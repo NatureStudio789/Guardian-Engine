@@ -1,0 +1,24 @@
+﻿  GuardianRasterizerState.cpp
+  GuardianTopology.cpp
+  GuardianDepthStencil.cpp
+  GuardianSampler.cpp
+  GuardianRenderer.cpp
+  GuardianVertexBuffer.cpp
+  GuardianRenderable.cpp
+  GuardianTexture.cpp
+  GuardianSurface.cpp
+  GuardianConverter.cpp
+  GuardianEventDispatcher.cpp
+  GuardianException.cpp
+  GuardianApplication.cpp
+  GuardianWindow.cpp
+  GuardianIndexBuffer.cpp
+  GuardianInputLayout.cpp
+  GuardianPixelShader.cpp
+  GuardianVertexShader.cpp
+  GuardianGraphics.cpp
+  GuardianRenderTarget.cpp
+  GuardianViewport.cpp
+  GuardianEngine.cpp
+    正在创建库 ..\Build\Debug\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug\x86_64\Guardian Engine.exp
+  Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug\x86_64\Guardian Engine.dll
