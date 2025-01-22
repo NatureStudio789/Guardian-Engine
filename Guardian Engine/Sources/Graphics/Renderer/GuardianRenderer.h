@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERER_H_
 #define _GE_GUARDIANRENDERER_H_
-#include "../Renderable/GuardianRenderable.h"
+#include "../Renderable/Mesh/GuardianMesh.h"
 
 namespace guardian
 {

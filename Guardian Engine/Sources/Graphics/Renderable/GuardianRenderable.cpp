@@ -1,5 +1,4 @@
 #include "GuardianRenderable.h"
-#include "../Renderer/GuardianRenderer.h"
 
 namespace guardian
 {
@@ -73,13 +72,13 @@ namespace guardian
 		}
 	}
 
-	void GuardianRenderable::SubmitToRenderer(GuardianSubmitPassLevel level)
-	{
-		GuardianRenderer::SubmitRenderable(level, std::make_shared<GuardianRenderable>(*this));
-	}
-
 	void GuardianRenderable::Render(std::shared_ptr<GuardianGraphics> graphics)
 	{
+		for (auto& staticApplicable : this->GetStaticApplicableList())
+		{
+			staticApplicable->Apply(graphics);
+		}
+
 		for (auto& applicable : this->ApplicableList)
 		{
 			applicable->Apply(graphics);

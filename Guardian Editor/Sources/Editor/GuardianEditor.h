@@ -19,7 +19,7 @@ namespace guardian
 		void RenderDockspace();
 		LRESULT CALLBACK EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
-		std::shared_ptr<GuardianRenderable> renderable;
+		std::shared_ptr<GuardianMesh> renderable;
 		std::shared_ptr<GuardianTransformConstantBuffer> cb;
 	};
 }

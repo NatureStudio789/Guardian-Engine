@@ -6,7 +6,7 @@ namespace guardian
 	GuardianEditor::GuardianEditor()
 	{
 		this->ProgramName = "Guardian Engine - <Nature Software>";
-		this->renderable = std::make_shared<GuardianRenderable>();
+		this->renderable = std::make_shared<GuardianMesh>();
 	}
 
 	GuardianEditor::~GuardianEditor()
@@ -60,7 +60,7 @@ namespace guardian
 		this->renderable->AddApplicable(il);
 
 		this->renderable->AddApplicable(GuardianRasterizerState::CreateNewRasterizerState(
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_FILL_WIREFRAME, GE_CULL_NONE));
+			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_FILL_SOLID, GE_CULL_NONE));
 
 		std::shared_ptr<GuardianTexture> te = GuardianTexture::CreateNewTexture(
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -138,7 +138,7 @@ namespace guardian
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_VERTEXSHADER_CONSTANTBUFFER);
 		this->renderable->AddTransformConstantBuffer(cb);
 
-		this->renderable->SubmitToRenderer(GE_SUBMIT_DEFAULT2D);
+		GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT2D, this->renderable);
 	}
 
 	void GuardianEditor::Update()

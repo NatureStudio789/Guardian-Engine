@@ -4,8 +4,6 @@
 
 namespace guardian 
 {
-	class GUARDIAN_API GuardianRenderer;
-
 	enum GUARDIAN_API GuardianSubmitPassLevel
 	{
 		GE_SUBMIT_DEFAULT3D = 0,
@@ -27,8 +25,6 @@ namespace guardian
 		void AddIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
 		void AddTransformConstantBuffer(std::shared_ptr<GuardianTransformConstantBuffer> transformCBuffer);
 
-		void SubmitToRenderer(GuardianSubmitPassLevel level);
-
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}
 
@@ -39,7 +35,15 @@ namespace guardian
 
 		std::vector<std::shared_ptr<GuardianApplicable>> ApplicableList;
 
+	private:
+		virtual std::vector<std::shared_ptr<GuardianApplicable>> GetStaticApplicableList() noexcept
+		{
+			return std::vector<std::shared_ptr<GuardianApplicable>>();
+		}
+
 		friend class GuardianRenderer;
+		template<typename T>
+		friend class GuardianRenderableBase;
 	};
 }
 
