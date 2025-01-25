@@ -97,4 +97,9 @@ namespace guardian
 			}
 		}
 	}
+
+	std::shared_ptr<GuardianTransformConstantBuffer> GuardianRenderable::GetTransformConstantBuffer()
+	{
+		return this->RenderingTransformConstantBuffer;
+	}
 }

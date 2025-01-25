@@ -23,6 +23,7 @@ namespace guardian
 		{
 			applicable.reset();
 		}
+		this->ApplicableList.clear();
 	}
 
 	void GuardianMesh::Update()

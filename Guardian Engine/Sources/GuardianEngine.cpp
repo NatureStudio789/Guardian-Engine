@@ -29,7 +29,7 @@ namespace guardian
 		}
 
 		GuardianWindowProperties EngineWindowProperties;
-		EngineWindowProperties.SetWindowResolution(1536, 864);
+		EngineWindowProperties.SetWindowResolution((int)(GetSystemMetrics(SM_CXSCREEN) * 0.8), (int)(GetSystemMetrics(SM_CYSCREEN) * 0.8));
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
 
@@ -42,6 +42,7 @@ namespace guardian
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianApplication::ApplicationInstance->UpdateApplication();
+			GuardianRenderer::UpdateRenderer();
 			this->EngineProgram->Update();
 
 			GuardianApplication::ApplicationInstance->BeginRendering({0.0f, 0.0f, 0.0f});

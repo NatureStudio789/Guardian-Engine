@@ -45,6 +45,27 @@ namespace guardian
 
 		unsigned int KeyCode;
 	};
+
+	class GUARDIAN_API GuardianCharEvent : public GuardianEvent
+	{
+	public:
+		GuardianCharEvent()
+		{
+			this->CharCode = 0;
+		}
+		GuardianCharEvent(unsigned char charCode)
+		{
+			this->CharCode = charCode;
+		}
+		GuardianCharEvent(const GuardianCharEvent& other)
+		{
+			this->CharCode = other.CharCode;
+		}
+
+		GUARDIAN_EVENT_TYPE(GE_EVENT_CHAR)
+
+		unsigned char CharCode;
+	};
 }
 
 #endif

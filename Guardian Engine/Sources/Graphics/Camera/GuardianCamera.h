@@ -28,6 +28,16 @@ namespace guardian
 		}
 		~GuardianCamera() = default;
 
+		void Translate(const GVector3& translation)
+		{
+			this->Position += translation;
+		}
+
+		void Rotate(const GVector3& rotation)
+		{
+			this->Direction += rotation;
+		}
+
 		const XMMATRIX GetViewMatrix() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x, 
@@ -47,64 +57,77 @@ namespace guardian
 			return this->Projection.GetProjectionMatrix();
 		}
 
-		const XMVECTOR GetForwardVector() const noexcept
+		const GVector3 GetForwardVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Forward = { 0.0f, 0.0f, 1.0f };
+			XMVECTOR ForwardVector = XMVector3TransformCoord(XMLoadFloat3(&Forward), RotationMatrix);
+			XMStoreFloat3(&Forward, ForwardVector);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Forward), RotationMatrix);
+			return GVector3(Forward.x, Forward.y, Forward.z);
 		}
 
-		const XMVECTOR GetBackwardVector() const noexcept
+		const GVector3 GetBackwardVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Backward = { 0.0f, 0.0f, -1.0f };
+			XMVECTOR BackwardVector = XMVector3TransformCoord(XMLoadFloat3(&Backward), RotationMatrix);
+			XMStoreFloat3(&Backward, BackwardVector);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Backward), RotationMatrix);
+			return GVector3(Backward.x, Backward.y, Backward.z);
 		}
 
-		const XMVECTOR GetLeftVector() const noexcept
+		const GVector3 GetLeftVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Left = { -1.0f, 0.0f, 0.0f };
+			XMVECTOR LeftVector = XMVector3TransformCoord(XMLoadFloat3(&Left), RotationMatrix);
+			XMStoreFloat3(&Left, LeftVector);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Left), RotationMatrix);
+			return GVector3(Left.x, Left.y, Left.z);
 		}
 
-		const XMVECTOR GetRightVector() const noexcept
+		const GVector3 GetRightVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Right = { 1.0f, 0.0f, 0.0f };
+			XMVECTOR RightVector = XMVector3TransformCoord(XMLoadFloat3(&Right), RotationMatrix);
+			XMStoreFloat3(&Right, RightVector);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Right), RotationMatrix);
+			return GVector3(Right.x, Right.y, Right.z);
 		}
 
-		const XMVECTOR GetUpVector() const noexcept
+		const GVector3 GetUpVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Up = { 0.0f, 1.0f, 0.0f };
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Up), RotationMatrix);
+			XMVECTOR UpVector = XMVector3TransformCoord(XMLoadFloat3(&Up), RotationMatrix);
+			XMStoreFloat3(&Up, UpVector);
+
+			return GVector3(Up.x, Up.y, Up.z);
 		}
 
-		const XMVECTOR GetDownVector() const noexcept
+		const GVector3 GetDownVector() const noexcept
 		{
 			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
 				this->Direction.y, this->Direction.z);
 
 			XMFLOAT3 Down = { 0.0f, -1.0f, 0.0f };
+			XMVECTOR DownVector = XMVector3TransformCoord(XMLoadFloat3(&Down), RotationMatrix);
+			XMStoreFloat3(&Down, DownVector);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Down), RotationMatrix);
+			return GVector3(Down.x, Down.y, Down.z);
 		}
 
 		GVector3 Position;

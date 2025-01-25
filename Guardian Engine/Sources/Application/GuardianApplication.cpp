@@ -22,6 +22,8 @@ namespace guardian
 		this->ApplicationWindow = GuardianWindow::CreateNewWindow(
 			windowProperties, GuardianApplication::ApplicationMessageProcessFunction);
 
+		GuardianInput::InitializeInput();
+
 		this->ApplicationEventProcesser->OnEvent<GuardianWindowCloseEvent>([this](const GuardianWindowCloseEvent& event)
 		{
 			if (this->ApplicationWindow->GetWindowHandle() == event.WindowHandle)
@@ -88,7 +90,7 @@ namespace guardian
 	{
 		if (GuardianEngine::EngineInstance->EngineProgram->EditorMessageProcess(hWnd, msg, wParam, lParam))
 		{
-			return true;
+			return 0;
 		}
 
 		switch (msg)
@@ -102,6 +104,39 @@ namespace guardian
 				break;
 			}
 
+			case WM_SYSCOMMAND:
+			{
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_MOVE:
+			{
+				GuardianWindowMoveEvent windowMoving(hWnd, (int)LOWORD(lParam), (int)HIWORD(lParam));
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(windowMoving);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_ACTIVATE:
+			{
+				if (LOWORD(lParam) == WA_ACTIVE || LOWORD(lParam) == WA_CLICKACTIVE)
+				{
+					GuardianWindowFocusEvent windowFocusing(hWnd);
+
+					GuardianEventDispatcher::DispatcherInstance->DispatchEvent(windowFocusing);
+				}
+				else if (LOWORD(lParam) == WA_INACTIVE)
+				{
+					GuardianWindowLostFocusEvent windowLostFocusing(hWnd);
+
+					GuardianEventDispatcher::DispatcherInstance->DispatchEvent(windowLostFocusing);
+				}
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
 			case WM_SIZE:
 			{
 				if (wParam == SIZE_MINIMIZED)
@@ -112,7 +147,122 @@ namespace guardian
 
 				GuardianWindowResizeEvent windowResizing(hWnd, (int)LOWORD(lParam), (int)HIWORD(lParam));
 				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
-				return 0;
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_KEYDOWN:
+			{
+				GuardianKeyPressEvent keyPressing((UINT)wParam);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(keyPressing);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_KEYUP:
+			{
+				GuardianKeyReleaseEvent keyReleasing((UINT)wParam);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(keyReleasing);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_CHAR:
+			{
+				GuardianCharEvent charEvent((UCHAR)wParam);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(charEvent);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_MOUSEMOVE:
+			{
+				GuardianMouseMoveEvent mouseMoving((int)LOWORD(lParam), (int)HIWORD(lParam));
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseMoving);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_LBUTTONDOWN:
+			{
+				GuardianMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_LEFT);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_MBUTTONDOWN:
+			{
+				GuardianMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_MIDDLE);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_RBUTTONDOWN:
+			{
+				GuardianMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_RIGHT);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_LBUTTONUP:
+			{
+				GuardianMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_LEFT);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+			case WM_MBUTTONUP:
+			{
+				GuardianMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_MIDDLE);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_RBUTTONUP:
+			{
+				GuardianMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_RIGHT);
+
+				GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(hWnd, msg, wParam, lParam);
+				break;
+			}
+
+			case WM_INPUT:
+			{
+				UINT DataSize = 0;
+				GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, null, &DataSize, sizeof(RAWINPUTHEADER));
+
+				if (DataSize > 0) 
+				{
+					std::unique_ptr<BYTE[]> RawData = std::make_unique<BYTE[]>(DataSize);
+					if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), 
+						RID_INPUT, RawData.get(), &DataSize, sizeof(RAWINPUTHEADER)) == DataSize)
+					{
+						RAWINPUT* Raw = reinterpret_cast<RAWINPUT*>(RawData.get());
+
+						if (Raw->header.dwType == RIM_TYPEMOUSE)
+						{
+							GuardianMouseRawMoveEvent mouseRawMoving((float)Raw->data.mouse.lLastX, (float)Raw->data.mouse.lLastY);
+
+							GuardianEventDispatcher::DispatcherInstance->DispatchEvent(mouseRawMoving);
+						}
+					}
+				}
+
+				return DefWindowProc(hWnd, msg, wParam, lParam);
 				break;
 			}
 

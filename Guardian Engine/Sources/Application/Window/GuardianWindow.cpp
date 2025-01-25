@@ -38,9 +38,9 @@ namespace guardian
 		GWideString WideClassName = GuardianConverter::StringToWideString(this->WindowProperties.WindowClassName);
 		WindowClass.lpszClassName = WideClassName.c_str();
 		WindowClass.lpszMenuName = null;
-		WindowClass.style = CS_OWNDC;
+		WindowClass.style = CS_CLASSDC;
 
-		if (!RegisterClassEx(&WindowClass))		
+		if (!RegisterClassEx(&WindowClass))
 		{
 			throw GUARDIAN_LAST_WINDOW_EXCEPTION();
 		}
@@ -86,8 +86,8 @@ namespace guardian
 		}
 		ShowWindow(this->WindowHandle, SW_SHOW);
 
-		SetFocus(this->WindowHandle);
 		SetForegroundWindow(this->WindowHandle);
+		SetFocus(this->WindowHandle);
 
 		this->IsWindowRunning = true;
 	}

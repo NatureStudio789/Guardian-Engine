@@ -30,7 +30,8 @@ namespace guardian
 		GString ShaderCode(FileBuffer.str());
 
 		GWideString WideShaderFilePath = GuardianConverter::StringToWideString(shaderFilePath);
-		HRESULT hr = D3DCompile(ShaderCode.c_str(), ShaderCode.size(), null, null, null, "main", "vs_5_0", 0, 0,
+		HRESULT hr = D3DCompile(ShaderCode.c_str(), ShaderCode.size(), shaderFilePath.c_str(), null, 
+			D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", 0, 0,
 			this->VertexShaderBuffer.GetAddressOf(), null);
 		if (GFailed(hr))
 		{

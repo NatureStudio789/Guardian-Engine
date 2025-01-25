@@ -28,10 +28,12 @@ namespace guardian
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}
 
+		std::shared_ptr<GuardianTransformConstantBuffer> GetTransformConstantBuffer();
+
 	protected:
 		std::shared_ptr<GuardianVertexBuffer> RenderingVertexBuffer;
 		std::shared_ptr<GuardianIndexBuffer> RenderingIndexBuffer;
-		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;;
+		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;
 
 		std::vector<std::shared_ptr<GuardianApplicable>> ApplicableList;
 

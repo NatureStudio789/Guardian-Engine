@@ -138,19 +138,18 @@ namespace guardian
 		return this->ConstantBufferData;
 	}
 
-
 	class GUARDIAN_API GuardianTransformConstantBuffer : public GuardianConstantBuffer<XMMATRIX>
 	{ 
 	public:
 		GuardianTransformConstantBuffer() : GuardianConstantBuffer()
 		{
-
+			this->ConstantBufferData = XMMatrixIdentity();
 		}
 		GuardianTransformConstantBuffer(
 			std::shared_ptr<GuardianGraphics> graphics, GuardianConstantBufferCategory category, int index = 0)
 			: GuardianConstantBuffer(graphics, category, index)
 		{
-
+			this->ConstantBufferData = XMMatrixIdentity();
 		}
 		GuardianTransformConstantBuffer(const GuardianTransformConstantBuffer& other) : GuardianConstantBuffer(other)
 		{

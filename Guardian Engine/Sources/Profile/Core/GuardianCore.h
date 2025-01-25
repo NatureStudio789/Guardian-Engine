@@ -16,6 +16,10 @@
 #include <DirectXTex.h>
 #include <filesystem>
 #include <map>
+#include <queue>
+#include <Assimp/Importer.hpp>
+#include <Assimp/scene.h>
+#include <Assimp/postprocess.h>
 using namespace Microsoft;
 using namespace DirectX;
 

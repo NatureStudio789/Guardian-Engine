@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANVECTOR_H_
 #define _GE_GUARDIANVECTOR_H_
-#include "../../../Application/Event/GuardianMouseEvent.h"
+#include "../../../Application/Input/GuardianInput.h"
 
 namespace guardian
 {

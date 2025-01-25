@@ -38,17 +38,21 @@ namespace guardian
 		hr = LoadFromWICFile(WidePath.c_str(), WIC_FLAGS_IGNORE_SRGB, null, this->SurfaceImage);
 		if (GFailed(hr))
 		{
-			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
+			this->InitializeSurface(1, 1);
+			this->ClearSurface(GuardianColor(51, 76, 76));
 		}
 
 		if (this->SurfaceImage.GetImage(0, 0, 0)->format != DXGI_FORMAT_R8G8B8A8_UNORM)
 		{
+			ScratchImage ConvertedImage;
 			hr = Convert(*this->SurfaceImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM,
-				TEX_FILTER_DEFAULT, TEX_THRESHOLD_DEFAULT, this->SurfaceImage);
+				TEX_FILTER_DEFAULT, TEX_THRESHOLD_DEFAULT, ConvertedImage);
 			if (GFailed(hr))
 			{
 				throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
 			}
+
+			this->SurfaceImage = std::move(ConvertedImage);
 		}
 	}
 

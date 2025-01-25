@@ -163,6 +163,39 @@ namespace guardian
 	};
 
 #define GUARDIAN_TYPE_EXCEPTION(wrongType, properType) GuardianTypeException(__LINE__, __FILE__, wrongType, properType)
+
+	class GUARDIAN_API GuardianErrorException : public GuardianException
+	{
+	public:
+		GuardianErrorException() noexcept : GuardianException()
+		{
+			this->ErrorDescription = "";
+		}
+		GuardianErrorException(const GuardianErrorException& other) noexcept : GuardianException(other)
+		{
+			this->ErrorDescription = other.ErrorDescription;
+		}
+		GuardianErrorException(int line, const char* file, const GString& errorDesc) noexcept :
+			GuardianException(line, file)
+		{
+			this->ErrorDescription = errorDesc;
+		}
+
+		const char* what() const noexcept override
+		{
+			std::ostringstream oss;
+			oss << "Guardian Error Exception" << std::endl <<
+				"There are something error here : " << this->ErrorDescription << std::endl <<
+				this->GetExceptionInfo();
+			this->ExceptionDescription = oss.str();
+			return this->ExceptionDescription.c_str();
+		}
+
+	private:
+		GString ErrorDescription;
+	};
+
+#define GUARDIAN_ERROR_EXCEPTION(errorDescription) GuardianErrorException(__LINE__, __FILE__, errorDescription)
 }
 
 #endif

@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERER_H_
 #define _GE_GUARDIANRENDERER_H_
-#include "../Renderable/Mesh/GuardianMesh.h"
+#include "../Renderable/Model/GuardianModel.h"
 
 namespace guardian
 {
@@ -11,8 +11,12 @@ namespace guardian
 		static void SetRenderingCamera(std::shared_ptr<GuardianCamera> camera);
 
 		static void RenderScene(std::shared_ptr<GuardianGraphics> graphics);
+		static void UpdateRenderer();
 
 	private:
+		static void BeginSceneRendering();
+		static void EndUpSceneRendering();
+
 		static void UpdateProjectionAspect(float newWidth, float newHeight);
 
 		static std::map<GuardianSubmitPassLevel, std::vector<std::shared_ptr<GuardianRenderable>>> RenderableList;

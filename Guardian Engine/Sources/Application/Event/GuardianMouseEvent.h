@@ -79,6 +79,31 @@ namespace guardian
 		int MousePositionX;
 		int MousePositionY;
 	};
+
+	class GUARDIAN_API GuardianMouseRawMoveEvent : public GuardianEvent
+	{
+	public:
+		GuardianMouseRawMoveEvent()
+		{
+			this->MouseMovementX = 0.0f;
+			this->MouseMovementY = 0.0f;
+		}
+		GuardianMouseRawMoveEvent(float movementX, float movementY)
+		{
+			this->MouseMovementX = movementX;
+			this->MouseMovementY = movementY;
+		}
+		GuardianMouseRawMoveEvent(const GuardianMouseRawMoveEvent& other)
+		{
+			this->MouseMovementX = other.MouseMovementX;
+			this->MouseMovementY = other.MouseMovementY;
+		}
+
+		GUARDIAN_EVENT_TYPE(GE_EVENT_MOUSE_RAWMOVE)
+
+		float MouseMovementX;
+		float MouseMovementY;
+	};
 }
 
 #endif // !_GE_GUARDIANMOUSEEVENT_H_

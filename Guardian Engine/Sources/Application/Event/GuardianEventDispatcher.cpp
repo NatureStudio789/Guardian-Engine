@@ -24,7 +24,7 @@ namespace guardian
 			return;
 		}
 
-		auto processers = this->EventProcesserList[event.GetEventType()];
+		auto& processers = this->EventProcesserList[event.GetEventType()];
 		if (processers.empty())
 		{
 			return;

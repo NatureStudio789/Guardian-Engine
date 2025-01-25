@@ -12,7 +12,7 @@ namespace guardian
 			this->FOV = 60.0f;
 			this->Aspect = 16.0f / 9.0f;
 			this->NearZ = 0.1f;
-			this->FarZ = 1000.0f;
+			this->FarZ = 10000.0f;
 		}
 		GuardianPerspectiveProjection(float fov, float aspect, float nearZ, float farZ)
 		{

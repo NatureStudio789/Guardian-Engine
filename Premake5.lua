@@ -31,6 +31,7 @@ project "Guardian Engine"
     libdirs
     {
         "Setup/Libraries/DirectX 11/%{cfg.architecture}/%{cfg.buildcfg}/",
+        "Setup/Libraries/Assimp/%{cfg.buildcfg}/%{cfg.architecture}/",
     }
 
     links
@@ -40,7 +41,8 @@ project "Guardian Engine"
         "D3DCompiler",
         "DXGI",
         "DirectXTex",
-        "ImGui"
+        "ImGui",
+        "assimp",
     }
 
     filter "system:windows"
