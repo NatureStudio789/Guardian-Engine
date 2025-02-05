@@ -16,6 +16,8 @@ namespace guardian
 
 		void InitializeDepthStencil(std::shared_ptr<GuardianGraphics> graphics, int width, int height);
 
+		void ClearDepthStencil(std::shared_ptr<GuardianGraphics> graphics);
+
 		WRL::ComPtr<ID3D11DepthStencilState> GetDepthStencilState() noexcept;
 		WRL::ComPtr<ID3D11DepthStencilView> GetDepthStencilView() noexcept;
 		WRL::ComPtr<ID3D11ShaderResourceView> GetDepthStencilShaderResource() noexcept;

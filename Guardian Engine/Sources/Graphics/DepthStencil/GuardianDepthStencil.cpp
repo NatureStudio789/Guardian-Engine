@@ -89,6 +89,12 @@ namespace guardian
 		}
 	}
 
+	void GuardianDepthStencil::ClearDepthStencil(std::shared_ptr<GuardianGraphics> graphics)
+	{
+		graphics->GetGraphicsDeviceContext()->ClearDepthStencilView(
+			this->DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	}
+
 	WRL::ComPtr<ID3D11DepthStencilState> GuardianDepthStencil::GetDepthStencilState() noexcept
 	{
 		return this->DepthStencilState;

@@ -1,8 +1,6 @@
 #ifndef _GE_GUARDIANGRAPHICS_H_
 #define _GE_GUARDIANGRAPHICS_H_
-#include "Viewport/GuardianViewport.h"
-#include "Surface/GuardianSurface.h"
-#include "DepthStencil/GuardianDepthStencil.h"
+#include "Framebuffer/GuardianFramebuffer.h"
 
 namespace guardian
 {
@@ -21,13 +19,14 @@ namespace guardian
 		void BeginRendering(const GVector3& clearColor);
 		void EndUpRendering(int syncInterval = 1);
 
-		void UpdateGraphicsResolution(int newWidth, int newHeight);
+		void UpdateGUIGraphicsResolution(int newWidth, int newHeight);
+		void UpdateSceneGraphicsResolution(int newWidth, int newHeight);
 
 		WRL::ComPtr<ID3D11Device> GetGraphicsDevice() noexcept;
 		WRL::ComPtr<ID3D11DeviceContext> GetGraphicsDeviceContext() noexcept;
 		WRL::ComPtr<IDXGISwapChain> GetGraphicsSwapChain() noexcept;
-		std::shared_ptr<GuardianRenderTarget> GetGraphicsRenderTarget() noexcept;
-		std::shared_ptr<GuardianDepthStencil> GetGraphicsDepthStencil() noexcept;
+		std::shared_ptr<GuardianFramebuffer> GetGraphicsSceneFramebuffer() noexcept;
+		std::shared_ptr<GuardianFramebuffer> GetGraphicsGUIFramebuffer() noexcept;
 
 		static std::shared_ptr<GuardianGraphics> CreateNewGraphics(GWindowHandle renderWindow,
 			int windowWidth, int windowHeight, bool isFullscreenWindow);
@@ -37,9 +36,8 @@ namespace guardian
 		WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceContext;
 		WRL::ComPtr<IDXGISwapChain> GraphicsSwapChain;
 
-		std::shared_ptr<GuardianRenderTarget> GraphicsRenderTarget;
-		std::shared_ptr<GuardianDepthStencil> GraphicsDepthStencil;
-		std::shared_ptr<GuardianViewport> GraphicsMainViewport;
+		std::shared_ptr<GuardianFramebuffer> GraphicsSceneFramebuffer;
+		std::shared_ptr<GuardianFramebuffer> GraphicsGUIFramebuffer;
 	};
 }
 

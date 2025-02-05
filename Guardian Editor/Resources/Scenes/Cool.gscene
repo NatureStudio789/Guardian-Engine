@@ -1,0 +1,27 @@
+Scene: Unnamed
+Entities:
+  - Entity: 1102962296484071954
+    Tag Component:
+      Tag: Main Camera
+    Transform Component:
+      Position: [-0.112375811, 0.549000025, -15.9099998]
+      Rotation: [-18.750391, -37.5993881, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [-0.112375811, 0.549000025, -15.9099998]
+      Direction: [-18.750391, -37.5993881, 0]
+      Is Freelook: true
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.90206897
+        NearZ: 0.100000001
+        FarZ: 10000
+  - Entity: 13546964816139194417
+    Tag Component:
+      Tag: Nanosuit
+    Transform Component:
+      Position: [0.564283431, -3.69461346, -8.32038116]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Model Component:
+      File Path: Resources/Models/Nanosuit/Nanosuit.obj

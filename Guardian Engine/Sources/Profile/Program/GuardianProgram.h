@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANPROGRAM_H_
 #define _GE_GUARDIANPROGRAM_H_
-#include "../../Graphics/Renderer/GuardianRenderer.h"
+#include "../../ECS/Entity/GuardianScriptableEntity.h"
 
 namespace guardian
 {

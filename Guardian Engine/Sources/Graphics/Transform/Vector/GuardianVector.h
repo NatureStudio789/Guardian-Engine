@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANVECTOR_H_
 #define _GE_GUARDIANVECTOR_H_
-#include "../../../Application/Input/GuardianInput.h"
+#include "../../../Script/GuardianScriptEngine.h"
 
 namespace guardian
 {
@@ -73,6 +73,16 @@ namespace guardian
 			this->y *= a;
 
 			return *this;
+		}
+
+		bool operator==(const GVector2& other)
+		{
+			return (this->x == other.x) && (this->y == other.y);
+		}
+
+		bool operator!=(const GVector2& other)
+		{
+			return (this->x != other.x) || (this->y != other.y);
 		}
 
 		const float length() const
@@ -159,6 +169,16 @@ namespace guardian
 			this->z *= a;
 
 			return *this;
+		}
+
+		bool operator==(const GVector3& other)
+		{
+			return (this->x == other.x) && (this->y == other.y) && (this->z == other.z);
+		}
+
+		bool operator!=(const GVector3& other)
+		{
+			return (this->x != other.x) || (this->y != other.y) || (this->z != other.z);
 		}
 
 		const float length() const
@@ -252,6 +272,16 @@ namespace guardian
 			this->w *= a;
 
 			return *this;
+		}
+
+		bool operator==(const GVector4& other)
+		{
+			return (this->x == other.x) && (this->y == other.y) && (this->z == other.z) && (this->w == other.w);
+		}
+
+		bool operator!=(const GVector4& other)
+		{
+			return (this->x != other.x) || (this->y != other.y) || (this->z != other.z) || (this->w != other.w);
 		}
 
 		const float length() const

@@ -15,11 +15,15 @@ namespace guardian
 
 		void LaunchEngine();
 
+		std::shared_ptr<GuardianScene> GetScene() noexcept;
+
 		static std::unique_ptr<GuardianEngine> EngineInstance;
 
 	private:
 		GuardianProgram* EngineProgram;
 		
+		std::shared_ptr<GuardianScene> EngineScene;
+
 		std::unique_ptr<GuardianEventProcesser> EngineEventProcesser;
 
 		friend class GuardianEditor;

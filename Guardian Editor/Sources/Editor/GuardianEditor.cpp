@@ -6,6 +6,7 @@ namespace guardian
 	GuardianEditor::GuardianEditor()
 	{
 		this->ProgramName = "Guardian Engine - <Nature Software>";
+		this->EditorPanelList.clear();
 	}
 
 	GuardianEditor::~GuardianEditor()
@@ -30,11 +31,26 @@ namespace guardian
 		{
 			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
-			style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-			style.Colors[ImGuiCol_TitleBg] = ImVec4(0.2f, 0.2f, 0.2f, 1.0f);
-			style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-		}
 
+			style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+			style.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+			style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+
+			style.Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
+			style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
+			style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
+
+			style.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
+			style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
+			style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
+
+			style.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+			style.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
+			style.Colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.2805f, 0.281f, 1.0f);
+			style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+			style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
+		}
+		
 		ImGui_ImplWin32_Init(GuardianApplication::ApplicationInstance->GetApplicationWindowHandle());
 		ImGui_ImplDX11_Init(
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsDevice().Get(),
@@ -42,10 +58,85 @@ namespace guardian
 
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
 
-		Nanosuit = GuardianModel::CreateNewModel(
+		this->EditorScenePanel = std::make_shared<GuardianScenePanel>(GuardianEngine::EngineInstance->EngineScene.get());
+		this->AddPanelToEditor(this->EditorScenePanel);
+		this->EditorSceneHierarchyPanel = 
+			std::make_shared<GuardianSceneHierarchyPanel>(GuardianEngine::EngineInstance->EngineScene.get());
+		this->AddPanelToEditor(this->EditorSceneHierarchyPanel);
+		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
+
+#if 0
+		this->Nanosuit = GuardianEngine::EngineInstance->GetScene()->CreateEntity("Nanosuit");
+		this->Nanosuit->AddComponent<GuardianTransformComponent>();
+		this->Nanosuit->AddComponent<GuardianModelComponent>().InitializeModel(
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Resources/Models/Nanosuit/Nanosuit.obj");
-		Sponza = GuardianModel::CreateNewModel(
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Resources/Models/Sponza/sponza.obj");
+#endif
+	}
+
+	void GuardianEditor::RenderDockspace()
+	{
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_MenuBar;
+		const ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->WorkPos);
+		ImGui::SetNextWindowSize(viewport->WorkSize);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("Guardian Engine Editor", null, window_flags);
+
+		ImGui::PopStyleVar();
+		ImGui::PopStyleVar(2);
+
+		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+				{
+					GuardianEngine::EngineInstance->GetScene()->RemoveAllEntity();
+					GuardianEngine::EngineInstance->GetScene()->CurrentScenePath = "";
+					this->EditorSceneHierarchyPanel->SelectedEntity = null;
+					GuardianEngine::EngineInstance->GetScene() = std::make_shared<GuardianScene>();
+				}
+
+				if (ImGui::MenuItem("Save", "Ctrl+S") || 
+					(GuardianKeyboard::IsKeyPress(VK_CONTROL) && GuardianKeyboard::IsKeyPress('S')))
+				{
+					GuardianEngine::EngineInstance->GetScene()->SaveScene();
+				}
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				{
+					GString filePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
+					GuardianEngine::EngineInstance->GetScene()->SaveSceneAs(filePath);
+				}
+
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+				{
+					GuardianEngine::EngineInstance->GetScene()->InitializeScene(
+						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
+
+		ImGui::End();
+	}
+
+	void GuardianEditor::AddPanelToEditor(std::shared_ptr<GuardianPanel> panel)
+	{
+		this->EditorPanelList[panel->GetPanelName()] = panel;
 	}
 
 	void GuardianEditor::Update()
@@ -60,29 +151,17 @@ namespace guardian
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::Begin("Properties");
+		this->RenderDockspace();
 
-		static float degreesX = 0.0f;
-		static float degreesY = 0.0f;
-		static float degreesZ = 0.0f;
-		ImGui::SliderFloat("X Angle", &degreesX, -360.0f, 360.0f);
-		ImGui::SliderFloat("Y Angle", &degreesY, -360.0f, 360.0f);
-		ImGui::SliderFloat("Z Angle", &degreesZ, -360.0f, 360.0f);
-
-		static float X = 0.0f;
-		static float Y = 0.0f;
-		static float Z = 0.0f;
-		ImGui::SliderFloat("X", &X, -50.0f, 50.0f);
-		ImGui::SliderFloat("Y", &Y, -50.0f, 50.0f);
-		ImGui::SliderFloat("Z", &Z, -50.0f, 50.0f);
-		Nanosuit->UpdateModel(GuardianTransform(GVector3(X * 0.1f, Y * 0.1f, Z * 0.1f),
-			GVector3(degreesX * 0.01f, degreesY * 0.01f, degreesZ * 0.01f), GVector4(),
-			GVector3(50.0f, 50.0f, 50.0f)).GetTransformMatrix());
-		Sponza->UpdateModel(XMMatrixIdentity());
-
-		ImGui::End();
+		for (auto& panel : this->EditorPanelList)
+		{
+			panel.second->Render();
+		}
+		this->EditorScenePanel->SetSelectedEntity(this->EditorSceneHierarchyPanel->GetSelectedEntity());
 
 		ImGui::Render();
+		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsGUIFramebuffer()->ApplyFramebuffer(
+			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), { 0.0f, 0.0f, 0.0f });
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
@@ -93,76 +172,13 @@ namespace guardian
 
 	void GuardianEditor::Release()
 	{
-		
-	}
+		ImGui_ImplDX11_Shutdown();
+		ImGui_ImplWin32_Shutdown();
+		ImGui::DestroyContext();
 
-	void GuardianEditor::RenderDockspace()
-	{
-		static ImGuiDockNodeFlags DockspaceFlags = ImGuiDockNodeFlags_None;
-
-		ImGuiWindowFlags WindowFlags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
-		const ImGuiViewport* viewport = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(viewport->WorkPos);
-		ImGui::SetNextWindowSize(viewport->WorkSize);
-		ImGui::SetNextWindowViewport(viewport->ID);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-		WindowFlags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
-		WindowFlags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-		if (DockspaceFlags & ImGuiDockNodeFlags_PassthruCentralNode)
-			WindowFlags |= ImGuiWindowFlags_NoBackground;
-
-		static bool open = true;
-		if (open)
+		for (auto& panel : this->EditorPanelList)
 		{
-			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-			ImGui::Begin("Guardian Engine Editor", &open, WindowFlags);
-			ImGui::PopStyleVar();
-
-			ImGui::PopStyleVar(2);
-
-			ImGuiIO& io = ImGui::GetIO();
-			if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
-			{
-				ImGuiID DockspaceId = ImGui::GetID("Guardian Dockspace");
-				ImGui::DockSpace(DockspaceId, ImVec2(0.0f, 0.0f), DockspaceFlags);
-			}
-
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("File(F)"))
-				{
-
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Edite(E)"))
-				{
-
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Viewport(V)"))
-				{
-
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Project(P)"))
-				{
-
-
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMenuBar();
-			}
-
-			ImGui::End();
+			panel.second.reset();
 		}
 	}
 

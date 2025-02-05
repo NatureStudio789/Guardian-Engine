@@ -31,6 +31,7 @@ namespace guardian
 		std::shared_ptr<GuardianTransformConstantBuffer> GetTransformConstantBuffer();
 
 	protected:
+		GuardianUUID RenderableId;
 		std::shared_ptr<GuardianVertexBuffer> RenderingVertexBuffer;
 		std::shared_ptr<GuardianIndexBuffer> RenderingIndexBuffer;
 		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;

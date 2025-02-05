@@ -35,7 +35,7 @@ namespace guardian
 		}
 
 		GWideString WidePath = GuardianConverter::StringToWideString(imageFileName);
-		hr = LoadFromWICFile(WidePath.c_str(), WIC_FLAGS_IGNORE_SRGB, null, this->SurfaceImage);
+		hr = DirectX::LoadFromWICFile(WidePath.c_str(), WIC_FLAGS_IGNORE_SRGB, null, this->SurfaceImage);
 		if (GFailed(hr))
 		{
 			this->InitializeSurface(1, 1);
@@ -45,7 +45,7 @@ namespace guardian
 		if (this->SurfaceImage.GetImage(0, 0, 0)->format != DXGI_FORMAT_R8G8B8A8_UNORM)
 		{
 			ScratchImage ConvertedImage;
-			hr = Convert(*this->SurfaceImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM,
+			hr = DirectX::Convert(*this->SurfaceImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM,
 				TEX_FILTER_DEFAULT, TEX_THRESHOLD_DEFAULT, ConvertedImage);
 			if (GFailed(hr))
 			{
@@ -95,7 +95,7 @@ namespace guardian
 				}
 			};
 
-		HRESULT hr = SaveToWICFile(*this->SurfaceImage.GetImage(0, 0, 0), WIC_FLAGS_NONE,
+		HRESULT hr = DirectX::SaveToWICFile(*this->SurfaceImage.GetImage(0, 0, 0), WIC_FLAGS_NONE,
 			GetWICCodec(GetCodecId(savePath)), GuardianConverter::StringToWideString(savePath).c_str());
 		if (GFailed(hr))
 		{

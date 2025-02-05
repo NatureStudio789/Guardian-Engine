@@ -7,19 +7,28 @@
 #include <memory>
 #include <functional>
 #include <wrl/client.h>
+#include <xhash>
+#include <random>
 #include <d3d11.h>
 #include <d3dcompiler.h>
 #include <ImGui/imgui.h>
 #include <ImGui/imgui_impl_win32.h>
 #include <ImGui/imgui_impl_dx11.h>
+#include <ImGuizmo.h>
 #include <fstream>
-#include <DirectXTex.h>
+#include <DirectXTex/DirectXTex.h>
 #include <filesystem>
 #include <map>
 #include <queue>
+#include <chrono>
 #include <Assimp/Importer.hpp>
 #include <Assimp/scene.h>
 #include <Assimp/postprocess.h>
+#include <entt/entt.hpp>
+#include <yaml-cpp/yaml.h>
+#include <commdlg.h>
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
 using namespace Microsoft;
 using namespace DirectX;
 

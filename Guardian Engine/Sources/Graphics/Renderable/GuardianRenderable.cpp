@@ -4,6 +4,7 @@ namespace guardian
 {
 	GuardianRenderable::GuardianRenderable()
 	{
+		this->RenderableId = GuardianUUID();
 		this->RenderingVertexBuffer = std::make_shared<GuardianVertexBuffer>();
 		this->RenderingIndexBuffer = std::make_shared<GuardianIndexBuffer>();
 		this->RenderingTransformConstantBuffer = std::make_shared<GuardianTransformConstantBuffer>();
@@ -13,6 +14,7 @@ namespace guardian
 
 	GuardianRenderable::GuardianRenderable(const GuardianRenderable& other)
 	{
+		this->RenderableId = other.RenderableId;
 		this->RenderingVertexBuffer = other.RenderingVertexBuffer;
 		this->RenderingIndexBuffer = other.RenderingIndexBuffer;
 		this->RenderingTransformConstantBuffer = other.RenderingTransformConstantBuffer;

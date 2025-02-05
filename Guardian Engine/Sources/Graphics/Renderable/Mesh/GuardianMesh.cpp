@@ -18,6 +18,7 @@ namespace guardian
 		{
 			staticApplicableList.reset();
 		}
+		StaticApplicableList.clear();
 
 		for (auto& applicable : this->ApplicableList)
 		{

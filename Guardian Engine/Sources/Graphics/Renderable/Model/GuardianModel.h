@@ -13,12 +13,16 @@ namespace guardian
 		GuardianModel(
 			std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath);
 		GuardianModel(const GuardianModel& other);
+		GuardianModel(GuardianModel& other);
 		~GuardianModel();
 
 		void InitializeModel(
 			std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath);
+		void SubmitToRenderer();
 
 		void UpdateModel(XMMATRIX transformMatrix);
+
+		const GString& GetModelFilePath() const noexcept;
 
 		static std::shared_ptr<GuardianModel> CreateNewModel(
 			std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath);
@@ -29,9 +33,10 @@ namespace guardian
 		std::shared_ptr<GuardianMesh> ProcessModelMesh(
 			std::shared_ptr<GuardianGraphics> graphics, aiMesh* mesh, const aiScene* scene);
 		std::shared_ptr<GuardianTexture> LoadMaterialTexture(
-			std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type, const GString& typeName);
+			std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type);
 
 		GString ModelFileDirectory;
+		GString ModelFilePath;
 		std::vector<std::shared_ptr<GuardianMesh>> ModelMeshList;
 	};
 }

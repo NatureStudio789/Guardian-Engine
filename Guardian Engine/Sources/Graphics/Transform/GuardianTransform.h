@@ -11,119 +11,123 @@ namespace guardian
 		{
 			this->Position = { 0.0f, 0.0f, 0.0f };
 			this->Rotation = { 0.0f, 0.0f, 0.0f };
-			this->QuaternionRotation = { 0.0f, 0.0f, 0.0f, 1.0f };
 			this->Scale = { 1.0f, 1.0f, 1.0f };
 		}
-		GuardianTransform(const GVector3& position, const GVector3& rotation,
-			const GVector4& quaternion, const GVector3& scale)
+		GuardianTransform(const GVector3& position, const GVector3& rotation, const GVector3& scale)
 		{
 			this->Position = position;
 			this->Rotation = rotation;
-			this->QuaternionRotation = quaternion;
 			this->Scale = scale;
 		}
 		GuardianTransform(const GuardianTransform& other)
 		{
 			this->Position = other.Position;
 			this->Rotation = other.Rotation;
-			this->QuaternionRotation = other.QuaternionRotation;
 			this->Scale = other.Scale;
 		}
 
-		GVector3& Translate(const GVector3& translation) noexcept
+		void Translate(const GVector3& translation) noexcept
 		{
 			this->Position += translation;
-			return this->Position;
 		}
-		GVector3& Rotate(const GVector3& rotation) noexcept
+		void Rotate(const GVector3& rotation) noexcept
 		{
 			this->Rotation += rotation;
-			return this->Rotation;
 		}
-		GVector3& Scaling(const GVector3& scaling) noexcept
+		void Scaling(const GVector3& scaling) noexcept
 		{
 			this->Scale += scaling;
-			return this->Scale;
 		}
 
 		const XMMATRIX GetTransformMatrix() const noexcept
 		{
-			return XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z) *
+			return XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI) *
 				XMMatrixTranslation(this->Position.x, this->Position.y, this->Position.z) *
 				XMMatrixScaling(this->Scale.x, this->Scale.y, this->Scale.z);
 		}
 
-		const XMVECTOR GetForwardVector() const noexcept
+		const GVector3 GetForwardVector() const noexcept
 		{
 			XMFLOAT3 Forward = { 0.0f, 0.0f, 1.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Forward), RotationMatrix);
+			XMVECTOR ForwardVector = XMVector3TransformCoord(XMLoadFloat3(&Forward), RotationMatrix);
+			XMStoreFloat3(&Forward, ForwardVector);
+			return GVector3(Forward.x, Forward.y, Forward.z);
 		}
 
-		const XMVECTOR GetBackwardVector() const noexcept
+		const GVector3 GetBackwardVector() const noexcept
 		{
 			XMFLOAT3 Backward = { 0.0f, 0.0f, -1.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Backward), RotationMatrix);
+			XMVECTOR BackwardVector = XMVector3TransformCoord(XMLoadFloat3(&Backward), RotationMatrix);
+			XMStoreFloat3(&Backward, BackwardVector);
+			return GVector3(Backward.x, Backward.y, Backward.z);
 		}
 
-		const XMVECTOR GetRightVector() const noexcept
+		const GVector3 GetRightVector() const noexcept
 		{
 			XMFLOAT3 Right = { 1.0f, 0.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Right), RotationMatrix);
+			XMVECTOR RightVector = XMVector3TransformCoord(XMLoadFloat3(&Right), RotationMatrix);
+			XMStoreFloat3(&Right, RightVector);
+			return GVector3(Right.x, Right.y, Right.z);
 		}
 
-		const XMVECTOR GetLeftVector() const noexcept
+		const GVector3 GetLeftVector() const noexcept
 		{
 			XMFLOAT3 Left = { -1.0f, 0.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Left), RotationMatrix);
+			XMVECTOR LeftVector = XMVector3TransformCoord(XMLoadFloat3(&Left), RotationMatrix);
+			XMStoreFloat3(&Left, LeftVector);
+			return GVector3(Left.x, Left.y, Left.z);
 		}
 
-		const XMVECTOR GetUpVector() const noexcept
+		const GVector3 GetUpVector() const noexcept
 		{
 			XMFLOAT3 Up = { 0.0f, 1.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Up), RotationMatrix);
+			XMVECTOR UpVector = XMVector3TransformCoord(XMLoadFloat3(&Up), RotationMatrix);
+			XMStoreFloat3(&Up, UpVector);
+			return GVector3(Up.x, Up.y, Up.z);
 		}
 
-		const XMVECTOR GetDownVector() const noexcept
+		const GVector3 GetDownVector() const noexcept
 		{
 			XMFLOAT3 Down = { 0.0f, -1.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationQuaternion(XMVectorSet(this->QuaternionRotation.x, this->QuaternionRotation.y,
-				this->QuaternionRotation.z, this->QuaternionRotation.w)) *
-				XMMatrixRotationRollPitchYaw(this->Rotation.x, this->Rotation.y, this->Rotation.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
+				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
-			return XMVector3TransformCoord(XMLoadFloat3(&Down), RotationMatrix);
+			XMVECTOR DownVector = XMVector3TransformCoord(XMLoadFloat3(&Down), RotationMatrix);
+			XMStoreFloat3(&Down, DownVector);
+			return GVector3(Down.x, Down.y, Down.z);
 		}
 
 		GVector3 Position;
 		GVector3 Rotation;
-		GVector4 QuaternionRotation;
 		GVector3 Scale;
 	};
 }

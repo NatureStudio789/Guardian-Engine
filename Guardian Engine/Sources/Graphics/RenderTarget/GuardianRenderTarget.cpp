@@ -9,6 +9,11 @@ namespace guardian
 		this->InitializeRenderTarget(graphics);
 	}
 
+	GuardianRenderTarget::GuardianRenderTarget(std::shared_ptr<GuardianGraphics> graphics, int width, int height)
+	{
+		this->InitializeRenderTarget(graphics, width, height);
+	}
+
 	void GuardianRenderTarget::InitializeRenderTarget(std::shared_ptr<GuardianGraphics> graphics)
 	{
 		DXGI_SWAP_CHAIN_DESC SwapChainDesc;
@@ -16,9 +21,48 @@ namespace guardian
 		this->RenderTargetWidth = SwapChainDesc.BufferDesc.Width;
 		this->RenderTargetHeight = SwapChainDesc.BufferDesc.Height;
 
-		WRL::ComPtr<ID3D11Texture2D> RenderTargetTexture;
-		HRESULT hr = graphics->GetGraphicsSwapChain()->GetBuffer(
-			0, __uuidof(ID3D11Texture2D), (void**)RenderTargetTexture.GetAddressOf());
+		HRESULT hr = graphics->GetGraphicsSwapChain()->GetBuffer(0, __uuidof(ID3D11Texture2D),
+			(void**)this->RenderTargetTexture.GetAddressOf());
+		if (GFailed(hr))
+		{
+			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
+		}
+
+		hr = graphics->GetGraphicsDevice()->CreateRenderTargetView(
+			RenderTargetTexture.Get(), null, this->RenderTargetView.GetAddressOf());
+		if (GFailed(hr))
+		{
+			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
+		}
+	}
+
+	void GuardianRenderTarget::InitializeRenderTarget(std::shared_ptr<GuardianGraphics> graphics, int width, int height)
+	{
+		this->RenderTargetWidth = width;
+		this->RenderTargetHeight = height;
+
+		D3D11_TEXTURE2D_DESC RenderTargetTextureDesc;
+		ZeroMemory(&RenderTargetTextureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+
+		RenderTargetTextureDesc.Width = this->RenderTargetWidth;
+		RenderTargetTextureDesc.Height = this->RenderTargetHeight;
+		RenderTargetTextureDesc.MipLevels = 1;
+		RenderTargetTextureDesc.ArraySize = 1;
+		RenderTargetTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		RenderTargetTextureDesc.SampleDesc.Count = 1;
+		RenderTargetTextureDesc.SampleDesc.Quality = 0;
+		RenderTargetTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		RenderTargetTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+
+		HRESULT hr = graphics->GetGraphicsDevice()->CreateTexture2D(&RenderTargetTextureDesc,
+			null, this->RenderTargetTexture.GetAddressOf());
+		if (GFailed(hr))
+		{
+			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
+		}
+
+		hr = graphics->GetGraphicsDevice()->CreateShaderResourceView(this->RenderTargetTexture.Get(),
+			null, this->RenderTargetShaderResource.GetAddressOf());
 		if (GFailed(hr))
 		{
 			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
@@ -45,6 +89,16 @@ namespace guardian
 	WRL::ComPtr<ID3D11RenderTargetView> GuardianRenderTarget::GetRenderTargetView() noexcept
 	{
 		return this->RenderTargetView;
+	}
+
+	WRL::ComPtr<ID3D11ShaderResourceView> GuardianRenderTarget::GetRenderTargetShaderResource() noexcept
+	{
+		return this->RenderTargetShaderResource;
+	}
+
+	WRL::ComPtr<ID3D11Texture2D> GuardianRenderTarget::GetRenderTargetTexture() noexcept
+	{
+		return this->RenderTargetTexture;
 	}
 
 	GuardianSurface GuardianRenderTarget::ConvertToSurface(std::shared_ptr<GuardianGraphics> graphics)
@@ -117,5 +171,11 @@ namespace guardian
 		std::shared_ptr<GuardianGraphics> graphics)
 	{
 		return std::make_shared<GuardianRenderTarget>(graphics);
+	}
+
+	std::shared_ptr<GuardianRenderTarget> GuardianRenderTarget::CreateNewRenderTarget(
+		std::shared_ptr<GuardianGraphics> graphics, int width, int height)
+	{
+		return std::make_shared<GuardianRenderTarget>(graphics, width, height);
 	}
 }

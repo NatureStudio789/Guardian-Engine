@@ -15,6 +15,8 @@ namespace guardian
 
 	GuardianModel::GuardianModel(const GuardianModel& other)
 	{
+		this->ModelFileDirectory = other.ModelFileDirectory;
+		this->ModelFilePath = other.ModelFilePath;
 		this->ModelMeshList = other.ModelMeshList;
 	}
 
@@ -29,6 +31,7 @@ namespace guardian
 
 	void GuardianModel::InitializeModel(std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath)
 	{
+		this->ModelFilePath = modelFilePath;
 		this->ModelFileDirectory = modelFilePath.substr(0, modelFilePath.find_last_of('/'));
 
 		Assimp::Importer Importer;
@@ -40,7 +43,10 @@ namespace guardian
 		}
 
 		this->ProcessModelNode(graphics, ModelScene->mRootNode, ModelScene);
+	}
 
+	void GuardianModel::SubmitToRenderer()
+	{
 		for (auto& mesh : this->ModelMeshList)
 		{
 			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, mesh);
@@ -53,6 +59,11 @@ namespace guardian
 		{
 			mesh->GetTransformConstantBuffer()->UpdateData(transformMatrix);
 		}
+	}
+
+	const GString& GuardianModel::GetModelFilePath() const noexcept
+	{
+		return this->ModelFilePath;
 	}
 
 	void GuardianModel::ProcessModelNode(std::shared_ptr<GuardianGraphics> graphics, aiNode* node, const aiScene* scene)
@@ -138,18 +149,18 @@ namespace guardian
 		}
 
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		Mesh->AddApplicable(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE, "texture_diffuse"));
+		Mesh->AddApplicable(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
 
 		Mesh->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, (void*)Vertices.data(), (UINT)Vertices.size(), (UINT)sizeof(ModelVertex)));
 		Mesh->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, Indices));
 
-		Mesh->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics, GE_VERTEXSHADER_CONSTANTBUFFER));
+		Mesh->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
 
 		return Mesh;
 	}
 
 	std::shared_ptr<GuardianTexture> GuardianModel::LoadMaterialTexture(
-		std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type, const GString& typeName)
+		std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type)
 	{
 		std::shared_ptr<GuardianTexture> Texture = std::make_shared<GuardianTexture>();
 

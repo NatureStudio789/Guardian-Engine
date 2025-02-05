@@ -36,12 +36,7 @@ namespace guardian
 		{
 			if (this->ApplicationWindow->GetWindowHandle() == event.WindowHandle)
 			{
-				this->ApplicationWindow->WindowGraphicsContext->UpdateGraphicsResolution(event.ResizeWidth, event.ResizeHeight);
-			}
-
-			if (GuardianRenderer::RendererCamera.get())
-			{
-				GuardianRenderer::UpdateProjectionAspect((float)event.ResizeWidth, (float)event.ResizeHeight);
+				this->ApplicationWindow->WindowGraphicsContext->UpdateGUIGraphicsResolution(event.ResizeWidth, event.ResizeHeight);
 			}
 		});
 	}

@@ -146,8 +146,8 @@ namespace guardian
 			this->ConstantBufferData = XMMatrixIdentity();
 		}
 		GuardianTransformConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, GuardianConstantBufferCategory category, int index = 0)
-			: GuardianConstantBuffer(graphics, category, index)
+			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
+			: GuardianConstantBuffer(graphics, GE_VERTEXSHADER_CONSTANTBUFFER, index)
 		{
 			this->ConstantBufferData = XMMatrixIdentity();
 		}
@@ -157,9 +157,9 @@ namespace guardian
 		}
 
 		static std::shared_ptr<GuardianTransformConstantBuffer> CreateNewTransformConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, GuardianConstantBufferCategory category, int index = 0)
+			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
 		{
-			return std::make_shared<GuardianTransformConstantBuffer>(graphics, category, index);
+			return std::make_shared<GuardianTransformConstantBuffer>(graphics, index);
 		}
 	};
 }

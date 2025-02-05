@@ -1,39 +1,41 @@
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiansampler.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianmesh.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianindexbuffer.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianvertexshader.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiansurface.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianexception.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantopology.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianscriptregistry.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianvertexbuffer.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiandepthstencil.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianpixelshader.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiangraphics.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantexture.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrendertarget.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianscriptclass.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianinputlayout.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrenderer.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianentity.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianvertexshader.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianmodel.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianeventdispatcher.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrenderer.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrasterizerstate.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianviewport.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianapplication.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianengine.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianinputlayout.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrenderable.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianindexbuffer.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiangraphics.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiankeyboard.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianpixelshader.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiansurface.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianwindow.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrendertarget.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantopology.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianviewport.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianfiledialog.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianframebuffer.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantimestep.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianconverter.obj
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\vc143.pdb
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianscene.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianuuid.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianapplication.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiandepthstencil.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianengine.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianexception.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrasterizerstate.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianmesh.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianinput.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantexture.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiantimepoint.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianmouse.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardiansampler.obj
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardianrenderable.obj
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\vc143.idb
-d:\development\c++\nature studio\guardian engine\build\debug\x86_64\guardian engine.dll
-d:\development\c++\nature studio\guardian engine\build\debug\x86_64\guardian engine.pdb
-d:\development\c++\nature studio\guardian engine\build\debug\x86_64\guardian engine.lib
-d:\development\c++\nature studio\guardian engine\build\debug\x86_64\guardian engine.exp
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.ilk
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\vc143.pdb
+d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\cl.14328.write.1.tlog
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\cl.command.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\cl.items.tlog
 d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\cl.read.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\cl.write.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\link.command.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\link.read.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\link.secondary.1.tlog
-d:\development\c++\nature studio\guardian engine\guardian engine\immediate\debug\x86_64\guardian engine.tlog\link.write.1.tlog

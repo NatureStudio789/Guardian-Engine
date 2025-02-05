@@ -1,0 +1,29 @@
+Scene: Unnamed
+Entities:
+  - Entity: 1102962296484071954
+    Tag Component:
+      Tag: Main Camera
+    Transform Component:
+      Position: [0, 5.64900017, -11.9099998]
+      Rotation: [7.25, -2.59899998, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [0, 5.64900017, -11.9099998]
+      Direction: [7.25, -2.59899998, 0]
+      Is Freelook: true
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.90206897
+        NearZ: 0.100000001
+        FarZ: 10000
+  - Entity: 13546964816139194417
+    Tag Component:
+      Tag: Nanosuit
+    Transform Component:
+      Position: [0, 1.005, 0.479999989]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Script Component:
+      Class: Guardian.Player
+    Model Component:
+      File Path: Resources/Models/Nanosuit/Nanosuit.obj

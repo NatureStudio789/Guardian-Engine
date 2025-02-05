@@ -37,11 +37,18 @@ namespace guardian
 			GuardianColor((x << 24u) | col.ColorValue)
 		{
 		}
+
 		GuardianColor& operator =(GuardianColor color)
 		{
 			ColorValue = color.ColorValue;
 			return *this;
 		}
+
+		operator UINT()
+		{
+			return this->ColorValue;
+		}
+
 		constexpr unsigned char GetX() const
 		{
 			return ColorValue >> 24u;
@@ -111,7 +118,7 @@ namespace guardian
 		static std::shared_ptr<GuardianSurface> CreateNewSurface(GString imageFileName);
 
 	private:
-		ScratchImage SurfaceImage;
+		DirectX::ScratchImage SurfaceImage;
 	};
 }
 

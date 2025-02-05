@@ -9,14 +9,11 @@ namespace guardian
 	{
 		this->EngineProgram = null;
 		this->EngineEventProcesser = std::make_unique<GuardianEventProcesser>();
+		this->EngineScene = std::make_shared<GuardianScene>();
 	}
 
 	GuardianEngine::~GuardianEngine()
 	{
-		if (this->EngineProgram)
-		{
-			delete this->EngineProgram;
-		}
 		this->EngineProgram = null;
 	}
 
@@ -33,6 +30,8 @@ namespace guardian
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
 
+		GuardianScriptEngine::InitializeScriptEngine();
+
 		this->EngineProgram->Initialize();
 	}
 
@@ -42,16 +41,34 @@ namespace guardian
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianApplication::ApplicationInstance->UpdateApplication();
-			GuardianRenderer::UpdateRenderer();
+			switch (this->EngineScene->GetSceneState())
+			{
+				case GE_SCENE_EDIT:
+				{
+					this->EngineScene->UpdateEditScene(16.666f);
+					break;
+				}
+
+				case GE_SCENE_RUNTIME:
+				{
+					this->EngineScene->UpdateRuntimeScene();
+					break;
+				}
+			}
 			this->EngineProgram->Update();
 
 			GuardianApplication::ApplicationInstance->BeginRendering({0.0f, 0.0f, 0.0f});
 			{
-				GuardianRenderer::RenderScene(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
+				GuardianRenderer::RenderScene();
 
 				this->EngineProgram->Render();
 			}
 			GuardianApplication::ApplicationInstance->EndUpRendering();
 		}
+	}
+
+	std::shared_ptr<GuardianScene> GuardianEngine::GetScene() noexcept
+	{
+		return this->EngineScene;
 	}
 }

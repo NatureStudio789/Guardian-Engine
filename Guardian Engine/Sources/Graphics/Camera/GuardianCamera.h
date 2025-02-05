@@ -12,6 +12,7 @@ namespace guardian
 			this->Position = { 0.0f, 0.0f, 0.0f };
 			this->Direction = { 0.0f, 0.0f, 0.0f };
 			this->Projection = GuardianPerspectiveProjection();
+			this->IsFreelook = true;
 		}
 		GuardianCamera(const GVector3& position, const GVector3& direction,
 			const GuardianPerspectiveProjection& projection)
@@ -19,12 +20,14 @@ namespace guardian
 			this->Position = position;
 			this->Direction = direction;
 			this->Projection = projection;
+			this->IsFreelook = true;
 		}
 		GuardianCamera(const GuardianCamera& other)
 		{
 			this->Position = other.Position;
 			this->Direction = other.Direction;
 			this->Projection = other.Projection;
+			this->IsFreelook = other.IsFreelook;
 		}
 		~GuardianCamera() = default;
 
@@ -40,8 +43,9 @@ namespace guardian
 
 		const XMMATRIX GetViewMatrix() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x, 
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) * 
+				XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) * 
+				XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
 
 			XMVECTOR CameraTarget = XMVector3TransformCoord(XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f), RotationMatrix);
 			XMFLOAT3 CameraPosition = XMFLOAT3(this->Position.x, this->Position.y, this->Position.z);
@@ -59,8 +63,19 @@ namespace guardian
 
 		const GVector3 GetForwardVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Forward = { 0.0f, 0.0f, 1.0f };
 			XMVECTOR ForwardVector = XMVector3TransformCoord(XMLoadFloat3(&Forward), RotationMatrix);
@@ -71,8 +86,19 @@ namespace guardian
 
 		const GVector3 GetBackwardVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Backward = { 0.0f, 0.0f, -1.0f };
 			XMVECTOR BackwardVector = XMVector3TransformCoord(XMLoadFloat3(&Backward), RotationMatrix);
@@ -83,8 +109,19 @@ namespace guardian
 
 		const GVector3 GetLeftVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Left = { -1.0f, 0.0f, 0.0f };
 			XMVECTOR LeftVector = XMVector3TransformCoord(XMLoadFloat3(&Left), RotationMatrix);
@@ -95,8 +132,19 @@ namespace guardian
 
 		const GVector3 GetRightVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Right = { 1.0f, 0.0f, 0.0f };
 			XMVECTOR RightVector = XMVector3TransformCoord(XMLoadFloat3(&Right), RotationMatrix);
@@ -107,8 +155,19 @@ namespace guardian
 
 		const GVector3 GetUpVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Up = { 0.0f, 1.0f, 0.0f };
 
@@ -120,8 +179,19 @@ namespace guardian
 
 		const GVector3 GetDownVector() const noexcept
 		{
-			XMMATRIX RotationMatrix = XMMatrixRotationRollPitchYaw(this->Direction.x,
-				this->Direction.y, this->Direction.z);
+			XMMATRIX RotationMatrix;
+			if (this->IsFreelook)
+			{
+				RotationMatrix = XMMatrixRotationX((this->Direction.x / 360.0f) * XM_2PI) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
+			else
+			{
+				RotationMatrix = XMMatrixRotationX(0.0f) *
+					XMMatrixRotationY((this->Direction.y / 360.0f) * XM_2PI) *
+					XMMatrixRotationZ((this->Direction.z / 360.0f) * XM_2PI);
+			}
 
 			XMFLOAT3 Down = { 0.0f, -1.0f, 0.0f };
 			XMVECTOR DownVector = XMVector3TransformCoord(XMLoadFloat3(&Down), RotationMatrix);
@@ -133,6 +203,7 @@ namespace guardian
 		GVector3 Position;
 		GVector3 Direction;
 		GuardianPerspectiveProjection Projection;
+		bool IsFreelook;
 	};
 }
 
