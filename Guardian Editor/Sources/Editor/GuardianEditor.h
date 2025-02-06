@@ -29,8 +29,6 @@ namespace guardian
 		std::map<GString, std::shared_ptr<GuardianPanel>> EditorPanelList;
 		std::shared_ptr<GuardianScenePanel> EditorScenePanel;
 		std::shared_ptr<GuardianSceneHierarchyPanel> EditorSceneHierarchyPanel;
-
-		std::shared_ptr<GuardianEntity> Nanosuit;
 	};
 }
 

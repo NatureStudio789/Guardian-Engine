@@ -8,27 +8,27 @@ namespace guardian
 	{
 		this->PanelName = "Scene Hierarchy";
 		this->PanelScene = null;
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
 	{
 		this->PanelName = "Scene Hierarchy";
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 		this->SetScene(scene);
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(const GuardianSceneHierarchyPanel& other)
 	{
 		this->PanelScene = other.PanelScene;
-		this->SelectedEntity = other.SelectedEntity;
+		this->SelectedEntityId = other.SelectedEntityId;
 		this->PanelName = other.PanelName;
 	}
 
 	GuardianSceneHierarchyPanel::~GuardianSceneHierarchyPanel()
 	{
 		this->PanelScene = null;
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 	}
 
 	void GuardianSceneHierarchyPanel::SetScene(GuardianScene* scene)
@@ -59,7 +59,7 @@ namespace guardian
 
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			{
-				this->SelectedEntity = null;
+				this->SelectedEntityId = 0;
 			}
 
 			if (ImGui::BeginPopupContextWindow(0, ImGuiPopupFlags_MouseButtonRight | ImGuiPopupFlags_NoOpenOverItems))
@@ -86,20 +86,20 @@ namespace guardian
 		}
 	}
 
-	GuardianEntity* GuardianSceneHierarchyPanel::GetSelectedEntity()
+	GuardianUUID GuardianSceneHierarchyPanel::GetSelectedEntityId()
 	{
-		return this->SelectedEntity;
+		return this->SelectedEntityId;
 	}
 
 	bool GuardianSceneHierarchyPanel::RenderEntityNode(GuardianEntity* entity)
 	{
-		ImGuiTreeNodeFlags flags = ((this->SelectedEntity == entity) ? ImGuiTreeNodeFlags_Selected : 0) | 
+		ImGuiTreeNodeFlags flags = ((this->SelectedEntityId == entity->GetEntityId()) ? ImGuiTreeNodeFlags_Selected : 0) |
 			ImGuiTreeNodeFlags_OpenOnArrow;
 		bool opened = ImGui::TreeNodeEx((void*)(uint64_t)(uint32_t)(*entity), flags,
 			entity->GetComponent<GuardianTagComponent>().Tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			this->SelectedEntity = entity;
+			this->SelectedEntityId = entity->GetEntityId();
 		}
 
 		bool EntityDeleted = false;
@@ -122,7 +122,7 @@ namespace guardian
 
 		if (EntityDeleted)
 		{
-			this->SelectedEntity = null;
+			this->SelectedEntityId = 0;
 			return false;
 		}
 		else
@@ -133,16 +133,15 @@ namespace guardian
 
 	void GuardianSceneHierarchyPanel::RenderEntityComponents()
 	{
-		if (this->SelectedEntity)
+		if (auto SelectedEntity = this->PanelScene->GetEntity(this->SelectedEntityId))
 		{
-			if (this->SelectedEntity->HasComponent<GuardianTagComponent>())
+			if (SelectedEntity->HasComponent<GuardianTagComponent>())
 			{
-				auto& tag = this->SelectedEntity->GetComponent<GuardianTagComponent>().Tag;
+				auto& tag = SelectedEntity->GetComponent<GuardianTagComponent>().Tag;
 
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianTagComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Tag Component"))
 				{
-
 					char Buffer[256];
 					memset(Buffer, 0, sizeof(Buffer));
 					strcpy_s(Buffer, tag.c_str());
@@ -157,9 +156,9 @@ namespace guardian
 				ImGui::Separator();
 			}
 
-			if (this->SelectedEntity->HasComponent<GuardianTransformComponent>())
+			if (SelectedEntity->HasComponent<GuardianTransformComponent>())
 			{
-				auto& transform = this->SelectedEntity->GetComponent<GuardianTransformComponent>();
+				auto& transform = SelectedEntity->GetComponent<GuardianTransformComponent>();
 
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianTransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Transform Component"))
@@ -177,7 +176,7 @@ namespace guardian
 						transform.Rotation = GVector3(rotation[0], rotation[1], rotation[2]);
 					}
 
-					if (!this->SelectedEntity->HasComponent<GuardianCameraComponent>())
+					if (!SelectedEntity->HasComponent<GuardianCameraComponent>())
 					{
 						float scale[3] = { transform.Scale.x, transform.Scale.y, transform.Scale.z };
 						if (ImGui::DragFloat3("Scale", scale, 0.1f, 0.0f))
@@ -192,9 +191,9 @@ namespace guardian
 				ImGui::Separator();
 			}
 
-			if (this->SelectedEntity->HasComponent<GuardianCameraComponent>()) 
+			if (SelectedEntity->HasComponent<GuardianCameraComponent>()) 
 			{
-				auto& camera = this->SelectedEntity->GetComponent<GuardianCameraComponent>();
+				auto& camera = SelectedEntity->GetComponent<GuardianCameraComponent>();
 
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianCameraComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Camera Component"))
@@ -212,9 +211,9 @@ namespace guardian
 				ImGui::Separator();
 			}
 
-			if (this->SelectedEntity->HasComponent<GuardianScriptComponent>())
+			if (SelectedEntity->HasComponent<GuardianScriptComponent>())
 			{
-				auto& script = this->SelectedEntity->GetComponent<GuardianScriptComponent>();
+				auto& script = SelectedEntity->GetComponent<GuardianScriptComponent>();
 
 				bool IsScriptExists = GuardianScriptEngine::IsEntityClassExists(script.ClassName);
 
@@ -242,9 +241,9 @@ namespace guardian
 				}
 			}
 
-			if (this->SelectedEntity->HasComponent<GuardianModelComponent>())
+			if (SelectedEntity->HasComponent<GuardianModelComponent>())
 			{
-				auto& model = this->SelectedEntity->GetComponent<GuardianModelComponent>();
+				auto& model = SelectedEntity->GetComponent<GuardianModelComponent>();
 
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianModelComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Model Component"))
@@ -264,28 +263,28 @@ namespace guardian
 			{
 				if (ImGui::MenuItem("Transform Component"))
 				{
-					this->PanelScene->SceneEntityList[this->SelectedEntity->GetEntityHandle()]->
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 						AddComponent<GuardianTransformComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Camera Component"))
 				{
-					this->PanelScene->SceneEntityList[this->SelectedEntity->GetEntityHandle()]->
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 						AddComponent<GuardianCameraComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Script Component"))
 				{
-					this->PanelScene->SceneEntityList[this->SelectedEntity->GetEntityHandle()]->
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 						AddComponent<GuardianScriptComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Model Component"))
 				{
-					this->PanelScene->SceneEntityList[this->SelectedEntity->GetEntityHandle()]->
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 						AddComponent<GuardianModelComponent>();
 					ImGui::CloseCurrentPopup();
 				}

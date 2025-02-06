@@ -17,14 +17,14 @@ namespace guardian
 
 		void Render() override;
 
-		GuardianEntity* GetSelectedEntity();
+		GuardianUUID GetSelectedEntityId();
 
 	private:
 		bool RenderEntityNode(GuardianEntity* entity);
 		void RenderEntityComponents();
 
 		GuardianScene* PanelScene;
-		GuardianEntity* SelectedEntity;
+		GuardianUUID SelectedEntityId;
 
 		friend class GuardianEditor;
 	};

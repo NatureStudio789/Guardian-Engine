@@ -22,6 +22,7 @@ namespace guardian
 		static const bool IsEntityClassExists(const GString& fullName);
 		static std::shared_ptr<GuardianScene> GetSceneContext();
 		static std::unordered_map<GString, std::shared_ptr<GuardianScriptClass>> GetEntityClassList();
+		static MonoAssembly* GetCoreAssembly();
 
 	private:
 		static char* ReadFileBytes(const GString& filePath, unsigned int* outSize);

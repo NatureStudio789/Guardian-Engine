@@ -13,6 +13,24 @@ namespace guardian
 	std::shared_ptr<GuardianScene> GuardianScriptEngine::SceneContext;
 
 
+	static bool EntityHasComponent(unsigned long long uuid, MonoReflectionType* componentType)
+	{
+		auto entity = GuardianScriptEngine::GetSceneContext()->GetEntity(uuid);
+		if (!entity)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Cannot find the entity with this UUID!");
+		}
+
+		MonoType* monoComponentType = mono_reflection_type_get_type(componentType);
+		const auto& HasComponentFunctionList = GuardianScriptRegistry::GetEntityHasComponentFunctionList();
+		if (HasComponentFunctionList.find(monoComponentType) == HasComponentFunctionList.end())
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Cannot find this type of component in engine!");
+		}
+
+		return HasComponentFunctionList.at(monoComponentType)(entity);
+	}
+
 	static void EntityGetTranslation(unsigned long long uuid, GVector3* translation)
 	{
 		auto entity = GuardianScriptEngine::GetSceneContext()->GetEntity(uuid);
@@ -145,6 +163,11 @@ namespace guardian
 	std::unordered_map<GString, std::shared_ptr<GuardianScriptClass>> GuardianScriptEngine::GetEntityClassList()
 	{
 		return EntityClassList;
+	}
+
+	MonoAssembly* GuardianScriptEngine::GetCoreAssembly()
+	{
+		return CoreAssembly;
 	}
 
 	char* GuardianScriptEngine::ReadFileBytes(const GString& filePath, unsigned int* outSize)

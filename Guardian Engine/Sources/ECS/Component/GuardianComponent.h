@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANCOMPONENT_H_
 #define _GE_GUARDIANCOMPONENT_H_
-#include "../../Graphics/Renderer/GuardianRenderer.h"
+#include "../../Physics/GuardianPhysicsEngine.h"
 
 namespace guardian
 {

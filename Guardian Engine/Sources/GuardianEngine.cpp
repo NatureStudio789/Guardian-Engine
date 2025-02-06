@@ -28,8 +28,9 @@ namespace guardian
 		GuardianWindowProperties EngineWindowProperties;
 		EngineWindowProperties.SetWindowResolution((int)(GetSystemMetrics(SM_CXSCREEN) * 0.8), (int)(GetSystemMetrics(SM_CYSCREEN) * 0.8));
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
-		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
 
+		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
+		GuardianPhysicsEngine::InitializePhysicsEngine(GE_GRAVITY_EARTH);
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		this->EngineProgram->Initialize();
@@ -41,20 +42,7 @@ namespace guardian
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianApplication::ApplicationInstance->UpdateApplication();
-			switch (this->EngineScene->GetSceneState())
-			{
-				case GE_SCENE_EDIT:
-				{
-					this->EngineScene->UpdateEditScene(16.666f);
-					break;
-				}
-
-				case GE_SCENE_RUNTIME:
-				{
-					this->EngineScene->UpdateRuntimeScene();
-					break;
-				}
-			}
+			this->EngineScene->UpdateScene(16.6667f);
 			this->EngineProgram->Update();
 
 			GuardianApplication::ApplicationInstance->BeginRendering({0.0f, 0.0f, 0.0f});

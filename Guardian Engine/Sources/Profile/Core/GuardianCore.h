@@ -29,8 +29,10 @@
 #include <commdlg.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
+#include <PhysX/PxPhysicsAPI.h>
 using namespace Microsoft;
 using namespace DirectX;
+using namespace physx;
 
 #ifdef GE_PLATFORM_WINDOWS
 	

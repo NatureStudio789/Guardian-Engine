@@ -24,32 +24,27 @@ namespace guardian
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
-		ImGui::StyleColorsDark();
-
 		ImGuiStyle& style = ImGui::GetStyle();
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			style.WindowRounding = 0.0f;
-			style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+		style.WindowRounding = 0.0f;
+		style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
 
-			style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
-			style.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
-			style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+		style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
+		style.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);
+		style.Colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-			style.Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
-			style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
-			style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
+		style.Colors[ImGuiCol_FrameBg] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
+		style.Colors[ImGuiCol_FrameBgHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
+		style.Colors[ImGuiCol_FrameBgActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
 
-			style.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
-			style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
-			style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
+		style.Colors[ImGuiCol_Header] = ImVec4(0.2f, 0.205f, 0.201f, 1.0f);
+		style.Colors[ImGuiCol_HeaderHovered] = ImVec4(0.3f, 0.305f, 0.301f, 1.0f);
+		style.Colors[ImGuiCol_HeaderActive] = ImVec4(0.15f, 0.1505f, 0.1501f, 1.0f);
 
-			style.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
-			style.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
-			style.Colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.2805f, 0.281f, 1.0f);
-			style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
-			style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
-		}
+		style.Colors[ImGuiCol_Tab] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+		style.Colors[ImGuiCol_TabHovered] = ImVec4(0.38f, 0.3805f, 0.381f, 1.0f);
+		style.Colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.2805f, 0.281f, 1.0f);
+		style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
+		style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
 		
 		ImGui_ImplWin32_Init(GuardianApplication::ApplicationInstance->GetApplicationWindowHandle());
 		ImGui_ImplDX11_Init(
@@ -60,17 +55,12 @@ namespace guardian
 
 		this->EditorScenePanel = std::make_shared<GuardianScenePanel>(GuardianEngine::EngineInstance->EngineScene.get());
 		this->AddPanelToEditor(this->EditorScenePanel);
+
 		this->EditorSceneHierarchyPanel = 
 			std::make_shared<GuardianSceneHierarchyPanel>(GuardianEngine::EngineInstance->EngineScene.get());
 		this->AddPanelToEditor(this->EditorSceneHierarchyPanel);
-		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 
-#if 0
-		this->Nanosuit = GuardianEngine::EngineInstance->GetScene()->CreateEntity("Nanosuit");
-		this->Nanosuit->AddComponent<GuardianTransformComponent>();
-		this->Nanosuit->AddComponent<GuardianModelComponent>().InitializeModel(
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Resources/Models/Nanosuit/Nanosuit.obj");
-#endif
+		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 	}
 
 	void GuardianEditor::RenderDockspace()
@@ -103,7 +93,7 @@ namespace guardian
 				{
 					GuardianEngine::EngineInstance->GetScene()->RemoveAllEntity();
 					GuardianEngine::EngineInstance->GetScene()->CurrentScenePath = "";
-					this->EditorSceneHierarchyPanel->SelectedEntity = null;
+					this->EditorSceneHierarchyPanel->SelectedEntityId = 0;
 					GuardianEngine::EngineInstance->GetScene() = std::make_shared<GuardianScene>();
 				}
 
@@ -157,7 +147,7 @@ namespace guardian
 		{
 			panel.second->Render();
 		}
-		this->EditorScenePanel->SetSelectedEntity(this->EditorSceneHierarchyPanel->GetSelectedEntity());
+		this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
 
 		ImGui::Render();
 		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsGUIFramebuffer()->ApplyFramebuffer(
@@ -180,6 +170,7 @@ namespace guardian
 		{
 			panel.second.reset();
 		}
+		this->EditorPanelList.clear();
 	}
 
 	LRESULT GuardianEditor::EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

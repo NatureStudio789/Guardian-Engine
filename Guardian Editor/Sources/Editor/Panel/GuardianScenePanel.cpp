@@ -6,7 +6,7 @@ namespace guardian
 	GuardianScenePanel::GuardianScenePanel()
 	{
 		this->PanelName = "Scene";
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
 		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -17,7 +17,7 @@ namespace guardian
 	{
 		this->PanelName = "Scene";
 		this->PanelScene = scene;
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
 		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -27,7 +27,7 @@ namespace guardian
 	GuardianScenePanel::GuardianScenePanel(const GuardianScenePanel& other)
 	{
 		this->PanelName = other.PanelName;
-		this->SelectedEntity = other.SelectedEntity;
+		this->SelectedEntityId = other.SelectedEntityId;
 		this->PlayButtonTexture = other.PlayButtonTexture;
 		this->StopButtonTexture = other.StopButtonTexture;
 	}
@@ -35,12 +35,12 @@ namespace guardian
 	GuardianScenePanel::~GuardianScenePanel()
 	{
 		this->PanelScene = null;
-		this->SelectedEntity = null;
+		this->SelectedEntityId = 0;
 	}
 
-	void GuardianScenePanel::SetSelectedEntity(GuardianEntity* entity)
+	void GuardianScenePanel::SetSelectedEntityId(GuardianUUID entityId)
 	{
-		this->SelectedEntity = entity;
+		this->SelectedEntityId = entityId;
 	}
 
 	void GuardianScenePanel::Render()

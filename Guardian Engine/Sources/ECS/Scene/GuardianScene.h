@@ -25,9 +25,10 @@ namespace guardian
 		void SaveScene();
 		void SaveSceneAs(const GString& filePath);
 
+		void UpdateScene(GuardianTimestep deltaTime);
 		void UpdateEditScene(GuardianTimestep deltaTime);
-		void UpdateRuntimeScene();
 		void StartRuntime();
+		void UpdateRuntimeScene();
 		void StopRuntime();
 
 		std::shared_ptr<GuardianEntity> CreateEntity(const GString& name);
@@ -39,6 +40,9 @@ namespace guardian
 		std::shared_ptr<GuardianEntity> GetEntity(const GuardianUUID& uuid);
 
 	private:
+		void DeserializeScene(const GString& filePath);
+		void SerializeScene(const GString& filePath);
+
 		void SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
 
 		void UpdateProjectionAspect(float newWidth, float newHeight);

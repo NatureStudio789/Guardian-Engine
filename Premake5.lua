@@ -26,6 +26,7 @@ project "Guardian Engine"
     includedirs
     {
         "Setup/Includes/",
+        "Setup/Includes/PhysX/",
         "ThirdParty/yaml-cpp/include/",
         "ThirdParty/ImGuizmo/Sources/",
     }
@@ -36,6 +37,7 @@ project "Guardian Engine"
         "Setup/Libraries/Assimp/%{cfg.buildcfg}/%{cfg.architecture}/",
         "Setup/Libraries/DirectXTex/%{cfg.buildcfg}/",
         "Setup/Libraries/mono/%{cfg.buildcfg}/",
+        "Setup/Libraries/PhysX/%{cfg.buildcfg}/",
     }
 
     links
@@ -54,12 +56,27 @@ project "Guardian Engine"
         "ole32",
         "windowscodecs",
         "uuid",
-        "ws2_32.lib",
-        "winmm.lib",
-        "version.lib",
-        "bcrypt.lib",
+        "ws2_32",
+        "winmm",
+        "version",
+        "bcrypt",
 
-        "libmono-static-sgen.lib"
+        "libmono-static-sgen",
+
+        "LowLevel_static_64",
+        "LowLevelAABB_static_64",
+        "LowLevelDynamics_static_64",
+        "PhysX_64",
+        "PhysXCharacterKinematic_static_64",
+        "PhysXCommon_64",
+        "PhysXCooking_64",
+        "PhysXExtensions_static_64",
+        "PhysXFoundation_64",
+        "PhysXPvdSDK_static_64",
+        "PhysXTask_static_64",
+        "PhysXVehicle_static_64",
+        "PhysXVehicle2_static_64",
+        "PVDRuntime_64"
     }
 
     defines
@@ -123,6 +140,7 @@ project "Guardian Editor"
         "ThirdParty/yaml-cpp/include/",
         "ThirdParty/ImGuizmo/Sources/",
         "Setup/Includes/",
+        "Setup/Includes/PhysX/",
     }
 
     links

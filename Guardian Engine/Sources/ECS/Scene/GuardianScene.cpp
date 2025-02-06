@@ -127,65 +127,9 @@ namespace guardian
 
 		GString sceneFilePath = GuardianFileDialog::OpenFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 
-		std::ifstream SceneFile(sceneFilePath);
-		std::stringstream SceneFileStringStream;
-		SceneFileStringStream << SceneFile.rdbuf();
+		this->DeserializeScene(sceneFilePath);
 
-		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
-		if (!SceneData["Scene"])
-		{
-			throw GUARDIAN_ERROR_EXCEPTION("Failed to load scene : '" + sceneFilePath + "' !");
-		}
 		this->CurrentScenePath = sceneFilePath;
-
-		auto entities = SceneData["Entities"];
-		if (entities)
-		{
-			for (auto entity : entities)
-			{
-				auto TagComponent = entity["Tag Component"];
-				GString name = TagComponent["Tag"].as<GString>();
-				auto LoadedEntity = this->CreateEntity(name, GuardianUUID(entity["Entity"].as<uint64_t>()));
-
-				auto TransformComponent = entity["Transform Component"];
-				if (TransformComponent)
-				{
-					auto& Transform = LoadedEntity->AddComponent<GuardianTransformComponent>();
-					Transform.Position = TransformComponent["Position"].as<GVector3>();
-					Transform.Rotation = TransformComponent["Rotation"].as<GVector3>();
-					Transform.Scale = TransformComponent["Scale"].as<GVector3>();
-				}
-
-				auto CameraComponent = entity["Camera Component"];
-				if (CameraComponent)
-				{
-					auto& Camera = LoadedEntity->AddComponent<GuardianCameraComponent>();
-					Camera.Position = CameraComponent["Position"].as<GVector3>();
-					Camera.Direction = CameraComponent["Direction"].as<GVector3>();
-					Camera.IsFreelook = CameraComponent["Is Freelook"].as<bool>();
-					auto Projection = CameraComponent["Perspective Projection"];
-					Camera.Projection.FOV = Projection["FOV"].as<float>();
-					Camera.Projection.Aspect = Projection["Aspect"].as<float>();
-					Camera.Projection.NearZ = Projection["NearZ"].as<float>();
-					Camera.Projection.FarZ = Projection["FarZ"].as<float>();
-				}
-
-				auto ScriptComponent = entity["Script Component"];
-				if (ScriptComponent)
-				{
-					auto& Script = LoadedEntity->AddComponent<GuardianScriptComponent>();
-					Script.ClassName = ScriptComponent["Class"].as<GString>();
-				}
-
-				auto ModelComponent = entity["Model Component"];
-				if (ModelComponent)
-				{
-					auto& Model = LoadedEntity->AddComponent<GuardianModelComponent>();
-					auto ModelFilePath = ModelComponent["File Path"].as<GString>();
-					Model.InitializeModel(graphics, ModelFilePath);
-				}
-			}
-		}
 	}
 
 	void GuardianScene::InitializeSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
@@ -197,115 +141,44 @@ namespace guardian
 
 		this->RemoveAllEntity();
 
-		std::ifstream SceneFile(sceneFilePath);
-		std::stringstream SceneFileStringStream;
-		SceneFileStringStream << SceneFile.rdbuf();
+		this->DeserializeScene(sceneFilePath);
 
-		if (std::filesystem::path(sceneFilePath).extension() != ".gscene")
-		{
-			return;
-		}
-
-		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
-		if (!SceneData["Scene"])
-		{
-			throw GUARDIAN_ERROR_EXCEPTION(("Failed to load scene : '" + sceneFilePath + "' !").c_str());
-		}
 		this->CurrentScenePath = sceneFilePath;
-
-		auto entities = SceneData["Entities"];
-		if (entities)
-		{
-			for (auto entity : entities)
-			{
-				auto TagComponent = entity["Tag Component"];
-				GString name = TagComponent["Tag"].as<GString>();
-				auto LoadedEntity = this->CreateEntity(name, GuardianUUID(entity["Entity"].as<uint64_t>()));
-
-				auto TransformComponent = entity["Transform Component"];
-				if (TransformComponent)
-				{
-					auto& Transform = LoadedEntity->AddComponent<GuardianTransformComponent>();
-					Transform.Position = TransformComponent["Position"].as<GVector3>();
-					Transform.Rotation = TransformComponent["Rotation"].as<GVector3>();
-					Transform.Scale = TransformComponent["Scale"].as<GVector3>();
-				}
-
-				auto CameraComponent = entity["Camera Component"];
-				if (CameraComponent)
-				{
-					auto& Camera = LoadedEntity->AddComponent<GuardianCameraComponent>();
-					Camera.Position = CameraComponent["Position"].as<GVector3>();
-					Camera.Direction = CameraComponent["Direction"].as<GVector3>();
-					Camera.IsFreelook = CameraComponent["Is Freelook"].as<bool>();
-					auto Projection = CameraComponent["Perspective Projection"];
-					Camera.Projection.FOV = Projection["FOV"].as<float>();
-					Camera.Projection.Aspect = Projection["Aspect"].as<float>();
-					Camera.Projection.NearZ = Projection["NearZ"].as<float>();
-					Camera.Projection.FarZ = Projection["FarZ"].as<float>();
-				}
-
-				auto ScriptComponent = entity["Script Component"];
-				if (ScriptComponent)
-				{
-					auto& Script = LoadedEntity->AddComponent<GuardianScriptComponent>();
-					Script.ClassName = ScriptComponent["Class"].as<GString>();
-				}
-
-				auto ModelComponent = entity["Model Component"];
-				if (ModelComponent)
-				{
-					auto& Model = LoadedEntity->AddComponent<GuardianModelComponent>();
-					auto ModelFilePath = ModelComponent["File Path"].as<GString>();
-					Model.InitializeModel(graphics, ModelFilePath);
-				}
-			}
-		}
 	}
 
 	void GuardianScene::SaveScene()
 	{
-		YAML::Emitter SceneOutput;
-		SceneOutput << YAML::BeginMap;
-		SceneOutput << YAML::Key << "Scene";
-		SceneOutput << YAML::Value << "Unnamed";
-		SceneOutput << YAML::Key << "Entities";
-		SceneOutput << YAML::Value << YAML::BeginSeq;
-		for (auto& entity : this->SceneEntityList)
-		{
-			this->SaveEntity(SceneOutput, entity.second);
-		}
-		SceneOutput << YAML::EndSeq;
-		SceneOutput << YAML::EndMap;
-
 		if (this->CurrentScenePath == "")
 		{
 			this->CurrentScenePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 		}
 
-		std::ofstream SceneFileOutput(this->CurrentScenePath);
-		SceneFileOutput << SceneOutput.c_str();
+		this->SerializeScene(this->CurrentScenePath);
 	}
 
 	void GuardianScene::SaveSceneAs(const GString& filePath)
 	{
-		YAML::Emitter SceneOutput;
-		SceneOutput << YAML::BeginMap;
-		SceneOutput << YAML::Key << "Scene";
-		SceneOutput << YAML::Value << "Unnamed";
-		SceneOutput << YAML::Key << "Entities";
-		SceneOutput << YAML::Value << YAML::BeginSeq;
-		for (auto& entity : this->SceneEntityList)
-		{
-			this->SaveEntity(SceneOutput, entity.second);
-		}
-		SceneOutput << YAML::EndSeq;
-		SceneOutput << YAML::EndMap;
-
 		this->CurrentScenePath = filePath;
 
-		std::ofstream SceneFileOutput(this->CurrentScenePath);
-		SceneFileOutput << SceneOutput.c_str();
+		this->SerializeScene(this->CurrentScenePath);
+	}
+
+	void GuardianScene::UpdateScene(GuardianTimestep deltaTime)
+	{
+		switch (this->SceneState)
+		{
+			case GE_SCENE_EDIT:
+			{
+				this->UpdateEditScene(deltaTime);
+				break;
+			}
+
+			case GE_SCENE_RUNTIME:
+			{
+				this->UpdateRuntimeScene();
+				break;
+			}
+		}
 	}
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
@@ -390,60 +263,11 @@ namespace guardian
 		}
 	}
 
-	void GuardianScene::UpdateRuntimeScene()
-	{
-		{
-			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
-			view.each([this](const auto& e, GuardianNativeScriptComponent& SComponent)
-			{
-				SComponent.EntityInstance->Update(16.667f);
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianScriptComponent>();
-			view.each([this](const entt::entity& e, GuardianScriptComponent& SComponent)
-			{
-				auto& entity = this->SceneEntityList[e];
-
-				GuardianScriptEngine::OnUpdateEntity(entity);
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
-			{
-				CComponent.Position = TComponent.Position;
-				CComponent.Direction = TComponent.Rotation;
-
-				this->RuntimeCamera->Position = CComponent.Position;
-				this->RuntimeCamera->Direction = CComponent.Direction;
-				this->RuntimeCamera->IsFreelook = CComponent.IsFreelook;
-				this->RuntimeCamera->Projection.FarZ = CComponent.Projection.FarZ;
-				this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
-				this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
-			{
-					MComponent.UpdateModel(TComponent.GetTransformMatrix() *
-						this->RuntimeCamera->GetViewMatrix() *
-						this->RuntimeCamera->GetProjectionMatrix());
-
-				MComponent.SubmitToRenderer();
-			});
-		}
-	}
-
 	void GuardianScene::StartRuntime()
 	{
 		this->SceneState = GE_SCENE_RUNTIME;
+
+		this->SerializeScene("Temp.gdata");
 
 		{
 			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
@@ -468,6 +292,59 @@ namespace guardian
 		}
 	}
 
+	void GuardianScene::UpdateRuntimeScene()
+	{
+		GuardianPhysicsEngine::UpdatePhysicsSimulation(16.6667f);
+
+		{
+			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
+			view.each([this](const auto& e, GuardianNativeScriptComponent& SComponent)
+				{
+					SComponent.EntityInstance->Update(16.667f);
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianScriptComponent>();
+			view.each([this](const entt::entity& e, GuardianScriptComponent& SComponent)
+				{
+					auto& entity = this->SceneEntityList[e];
+
+					GuardianScriptEngine::OnUpdateEntity(entity);
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
+				{
+					CComponent.Position = TComponent.Position;
+					CComponent.Direction = TComponent.Rotation;
+
+					this->RuntimeCamera->Position = CComponent.Position;
+					this->RuntimeCamera->Direction = CComponent.Direction;
+					this->RuntimeCamera->IsFreelook = CComponent.IsFreelook;
+					this->RuntimeCamera->Projection.FarZ = CComponent.Projection.FarZ;
+					this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
+					this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
+				{
+					MComponent.UpdateModel(TComponent.GetTransformMatrix() *
+						this->RuntimeCamera->GetViewMatrix() *
+						this->RuntimeCamera->GetProjectionMatrix());
+
+					MComponent.SubmitToRenderer();
+				});
+		}
+	}
+
 	void GuardianScene::StopRuntime()
 	{
 		{
@@ -482,6 +359,10 @@ namespace guardian
 		{
 			GuardianScriptEngine::StopRuntime();
 		}
+
+		this->RemoveAllEntity();
+		this->DeserializeScene("Temp.gdata");
+		std::filesystem::remove("Temp.gdata");
 
 		this->SceneState = GE_SCENE_EDIT;
 	}
@@ -528,6 +409,7 @@ namespace guardian
 		{
 			this->SceneRegistry.destroy(entity.second->GetEntityHandle());
 			entity.second.reset();
+			entity.second = null;
 		}
 		this->SceneEntityList.clear();
 	}
@@ -549,6 +431,88 @@ namespace guardian
 		}
 
 		return null;
+	}
+
+	void GuardianScene::DeserializeScene(const GString& filePath)
+	{
+		std::ifstream SceneFile(filePath);
+		std::stringstream SceneFileStringStream;
+		SceneFileStringStream << SceneFile.rdbuf();
+
+		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
+		if (!SceneData["Scene"])
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to load scene : '" + filePath + "' !");
+		}
+
+		auto entities = SceneData["Entities"];
+		if (entities)
+		{
+			for (auto entity : entities)
+			{
+				auto TagComponent = entity["Tag Component"];
+				GString name = TagComponent["Tag"].as<GString>();
+				auto LoadedEntity = this->CreateEntity(name, GuardianUUID(entity["Entity"].as<uint64_t>()));
+
+				auto TransformComponent = entity["Transform Component"];
+				if (TransformComponent)
+				{
+					auto& Transform = LoadedEntity->AddComponent<GuardianTransformComponent>();
+					Transform.Position = TransformComponent["Position"].as<GVector3>();
+					Transform.Rotation = TransformComponent["Rotation"].as<GVector3>();
+					Transform.Scale = TransformComponent["Scale"].as<GVector3>();
+				}
+
+				auto CameraComponent = entity["Camera Component"];
+				if (CameraComponent)
+				{
+					auto& Camera = LoadedEntity->AddComponent<GuardianCameraComponent>();
+					Camera.Position = CameraComponent["Position"].as<GVector3>();
+					Camera.Direction = CameraComponent["Direction"].as<GVector3>();
+					Camera.IsFreelook = CameraComponent["Is Freelook"].as<bool>();
+					auto Projection = CameraComponent["Perspective Projection"];
+					Camera.Projection.FOV = Projection["FOV"].as<float>();
+					Camera.Projection.Aspect = Projection["Aspect"].as<float>();
+					Camera.Projection.NearZ = Projection["NearZ"].as<float>();
+					Camera.Projection.FarZ = Projection["FarZ"].as<float>();
+				}
+
+				auto ScriptComponent = entity["Script Component"];
+				if (ScriptComponent)
+				{
+					auto& Script = LoadedEntity->AddComponent<GuardianScriptComponent>();
+					Script.ClassName = ScriptComponent["Class"].as<GString>();
+				}
+
+				auto ModelComponent = entity["Model Component"];
+				if (ModelComponent)
+				{
+					auto& Model = LoadedEntity->AddComponent<GuardianModelComponent>();
+					auto ModelFilePath = ModelComponent["File Path"].as<GString>();
+					Model.InitializeModel(
+						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), ModelFilePath);
+				}
+			}
+		}
+	}
+
+	void GuardianScene::SerializeScene(const GString& filePath)
+	{
+		YAML::Emitter SceneOutput;
+		SceneOutput << YAML::BeginMap;
+		SceneOutput << YAML::Key << "Scene";
+		SceneOutput << YAML::Value << "Unnamed";
+		SceneOutput << YAML::Key << "Entities";
+		SceneOutput << YAML::Value << YAML::BeginSeq;
+		for (auto& entity : this->SceneEntityList)
+		{
+			this->SaveEntity(SceneOutput, entity.second);
+		}
+		SceneOutput << YAML::EndSeq;
+		SceneOutput << YAML::EndMap;
+
+		std::ofstream SceneFileOutput(filePath);
+		SceneFileOutput << SceneOutput.c_str();
 	}
 
 	void GuardianScene::SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity)

@@ -14,12 +14,12 @@ namespace guardian
 		GuardianScenePanel(const GuardianScenePanel& other);
 		~GuardianScenePanel();
 
-		void SetSelectedEntity(GuardianEntity* entity);
+		void SetSelectedEntityId(GuardianUUID entityId);
 
 		void Render() override;
 
 	private:
-		GuardianEntity* SelectedEntity;
+		GuardianUUID SelectedEntityId;
 		GuardianScene* PanelScene;
 		GuardianTexture PlayButtonTexture;
 		GuardianTexture StopButtonTexture;
