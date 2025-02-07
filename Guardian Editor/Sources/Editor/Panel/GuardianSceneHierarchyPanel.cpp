@@ -289,6 +289,23 @@ namespace guardian
 					ImGui::CloseCurrentPopup();
 				}
 
+				if (ImGui::MenuItem("Box Collider Component"))
+				{
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianBoxColliderComponent>().BoxCollider->InitializeBoxCollider(GuardianBoxColliderProperties(), 
+							GuardianPhysicsMaterial(0.5f, 0.5f, 0.5f));
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Dynamic RigidBody Component"))
+				{
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody->
+						InitializeDynamicRigidBody(
+							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->GetComponent<GuardianTransformComponent>());
+					ImGui::CloseCurrentPopup();
+				}
+
 				ImGui::EndPopup();
 			}
 		}

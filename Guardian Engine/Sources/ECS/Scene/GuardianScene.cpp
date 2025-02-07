@@ -92,6 +92,9 @@ namespace guardian
 		this->ShouldOperateCamera = false;
 		this->SceneGrid = null;
 		this->SceneState = GE_SCENE_EDIT;
+
+		this->PhysicsWorld = null;
+		this->SceneGravity = GE_GRAVITY_EARTH;
 	}
 
 	GuardianScene::GuardianScene(std::shared_ptr<GuardianGraphics> graphics)
@@ -103,7 +106,10 @@ namespace guardian
 		this->RuntimeCamera = std::make_shared<GuardianCamera>();
 		this->SceneState = GE_SCENE_EDIT;
 
-		this->InitializeScene(graphics);
+		this->PhysicsWorld = null;
+		this->SceneGravity = GE_GRAVITY_EARTH;
+
+		this->LoadScene(graphics);
 	}
 
 	GuardianScene::GuardianScene(const GuardianScene& other)
@@ -114,9 +120,34 @@ namespace guardian
 		this->EditorCamera = other.EditorCamera;
 		this->RuntimeCamera = other.RuntimeCamera;
 		this->ShouldOperateCamera = other.ShouldOperateCamera;
+		this->SceneGrid = other.SceneGrid;
+
+		this->PhysicsWorld = other.PhysicsWorld;
+		this->SceneGravity = other.SceneGravity;
 	}
 
-	void GuardianScene::InitializeScene(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianScene::InitializeScene()
+	{
+		PxSceneDesc SceneDesc(GuardianPhysicsEngine::PhysicsObject->getTolerancesScale());
+		SceneDesc.gravity = PxVec3(this->SceneGravity.x, this->SceneGravity.y, this->SceneGravity.z);
+		SceneDesc.cpuDispatcher = GuardianPhysicsEngine::PhysicsCpuDispatcher;
+		SceneDesc.filterShader = PxDefaultSimulationFilterShader;
+		this->PhysicsWorld = GuardianPhysicsEngine::PhysicsObject->createScene(SceneDesc);
+		if (!this->PhysicsWorld)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics world!");
+		}
+
+		PxPvdSceneClient* DebuggerClient = this->PhysicsWorld->getScenePvdClient();
+		if (DebuggerClient)
+		{
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		}
+	}
+
+	void GuardianScene::LoadScene(std::shared_ptr<GuardianGraphics> graphics)
 	{
 		if (this->SceneState == GE_SCENE_RUNTIME)
 		{
@@ -127,12 +158,11 @@ namespace guardian
 
 		GString sceneFilePath = GuardianFileDialog::OpenFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 
-		this->DeserializeScene(sceneFilePath);
-
+		this->Deserialize(sceneFilePath);
 		this->CurrentScenePath = sceneFilePath;
 	}
 
-	void GuardianScene::InitializeSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
+	void GuardianScene::LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
 	{
 		if (this->SceneState == GE_SCENE_RUNTIME)
 		{
@@ -141,7 +171,7 @@ namespace guardian
 
 		this->RemoveAllEntity();
 
-		this->DeserializeScene(sceneFilePath);
+		this->Deserialize(sceneFilePath);
 
 		this->CurrentScenePath = sceneFilePath;
 	}
@@ -153,14 +183,14 @@ namespace guardian
 			this->CurrentScenePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 		}
 
-		this->SerializeScene(this->CurrentScenePath);
+		this->Serialize(this->CurrentScenePath);
 	}
 
 	void GuardianScene::SaveSceneAs(const GString& filePath)
 	{
 		this->CurrentScenePath = filePath;
 
-		this->SerializeScene(this->CurrentScenePath);
+		this->Serialize(this->CurrentScenePath);
 	}
 
 	void GuardianScene::UpdateScene(GuardianTimestep deltaTime)
@@ -175,7 +205,7 @@ namespace guardian
 
 			case GE_SCENE_RUNTIME:
 			{
-				this->UpdateRuntimeScene();
+				this->UpdateRuntimeScene(deltaTime);
 				break;
 			}
 		}
@@ -267,7 +297,36 @@ namespace guardian
 	{
 		this->SceneState = GE_SCENE_RUNTIME;
 
-		this->SerializeScene("Temp.gdata");
+		this->InitializeScene();
+		this->Serialize("Temp.gdata");
+
+		{
+			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianStaticRigidBodyComponent>();
+			view.each([this](const auto& e, GuardianBoxColliderComponent& BCComponet,
+				GuardianStaticRigidBodyComponent& SRBComponent)
+				{
+					if (!SRBComponent.StaticRigidBody->GetRigidBodyCollider())
+					{
+						SRBComponent.StaticRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+					}
+
+					this->PhysicsWorld->addActor(*SRBComponent.StaticRigidBody->GetRigidBodyObject());
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianDynamicRigidBodyComponent>();
+			view.each([this](const auto& e, GuardianBoxColliderComponent& BCComponet,
+				GuardianDynamicRigidBodyComponent& DRBComponent)
+				{
+					if (!DRBComponent.DynamicRigidBody->GetRigidBodyCollider())
+					{
+						DRBComponent.DynamicRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+					}
+
+					this->PhysicsWorld->addActor(*DRBComponent.DynamicRigidBody->GetRigidBodyObject());
+				});
+		}
 
 		{
 			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
@@ -292,9 +351,37 @@ namespace guardian
 		}
 	}
 
-	void GuardianScene::UpdateRuntimeScene()
+	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
-		GuardianPhysicsEngine::UpdatePhysicsSimulation(16.6667f);
+		{
+			this->PhysicsWorld->fetchResults(true);
+
+			this->PhysicsWorld->simulate(deltaTime.GetSecond());
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianStaticRigidBodyComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianStaticRigidBodyComponent& SRBComponent)
+				{
+					TComponent.Position = SRBComponent.StaticRigidBody->GetRigidBodyTransform().Position;
+					GVector4 Quaternion = SRBComponent.StaticRigidBody->GetRigidBodyTransform().Quaternion;
+					XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
+					TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianDynamicRigidBodyComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianDynamicRigidBodyComponent& DRBComponent)
+				{
+					TComponent.Position = DRBComponent.DynamicRigidBody->GetRigidBodyTransform().Position;
+					GVector4 Quaternion = DRBComponent.DynamicRigidBody->GetRigidBodyTransform().Quaternion;
+					XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
+					TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+				});
+		}
 
 		{
 			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
@@ -318,35 +405,38 @@ namespace guardian
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
-				{
-					CComponent.Position = TComponent.Position;
-					CComponent.Direction = TComponent.Rotation;
+			{
+				CComponent.Position = TComponent.Position;
+				CComponent.Direction = TComponent.Rotation;
 
-					this->RuntimeCamera->Position = CComponent.Position;
-					this->RuntimeCamera->Direction = CComponent.Direction;
-					this->RuntimeCamera->IsFreelook = CComponent.IsFreelook;
-					this->RuntimeCamera->Projection.FarZ = CComponent.Projection.FarZ;
-					this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
-					this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
-				});
+				this->RuntimeCamera->Position = CComponent.Position;
+				this->RuntimeCamera->Direction = CComponent.Direction;
+				this->RuntimeCamera->IsFreelook = CComponent.IsFreelook;
+				this->RuntimeCamera->Projection.FarZ = CComponent.Projection.FarZ;
+				this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
+				this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
+			});
 		}
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
-				{
-					MComponent.UpdateModel(TComponent.GetTransformMatrix() *
-						this->RuntimeCamera->GetViewMatrix() *
-						this->RuntimeCamera->GetProjectionMatrix());
+			{
+				MComponent.UpdateModel(TComponent.GetTransformMatrix() *
+					this->RuntimeCamera->GetViewMatrix() *
+					this->RuntimeCamera->GetProjectionMatrix());
 
-					MComponent.SubmitToRenderer();
-				});
+				MComponent.SubmitToRenderer();
+			});
 		}
 	}
 
 	void GuardianScene::StopRuntime()
 	{
+		this->PhysicsWorld->release();
+		this->PhysicsWorld = null;
+
 		{
 			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
 			view.each([this](const auto& e, GuardianNativeScriptComponent& SComponent)
@@ -361,7 +451,7 @@ namespace guardian
 		}
 
 		this->RemoveAllEntity();
-		this->DeserializeScene("Temp.gdata");
+		this->Deserialize("Temp.gdata");
 		std::filesystem::remove("Temp.gdata");
 
 		this->SceneState = GE_SCENE_EDIT;
@@ -433,17 +523,17 @@ namespace guardian
 		return null;
 	}
 
-	void GuardianScene::DeserializeScene(const GString& filePath)
+	void GuardianScene::Deserialize(const GString& filePath)
 	{
 		std::ifstream SceneFile(filePath);
 		std::stringstream SceneFileStringStream;
 		SceneFileStringStream << SceneFile.rdbuf();
-
-		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
-		if (!SceneData["Scene"])
+		if (SceneFileStringStream.str().empty())
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to load scene : '" + filePath + "' !");
 		}
+
+		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
 
 		auto entities = SceneData["Entities"];
 		if (entities)
@@ -492,11 +582,32 @@ namespace guardian
 					Model.InitializeModel(
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), ModelFilePath);
 				}
+
+				auto BoxColliderComponent = entity["Box Collider Component"];
+				if (BoxColliderComponent)
+				{
+					auto& BoxCollider = LoadedEntity->AddComponent<GuardianBoxColliderComponent>().BoxCollider;
+					auto HalfSize = BoxColliderComponent["Half Size"].as<GVector3>();
+					auto PhysicsMaterial = BoxColliderComponent["Physics Material"];
+					float StaticFriction = PhysicsMaterial["Static Friction"].as<float>();
+					float DynamicFriction = PhysicsMaterial["Dynamic Friction"].as<float>();
+					float Restitution = PhysicsMaterial["Restitution"].as<float>();
+					BoxCollider->InitializeBoxCollider({ HalfSize }, GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
+				}
+
+				auto DynamicRigidBodyComponent = entity["Dynamic RigidBody Component"];
+				if (DynamicRigidBodyComponent)
+				{
+					auto& DynamicRigidBody = LoadedEntity->AddComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody;
+					float density = DynamicRigidBodyComponent["Density"].as<float>();
+					auto& transform = LoadedEntity->GetComponent<GuardianTransformComponent>();
+					DynamicRigidBody->InitializeDynamicRigidBody(transform);
+				}
 			}
 		}
 	}
 
-	void GuardianScene::SerializeScene(const GString& filePath)
+	void GuardianScene::Serialize(const GString& filePath)
 	{
 		YAML::Emitter SceneOutput;
 		SceneOutput << YAML::BeginMap;
@@ -595,6 +706,41 @@ namespace guardian
 				entity->GetComponent<GuardianModelComponent>().GetModelFilePath();
 
 			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianBoxColliderComponent>())
+		{
+			output << YAML::Key << "Box Collider Component";
+			output << YAML::BeginMap;
+
+			output << YAML::Key << "Half Size" << YAML::Value <<
+				entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderProperties().BoxHalfsize;
+
+			auto material = entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderMaterial();
+			output << YAML::Key << "Physics Material";
+			output << YAML::BeginMap;
+			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();
+			output << YAML::Key << "Dynamic Friction" << YAML::Value << material.GetDynamicFriction();
+			output << YAML::Key << "Restitution" << YAML::Value << material.GetRestitution();
+			output << YAML::EndMap;
+
+			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianDynamicRigidBodyComponent>())
+		{
+			output << YAML::Key << "Dynamic RigidBody Component";
+			output << YAML::BeginMap;
+
+			output << YAML::Key << "Density" << YAML::Value <<
+				entity->GetComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody->GetRigidBodyDensity();
+
+			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianStaticRigidBodyComponent>())
+		{
+			output << YAML::Key << "Static RigidBody Component";
 		}
 
 		output << YAML::EndMap;

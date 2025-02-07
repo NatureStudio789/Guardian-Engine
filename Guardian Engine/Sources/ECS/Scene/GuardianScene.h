@@ -12,23 +12,25 @@ namespace guardian
 		GE_SCENE_RUNTIME,
 	};
 
-	class GUARDIAN_API GuardianScene
+	class GUARDIAN_API GuardianScene : public GuardianSerializable
 	{
 	public:
 		GuardianScene();
 		GuardianScene(std::shared_ptr<GuardianGraphics> graphics);
 		GuardianScene(const GuardianScene& other);
-		~GuardianScene() = default;
+		~GuardianScene() override = default;
 
-		void InitializeScene(std::shared_ptr<GuardianGraphics> graphics);
-		void InitializeSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath);
+		void InitializeScene();
+
+		void LoadScene(std::shared_ptr<GuardianGraphics> graphics);
+		void LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath);
 		void SaveScene();
 		void SaveSceneAs(const GString& filePath);
 
 		void UpdateScene(GuardianTimestep deltaTime);
 		void UpdateEditScene(GuardianTimestep deltaTime);
 		void StartRuntime();
-		void UpdateRuntimeScene();
+		void UpdateRuntimeScene(GuardianTimestep deltaTime);
 		void StopRuntime();
 
 		std::shared_ptr<GuardianEntity> CreateEntity(const GString& name);
@@ -40,8 +42,8 @@ namespace guardian
 		std::shared_ptr<GuardianEntity> GetEntity(const GuardianUUID& uuid);
 
 	private:
-		void DeserializeScene(const GString& filePath);
-		void SerializeScene(const GString& filePath);
+		void Deserialize(const GString& filePath) override;
+		void Serialize(const GString& filePath) override;
 
 		void SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
 
@@ -56,6 +58,9 @@ namespace guardian
 		bool ShouldOperateCamera;
 		std::shared_ptr<GuardianModel> SceneGrid;
 		std::shared_ptr<GuardianCamera> RuntimeCamera;
+
+		PxScene* PhysicsWorld;
+		GVector3 SceneGravity;
 
 		friend class GuardianEntity;
 		friend class GuardianEditor;

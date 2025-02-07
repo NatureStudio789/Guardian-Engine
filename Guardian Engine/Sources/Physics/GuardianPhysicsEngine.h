@@ -1,17 +1,20 @@
 #ifndef _GE_GUARDIANPHYSICSENGINE_H_
 #define _GE_GUARDIANPHYSICSENGINE_H_
-#include "../Graphics/Renderer/GuardianRenderer.h"
+#include "../Graphics/Camera/GuardianCamera.h"
 
 namespace guardian
 {
-#define GE_GRAVITY_EARTH GVector3(0.0f, 9.81f, 0.0f)
+#define GE_GRAVITY_EARTH GVector3(0.0f, -9.81f, 0.0f)
 
 	class GUARDIAN_API GuardianPhysicsEngine
 	{
 	public:
-		static void InitializePhysicsEngine(const GVector3& gravity);
+		static void InitializePhysicsEngine();
+		
+		static PxMaterial* CreatePhysicsMaterial(float staticFriction,
+			float dynamicFriction, float restitution);
 
-		static void UpdatePhysicsSimulation(GuardianTimestep deltaTime);
+		static PxPhysics* GetPhysicsObject() noexcept;
 
 	private:
 		static PxDefaultAllocator PhysicsAllocator;
@@ -20,7 +23,8 @@ namespace guardian
 		static PxPvd* PhysicsDebugger;
 		static PxPhysics* PhysicsObject;
 		static PxDefaultCpuDispatcher* PhysicsCpuDispatcher;
-		static PxScene* PhysicsScene;
+
+		friend class GuardianScene;
 	};
 }
 

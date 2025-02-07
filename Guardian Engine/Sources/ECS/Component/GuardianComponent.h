@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANCOMPONENT_H_
 #define _GE_GUARDIANCOMPONENT_H_
-#include "../../Physics/GuardianPhysicsEngine.h"
+#include "../../Graphics/Renderer/GuardianRenderer.h"
 
 namespace guardian
 {
@@ -79,6 +79,51 @@ namespace guardian
 	class GUARDIAN_API GuardianModelComponent : public GuardianComponent, public GuardianModel
 	{
 	public:
+	};
+
+	class GUARDIAN_API GuardianBoxColliderComponent : public GuardianComponent
+	{
+	public:
+		GuardianBoxColliderComponent()
+		{
+			this->BoxCollider = std::make_shared<GuardianBoxCollider>();
+		}
+		GuardianBoxColliderComponent(const GuardianBoxColliderComponent& other)
+		{
+			this->BoxCollider = other.BoxCollider;
+		}
+
+		std::shared_ptr<GuardianBoxCollider> BoxCollider;
+	};
+
+	class GUARDIAN_API GuardianDynamicRigidBodyComponent : public GuardianComponent
+	{
+	public:
+		GuardianDynamicRigidBodyComponent()
+		{
+			this->DynamicRigidBody = std::make_shared<GuardianDynamicRigidBody>();
+		}
+		GuardianDynamicRigidBodyComponent(const GuardianDynamicRigidBodyComponent& other)
+		{
+			this->DynamicRigidBody = other.DynamicRigidBody;
+		}
+
+		std::shared_ptr<GuardianDynamicRigidBody> DynamicRigidBody;
+	};
+
+	class GUARDIAN_API GuardianStaticRigidBodyComponent : public GuardianComponent
+	{
+	public:
+		GuardianStaticRigidBodyComponent()
+		{
+			this->StaticRigidBody = std::make_shared<GuardianStaticRigidBody>();
+		}
+		GuardianStaticRigidBodyComponent(const GuardianStaticRigidBodyComponent& other)
+		{
+			this->StaticRigidBody = other.StaticRigidBody;
+		}
+
+		std::shared_ptr<GuardianStaticRigidBody> StaticRigidBody;
 	};
 }
 

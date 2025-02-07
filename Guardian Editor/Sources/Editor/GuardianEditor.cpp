@@ -111,7 +111,7 @@ namespace guardian
 
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 				{
-					GuardianEngine::EngineInstance->GetScene()->InitializeScene(
+					GuardianEngine::EngineInstance->GetScene()->LoadScene(
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
 				}
 

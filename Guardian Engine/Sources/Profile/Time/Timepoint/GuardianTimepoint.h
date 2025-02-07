@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANTIMEPOINT_H_
 #define _GE_GUARDIANTIMEPOINT_H_
-#include "../../UUID/GuardianUUID.h"
+#include "../../Serializable/GuardianSerializable.h"
 
 namespace guardian
 {

@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERTARGET_H_
 #define _GE_GUARDIANRENDERTARGET_H_
-#include "../Camera/GuardianCamera.h"
+#include "../../Physics/RigidBody/GuardianDynamicRigidBody.h"
 
 namespace guardian
 {

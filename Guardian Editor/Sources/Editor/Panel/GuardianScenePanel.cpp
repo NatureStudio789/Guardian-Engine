@@ -77,7 +77,7 @@ namespace guardian
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCES_BROWSER_ITEM"))
 			{
-				this->PanelScene->InitializeSceneAs(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+				this->PanelScene->LoadSceneAs(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 					GString((const char*)payload->Data));
 			}
 

@@ -11,18 +11,22 @@ namespace guardian
 		{
 			this->Position = { 0.0f, 0.0f, 0.0f };
 			this->Rotation = { 0.0f, 0.0f, 0.0f };
+			this->Quaternion = { 0.0f, 0.0f, 0.0f, 1.0f };
 			this->Scale = { 1.0f, 1.0f, 1.0f };
 		}
-		GuardianTransform(const GVector3& position, const GVector3& rotation, const GVector3& scale)
+		GuardianTransform(const GVector3& position, const GVector3& rotation, 
+			const GVector4& quaternion, const GVector3& scale)
 		{
 			this->Position = position;
 			this->Rotation = rotation;
+			this->Quaternion = quaternion;
 			this->Scale = scale;
 		}
 		GuardianTransform(const GuardianTransform& other)
 		{
 			this->Position = other.Position;
 			this->Rotation = other.Rotation;
+			this->Quaternion = other.Quaternion;
 			this->Scale = other.Scale;
 		}
 
@@ -41,7 +45,8 @@ namespace guardian
 
 		const XMMATRIX GetTransformMatrix() const noexcept
 		{
-			return XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			return XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) * 
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI) *
 				XMMatrixTranslation(this->Position.x, this->Position.y, this->Position.z) *
@@ -52,7 +57,9 @@ namespace guardian
 		{
 			XMFLOAT3 Forward = { 0.0f, 0.0f, 1.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix = 
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -65,7 +72,9 @@ namespace guardian
 		{
 			XMFLOAT3 Backward = { 0.0f, 0.0f, -1.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix = 
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -78,7 +87,9 @@ namespace guardian
 		{
 			XMFLOAT3 Right = { 1.0f, 0.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix =
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -91,7 +102,9 @@ namespace guardian
 		{
 			XMFLOAT3 Left = { -1.0f, 0.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix =
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -104,7 +117,9 @@ namespace guardian
 		{
 			XMFLOAT3 Up = { 0.0f, 1.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix =
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -117,7 +132,9 @@ namespace guardian
 		{
 			XMFLOAT3 Down = { 0.0f, -1.0f, 0.0f };
 
-			XMMATRIX RotationMatrix = XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
+			XMMATRIX RotationMatrix =
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) *
+				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI);
 
@@ -128,6 +145,7 @@ namespace guardian
 
 		GVector3 Position;
 		GVector3 Rotation;
+		GVector4 Quaternion;
 		GVector3 Scale;
 	};
 }

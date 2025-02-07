@@ -30,7 +30,7 @@ namespace guardian
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
-		GuardianPhysicsEngine::InitializePhysicsEngine(GE_GRAVITY_EARTH);
+		GuardianPhysicsEngine::InitializePhysicsEngine();
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		this->EngineProgram->Initialize();
