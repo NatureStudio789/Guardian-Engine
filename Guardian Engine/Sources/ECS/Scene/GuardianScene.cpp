@@ -178,7 +178,7 @@ namespace guardian
 
 	void GuardianScene::SaveScene()
 	{
-		if (this->CurrentScenePath == "")
+		if (this->CurrentScenePath.empty())
 		{
 			this->CurrentScenePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 		}
@@ -247,7 +247,7 @@ namespace guardian
 			}
 		}
 
-		if (!this->SceneGrid.get())
+		if (!this->SceneGrid)
 		{
 			this->SceneGrid = GuardianModel::CreateNewModel(
 				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -258,6 +258,22 @@ namespace guardian
 			this->EditorCamera->GetViewMatrix() * this->EditorCamera->GetProjectionMatrix());
 
 		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianRigidBodyComponent& RBComponent)
+			{
+				if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
+				{
+					RBComponent.StaticRigidBody->SetRigidBodyTransform(TComponent);
+				}
+				else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+				{
+					RBComponent.DynamicRigidBody->SetRigidBodyTransform(TComponent);
+				}
+			});
+		}
+
+		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
 			view.each([this](const auto& e, 
 				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
@@ -265,7 +281,7 @@ namespace guardian
 				CComponent.Position = TComponent.Position;
 				CComponent.Direction = TComponent.Rotation;
 
-				if (!CComponent.CameraModel.get())
+				if (!CComponent.CameraModel)
 				{
 					CComponent.CameraModel = GuardianModel::CreateNewModel(
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -301,30 +317,36 @@ namespace guardian
 		this->Serialize("Temp.gdata");
 
 		{
-			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianStaticRigidBodyComponent>();
+			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianRigidBodyComponent>();
 			view.each([this](const auto& e, GuardianBoxColliderComponent& BCComponet,
-				GuardianStaticRigidBodyComponent& SRBComponent)
+				GuardianRigidBodyComponent& RBComponent)
 				{
-					if (!SRBComponent.StaticRigidBody->GetRigidBodyCollider())
+					if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
 					{
-						SRBComponent.StaticRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+						BCComponet.BoxCollider->InitializeBoxCollider();
+
+						if (!RBComponent.StaticRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.StaticRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+						}
+
+						RBComponent.StaticRigidBody->InitializeStaticRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.StaticRigidBody->GetRigidBodyObject());
 					}
-
-					this->PhysicsWorld->addActor(*SRBComponent.StaticRigidBody->GetRigidBodyObject());
-				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianDynamicRigidBodyComponent>();
-			view.each([this](const auto& e, GuardianBoxColliderComponent& BCComponet,
-				GuardianDynamicRigidBodyComponent& DRBComponent)
-				{
-					if (!DRBComponent.DynamicRigidBody->GetRigidBodyCollider())
+					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
 					{
-						DRBComponent.DynamicRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
-					}
+						BCComponet.BoxCollider->InitializeBoxCollider();
 
-					this->PhysicsWorld->addActor(*DRBComponent.DynamicRigidBody->GetRigidBodyObject());
+						if (!RBComponent.DynamicRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.DynamicRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+						}
+
+						RBComponent.DynamicRigidBody->InitializeDynamicRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.DynamicRigidBody->GetRigidBodyObject());
+					}
 				});
 		}
 
@@ -354,32 +376,30 @@ namespace guardian
 	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
 		{
-			this->PhysicsWorld->fetchResults(true);
-
 			this->PhysicsWorld->simulate(deltaTime.GetSecond());
+			
+			this->PhysicsWorld->fetchResults(true);
 		}
 
 		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianStaticRigidBodyComponent>();
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
 			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianStaticRigidBodyComponent& SRBComponent)
+				GuardianTransformComponent& TComponent, GuardianRigidBodyComponent& RBComponent)
 				{
-					TComponent.Position = SRBComponent.StaticRigidBody->GetRigidBodyTransform().Position;
-					GVector4 Quaternion = SRBComponent.StaticRigidBody->GetRigidBodyTransform().Quaternion;
-					XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
-					TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
-				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianDynamicRigidBodyComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianDynamicRigidBodyComponent& DRBComponent)
-				{
-					TComponent.Position = DRBComponent.DynamicRigidBody->GetRigidBodyTransform().Position;
-					GVector4 Quaternion = DRBComponent.DynamicRigidBody->GetRigidBodyTransform().Quaternion;
-					XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
-					TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+					if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						TComponent.Position = RBComponent.StaticRigidBody->GetRigidBodyTransform().Position;
+						GVector4 Quaternion = RBComponent.StaticRigidBody->GetRigidBodyTransform().Quaternion;
+						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
+						TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+					}
+					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						TComponent.Position = RBComponent.DynamicRigidBody->GetRigidBodyTransform().Position;
+						GVector4 Quaternion = RBComponent.DynamicRigidBody->GetRigidBodyTransform().Quaternion;
+						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
+						TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+					}
 				});
 		}
 
@@ -592,16 +612,29 @@ namespace guardian
 					float StaticFriction = PhysicsMaterial["Static Friction"].as<float>();
 					float DynamicFriction = PhysicsMaterial["Dynamic Friction"].as<float>();
 					float Restitution = PhysicsMaterial["Restitution"].as<float>();
-					BoxCollider->InitializeBoxCollider({ HalfSize }, GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
+					BoxCollider->SetColliderProperties({ HalfSize });
+					BoxCollider->SetColliderMaterial(GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
 				}
 
-				auto DynamicRigidBodyComponent = entity["Dynamic RigidBody Component"];
-				if (DynamicRigidBodyComponent)
+				auto RigidBodyComponent = entity["RigidBody Component"];
+				if (RigidBodyComponent)
 				{
-					auto& DynamicRigidBody = LoadedEntity->AddComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody;
-					float density = DynamicRigidBodyComponent["Density"].as<float>();
-					auto& transform = LoadedEntity->GetComponent<GuardianTransformComponent>();
-					DynamicRigidBody->InitializeDynamicRigidBody(transform);
+					auto& component = LoadedEntity->AddComponent<GuardianRigidBodyComponent>();
+					component.RigidBodyType = (GuardianRigidBodyType)RigidBodyComponent["Type"].as<unsigned int>();
+					if (component.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						auto& DynamicRigidBody = LoadedEntity->GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody;
+						float density = RigidBodyComponent["Density"].as<float>();
+						auto& transform = LoadedEntity->GetComponent<GuardianTransformComponent>();
+						DynamicRigidBody->SetRigidBodyTransform(transform);
+						DynamicRigidBody->SetRigidBodyDensity(density);
+					}
+					else if (component.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						auto& StaticRigidBody = LoadedEntity->GetComponent<GuardianRigidBodyComponent>().StaticRigidBody;
+						auto& transform = LoadedEntity->GetComponent<GuardianTransformComponent>();
+						StaticRigidBody->SetRigidBodyTransform(transform);
+					}
 				}
 			}
 		}
@@ -727,20 +760,21 @@ namespace guardian
 			output << YAML::EndMap;
 		}
 
-		if (entity->HasComponent<GuardianDynamicRigidBodyComponent>())
+		if (entity->HasComponent<GuardianRigidBodyComponent>())
 		{
-			output << YAML::Key << "Dynamic RigidBody Component";
+			output << YAML::Key << "RigidBody Component";
 			output << YAML::BeginMap;
 
-			output << YAML::Key << "Density" << YAML::Value <<
-				entity->GetComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody->GetRigidBodyDensity();
+			output << YAML::Key << "Type" << YAML::Value << (unsigned int)
+				entity->GetComponent<GuardianRigidBodyComponent>().RigidBodyType;
+
+			if (entity->GetComponent<GuardianRigidBodyComponent>().RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+			{
+				output << YAML::Key << "Density" << YAML::Value <<
+					entity->GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody->GetRigidBodyDensity();
+			}
 
 			output << YAML::EndMap;
-		}
-
-		if (entity->HasComponent<GuardianStaticRigidBodyComponent>())
-		{
-			output << YAML::Key << "Static RigidBody Component";
 		}
 
 		output << YAML::EndMap;

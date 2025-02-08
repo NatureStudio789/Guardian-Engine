@@ -8,14 +8,14 @@ namespace guardian
 	{
 	public:
 		GuardianStaticRigidBody();
-		GuardianStaticRigidBody(const GuardianTransform& transform);
 		GuardianStaticRigidBody(const GuardianStaticRigidBody& other);
 		~GuardianStaticRigidBody();
 
-		void InitializeStaticRigidBody(const GuardianTransform& transform);
+		void SetRigidBodyTransform(const GuardianTransform& transform);
 		void SetRigidBodyCollider(std::shared_ptr<GuardianCollider> collider);
+		void InitializeStaticRigidBody();
 
-		const GuardianTransform GetRigidBodyTransform() noexcept;
+		const GuardianTransform& GetRigidBodyTransform() noexcept;
 		PxRigidStatic* GetRigidBodyObject() noexcept;
 		std::shared_ptr<GuardianCollider> GetRigidBodyCollider() noexcept;
 

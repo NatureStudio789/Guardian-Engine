@@ -10,11 +10,6 @@ namespace guardian
 		this->RigidBodyDensity = 1.0f;
 	}
 
-	GuardianDynamicRigidBody::GuardianDynamicRigidBody(const GuardianTransform& transform)
-	{
-		this->InitializeDynamicRigidBody(transform);
-	}
-
 	GuardianDynamicRigidBody::GuardianDynamicRigidBody(const GuardianDynamicRigidBody& other)
 	{
 		this->RigidBodyObject = other.RigidBodyObject;
@@ -32,7 +27,21 @@ namespace guardian
 		this->RigidBodyObject = null;
 	}
 
-	void GuardianDynamicRigidBody::InitializeDynamicRigidBody(const GuardianTransform& transform)
+	void GuardianDynamicRigidBody::InitializeDynamicRigidBody()
+	{
+		this->RigidBodyObject = GuardianPhysicsEngine::GetPhysicsObject()->createRigidDynamic(
+			PxTransform(this->RigidBodyTransform.Position.x,
+				this->RigidBodyTransform.Position.y, this->RigidBodyTransform.Position.z,
+				PxQuat(this->RigidBodyTransform.Quaternion.x, 
+					this->RigidBodyTransform.Quaternion.y, 
+					this->RigidBodyTransform.Quaternion.z, 
+					this->RigidBodyTransform.Quaternion.w)));
+
+		this->RigidBodyObject->attachShape(*this->RigidBodyCollider->GetColliderShape());
+		PxRigidBodyExt::updateMassAndInertia(*this->RigidBodyObject, this->RigidBodyDensity);
+	}
+
+	void GuardianDynamicRigidBody::SetRigidBodyTransform(const GuardianTransform& transform)
 	{
 		this->RigidBodyTransform = transform;
 
@@ -42,28 +51,19 @@ namespace guardian
 		XMStoreFloat4(&Quaternion, quaternion);
 		this->RigidBodyTransform.Rotation = GVector3(0.0f, 0.0f, 0.0f);
 		this->RigidBodyTransform.Quaternion = GVector4(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w);
-
-		this->RigidBodyObject = GuardianPhysicsEngine::GetPhysicsObject()->createRigidDynamic(
-			PxTransform(this->RigidBodyTransform.Position.x,
-				this->RigidBodyTransform.Position.y, this->RigidBodyTransform.Position.z,
-				PxQuat(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w)));
 	}
 
 	void GuardianDynamicRigidBody::SetRigidBodyCollider(std::shared_ptr<GuardianCollider> collider)
 	{
 		this->RigidBodyCollider = collider;
-
-		this->RigidBodyObject->attachShape(*this->RigidBodyCollider->GetColliderShape());
 	}
 
 	void GuardianDynamicRigidBody::SetRigidBodyDensity(float density)
 	{
 		this->RigidBodyDensity = density;
-
-		PxRigidBodyExt::updateMassAndInertia(*this->RigidBodyObject, this->RigidBodyDensity);
 	}
 
-	const GuardianTransform GuardianDynamicRigidBody::GetRigidBodyTransform() noexcept
+	const GuardianTransform& GuardianDynamicRigidBody::GetRigidBodyTransform() noexcept
 	{
 		PxTransform pxtransform = this->RigidBodyObject->getGlobalPose();
 		this->RigidBodyTransform.Position = GVector3(pxtransform.p.x, pxtransform.p.y, pxtransform.p.z);

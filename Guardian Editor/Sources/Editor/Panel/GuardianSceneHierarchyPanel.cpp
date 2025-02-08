@@ -254,6 +254,100 @@ namespace guardian
 				}
 			}
 
+			if (SelectedEntity->HasComponent<GuardianBoxColliderComponent>())
+			{
+				auto& collider = SelectedEntity->GetComponent<GuardianBoxColliderComponent>().BoxCollider;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianBoxColliderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Box Collider Component"))
+				{
+					float size[3] = { collider->GetColliderProperties().BoxHalfsize.x * 2.0f,
+						collider->GetColliderProperties().BoxHalfsize.y * 2.0f,
+						collider->GetColliderProperties().BoxHalfsize.z * 2.0f };
+					if (ImGui::DragFloat3("Size", size, 0.5f, 0.0f))
+					{
+						GVector3 Halfsize = { size[0] / 2.0f, size[1] / 2.0f, size[2] / 2.0f };
+						collider->SetColliderProperties({ Halfsize });
+					}
+
+					ImGui::Separator();
+
+					ImGui::Text("Physics Material");
+
+					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							dynamicFriction,
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float restitution = collider->GetColliderMaterial().GetRestitution();
+					if (ImGui::DragFloat("Restitution", &restitution, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							restitution));
+					}
+
+					ImGui::TreePop();
+				}
+			}
+
+			if (SelectedEntity->HasComponent<GuardianRigidBodyComponent>())
+			{
+				auto& component = SelectedEntity->GetComponent<GuardianRigidBodyComponent>();
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianRigidBodyComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Rigid Body Component"))
+				{
+					static const char* types[] = { "Static", "Dynamic" };
+					int index = 0;
+					if (component.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						index = 0;
+					}
+					else if (component.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						index = 1;
+					}
+					if (ImGui::BeginCombo("Type", types[index]))
+					{
+						if (ImGui::Selectable("Static", true))
+						{
+							component.RigidBodyType = GE_RIGIDBODY_STATIC;
+						}
+						if (ImGui::Selectable("Dynamic"))
+						{
+							component.RigidBodyType = GE_RIGIDBODY_DYNAMIC;
+						}
+
+						ImGui::EndCombo();
+					}
+
+					if (component.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						float density = component.DynamicRigidBody->GetRigidBodyDensity();
+						if (ImGui::DragFloat("Density", &density, 0.1f, 0.0f))
+						{
+							component.DynamicRigidBody->SetRigidBodyDensity(density);
+						}
+					}
+
+					ImGui::TreePop();
+				}
+			}
+
 			if (ImGui::Button("Add Component"))
 			{
 				ImGui::OpenPopup("AddComponent");
@@ -291,18 +385,27 @@ namespace guardian
 
 				if (ImGui::MenuItem("Box Collider Component"))
 				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianBoxColliderComponent>().BoxCollider->InitializeBoxCollider(GuardianBoxColliderProperties(), 
-							GuardianPhysicsMaterial(0.5f, 0.5f, 0.5f));
+					auto& collider = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianBoxColliderComponent>().BoxCollider;
 					ImGui::CloseCurrentPopup();
 				}
 
-				if (ImGui::MenuItem("Dynamic RigidBody Component"))
+				if (ImGui::MenuItem("RigidBody Component"))
 				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianDynamicRigidBodyComponent>().DynamicRigidBody->
-						InitializeDynamicRigidBody(
-							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->GetComponent<GuardianTransformComponent>());
+					auto& type = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianRigidBodyComponent>().RigidBodyType;
+					if (type == GE_RIGIDBODY_STATIC)
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							GetComponent<GuardianRigidBodyComponent>().StaticRigidBody->SetRigidBodyTransform(
+								SelectedEntity->GetComponent<GuardianTransformComponent>());
+					}
+					else if (type == GE_RIGIDBODY_DYNAMIC)
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody->SetRigidBodyTransform(
+								SelectedEntity->GetComponent<GuardianTransformComponent>());
+					}
 					ImGui::CloseCurrentPopup();
 				}
 

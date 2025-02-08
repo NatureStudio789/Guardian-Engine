@@ -9,12 +9,6 @@ namespace guardian
 		this->ColliderMaterial = GuardianPhysicsMaterial();
 	}
 
-	GuardianBoxCollider::GuardianBoxCollider(
-		const GuardianBoxColliderProperties& properties, const GuardianPhysicsMaterial& material)
-	{
-		this->InitializeBoxCollider(properties, material);
-	}
-
 	GuardianBoxCollider::GuardianBoxCollider(const GuardianBoxCollider& other)
 	{
 		this->ColliderBoxShape = other.ColliderBoxShape;
@@ -24,16 +18,20 @@ namespace guardian
 
 	GuardianBoxCollider::~GuardianBoxCollider()
 	{
-		this->ColliderBoxShape->release();
-		this->ColliderBoxShape = null;
 	}
 
-	void GuardianBoxCollider::InitializeBoxCollider(
-		const GuardianBoxColliderProperties& properties, const GuardianPhysicsMaterial& material)
+	void GuardianBoxCollider::SetColliderProperties(const GuardianBoxColliderProperties& properties)
 	{
 		this->ColliderProperties = properties;
-		this->ColliderMaterial = material;
+	}
 
+	void GuardianBoxCollider::SetColliderMaterial(const GuardianPhysicsMaterial& material)
+	{
+		this->ColliderMaterial = material;
+	}
+
+	void GuardianBoxCollider::InitializeBoxCollider()
+	{
 		this->ColliderBoxShape = GuardianPhysicsEngine::GetPhysicsObject()->createShape(
 			PxBoxGeometry({ this->ColliderProperties.BoxHalfsize.x, this->ColliderProperties.BoxHalfsize.y , this->ColliderProperties.BoxHalfsize.z }),
 			*this->ColliderMaterial.GetMaterialObject(), true);

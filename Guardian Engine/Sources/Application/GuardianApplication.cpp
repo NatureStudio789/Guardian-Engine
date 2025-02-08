@@ -99,6 +99,17 @@ namespace guardian
 				break;
 			}
 
+			case WM_GETMINMAXINFO:
+			{
+				MINMAXINFO* MinMaxInfo = (MINMAXINFO*)lParam;
+
+				MinMaxInfo->ptMinTrackSize.x = 1000;
+				MinMaxInfo->ptMinTrackSize.y = 600;
+
+				return 0;
+				break;
+			}
+
 			case WM_SYSCOMMAND:
 			{
 				return DefWindowProc(hWnd, msg, wParam, lParam);

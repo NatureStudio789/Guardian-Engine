@@ -6,6 +6,15 @@ namespace guardian
 {
 	struct GUARDIAN_API GuardianBoxColliderProperties
 	{
+		GuardianBoxColliderProperties()
+		{
+			this->BoxHalfsize = GVector3(0.5f, 0.5f, 0.5f);
+		}
+		GuardianBoxColliderProperties(const GVector3& halfSize)
+		{
+			this->BoxHalfsize = halfSize;
+		}
+
 		GVector3 BoxHalfsize = GVector3(0.5f, 0.5f, 0.5f);
 	};
 
@@ -13,13 +22,12 @@ namespace guardian
 	{
 	public:
 		GuardianBoxCollider();
-		GuardianBoxCollider(const GuardianBoxColliderProperties& properties, 
-			const GuardianPhysicsMaterial& material);
 		GuardianBoxCollider(const GuardianBoxCollider& other);
 		~GuardianBoxCollider();
 
-		void InitializeBoxCollider(const GuardianBoxColliderProperties& properties,
-			const GuardianPhysicsMaterial& material);
+		void SetColliderProperties(const GuardianBoxColliderProperties& properties) override;
+		void SetColliderMaterial(const GuardianPhysicsMaterial& material) override;
+		void InitializeBoxCollider();
 
 		PxShape* GetColliderShape() noexcept override;
 		const GuardianBoxColliderProperties& GetColliderProperties() const noexcept;

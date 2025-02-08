@@ -9,12 +9,6 @@ namespace guardian
 		this->RigidBodyTransform = GuardianTransform();
 	}
 
-	GuardianStaticRigidBody::GuardianStaticRigidBody(const GuardianTransform& transform) : 
-		GuardianStaticRigidBody()
-	{
-		this->InitializeStaticRigidBody(transform);
-	}
-
 	GuardianStaticRigidBody::GuardianStaticRigidBody(const GuardianStaticRigidBody& other)
 	{
 		this->RigidBodyObject = other.RigidBodyObject;
@@ -30,7 +24,20 @@ namespace guardian
 		this->RigidBodyObject = null;
 	}
 
-	void GuardianStaticRigidBody::InitializeStaticRigidBody(const GuardianTransform& transform)
+	void GuardianStaticRigidBody::InitializeStaticRigidBody()
+	{
+		this->RigidBodyObject = GuardianPhysicsEngine::GetPhysicsObject()->createRigidStatic(
+			PxTransform(this->RigidBodyTransform.Position.x, 
+				this->RigidBodyTransform.Position.y, this->RigidBodyTransform.Position.z,
+				PxQuat(this->RigidBodyTransform.Quaternion.x, 
+					this->RigidBodyTransform.Quaternion.y, 
+					this->RigidBodyTransform.Quaternion.z, 
+					this->RigidBodyTransform.Quaternion.w)));
+
+		this->RigidBodyObject->attachShape(*this->RigidBodyCollider->GetColliderShape());
+	}
+
+	void GuardianStaticRigidBody::SetRigidBodyTransform(const GuardianTransform& transform)
 	{
 		this->RigidBodyTransform = transform;
 
@@ -40,21 +47,14 @@ namespace guardian
 		XMStoreFloat4(&Quaternion, quaternion);
 		this->RigidBodyTransform.Rotation = GVector3(0.0f, 0.0f, 0.0f);
 		this->RigidBodyTransform.Quaternion = GVector4(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w);
-
-		this->RigidBodyObject = GuardianPhysicsEngine::GetPhysicsObject()->createRigidStatic(
-			PxTransform(this->RigidBodyTransform.Position.x, 
-				this->RigidBodyTransform.Position.y, this->RigidBodyTransform.Position.z,
-				PxQuat(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w)));
 	}
 
 	void GuardianStaticRigidBody::SetRigidBodyCollider(std::shared_ptr<GuardianCollider> collider)
 	{
 		this->RigidBodyCollider = collider;
-
-		this->RigidBodyObject->attachShape(*this->RigidBodyCollider->GetColliderShape());
 	}
 
-	const GuardianTransform GuardianStaticRigidBody::GetRigidBodyTransform() noexcept
+	const GuardianTransform& GuardianStaticRigidBody::GetRigidBodyTransform() noexcept
 	{
 		PxTransform pxtransform = this->RigidBodyObject->getGlobalPose();
 		this->RigidBodyTransform.Position = GVector3(pxtransform.p.x, pxtransform.p.y, pxtransform.p.z);

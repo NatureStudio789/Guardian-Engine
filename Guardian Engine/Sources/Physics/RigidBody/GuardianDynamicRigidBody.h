@@ -8,15 +8,15 @@ namespace guardian
 	{
 	public:
 		GuardianDynamicRigidBody();
-		GuardianDynamicRigidBody(const GuardianTransform& transform);
 		GuardianDynamicRigidBody(const GuardianDynamicRigidBody& other);
 		~GuardianDynamicRigidBody();
 
-		void InitializeDynamicRigidBody(const GuardianTransform& transform);
+		void SetRigidBodyTransform(const GuardianTransform& transform);
 		void SetRigidBodyCollider(std::shared_ptr<GuardianCollider> collider);
 		void SetRigidBodyDensity(float density);
+		void InitializeDynamicRigidBody();
 
-		const GuardianTransform GetRigidBodyTransform() noexcept;
+		const GuardianTransform& GetRigidBodyTransform() noexcept;
 		PxRigidDynamic* GetRigidBodyObject() noexcept;
 		std::shared_ptr<GuardianCollider> GetRigidBodyCollider() noexcept;
 		const float GetRigidBodyDensity() const noexcept;

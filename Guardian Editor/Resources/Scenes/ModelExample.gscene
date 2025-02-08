@@ -27,3 +27,12 @@ Entities:
       Class: Guardian.Player
     Model Component:
       File Path: Resources/Models/Nanosuit/Nanosuit.obj
+    Box Collider Component:
+      Half Size: [0.5, 0.5, 0.5]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1

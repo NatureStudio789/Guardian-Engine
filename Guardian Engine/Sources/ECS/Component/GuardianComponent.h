@@ -96,33 +96,29 @@ namespace guardian
 		std::shared_ptr<GuardianBoxCollider> BoxCollider;
 	};
 
-	class GUARDIAN_API GuardianDynamicRigidBodyComponent : public GuardianComponent
+	enum GUARDIAN_API GuardianRigidBodyType
 	{
-	public:
-		GuardianDynamicRigidBodyComponent()
-		{
-			this->DynamicRigidBody = std::make_shared<GuardianDynamicRigidBody>();
-		}
-		GuardianDynamicRigidBodyComponent(const GuardianDynamicRigidBodyComponent& other)
-		{
-			this->DynamicRigidBody = other.DynamicRigidBody;
-		}
-
-		std::shared_ptr<GuardianDynamicRigidBody> DynamicRigidBody;
+		GE_RIGIDBODY_STATIC,
+		GE_RIGIDBODY_DYNAMIC,
 	};
-
-	class GUARDIAN_API GuardianStaticRigidBodyComponent : public GuardianComponent
+	class GUARDIAN_API GuardianRigidBodyComponent : public GuardianComponent
 	{
 	public:
-		GuardianStaticRigidBodyComponent()
+		GuardianRigidBodyComponent()
 		{
+			this->RigidBodyType = GE_RIGIDBODY_STATIC;
+			this->DynamicRigidBody = std::make_shared<GuardianDynamicRigidBody>();
 			this->StaticRigidBody = std::make_shared<GuardianStaticRigidBody>();
 		}
-		GuardianStaticRigidBodyComponent(const GuardianStaticRigidBodyComponent& other)
+		GuardianRigidBodyComponent(const GuardianRigidBodyComponent& other)
 		{
+			this->RigidBodyType = other.RigidBodyType;
+			this->DynamicRigidBody = other.DynamicRigidBody;
 			this->StaticRigidBody = other.StaticRigidBody;
 		}
 
+		GuardianRigidBodyType RigidBodyType;
+		std::shared_ptr<GuardianDynamicRigidBody> DynamicRigidBody;
 		std::shared_ptr<GuardianStaticRigidBody> StaticRigidBody;
 	};
 }
