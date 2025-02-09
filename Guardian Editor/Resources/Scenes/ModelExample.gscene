@@ -4,11 +4,11 @@ Entities:
     Tag Component:
       Tag: Main Camera
     Transform Component:
-      Position: [0, 5.64900017, -11.9099998]
+      Position: [0, 10.9490004, -17.9099998]
       Rotation: [7.25, -2.59899998, 0]
       Scale: [1, 1, 1]
     Camera Component:
-      Position: [0, 5.64900017, -11.9099998]
+      Position: [0, 10.9490004, -17.9099998]
       Direction: [7.25, -2.59899998, 0]
       Is Freelook: true
       Perspective Projection:
@@ -20,7 +20,7 @@ Entities:
     Tag Component:
       Tag: Nanosuit
     Transform Component:
-      Position: [0, 1.005, 0.479999989]
+      Position: [0, 12.2049999, 0.479999989]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     Script Component:
@@ -28,11 +28,28 @@ Entities:
     Model Component:
       File Path: Resources/Models/Nanosuit/Nanosuit.obj
     Box Collider Component:
-      Half Size: [0.5, 0.5, 0.5]
+      Half Size: [2.5, 8, 1.5]
       Physics Material:
         Static Friction: 0.5
         Dynamic Friction: 0.5
-        Restitution: 0.600000024
+        Restitution: 0.200000003
     RigidBody Component:
       Type: 1
       Density: 1
+  - Entity: 3396926578438212881
+    Tag Component:
+      Tag: Ground
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [14, 1, 14]
+    Model Component:
+      File Path: Resources/Models/Cube/Cube.obj
+    Box Collider Component:
+      Half Size: [14, 1, 14]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.100000001
+    RigidBody Component:
+      Type: 0

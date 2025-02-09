@@ -258,6 +258,42 @@ namespace guardian
 			this->EditorCamera->GetViewMatrix() * this->EditorCamera->GetProjectionMatrix());
 
 		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
+			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
+				GuardianSphereColliderComponent& SCComponent)
+			{
+				if (!SCComponent.SphereGeometry->IsInitialized())
+				{
+					SCComponent.SphereGeometry->InitializeGeometry(
+						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_SPHERE);
+				}
+
+				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, SCComponent.SphereGeometry);
+			});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianBoxColliderComponent>();
+			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
+				GuardianBoxColliderComponent& BCComponent)
+				{
+					if (!BCComponent.BoxGeometry->IsInitialized())
+					{
+						BCComponent.BoxGeometry->InitializeGeometry(
+							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_BOX);
+					}
+
+					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
+						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
+					BCComponent.BoxGeometry->UpdateGeometry(transform.GetTransformMatrix() *
+						this->EditorCamera->GetViewMatrix() *
+						this->EditorCamera->GetProjectionMatrix());
+
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, BCComponent.BoxGeometry);
+				});
+		}
+
+		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianRigidBodyComponent& RBComponent)
@@ -315,6 +351,40 @@ namespace guardian
 
 		this->InitializeScene();
 		this->Serialize("Temp.gdata");
+
+		{
+			auto view = this->SceneRegistry.view<GuardianSphereColliderComponent, GuardianRigidBodyComponent>();
+			view.each([this](const auto& e, GuardianSphereColliderComponent& SCComponet,
+				GuardianRigidBodyComponent& RBComponent)
+				{
+					if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						SCComponet.SphereCollider->InitializeSphereCollider();
+
+						if (!RBComponent.StaticRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.StaticRigidBody->SetRigidBodyCollider(SCComponet.SphereCollider);
+						}
+
+						RBComponent.StaticRigidBody->InitializeStaticRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.StaticRigidBody->GetRigidBodyObject());
+					}
+					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						SCComponet.SphereCollider->InitializeSphereCollider();
+
+						if (!RBComponent.DynamicRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.DynamicRigidBody->SetRigidBodyCollider(SCComponet.SphereCollider);
+						}
+
+						RBComponent.DynamicRigidBody->InitializeDynamicRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.DynamicRigidBody->GetRigidBodyObject());
+					}
+				});
+		}
 
 		{
 			auto view = this->SceneRegistry.view<GuardianBoxColliderComponent, GuardianRigidBodyComponent>();
@@ -603,6 +673,19 @@ namespace guardian
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), ModelFilePath);
 				}
 
+				auto SphereColliderComponent = entity["Sphere Collider Component"];
+				if (SphereColliderComponent)
+				{
+					auto& SphereCollider = LoadedEntity->AddComponent<GuardianSphereColliderComponent>().SphereCollider;
+					auto Radius = SphereColliderComponent["Radius"].as<float>();
+					auto PhysicsMaterial = SphereColliderComponent["Physics Material"];
+					float StaticFriction = PhysicsMaterial["Static Friction"].as<float>();
+					float DynamicFriction = PhysicsMaterial["Dynamic Friction"].as<float>();
+					float Restitution = PhysicsMaterial["Restitution"].as<float>();
+					SphereCollider->SetColliderProperties({ Radius });
+					SphereCollider->SetColliderMaterial(GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
+				}
+
 				auto BoxColliderComponent = entity["Box Collider Component"];
 				if (BoxColliderComponent)
 				{
@@ -737,6 +820,25 @@ namespace guardian
 
 			output << YAML::Key << "File Path" << YAML::Value << 
 				entity->GetComponent<GuardianModelComponent>().GetModelFilePath();
+
+			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianSphereColliderComponent>())
+		{
+			output << YAML::Key << "Sphere Collider Component";
+			output << YAML::BeginMap;
+
+			output << YAML::Key << "Radius" << YAML::Value <<
+				entity->GetComponent<GuardianSphereColliderComponent>().SphereCollider->GetColliderProperties().Radius;
+
+			auto material = entity->GetComponent<GuardianSphereColliderComponent>().SphereCollider->GetColliderMaterial();
+			output << YAML::Key << "Physics Material";
+			output << YAML::BeginMap;
+			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();
+			output << YAML::Key << "Dynamic Friction" << YAML::Value << material.GetDynamicFriction();
+			output << YAML::Key << "Restitution" << YAML::Value << material.GetRestitution();
+			output << YAML::EndMap;
 
 			output << YAML::EndMap;
 		}

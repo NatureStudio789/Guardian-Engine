@@ -22,11 +22,7 @@ namespace guardian
 
 	GuardianModel::~GuardianModel()
 	{
-		for (auto& mesh : this->ModelMeshList)
-		{
-			mesh.reset();
-		}
-		this->ModelMeshList.clear();
+		this->ClearModelMeshList();
 	}
 
 	void GuardianModel::InitializeModel(std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath)
@@ -59,6 +55,15 @@ namespace guardian
 		{
 			mesh->GetTransformConstantBuffer()->UpdateData(transformMatrix);
 		}
+	}
+
+	void GuardianModel::ClearModelMeshList()
+	{
+		for (auto& mesh : this->ModelMeshList)
+		{
+			mesh.reset();
+		}
+		this->ModelMeshList.clear();
 	}
 
 	const GString& GuardianModel::GetModelFilePath() const noexcept

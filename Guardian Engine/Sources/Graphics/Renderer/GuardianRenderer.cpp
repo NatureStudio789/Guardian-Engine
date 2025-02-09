@@ -15,7 +15,7 @@ namespace guardian
 	{
 		BeginSceneRendering();
 
-		for (UINT i = 0; i < (UINT)GE_SUBMIT_GUI2D; i++)
+		for (UINT i = 0; i <= (UINT)GE_SUBMIT_SPECIALLY; i++)
 		{
 			while (!RenderableList[(GuardianSubmitPassLevel)i].empty())
 			{

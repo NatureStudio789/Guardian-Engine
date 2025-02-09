@@ -11,6 +11,7 @@ namespace guardian
 		GE_SUBMIT_DEFAULT2D = 2,
 		GE_SUBMIT_TRANSPARENT2D = 3,
 		GE_SUBMIT_GUI2D = 4,
+		GE_SUBMIT_SPECIALLY = 5,
 	};
 
 	class GUARDIAN_API GuardianRenderable

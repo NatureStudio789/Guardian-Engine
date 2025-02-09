@@ -45,12 +45,13 @@ namespace guardian
 
 		const XMMATRIX GetTransformMatrix() const noexcept
 		{
-			return XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) * 
+				
+			return XMMatrixScaling(this->Scale.x, this->Scale.y, this->Scale.z) *
+				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) * 
 				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
 				XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
 				XMMatrixRotationZ((this->Rotation.z / 360.0f) * XM_2PI) *
-				XMMatrixTranslation(this->Position.x, this->Position.y, this->Position.z) *
-				XMMatrixScaling(this->Scale.x, this->Scale.y, this->Scale.z);
+				XMMatrixTranslation(this->Position.x, this->Position.y, this->Position.z);
 		}
 
 		const GVector3 GetForwardVector() const noexcept

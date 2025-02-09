@@ -25,7 +25,7 @@ namespace guardian
 		GuardianBoxCollider(const GuardianBoxCollider& other);
 		~GuardianBoxCollider();
 
-		void SetColliderProperties(const GuardianBoxColliderProperties& properties) override;
+		void SetColliderProperties(const GuardianBoxColliderProperties& properties);
 		void SetColliderMaterial(const GuardianPhysicsMaterial& material) override;
 		void InitializeBoxCollider();
 

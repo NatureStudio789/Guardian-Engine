@@ -81,19 +81,40 @@ namespace guardian
 	public:
 	};
 
+	class GUARDIAN_API GuardianSphereColliderComponent : public GuardianComponent
+	{
+	public:
+		GuardianSphereColliderComponent()
+		{
+			this->SphereCollider = std::make_shared<GuardianSphereCollider>();
+			this->SphereGeometry = std::make_shared<GuardianGeometry>();
+		}
+		GuardianSphereColliderComponent(const GuardianSphereColliderComponent& other)
+		{
+			this->SphereCollider = other.SphereCollider;
+			this->SphereGeometry = other.SphereGeometry;
+		}
+
+		std::shared_ptr<GuardianSphereCollider> SphereCollider;
+		std::shared_ptr<GuardianGeometry> SphereGeometry;
+	};
+
 	class GUARDIAN_API GuardianBoxColliderComponent : public GuardianComponent
 	{
 	public:
 		GuardianBoxColliderComponent()
 		{
 			this->BoxCollider = std::make_shared<GuardianBoxCollider>();
+			this->BoxGeometry = std::make_shared<GuardianGeometry>();
 		}
 		GuardianBoxColliderComponent(const GuardianBoxColliderComponent& other)
 		{
 			this->BoxCollider = other.BoxCollider;
+			this->BoxGeometry = other.BoxGeometry;
 		}
 
 		std::shared_ptr<GuardianBoxCollider> BoxCollider;
+		std::shared_ptr<GuardianGeometry> BoxGeometry;
 	};
 
 	enum GUARDIAN_API GuardianRigidBodyType

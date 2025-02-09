@@ -22,6 +22,8 @@ namespace guardian
 
 		void UpdateModel(XMMATRIX transformMatrix);
 
+		void ClearModelMeshList();
+
 		const GString& GetModelFilePath() const noexcept;
 
 		static std::shared_ptr<GuardianModel> CreateNewModel(

@@ -36,7 +36,15 @@ namespace guardian
 					this->RigidBodyTransform.Quaternion.y, 
 					this->RigidBodyTransform.Quaternion.z, 
 					this->RigidBodyTransform.Quaternion.w)));
+		if (!this->RigidBodyObject)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create dynamic rigid object!");
+		}
 
+		if (!this->RigidBodyCollider)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Cannot attach invalid collider to rigid body!");
+		}
 		this->RigidBodyObject->attachShape(*this->RigidBodyCollider->GetColliderShape());
 		PxRigidBodyExt::updateMassAndInertia(*this->RigidBodyObject, this->RigidBodyDensity);
 	}

@@ -163,7 +163,6 @@ namespace guardian
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianTransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Transform Component"))
 				{
-
 					float position[3] = { transform.Position.x, transform.Position.y, transform.Position.z };
 					if (ImGui::DragFloat3("Position", position, 0.1f))
 					{
@@ -239,6 +238,8 @@ namespace guardian
 
 					ImGui::TreePop();
 				}
+
+				ImGui::Separator();
 			}
 
 			if (SelectedEntity->HasComponent<GuardianModelComponent>())
@@ -248,10 +249,72 @@ namespace guardian
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianModelComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Model Component"))
 				{
-					ImGui::Text(("Model File Path : " + model.GetModelFilePath()).c_str());
+					GString fileName = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('/') + 1);
+					ImGui::Text("Model File Path");
+					if (ImGui::Button(fileName.c_str()))
+					{
+						GString filePath = GuardianFileDialog::OpenFile("Model File (*.obj)\0*.obj\0");
+						if (std::filesystem::exists(filePath) && std::filesystem::path(filePath).extension() == ".obj")
+						{
+							model.ClearModelMeshList();
+							model.InitializeModel(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+								filePath);
+						}
+					}
 
 					ImGui::TreePop();
 				}
+
+				ImGui::Separator();
+			}
+
+			if (SelectedEntity->HasComponent<GuardianSphereColliderComponent>())
+			{
+				auto& collider = SelectedEntity->GetComponent<GuardianSphereColliderComponent>().SphereCollider;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianSphereColliderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Sphere Collider Component"))
+				{
+					float radius = collider->GetColliderProperties().Radius;
+					if (ImGui::DragFloat3("Size", &radius, 0.5f, 0.0f))
+					{
+						collider->SetColliderProperties({ radius });
+					}
+
+					ImGui::Separator();
+
+					ImGui::Text("Physics Material");
+
+					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							dynamicFriction,
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float restitution = collider->GetColliderMaterial().GetRestitution();
+					if (ImGui::DragFloat("Restitution", &restitution, 0.1f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							restitution));
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
 			}
 
 			if (SelectedEntity->HasComponent<GuardianBoxColliderComponent>())
@@ -302,6 +365,8 @@ namespace guardian
 
 					ImGui::TreePop();
 				}
+
+				ImGui::Separator();
 			}
 
 			if (SelectedEntity->HasComponent<GuardianRigidBodyComponent>())
@@ -346,6 +411,8 @@ namespace guardian
 
 					ImGui::TreePop();
 				}
+
+				ImGui::Separator();
 			}
 
 			if (ImGui::Button("Add Component"))
@@ -379,14 +446,23 @@ namespace guardian
 				if (ImGui::MenuItem("Model Component"))
 				{
 					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianModelComponent>();
+						AddComponent<GuardianModelComponent>().InitializeModel(
+							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
+							"Resources/Models/Cube/Cube.obj");
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Sphere Collider Component"))
+				{
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianSphereColliderComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Box Collider Component"))
 				{
-					auto& collider = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianBoxColliderComponent>().BoxCollider;
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianBoxColliderComponent>();
 					ImGui::CloseCurrentPopup();
 				}
 

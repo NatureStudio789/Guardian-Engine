@@ -35,6 +35,10 @@ namespace guardian
 
 		this->MaterialObject = GuardianPhysicsEngine::CreatePhysicsMaterial(
 			this->StaticFriction, this->DynamicFriction, this->Restitution);
+		if (!this->MaterialObject)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics material!");
+		}
 	}
 
 	void GuardianPhysicsMaterial::ResetStaticFriction(float staticFriction)
