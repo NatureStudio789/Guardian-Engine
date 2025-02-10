@@ -9,12 +9,14 @@ namespace guardian
 		this->PanelName = "Scene Hierarchy";
 		this->PanelScene = null;
 		this->SelectedEntityId = 0;
+		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
 	{
 		this->PanelName = "Scene Hierarchy";
 		this->SelectedEntityId = 0;
+		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SetScene(scene);
 	}
 
@@ -23,6 +25,7 @@ namespace guardian
 		this->PanelScene = other.PanelScene;
 		this->SelectedEntityId = other.SelectedEntityId;
 		this->PanelName = other.PanelName;
+		this->CurrentOperation = other.CurrentOperation;
 	}
 
 	GuardianSceneHierarchyPanel::~GuardianSceneHierarchyPanel()
@@ -89,6 +92,11 @@ namespace guardian
 	GuardianUUID GuardianSceneHierarchyPanel::GetSelectedEntityId()
 	{
 		return this->SelectedEntityId;
+	}
+
+	const int GuardianSceneHierarchyPanel::GetCurrentOperation() const
+	{
+		return this->CurrentOperation;
 	}
 
 	bool GuardianSceneHierarchyPanel::RenderEntityNode(GuardianEntity* entity)
@@ -163,6 +171,42 @@ namespace guardian
 				if (ImGui::TreeNodeEx((void*)typeid(GuardianTransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
 					"Transform Component"))
 				{
+					static bool translate = false;
+					static bool rotate = false;
+					static bool scale = false;
+					if (this->CurrentOperation == ImGuizmo::TRANSLATE)
+					{
+						translate = true;
+						rotate = false;
+						scale = false;
+					}
+					else if (this->CurrentOperation == ImGuizmo::ROTATE)
+					{
+						rotate = true;
+						translate = false;
+						scale = false;
+					}
+					else if (this->CurrentOperation == ImGuizmo::SCALE)
+					{
+						scale = true;
+						rotate = false;
+						translate = false;
+					}
+					if (ImGui::Checkbox("Translation", &translate))
+					{
+						this->CurrentOperation = ImGuizmo::TRANSLATE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Checkbox("Rotation", &rotate))
+					{
+						this->CurrentOperation = ImGuizmo::ROTATE;
+					}
+					ImGui::SameLine();
+					if (ImGui::Checkbox("Scaling", &scale))
+					{
+						this->CurrentOperation = ImGuizmo::SCALE;
+					}
+
 					float position[3] = { transform.Position.x, transform.Position.y, transform.Position.z };
 					if (ImGui::DragFloat3("Position", position, 0.1f))
 					{
@@ -276,7 +320,7 @@ namespace guardian
 					"Sphere Collider Component"))
 				{
 					float radius = collider->GetColliderProperties().Radius;
-					if (ImGui::DragFloat3("Size", &radius, 0.5f, 0.0f))
+					if (ImGui::DragFloat("Radius", &radius, 0.1f, 0.0f))
 					{
 						collider->SetColliderProperties({ radius });
 					}
@@ -286,7 +330,7 @@ namespace guardian
 					ImGui::Text("Physics Material");
 
 					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
-					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
 							collider->GetColliderMaterial().GetDynamicFriction(),
@@ -294,7 +338,7 @@ namespace guardian
 					}
 
 					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
-					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -303,7 +347,7 @@ namespace guardian
 					}
 
 					float restitution = collider->GetColliderMaterial().GetRestitution();
-					if (ImGui::DragFloat("Restitution", &restitution, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -327,7 +371,7 @@ namespace guardian
 					float size[3] = { collider->GetColliderProperties().BoxHalfsize.x * 2.0f,
 						collider->GetColliderProperties().BoxHalfsize.y * 2.0f,
 						collider->GetColliderProperties().BoxHalfsize.z * 2.0f };
-					if (ImGui::DragFloat3("Size", size, 0.5f, 0.0f))
+					if (ImGui::DragFloat3("Size", size, 0.1f, 0.0f))
 					{
 						GVector3 Halfsize = { size[0] / 2.0f, size[1] / 2.0f, size[2] / 2.0f };
 						collider->SetColliderProperties({ Halfsize });
@@ -338,7 +382,7 @@ namespace guardian
 					ImGui::Text("Physics Material");
 
 					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
-					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
 							collider->GetColliderMaterial().GetDynamicFriction(),
@@ -346,7 +390,7 @@ namespace guardian
 					}
 
 					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
-					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -355,7 +399,62 @@ namespace guardian
 					}
 
 					float restitution = collider->GetColliderMaterial().GetRestitution();
-					if (ImGui::DragFloat("Restitution", &restitution, 0.1f, 0.0f))
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							restitution));
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
+			}
+
+			if (SelectedEntity->HasComponent<GuardianCapsuleColliderComponent>())
+			{
+				auto& collider = SelectedEntity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianCapsuleColliderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Capsule Collider Component"))
+				{
+					float radius = collider->GetColliderProperties().Radius;
+					if (ImGui::DragFloat("Radius", &radius, 0.1f, 0.0f))
+					{
+						collider->SetColliderProperties({ radius, collider->GetColliderProperties().HalfHeight });
+					}
+
+					float height = collider->GetColliderProperties().HalfHeight * 2.0f;
+					if (ImGui::DragFloat("Height", &height, 0.1f, 0.0f))
+					{
+						collider->SetColliderProperties({ collider->GetColliderProperties().Radius, height / 2.0f });
+					}
+
+					ImGui::Separator();
+
+					ImGui::Text("Physics Material");
+
+					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							dynamicFriction,
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float restitution = collider->GetColliderMaterial().GetRestitution();
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -448,21 +547,31 @@ namespace guardian
 					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 						AddComponent<GuardianModelComponent>().InitializeModel(
 							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-							"Resources/Models/Cube/Cube.obj");
+							"Resources/Models/SBDS/SBDS.obj");
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Sphere Collider Component"))
 				{
 					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianSphereColliderComponent>();
+						AddComponent<GuardianSphereColliderComponent>().SphereCollider->SetColliderMaterial(
+							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
 					ImGui::CloseCurrentPopup();
 				}
 
 				if (ImGui::MenuItem("Box Collider Component"))
 				{
 					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianBoxColliderComponent>();
+						AddComponent<GuardianBoxColliderComponent>().BoxCollider->SetColliderMaterial(
+							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Capsule Collider Component"))
+				{
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->SetColliderMaterial(
+							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
 					ImGui::CloseCurrentPopup();
 				}
 

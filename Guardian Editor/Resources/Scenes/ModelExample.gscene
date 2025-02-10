@@ -1,5 +1,24 @@
 Scene: Unnamed
 Entities:
+  - Entity: 1615171598229152630
+    Tag Component:
+      Tag: Empty Entity
+    Transform Component:
+      Position: [-4, 8.69999981, 0]
+      Rotation: [0, 0, 52]
+      Scale: [1, 1, 1]
+    Model Component:
+      File Path: Resources/Models/Cube/Cube.obj
+    Capsule Collider Component:
+      Radius: 1
+      Half Height: 1
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1
   - Entity: 1102962296484071954
     Tag Component:
       Tag: Main Camera
@@ -20,7 +39,7 @@ Entities:
     Tag Component:
       Tag: Nanosuit
     Transform Component:
-      Position: [0, 12.2049999, 0.479999989]
+      Position: [3.29999995, 12.2049999, 0.479999989]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     Script Component:

@@ -18,6 +18,7 @@ namespace guardian
 		void Render() override;
 
 		GuardianUUID GetSelectedEntityId();
+		const int GetCurrentOperation() const;
 
 	private:
 		bool RenderEntityNode(GuardianEntity* entity);
@@ -25,6 +26,7 @@ namespace guardian
 
 		GuardianScene* PanelScene;
 		GuardianUUID SelectedEntityId;
+		int CurrentOperation;
 
 		friend class GuardianEditor;
 	};

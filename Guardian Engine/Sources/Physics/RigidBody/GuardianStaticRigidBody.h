@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANSTATICRIGIDBODY_H_
 #define _GE_GUARDIANSTATICRIGIDBODY_H_
-#include "../Collider/GuardianSphereCollider.h"
+#include "../Collider/GuardianMeshCollider.h"
 
 namespace guardian
 {

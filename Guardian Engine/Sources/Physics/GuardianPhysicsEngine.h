@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANPHYSICSENGINE_H_
 #define _GE_GUARDIANPHYSICSENGINE_H_
-#include "../Graphics/Camera/GuardianCamera.h"
+#include "../Graphics/PickingRay/GuardianPickingRay.h"
 
 namespace guardian
 {

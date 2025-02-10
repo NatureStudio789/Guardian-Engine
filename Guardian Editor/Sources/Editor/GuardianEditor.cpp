@@ -82,7 +82,7 @@ namespace guardian
 		ImGui::PopStyleVar();
 		ImGui::PopStyleVar(2);
 
-		ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
+		ImGuiID dockspace_id = ImGui::GetID("Guardian Editor Dockspace");
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
 
 		if (ImGui::BeginMenuBar())
@@ -140,6 +140,7 @@ namespace guardian
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
 		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 
 		this->RenderDockspace();
 
@@ -148,6 +149,7 @@ namespace guardian
 			panel.second->Render();
 		}
 		this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
+		this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
 
 		ImGui::Render();
 		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsGUIFramebuffer()->ApplyFramebuffer(

@@ -240,10 +240,13 @@ namespace guardian
 				this->EditorCamera->Translate(GVector3(0.0f, -0.1f, 0.0f));
 			}
 
-			while (!GuardianMouse::IsMouseRawMoveEventListEmpty())
+			if (GuardianInput::IsMouseButtonClick(GE_MOUSEBUTTON_RIGHT))
 			{
-				GuardianMouseRawMoveEvent event = GuardianMouse::ReadRawMoveEvent();
-				this->EditorCamera->Rotate(GVector3(event.MouseMovementY * 0.1f, event.MouseMovementX * 0.1f, 0.0f));
+				while (!GuardianMouse::IsMouseRawMoveEventListEmpty())
+				{
+					GuardianMouseRawMoveEvent event = GuardianMouse::ReadRawMoveEvent();
+					this->EditorCamera->Rotate(GVector3(event.MouseMovementY * 0.1f, event.MouseMovementX * 0.1f, 0.0f));
+				}
 			}
 		}
 
@@ -268,6 +271,12 @@ namespace guardian
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_SPHERE);
 				}
 
+				GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
+					TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
+				SCComponent.SphereGeometry->UpdateGeometry(transform.GetTransformMatrix() *
+					this->EditorCamera->GetViewMatrix() *
+					this->EditorCamera->GetProjectionMatrix());
+
 				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, SCComponent.SphereGeometry);
 			});
 		}
@@ -290,6 +299,29 @@ namespace guardian
 						this->EditorCamera->GetProjectionMatrix());
 
 					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, BCComponent.BoxGeometry);
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCapsuleColliderComponent>();
+			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
+				GuardianCapsuleColliderComponent& CCComponent)
+				{
+					if (!CCComponent.CapsuleGeometry->IsInitialized())
+					{
+						CCComponent.CapsuleGeometry->InitializeGeometry(
+							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_CAPSULE);
+					}
+
+					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
+						TComponent.Quaternion, GVector3(CCComponent.CapsuleCollider->GetColliderProperties().Radius, 
+							CCComponent.CapsuleCollider->GetColliderProperties().HalfHeight * 2.0f, 
+							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
+					CCComponent.CapsuleGeometry->UpdateGeometry(transform.GetTransformMatrix() *
+						this->EditorCamera->GetViewMatrix() *
+						this->EditorCamera->GetProjectionMatrix());
+
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, CCComponent.CapsuleGeometry);
 				});
 		}
 
@@ -411,6 +443,40 @@ namespace guardian
 						if (!RBComponent.DynamicRigidBody->GetRigidBodyCollider())
 						{
 							RBComponent.DynamicRigidBody->SetRigidBodyCollider(BCComponet.BoxCollider);
+						}
+
+						RBComponent.DynamicRigidBody->InitializeDynamicRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.DynamicRigidBody->GetRigidBodyObject());
+					}
+				});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianCapsuleColliderComponent, GuardianRigidBodyComponent>();
+			view.each([this](const auto& e, GuardianCapsuleColliderComponent& CCComponet,
+				GuardianRigidBodyComponent& RBComponent)
+				{
+					if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						CCComponet.CapsuleCollider->InitializeCapsuleCollider();
+
+						if (!RBComponent.StaticRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.StaticRigidBody->SetRigidBodyCollider(CCComponet.CapsuleCollider);
+						}
+
+						RBComponent.StaticRigidBody->InitializeStaticRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.StaticRigidBody->GetRigidBodyObject());
+					}
+					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						CCComponet.CapsuleCollider->InitializeCapsuleCollider();
+
+						if (!RBComponent.DynamicRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.DynamicRigidBody->SetRigidBodyCollider(CCComponet.CapsuleCollider);
 						}
 
 						RBComponent.DynamicRigidBody->InitializeDynamicRigidBody();
@@ -699,6 +765,20 @@ namespace guardian
 					BoxCollider->SetColliderMaterial(GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
 				}
 
+				auto CapsuleColliderComponent = entity["Capsule Collider Component"];
+				if (CapsuleColliderComponent)
+				{
+					auto& CapsuleCollider = LoadedEntity->AddComponent<GuardianCapsuleColliderComponent>().CapsuleCollider;
+					auto Radius = CapsuleColliderComponent["Radius"].as<float>();
+					auto HalfHeight = CapsuleColliderComponent["Half Height"].as<float>();
+					auto PhysicsMaterial = CapsuleColliderComponent["Physics Material"];
+					float StaticFriction = PhysicsMaterial["Static Friction"].as<float>();
+					float DynamicFriction = PhysicsMaterial["Dynamic Friction"].as<float>();
+					float Restitution = PhysicsMaterial["Restitution"].as<float>();
+					CapsuleCollider->SetColliderProperties({ Radius, HalfHeight });
+					CapsuleCollider->SetColliderMaterial(GuardianPhysicsMaterial(StaticFriction, DynamicFriction, Restitution));
+				}
+
 				auto RigidBodyComponent = entity["RigidBody Component"];
 				if (RigidBodyComponent)
 				{
@@ -852,6 +932,27 @@ namespace guardian
 				entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderProperties().BoxHalfsize;
 
 			auto material = entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderMaterial();
+			output << YAML::Key << "Physics Material";
+			output << YAML::BeginMap;
+			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();
+			output << YAML::Key << "Dynamic Friction" << YAML::Value << material.GetDynamicFriction();
+			output << YAML::Key << "Restitution" << YAML::Value << material.GetRestitution();
+			output << YAML::EndMap;
+
+			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianCapsuleColliderComponent>())
+		{
+			output << YAML::Key << "Capsule Collider Component";
+			output << YAML::BeginMap;
+
+			output << YAML::Key << "Radius" << YAML::Value <<
+				entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderProperties().Radius;
+			output << YAML::Key << "Half Height" << YAML::Value <<
+				entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderProperties().HalfHeight;
+
+			auto material = entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderMaterial();
 			output << YAML::Key << "Physics Material";
 			output << YAML::BeginMap;
 			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();

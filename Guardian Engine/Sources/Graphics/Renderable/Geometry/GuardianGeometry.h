@@ -8,6 +8,7 @@ namespace guardian
 	{
 		GE_GEOMETRY_SPHERE,
 		GE_GEOMETRY_BOX,
+		GE_GEOMETRY_CAPSULE,
 	};
 
 	class GUARDIAN_API GuardianGeometry : public GuardianRenderableBase<GuardianGeometry>
@@ -32,6 +33,7 @@ namespace guardian
 
 		void GenerateSphere(std::vector<GeometryVertex>& vertices, std::vector<UINT>& indices);
 		void GenerateBox(std::vector<GeometryVertex>& vertices, std::vector<UINT>& indices);
+		void GenerateCapsule(std::vector<GeometryVertex>& vertices, std::vector<UINT>& indices);
 	};
 }
 

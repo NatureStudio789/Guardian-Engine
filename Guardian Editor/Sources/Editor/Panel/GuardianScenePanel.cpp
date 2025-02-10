@@ -6,6 +6,7 @@ namespace guardian
 	GuardianScenePanel::GuardianScenePanel()
 	{
 		this->PanelName = "Scene";
+		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
@@ -17,6 +18,7 @@ namespace guardian
 	{
 		this->PanelName = "Scene";
 		this->PanelScene = scene;
+		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
@@ -28,6 +30,7 @@ namespace guardian
 	{
 		this->PanelName = other.PanelName;
 		this->SelectedEntityId = other.SelectedEntityId;
+		this->CurrentOperation = other.CurrentOperation;
 		this->PlayButtonTexture = other.PlayButtonTexture;
 		this->StopButtonTexture = other.StopButtonTexture;
 	}
@@ -41,6 +44,11 @@ namespace guardian
 	void GuardianScenePanel::SetSelectedEntityId(GuardianUUID entityId)
 	{
 		this->SelectedEntityId = entityId;
+	}
+
+	void GuardianScenePanel::SetCurrentOperation(int operation)
+	{
+		this->CurrentOperation = operation;
 	}
 
 	void GuardianScenePanel::Render()
@@ -85,6 +93,63 @@ namespace guardian
 		}
 
 		ImGui::PopStyleVar();
+
+		if (this->PanelScene->GetEntity(this->SelectedEntityId) && 
+			this->PanelScene->GetEntity(this->SelectedEntityId)->HasComponent<GuardianTransformComponent>())
+		{
+			if (this->PanelScene->GetSceneState() == GE_SCENE_EDIT)
+			{
+				ImGuizmo::SetOrthographic(false);
+				ImGuizmo::SetDrawlist();
+
+				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
+
+				XMFLOAT4X4 view;
+				XMStoreFloat4x4(&view, this->PanelScene->EditorCamera->GetViewMatrix());
+				XMFLOAT4X4 projection;
+				XMStoreFloat4x4(&projection, this->PanelScene->EditorCamera->GetProjectionMatrix());
+				XMFLOAT4X4 trasnform;
+				XMStoreFloat4x4(&trasnform, this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().GetTransformMatrix());
+
+				ImGuizmo::Manipulate((const float*)view.m, (const float*)projection.m, (ImGuizmo::OPERATION)this->CurrentOperation,
+					ImGuizmo::LOCAL, (float*)trasnform.m);
+				
+				if (ImGuizmo::IsUsing())
+				{
+					if (this->CurrentOperation == ImGuizmo::TRANSLATE)
+					{
+						XMVECTOR VScale, VTranslation, VRotation;
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMFLOAT3 Position;
+						XMStoreFloat3(&Position, VTranslation);
+
+						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Position =
+							GVector3(Position.x, Position.y, Position.z);
+					}
+					else if (this->CurrentOperation == ImGuizmo::ROTATE)
+					{
+						XMVECTOR VScale, VTranslation, VRotation;
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMFLOAT4 Quaternion;
+						XMStoreFloat4(&Quaternion, VRotation);
+						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles(Quaternion);
+
+						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Rotation =
+							GVector3(Rotation.x, Rotation.y, Rotation.z);
+					}
+					else if (this->CurrentOperation == ImGuizmo::SCALE)
+					{
+						XMVECTOR VScale, VTranslation, VRotation;
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMFLOAT3 Scale;
+						XMStoreFloat3(&Scale, VScale);
+
+						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Scale =
+							GVector3(Scale.x, Scale.y, Scale.z);
+					}
+				}
+			}
+		}
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 2.0f));
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));

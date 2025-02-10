@@ -29,7 +29,7 @@ namespace guardian
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics object!");
 		}
 
-		PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(2);
+		PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(16);
 	}
 
 	PxMaterial* GuardianPhysicsEngine::CreatePhysicsMaterial(float staticFriction, float dynamicFriction, float restitution)

@@ -117,6 +117,24 @@ namespace guardian
 		std::shared_ptr<GuardianGeometry> BoxGeometry;
 	};
 
+	class GUARDIAN_API GuardianCapsuleColliderComponent : public GuardianComponent
+	{
+	public:
+		GuardianCapsuleColliderComponent()
+		{
+			this->CapsuleCollider = std::make_shared<GuardianCapsuleCollider>();
+			this->CapsuleGeometry = std::make_shared<GuardianGeometry>();
+		}
+		GuardianCapsuleColliderComponent(const GuardianCapsuleColliderComponent& other)
+		{
+			this->CapsuleCollider = other.CapsuleCollider;
+			this->CapsuleGeometry = other.CapsuleGeometry;
+		}
+
+		std::shared_ptr<GuardianCapsuleCollider> CapsuleCollider;
+		std::shared_ptr<GuardianGeometry> CapsuleGeometry;
+	};
+
 	enum GUARDIAN_API GuardianRigidBodyType
 	{
 		GE_RIGIDBODY_STATIC,

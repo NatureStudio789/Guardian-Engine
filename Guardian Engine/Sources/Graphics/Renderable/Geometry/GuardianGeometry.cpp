@@ -59,6 +59,10 @@ namespace guardian
 		{
 			this->GenerateBox(Vertices, Indices);
 		}
+		else if (type == GE_GEOMETRY_CAPSULE)
+		{
+			this->GenerateCapsule(Vertices, Indices);
+		}
 
 		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, (void*)Vertices.data(), 
 			(UINT)Vertices.size(), (UINT)sizeof(GeometryVertex)));
@@ -85,7 +89,7 @@ namespace guardian
 	void GuardianGeometry::GenerateSphere(std::vector<GeometryVertex>& vertices, std::vector<UINT>& indices)
 	{
 		GVector3 greenColor(0.0f, 1.0f, 0.0f);
-		float radius = 0.5f;
+		float radius = 1.0f;
 		float stackCount = 20.0f;
 		float sliceCount = 20.0f;
 		// 顶部顶点
@@ -186,5 +190,123 @@ namespace guardian
 			3, 2, 6,
 			3, 6, 7
 		};
+	}
+
+	void GuardianGeometry::GenerateCapsule(std::vector<GeometryVertex>& vertices, std::vector<UINT>& indices)
+	{
+		float stacks = 8.0f;
+		float slices = 16.0f;
+		float radius = 1.0f;
+		float halfHeight = 0.5f;
+
+		for (UINT i = 0; i < slices; ++i)
+		{
+			float theta = XM_2PI * i / slices;
+			GeometryVertex v;
+			v.Position = GVector3(
+				radius * cos(theta),
+				halfHeight,
+				radius * sin(theta)
+			);
+			v.Color = GVector3(0.0f, 1.0f, 0.0f);
+			vertices.push_back(v);
+		}
+
+		// 底部圆形顶点（y = -halfHeight）
+		for (UINT i = 0; i < slices; ++i)
+		{
+			float theta = XM_2PI * i / slices;
+			GeometryVertex v;
+			v.Position = GVector3(
+				radius * cos(theta),
+				-halfHeight,
+				radius * sin(theta)
+			);
+			v.Color = GVector3(0.0f, 1.0f, 0.0f);
+			vertices.push_back(v);
+		}
+
+		for (UINT j = 1; j < stacks; ++j) 
+		{
+			float phi = XM_PIDIV2 * j / stacks;
+			for (UINT i = 0; i < slices; ++i)
+			{
+				float theta = XM_2PI * i / slices;
+				GeometryVertex v;
+				v.Position = GVector3(
+					radius * sin(phi) * cos(theta),
+					halfHeight + radius * cos(phi),
+					radius * sin(phi) * sin(theta)
+				);
+				v.Color = GVector3(0.0f, 1.0f, 0.0f);
+				vertices.push_back(v);
+			}
+		}
+
+		// 生成底部半球顶点 -----------------------------------------------
+		for (UINT j = 1; j < stacks; ++j)
+		{
+			float phi = XM_PIDIV2 + XM_PIDIV2 * j / stacks;
+			for (UINT i = 0; i < slices; ++i)
+			{
+				float theta = XM_2PI * i / slices;
+				GeometryVertex v;
+				v.Position = GVector3(
+					radius * sin(phi) * cos(theta),
+					-halfHeight + radius * cos(phi),
+					radius * sin(phi) * sin(theta)
+				);
+				v.Color = GVector3(0.0f, 1.0f, 0.0f);
+				vertices.push_back(v);
+			}
+		}
+
+		// 生成索引数据 ---------------------------------------------------
+
+		// 圆柱体侧面索引
+		for (UINT i = 0; i < (UINT)slices; ++i)
+		{
+			UINT top = i;
+			UINT bottom = (UINT)slices + i;
+			UINT nextTop = (i + 1) % (UINT)slices;
+			UINT nextBottom = (UINT)slices + (i + 1) % (UINT)slices;
+
+			// 侧面四边形分解为两个三角形
+			indices.insert(indices.end(), { top, bottom, nextTop });
+			indices.insert(indices.end(), { bottom, nextBottom, nextTop });
+		}
+
+		// 顶部半球索引
+		UINT topStart = 2 * (UINT)slices;
+		for (UINT j = 0; j < (UINT)stacks - 1; ++j)
+		{
+			for (UINT i = 0; i < slices; ++i)
+			{
+				UINT current = topStart + j * (UINT)slices + i;
+				UINT next = topStart + j * (UINT)slices + (i + 1) % (UINT)slices;
+				UINT below = topStart + (j + 1) * (UINT)slices + i;
+				UINT belowNext = topStart + (j + 1) * (UINT)slices + (i + 1) % (UINT)slices;
+
+				indices.insert(indices.end(), { current, below, next });
+				indices.insert(indices.end(), { below, belowNext, next });
+			}
+		}
+
+		// 底部半球索引（注意三角形顺序）
+		UINT bottomStart = 2 * (UINT)slices + ((UINT)stacks - 1) * (UINT)slices;
+		for (UINT j = 0; j < (UINT)stacks - 1; ++j)
+		{
+			for (UINT i = 0; i < (UINT)slices; ++i)
+			{
+				UINT current = bottomStart + j * (UINT)slices + i;
+				UINT next = bottomStart + j * (UINT)slices + (i + 1) % (UINT)slices;
+				UINT below = bottomStart + (j + 1) * (UINT)slices + i;
+				UINT belowNext = bottomStart + (j + 1) * (UINT)slices + (i + 1) % (UINT)slices;
+
+				// 反转三角形顺序以保证正面朝向
+				indices.insert(indices.end(), { current, next, below });
+				indices.insert(indices.end(), { next, belowNext, below });
+			}
+		}
 	}
 }

@@ -15,11 +15,13 @@ namespace guardian
 		~GuardianScenePanel();
 
 		void SetSelectedEntityId(GuardianUUID entityId);
+		void SetCurrentOperation(int operation);
 
 		void Render() override;
 
 	private:
 		GuardianUUID SelectedEntityId;
+		int CurrentOperation;
 		GuardianScene* PanelScene;
 		GuardianTexture PlayButtonTexture;
 		GuardianTexture StopButtonTexture;

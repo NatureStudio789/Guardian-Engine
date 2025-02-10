@@ -104,4 +104,14 @@ namespace guardian
 	{
 		return this->RenderingTransformConstantBuffer;
 	}
+
+	std::shared_ptr<GuardianVertexBuffer> GuardianRenderable::GetVertexBuffer()
+	{
+		return this->RenderingVertexBuffer;
+	}
+
+	std::shared_ptr<GuardianIndexBuffer> GuardianRenderable::GetIndexBuffer()
+	{
+		return this->RenderingIndexBuffer;
+	}
 }

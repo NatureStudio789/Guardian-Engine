@@ -45,7 +45,7 @@ namespace guardian
 			this->EngineScene->UpdateScene(16.6667f);
 			this->EngineProgram->Update();
 
-			GuardianApplication::ApplicationInstance->BeginRendering({0.0f, 0.0f, 0.0f});
+			GuardianApplication::ApplicationInstance->BeginRendering({0.1f, 0.1f, 0.1f});
 			{
 				GuardianRenderer::RenderScene();
 
