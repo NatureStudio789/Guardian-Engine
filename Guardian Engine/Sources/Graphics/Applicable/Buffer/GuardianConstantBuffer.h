@@ -162,6 +162,48 @@ namespace guardian
 			return std::make_shared<GuardianTransformConstantBuffer>(graphics, index);
 		}
 	};
+
+	struct GUARDIAN_API GuardianMaterialProperties
+	{
+	public:
+		GuardianMaterialProperties()
+		{
+			this->UsingMaps = new bool[5];
+		}
+
+		GVector3 AlbedoColor;
+		float MetallicColor;
+		float RoughnessColor;
+		float AoColor;
+		GVector2 padding;
+		bool* UsingMaps;
+	};
+
+	class GUARDIAN_API GuardianMaterialConstantBuffer : public GuardianConstantBuffer<GuardianMaterialProperties>
+	{
+	public:
+		GuardianMaterialConstantBuffer() : GuardianConstantBuffer()
+		{
+			this->ConstantBufferData = GuardianMaterialProperties();
+		}
+		GuardianMaterialConstantBuffer(
+			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
+			: GuardianConstantBuffer(graphics, GE_PIXELSHADER_CONSTANTBUFFER, index)
+		{
+			this->ConstantBufferData = GuardianMaterialProperties();
+		}
+		GuardianMaterialConstantBuffer(const GuardianMaterialConstantBuffer& other) :
+			GuardianConstantBuffer(other)
+		{
+
+		}
+
+		static std::shared_ptr<GuardianMaterialConstantBuffer> CreateNewMaterialConstantBuffer(
+			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
+		{
+			return std::make_shared<GuardianMaterialConstantBuffer>(graphics, index);
+		}
+	};
 }
 
 #endif

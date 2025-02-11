@@ -29,6 +29,10 @@ namespace guardian
 	{
 		this->ModelFilePath = modelFilePath;
 		this->ModelFileDirectory = modelFilePath.substr(0, modelFilePath.find_last_of('/'));
+		if (this->ModelFileDirectory == modelFilePath)
+		{
+			this->ModelFileDirectory = modelFilePath.substr(0, modelFilePath.find_last_of("\\"));
+		}
 
 		Assimp::Importer Importer;
 		const aiScene* ModelScene = Importer.ReadFile(
@@ -87,20 +91,13 @@ namespace guardian
 
 	std::shared_ptr<GuardianMesh> GuardianModel::ProcessModelMesh(std::shared_ptr<GuardianGraphics> graphics, aiMesh* mesh, const aiScene* scene)
 	{
-		struct ModelVertex
-		{
-			GVector3 Position;
-			GVector2 TextureCoord;
-			GVector3 Normal;
-		};
-
 		std::shared_ptr<GuardianMesh> Mesh = std::make_shared<GuardianMesh>();
-		std::vector<ModelVertex> Vertices;
+		std::vector<GuardianMesh::Vertex> Vertices;
 		std::vector<UINT> Indices;
 
 		for (UINT i = 0; i < mesh->mNumVertices; i++)
 		{
-			ModelVertex Vertex;
+			GuardianMesh::Vertex Vertex;
 
 			Vertex.Position.x = mesh->mVertices[i].x;
 			Vertex.Position.y = mesh->mVertices[i].y;
@@ -132,34 +129,10 @@ namespace guardian
 			}
 		}
 
-		if (!Mesh->IsStaticApplicablesInitialized())
-		{
-			Mesh->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_SOLID, GE_CULL_BACK));
-			Mesh->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
-
-			auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/ModelVertexShader.hlsl");
-			Mesh->AddStaticApplicable(vs);
-			Mesh->AddStaticApplicable(
-				GuardianPixelShader::CreateNewPixelShader(graphics, "../Guardian Engine/Shaders/ModelPixelShader.hlsl"));
-
-			D3D11_INPUT_ELEMENT_DESC id[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			};
-			Mesh->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));
-
-			Mesh->AddStaticApplicable(GuardianSampler::CreateNewSampler(graphics, GE_FILTER_MIN_MAG_MIP_LINEAR));
-		}
+		Mesh->InitializeMesh(graphics, Vertices, Indices);
 
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		Mesh->AddApplicable(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
-
-		Mesh->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, (void*)Vertices.data(), (UINT)Vertices.size(), (UINT)sizeof(ModelVertex)));
-		Mesh->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, Indices));
-
-		Mesh->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
+		Mesh->GetMaterial()->SetAlbedoTexture(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
 
 		return Mesh;
 	}
@@ -175,6 +148,10 @@ namespace guardian
 			material->GetTexture(type, 0, &path);
 
 			GString FilePath = this->ModelFileDirectory + "/" + path.C_Str();
+			if (!std::filesystem::exists(FilePath))
+			{
+				FilePath = this->ModelFileDirectory + "\\" + path.C_Str();
+			}
 			Texture = GuardianTexture::CreateNewTexture(graphics, GuardianSurface(FilePath));
 		}
 

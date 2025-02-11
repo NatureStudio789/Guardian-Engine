@@ -8,6 +8,8 @@ namespace guardian
 		this->RenderingVertexBuffer = std::make_shared<GuardianVertexBuffer>();
 		this->RenderingIndexBuffer = std::make_shared<GuardianIndexBuffer>();
 		this->RenderingTransformConstantBuffer = std::make_shared<GuardianTransformConstantBuffer>();
+		this->RenderingMaterial = std::make_shared<GuardianMaterial>();
+		this->RenderingTexturesNumber = 0;
 
 		this->ApplicableList.clear();
 	}
@@ -18,6 +20,8 @@ namespace guardian
 		this->RenderingVertexBuffer = other.RenderingVertexBuffer;
 		this->RenderingIndexBuffer = other.RenderingIndexBuffer;
 		this->RenderingTransformConstantBuffer = other.RenderingTransformConstantBuffer;
+		this->RenderingMaterial = other.RenderingMaterial;
+		this->RenderingTexturesNumber = other.RenderingTexturesNumber;
 		this->ApplicableList = other.ApplicableList;
 	}
 
@@ -27,6 +31,7 @@ namespace guardian
 		{
 			applicable.reset();
 		}
+		this->RenderingTexturesNumber = 0;
 	}
 
 	void GuardianRenderable::AddApplicable(std::shared_ptr<GuardianApplicable> applicable)
@@ -42,6 +47,10 @@ namespace guardian
 		else if (typeid(*applicable) == typeid(GuardianTransformConstantBuffer))
 		{
 			throw GUARDIAN_TYPE_EXCEPTION("TransformConstantBuffer", "the type except the TransformConstantBuffer");
+		}
+		else if (typeid(*applicable) == typeid(GuardianTexture))
+		{
+			this->RenderingTexturesNumber++;
 		}
 
 		this->ApplicableList.push_back(applicable);
@@ -74,6 +83,11 @@ namespace guardian
 		}
 	}
 
+	void GuardianRenderable::SetMaterial(std::shared_ptr<GuardianMaterial> material)
+	{
+		this->RenderingMaterial = material;
+	}
+
 	void GuardianRenderable::Render(std::shared_ptr<GuardianGraphics> graphics)
 	{
 		for (auto& staticApplicable : this->GetStaticApplicableList())
@@ -85,6 +99,8 @@ namespace guardian
 		{
 			applicable->Apply(graphics);
 		}
+
+		this->RenderingMaterial->ApplyMaterial(graphics);
 
 		if (this->RenderingVertexBuffer->GetVertexBufferObject().Get())
 		{
@@ -113,5 +129,15 @@ namespace guardian
 	std::shared_ptr<GuardianIndexBuffer> GuardianRenderable::GetIndexBuffer()
 	{
 		return this->RenderingIndexBuffer;
+	}
+
+	std::shared_ptr<GuardianMaterial> GuardianRenderable::GetMaterial()
+	{
+		return this->RenderingMaterial;
+	}
+
+	const UINT& GuardianRenderable::GetTexturesNumber() const noexcept
+	{
+		return this->RenderingTexturesNumber;
 	}
 }

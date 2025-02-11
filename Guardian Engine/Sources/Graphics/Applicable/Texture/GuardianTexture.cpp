@@ -25,10 +25,15 @@ namespace guardian
 		this->TextureAppliedSlot = 0;
 	}
 
+	void GuardianTexture::SetTextureAppliedSlot(int index)
+	{
+		this->TextureAppliedSlot = index;
+	}
+
 	void GuardianTexture::InitializeTexture(
 		std::shared_ptr<GuardianGraphics> graphics, const GuardianSurface& surface, int index)
 	{
-		this->TextureAppliedSlot = index;
+		this->SetTextureAppliedSlot(index);
 
 		D3D11_TEXTURE2D_DESC TextureDesc;
 		ZeroMemory(&TextureDesc, sizeof(D3D11_TEXTURE2D_DESC));

@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERABLE_H_
 #define _GE_GUARDIANRENDERABLE_H_
-#include "../Applicable/Sampler/GuardianSampler.h"
+#include "../Material/GuardianMaterial.h"
 
 namespace guardian 
 {
@@ -25,6 +25,7 @@ namespace guardian
 		void AddVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
 		void AddIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
 		void AddTransformConstantBuffer(std::shared_ptr<GuardianTransformConstantBuffer> transformCBuffer);
+		void SetMaterial(std::shared_ptr<GuardianMaterial> material);
 
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}
@@ -32,12 +33,16 @@ namespace guardian
 		std::shared_ptr<GuardianTransformConstantBuffer> GetTransformConstantBuffer();
 		std::shared_ptr<GuardianVertexBuffer> GetVertexBuffer();
 		std::shared_ptr<GuardianIndexBuffer> GetIndexBuffer();
+		std::shared_ptr<GuardianMaterial> GetMaterial();
+		const UINT& GetTexturesNumber() const noexcept;
 
 	protected:
 		GuardianUUID RenderableId;
 		std::shared_ptr<GuardianVertexBuffer> RenderingVertexBuffer;
 		std::shared_ptr<GuardianIndexBuffer> RenderingIndexBuffer;
 		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;
+		std::shared_ptr<GuardianMaterial> RenderingMaterial;
+		UINT RenderingTexturesNumber;
 
 		std::vector<std::shared_ptr<GuardianApplicable>> ApplicableList;
 

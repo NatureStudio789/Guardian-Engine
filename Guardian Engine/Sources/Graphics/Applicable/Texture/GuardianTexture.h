@@ -13,6 +13,7 @@ namespace guardian
 		GuardianTexture(const GuardianTexture& other);
 		~GuardianTexture() override;
 
+		void SetTextureAppliedSlot(int index);
 		void InitializeTexture(std::shared_ptr<GuardianGraphics> graphics,
 			const GuardianSurface& surface, int index = 0);
 

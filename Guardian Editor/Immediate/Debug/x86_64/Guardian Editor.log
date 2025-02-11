@@ -1,5 +1,4 @@
 ﻿  GuardianEditor.cpp
-  GuardianPanel.cpp
   GuardianResourceBrowserPanel.cpp
   GuardianSceneHierarchyPanel.cpp
   GuardianScenePanel.cpp

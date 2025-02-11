@@ -294,7 +294,12 @@ namespace guardian
 					"Model Component"))
 				{
 					GString fileName = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('/') + 1);
+					if (fileName == model.GetModelFilePath())
+					{
+						fileName = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('\\') + 1);
+					}
 					ImGui::Text("Model File Path");
+					ImGui::SameLine();
 					if (ImGui::Button(fileName.c_str()))
 					{
 						GString filePath = GuardianFileDialog::OpenFile("Model File (*.obj)\0*.obj\0");

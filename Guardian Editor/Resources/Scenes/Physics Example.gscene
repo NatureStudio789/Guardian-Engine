@@ -1,5 +1,59 @@
 Scene: Unnamed
 Entities:
+  - Entity: 10484143216221030627
+    Tag Component:
+      Tag: SBDS
+    Transform Component:
+      Position: [9.93394756, 27.3199425, -1.41938174]
+      Rotation: [-58.1156845, 83.0771713, -150.36412]
+      Scale: [1, 1, 1]
+    Model Component:
+      File Path: Resources/Models/SBDS/SBDS.obj
+    Box Collider Component:
+      Half Size: [1, 1, 1]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 9.99999975e-05
+    RigidBody Component:
+      Type: 1
+      Density: 360
+  - Entity: 1102962296484071954
+    Tag Component:
+      Tag: Main Camera
+    Transform Component:
+      Position: [0, 11.5653982, -22.7602043]
+      Rotation: [7.25, -2.59899998, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [0, 11.5653982, -22.7602043]
+      Direction: [7.25, -2.59899998, 0]
+      Is Freelook: true
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.90206897
+        NearZ: 0.100000001
+        FarZ: 10000
+  - Entity: 13546964816139194417
+    Tag Component:
+      Tag: Nanosuit
+    Transform Component:
+      Position: [3.7402401, 11.4426498, 0.479999989]
+      Rotation: [-0, 0, -67.763382]
+      Scale: [1, 1, 1]
+    Script Component:
+      Class: Guardian.Player
+    Model Component:
+      File Path: Resources/Models/Nanosuit/Nanosuit.obj
+    Box Collider Component:
+      Half Size: [2.5, 8, 1.5]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.200000003
+    RigidBody Component:
+      Type: 1
+      Density: 1
   - Entity: 3396926578438212881
     Tag Component:
       Tag: Ground
@@ -17,57 +71,3 @@ Entities:
         Restitution: 0.100000001
     RigidBody Component:
       Type: 0
-  - Entity: 13546964816139194417
-    Tag Component:
-      Tag: Nanosuit
-    Transform Component:
-      Position: [0, 12.2049999, 0.479999989]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Script Component:
-      Class: Guardian.Player
-    Model Component:
-      File Path: Resources/Models/Nanosuit/Nanosuit.obj
-    Box Collider Component:
-      Half Size: [2.5, 8, 1.5]
-      Physics Material:
-        Static Friction: 0.5
-        Dynamic Friction: 0.5
-        Restitution: 0.200000003
-    RigidBody Component:
-      Type: 1
-      Density: 1
-  - Entity: 1102962296484071954
-    Tag Component:
-      Tag: Main Camera
-    Transform Component:
-      Position: [0, 10.9490004, -17.9099998]
-      Rotation: [7.25, -2.59899998, 0]
-      Scale: [1, 1, 1]
-    Camera Component:
-      Position: [0, 10.9490004, -17.9099998]
-      Direction: [7.25, -2.59899998, 0]
-      Is Freelook: true
-      Perspective Projection:
-        FOV: 60
-        Aspect: 1.90206897
-        NearZ: 0.100000001
-        FarZ: 10000
-  - Entity: 10484143216221030627
-    Tag Component:
-      Tag: SBDS
-    Transform Component:
-      Position: [0.930288613, 21.2820454, 0.0432704613]
-      Rotation: [-77.8934708, 58.639679, -160.726547]
-      Scale: [1, 1, 1]
-    Model Component:
-      File Path: Resources/Models/SBDS/SBDS.obj
-    Box Collider Component:
-      Half Size: [1, 1, 1]
-      Physics Material:
-        Static Friction: 0.5
-        Dynamic Friction: 0.5
-        Restitution: 1
-    RigidBody Component:
-      Type: 1
-      Density: 1
