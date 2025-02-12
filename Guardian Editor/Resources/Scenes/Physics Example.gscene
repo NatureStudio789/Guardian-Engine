@@ -1,60 +1,112 @@
 Scene: Unnamed
 Entities:
-  - Entity: 10484143216221030627
+  - Entity: 9610510829142013090
     Tag Component:
-      Tag: SBDS
+      Tag: Empty Entity1
     Transform Component:
-      Position: [9.93394756, 27.3199425, -1.41938174]
-      Rotation: [-58.1156845, 83.0771713, -150.36412]
+      Position: [3.80541277, 4.88094187, -0.361576438]
+      Rotation: [38.5944901, 9.39150959e-06, 43.4839745]
       Scale: [1, 1, 1]
     Model Component:
-      File Path: Resources/Models/SBDS/SBDS.obj
+      File Path: D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Resources\Models\SBDS\SBDS.obj
     Box Collider Component:
       Half Size: [1, 1, 1]
       Physics Material:
         Static Friction: 0.5
         Dynamic Friction: 0.5
-        Restitution: 9.99999975e-05
-    RigidBody Component:
-      Type: 1
-      Density: 360
-  - Entity: 1102962296484071954
-    Tag Component:
-      Tag: Main Camera
-    Transform Component:
-      Position: [0, 11.5653982, -22.7602043]
-      Rotation: [7.25, -2.59899998, 0]
-      Scale: [1, 1, 1]
-    Camera Component:
-      Position: [0, 11.5653982, -22.7602043]
-      Direction: [7.25, -2.59899998, 0]
-      Is Freelook: true
-      Perspective Projection:
-        FOV: 60
-        Aspect: 1.90206897
-        NearZ: 0.100000001
-        FarZ: 10000
-  - Entity: 13546964816139194417
-    Tag Component:
-      Tag: Nanosuit
-    Transform Component:
-      Position: [3.7402401, 11.4426498, 0.479999989]
-      Rotation: [-0, 0, -67.763382]
-      Scale: [1, 1, 1]
-    Script Component:
-      Class: Guardian.Player
-    Model Component:
-      File Path: Resources/Models/Nanosuit/Nanosuit.obj
-    Box Collider Component:
-      Half Size: [2.5, 8, 1.5]
-      Physics Material:
-        Static Friction: 0.5
-        Dynamic Friction: 0.5
-        Restitution: 0.200000003
+        Restitution: 0.600000024
     RigidBody Component:
       Type: 1
       Density: 1
-  - Entity: 3396926578438212881
+  - Entity: 18366408778278194884
+    Tag Component:
+      Tag: Empty Entity2
+    Transform Component:
+      Position: [0.694006741, 4.50741768, -0.519967079]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Model Component:
+      File Path: D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Resources\Models\Cube\Cube.obj
+    Box Collider Component:
+      Half Size: [1, 1, 1]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1
+  - Entity: 6615748073826524949
+    Tag Component:
+      Tag: Empty Entity3
+    Transform Component:
+      Position: [1.83548284, 6.379776, 0]
+      Rotation: [-0, 29.179636, -0]
+      Scale: [0.5, 0.5, 0.5]
+    Model Component:
+      File Path: Resources/Models/SBDS/SBDS.obj
+    Box Collider Component:
+      Half Size: [0.5, 0.5, 0.5]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1
+  - Entity: 9347927287678198785
+    Tag Component:
+      Tag: Empty Entity4
+    Transform Component:
+      Position: [0.963813424, 7.50850439, -0.0518538654]
+      Rotation: [0, 0, 0]
+      Scale: [0.5, 0.5, 0.5]
+    Model Component:
+      File Path: D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Resources\Models\Cube\Cube.obj
+    Box Collider Component:
+      Half Size: [0.5, 0.5, 0.5]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1
+  - Entity: 14566172386622594462
+    Tag Component:
+      Tag: Empty Entity5
+    Transform Component:
+      Position: [1.43965983, 2.28646994, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Model Component:
+      File Path: D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Resources\Models\Sphere\Sphere.obj
+    Sphere Collider Component:
+      Radius: 1
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1
+  - Entity: 15708168920103296846
+    Tag Component:
+      Tag: Camera
+    Transform Component:
+      Position: [0, 10.8472805, 20.6335278]
+      Rotation: [-171.146851, 0, 180]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [0, 10.8472805, 20.6335278]
+      Direction: [-171.146851, 0, 180]
+      Is Freelook: true
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.77777779
+        NearZ: 0.100000001
+        FarZ: 10000
+  - Entity: 17535945012892465555
     Tag Component:
       Tag: Ground
     Transform Component:
@@ -62,12 +114,12 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [14, 1, 14]
     Model Component:
-      File Path: Resources/Models/Cube/Cube.obj
+      File Path: D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Resources\Models\Ground\Ground.obj
     Box Collider Component:
       Half Size: [14, 1, 14]
       Physics Material:
         Static Friction: 0.5
         Dynamic Friction: 0.5
-        Restitution: 0.100000001
+        Restitution: 0.600000024
     RigidBody Component:
       Type: 0

@@ -4,21 +4,19 @@
 
 namespace guardian
 {
-	class GUARDIAN_API GuardianPhysicsMaterial : public GuardianSerializable
+	class GUARDIAN_API GuardianPhysicsMaterial
 	{
 	public:
 		GuardianPhysicsMaterial();
-		GuardianPhysicsMaterial(float staticFriction, float dynamicFriction, float restitution);
+		GuardianPhysicsMaterial(
+			float staticFriction, float dynamicFriction, float restitution);
 		GuardianPhysicsMaterial(const GuardianPhysicsMaterial& other);
 		~GuardianPhysicsMaterial();
 
-		void InitializePhysicsMaterial(float staticFriction, float dynamicFriction, float restitution);
-		void ResetStaticFriction(float staticFriction);
-		void ResetDynamicFriction(float dynamicFriction);
-		void ResetRestitution(float restituion);
-
-		void Serialize(const GString& filePath) override;
-		void Deserialize(const GString& filePath) override;
+		void SetStaticFriction(float staticFriction);
+		void SetDynamicFriction(float dynamicFriction);
+		void SetRestitution(float restituion);
+		void InitializePhysicsMaterial();
 
 		PxMaterial* GetMaterialObject() noexcept;
 

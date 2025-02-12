@@ -24,6 +24,10 @@ namespace guardian
 	void GuardianCapsuleCollider::SetColliderMaterial(const GuardianPhysicsMaterial& material)
 	{
 		this->ColliderMaterial = material;
+		if (!this->ColliderMaterial.GetMaterialObject())
+		{
+			this->ColliderMaterial.InitializePhysicsMaterial();
+		}
 	}
 
 	void GuardianCapsuleCollider::SetColliderProperties(const GuardianCapsuleColliderProperties& properties)

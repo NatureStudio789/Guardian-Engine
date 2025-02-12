@@ -1,4 +1,5 @@
 #include "GuardianMesh.h"
+#include "../../Renderer/GuardianRenderer.h"
 
 namespace guardian
 {

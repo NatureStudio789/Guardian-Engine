@@ -28,6 +28,10 @@ namespace guardian
 	void GuardianMeshCollider::SetColliderMaterial(const GuardianPhysicsMaterial& material)
 	{
 		this->ColliderMaterial = material;
+		if (!this->ColliderMaterial.GetMaterialObject())
+		{
+			this->ColliderMaterial.InitializePhysicsMaterial();
+		}
 	}
 
 	void GuardianMeshCollider::InitializeMeshCollider()

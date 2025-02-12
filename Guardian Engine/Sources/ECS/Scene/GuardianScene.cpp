@@ -86,8 +86,8 @@ namespace guardian
 	{
 		this->SceneEntityList.clear();
 		this->CurrentScenePath = "";
-		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 1.0f, -2.0f), 
-			GVector3(0.0f, 0.0f, 0.0f), GuardianPerspectiveProjection(60.0f, 16.0f / 9.0f, 0.001f, 10000.0f));
+		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 8.0f, -30.0f), 
+			GVector3(15.0f, 0.0f, 0.0f), GuardianPerspectiveProjection(60.0f, 16.0f / 9.0f, 0.001f, 10000.0f));
 		this->RuntimeCamera = std::make_shared<GuardianCamera>();
 		this->ShouldOperateCamera = false;
 		this->SceneGrid = null;
@@ -99,7 +99,7 @@ namespace guardian
 
 	GuardianScene::GuardianScene(std::shared_ptr<GuardianGraphics> graphics)
 	{
-		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 1.0f, -2.0f),
+		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 8.0f, -30.0f),
 			GVector3(0.0f, 0.0f, 0.0f), GuardianPerspectiveProjection(60.0f, 16.0f / 9.0f, 0.001f, 10000.0f));
 		this->ShouldOperateCamera = false;
 		this->SceneGrid = null;
@@ -364,6 +364,19 @@ namespace guardian
 		}
 
 		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
+				{
+					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix() *
+						this->EditorCamera->GetViewMatrix() *
+						this->EditorCamera->GetProjectionMatrix());
+
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
+				});
+		}
+
+		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
 			view.each([this](const auto& e, 
 				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
@@ -487,6 +500,40 @@ namespace guardian
 		}
 
 		{
+			auto view = this->SceneRegistry.view<GuardianMeshColliderComponent, GuardianRigidBodyComponent>();
+			view.each([this](const auto& e, GuardianMeshColliderComponent& MCComponet,
+				GuardianRigidBodyComponent& RBComponent)
+				{
+					if (RBComponent.RigidBodyType == GE_RIGIDBODY_STATIC)
+					{
+						MCComponet.MeshCollider->InitializeMeshCollider();
+
+						if (!RBComponent.StaticRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.StaticRigidBody->SetRigidBodyCollider(MCComponet.MeshCollider);
+						}
+
+						RBComponent.StaticRigidBody->InitializeStaticRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.StaticRigidBody->GetRigidBodyObject());
+					}
+					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
+					{
+						MCComponet.MeshCollider->InitializeMeshCollider();
+
+						if (!RBComponent.DynamicRigidBody->GetRigidBodyCollider())
+						{
+							RBComponent.DynamicRigidBody->SetRigidBodyCollider(MCComponet.MeshCollider);
+						}
+
+						RBComponent.DynamicRigidBody->InitializeDynamicRigidBody();
+
+						this->PhysicsWorld->addActor(*RBComponent.DynamicRigidBody->GetRigidBodyObject());
+					}
+				});
+		}
+
+		{
 			auto view = this->SceneRegistry.view<GuardianNativeScriptComponent>();
 			view.each([this](const auto& e, GuardianNativeScriptComponent& SComponent)
 			{
@@ -572,6 +619,19 @@ namespace guardian
 				this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
 				this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
 			});
+		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
+				{
+					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix() *
+						this->RuntimeCamera->GetViewMatrix() *
+						this->RuntimeCamera->GetProjectionMatrix());
+
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
+				});
 		}
 
 		{
@@ -813,7 +873,7 @@ namespace guardian
 		SceneOutput << YAML::Value << YAML::BeginSeq;
 		for (auto& entity : this->SceneEntityList)
 		{
-			this->SaveEntity(SceneOutput, entity.second);
+			this->SaveEntity(filePath, SceneOutput, entity.second);
 		}
 		SceneOutput << YAML::EndSeq;
 		SceneOutput << YAML::EndMap;
@@ -822,7 +882,7 @@ namespace guardian
 		SceneFileOutput << SceneOutput.c_str();
 	}
 
-	void GuardianScene::SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity)
+	void GuardianScene::SaveEntity(const GString& filePath, YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity)
 	{
 		output << YAML::BeginMap;
 		output << YAML::Key << "Entity";
@@ -912,7 +972,7 @@ namespace guardian
 			output << YAML::Key << "Radius" << YAML::Value <<
 				entity->GetComponent<GuardianSphereColliderComponent>().SphereCollider->GetColliderProperties().Radius;
 
-			auto material = entity->GetComponent<GuardianSphereColliderComponent>().SphereCollider->GetColliderMaterial();
+			auto& material = entity->GetComponent<GuardianSphereColliderComponent>().SphereCollider->GetColliderMaterial();
 			output << YAML::Key << "Physics Material";
 			output << YAML::BeginMap;
 			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();
@@ -931,7 +991,7 @@ namespace guardian
 			output << YAML::Key << "Half Size" << YAML::Value <<
 				entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderProperties().BoxHalfsize;
 
-			auto material = entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderMaterial();
+			auto& material = entity->GetComponent<GuardianBoxColliderComponent>().BoxCollider->GetColliderMaterial();
 			output << YAML::Key << "Physics Material";
 			output << YAML::BeginMap;
 			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();
@@ -952,7 +1012,7 @@ namespace guardian
 			output << YAML::Key << "Half Height" << YAML::Value <<
 				entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderProperties().HalfHeight;
 
-			auto material = entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderMaterial();
+			auto& material = entity->GetComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->GetColliderMaterial();
 			output << YAML::Key << "Physics Material";
 			output << YAML::BeginMap;
 			output << YAML::Key << "Static Friction" << YAML::Value << material.GetStaticFriction();

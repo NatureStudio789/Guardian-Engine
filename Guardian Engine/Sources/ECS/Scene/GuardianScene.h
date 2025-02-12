@@ -45,7 +45,7 @@ namespace guardian
 		void Deserialize(const GString& filePath) override;
 		void Serialize(const GString& filePath) override;
 
-		void SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
+		void SaveEntity(const GString& filePath, YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
 
 		void UpdateProjectionAspect(float newWidth, float newHeight);
 

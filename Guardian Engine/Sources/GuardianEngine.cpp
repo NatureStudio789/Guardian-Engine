@@ -53,6 +53,11 @@ namespace guardian
 			}
 			GuardianApplication::ApplicationInstance->EndUpRendering();
 		}
+
+		if (this->EngineScene->GetSceneState() == GE_SCENE_RUNTIME)
+		{
+			this->EngineScene->StopRuntime();
+		}
 	}
 
 	std::shared_ptr<GuardianScene> GuardianEngine::GetScene() noexcept

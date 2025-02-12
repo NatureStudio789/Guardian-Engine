@@ -76,6 +76,21 @@ namespace guardian
 		GString ClassName;
 	};
 
+	class GUARDIAN_API GuardianMeshComponent : public GuardianComponent
+	{
+	public:
+		GuardianMeshComponent()
+		{
+			this->Mesh = std::make_shared<GuardianMesh>();
+		}
+		GuardianMeshComponent(const GuardianMeshComponent& other)
+		{
+			this->Mesh = other.Mesh;
+		}
+
+		std::shared_ptr<GuardianMesh> Mesh;
+	};
+
 	class GUARDIAN_API GuardianModelComponent : public GuardianComponent, public GuardianModel
 	{
 	public:
@@ -133,6 +148,21 @@ namespace guardian
 
 		std::shared_ptr<GuardianCapsuleCollider> CapsuleCollider;
 		std::shared_ptr<GuardianGeometry> CapsuleGeometry;
+	};
+
+	class GUARDIAN_API GuardianMeshColliderComponent : public GuardianComponent
+	{
+	public:
+		GuardianMeshColliderComponent()
+		{
+			this->MeshCollider = std::make_shared<GuardianMeshCollider>();
+		}
+		GuardianMeshColliderComponent(const GuardianMeshColliderComponent& other)
+		{
+			this->MeshCollider = other.MeshCollider;
+		}
+
+		std::shared_ptr<GuardianMeshCollider> MeshCollider;
 	};
 
 	enum GUARDIAN_API GuardianRigidBodyType

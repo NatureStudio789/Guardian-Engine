@@ -2,7 +2,7 @@ Scene: Unnamed
 Entities:
   - Entity: 1615171598229152630
     Tag Component:
-      Tag: Empty Entity
+      Tag: Capsule
     Transform Component:
       Position: [-4, 8.69999981, 0]
       Rotation: [0, 0, 52]
