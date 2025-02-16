@@ -4,6 +4,8 @@ namespace guardian
 {
 	GuardianMaterial::GuardianMaterial()
 	{
+		this->MaterialId = GuardianUUID();
+
 		this->AlbedoTexture = null;
 		this->UsingAlbedoTexture = false;
 
@@ -28,6 +30,8 @@ namespace guardian
 
 	GuardianMaterial::GuardianMaterial(const GuardianMaterial& other)
 	{
+		this->MaterialId = other.MaterialId;
+
 		this->AlbedoTexture = other.AlbedoTexture;
 		this->UsingAlbedoTexture = other.UsingAlbedoTexture;
 
@@ -52,6 +56,7 @@ namespace guardian
 
 	GuardianMaterial::~GuardianMaterial()
 	{
+		this->MaterialId = 0;
 	}
 
 	void GuardianMaterial::SetAlbedoTexture(std::shared_ptr<GuardianTexture> albedo)
@@ -179,5 +184,15 @@ namespace guardian
 		{
 			this->AoTexture->Apply(graphics);
 		}
+	}
+
+	const GuardianUUID& GuardianMaterial::GetMaterialId() const noexcept
+	{
+		return this->MaterialId;
+	}
+
+	bool GuardianMaterial::operator==(const GuardianMaterial& other) const
+	{
+		return this->MaterialId == other.MaterialId;
 	}
 }

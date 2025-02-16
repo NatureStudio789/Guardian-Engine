@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANWINDOW_H_
 #define _GE_GUARDIANWINDOW_H_
-#include "../../Profile/Program/GuardianProgram.h"
+#include "../ResourceSystem/GuardianResourceSystem.h"
 
 namespace guardian
 {

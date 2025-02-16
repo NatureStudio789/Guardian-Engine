@@ -25,6 +25,8 @@ namespace guardian
 		void ClearModelMeshList();
 
 		const GString& GetModelFilePath() const noexcept;
+		const std::map<GString, std::shared_ptr<GuardianMesh>>& GetModelMeshList() const noexcept;
+		const std::map<GString, std::shared_ptr<GuardianMaterial>>& GetModelMaterialList() const noexcept;
 
 		static std::shared_ptr<GuardianModel> CreateNewModel(
 			std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath);
@@ -39,7 +41,8 @@ namespace guardian
 
 		GString ModelFileDirectory;
 		GString ModelFilePath;
-		std::vector<std::shared_ptr<GuardianMesh>> ModelMeshList;
+		std::map<GString, std::shared_ptr<GuardianMesh>> ModelMeshList;
+		std::map<GString, std::shared_ptr<GuardianMaterial>> ModelMaterialList;
 	};
 }
 

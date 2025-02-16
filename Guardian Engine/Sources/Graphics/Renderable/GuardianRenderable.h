@@ -25,7 +25,6 @@ namespace guardian
 		void AddVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
 		void AddIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
 		void AddTransformConstantBuffer(std::shared_ptr<GuardianTransformConstantBuffer> transformCBuffer);
-		void SetMaterial(std::shared_ptr<GuardianMaterial> material);
 
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}

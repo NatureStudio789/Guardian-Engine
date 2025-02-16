@@ -82,13 +82,16 @@ namespace guardian
 		GuardianMeshComponent()
 		{
 			this->Mesh = std::make_shared<GuardianMesh>();
+			this->MeshName.clear();
 		}
 		GuardianMeshComponent(const GuardianMeshComponent& other)
 		{
 			this->Mesh = other.Mesh;
+			this->MeshName = other.MeshName;
 		}
 
 		std::shared_ptr<GuardianMesh> Mesh;
+		GString MeshName;
 	};
 
 	class GUARDIAN_API GuardianModelComponent : public GuardianComponent, public GuardianModel

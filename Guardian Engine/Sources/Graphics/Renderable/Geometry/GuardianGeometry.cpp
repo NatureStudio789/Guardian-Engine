@@ -3,24 +3,18 @@
 
 namespace guardian
 {
-	GuardianGeometry::GuardianGeometry()
+	GuardianGeometry::GuardianGeometry() : GuardianRenderableBase<GuardianGeometry>()
 	{
 		
 	}
 
-	GuardianGeometry::GuardianGeometry(const GuardianGeometry& other)
+	GuardianGeometry::GuardianGeometry(const GuardianGeometry& other) : GuardianRenderableBase<GuardianGeometry>(other)
 	{
 
 	}
 
 	GuardianGeometry::~GuardianGeometry()
 	{
-		for (auto& staticApplicableList : StaticApplicableList)
-		{
-			staticApplicableList.reset();
-		}
-		StaticApplicableList.clear();
-
 		for (auto& applicable : this->ApplicableList)
 		{
 			applicable.reset();

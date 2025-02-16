@@ -2,6 +2,7 @@
 #define _GE_GUARDIANSCENEHIERARCHYPANEL_H_
 #include "GuardianPanel.h"
 #include <ECS/Scene/GuardianScene.h>
+#include <Application/ResourceSystem/GuardianResourceSystem.h>
 
 namespace guardian
 {
@@ -22,11 +23,14 @@ namespace guardian
 
 	private:
 		bool RenderEntityNode(GuardianEntity* entity);
-		void RenderEntityComponents();
+		void RenderEntityComponents(bool& openMeshBrowser, bool& openMaterialBrowser);
+		void RenderMeshBrowser(GString& meshName, bool& open);
+		void RenderMaterialBrowser(GString& materialName, bool& open);
 
 		GuardianScene* PanelScene;
 		GuardianUUID SelectedEntityId;
 		int CurrentOperation;
+		GuardianTexture MeshFileIcon;
 
 		friend class GuardianEditor;
 	};

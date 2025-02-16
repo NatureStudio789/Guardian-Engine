@@ -30,6 +30,7 @@ namespace guardian
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
+		GuardianResourceSystem::InitializeResourceSystem();
 		GuardianPhysicsEngine::InitializePhysicsEngine();
 		GuardianScriptEngine::InitializeScriptEngine();
 
@@ -42,6 +43,7 @@ namespace guardian
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianApplication::ApplicationInstance->UpdateApplication();
+			GuardianResourceSystem::UpdateResourceSystem();
 			this->EngineScene->UpdateScene(16.6667f);
 			this->EngineProgram->Update();
 

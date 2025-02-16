@@ -49,7 +49,7 @@ namespace guardian
 	{
 		for (auto& mesh : this->ModelMeshList)
 		{
-			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, mesh);
+			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, mesh.second);
 		}
 	}
 
@@ -57,7 +57,7 @@ namespace guardian
 	{
 		for (auto& mesh : this->ModelMeshList)
 		{
-			mesh->GetTransformConstantBuffer()->UpdateData(transformMatrix);
+			mesh.second->GetTransformConstantBuffer()->UpdateData(transformMatrix);
 		}
 	}
 
@@ -65,7 +65,8 @@ namespace guardian
 	{
 		for (auto& mesh : this->ModelMeshList)
 		{
-			mesh.reset();
+			mesh.second.reset();
+			mesh.second = null;
 		}
 		this->ModelMeshList.clear();
 	}
@@ -75,12 +76,22 @@ namespace guardian
 		return this->ModelFilePath;
 	}
 
+	const std::map<GString, std::shared_ptr<GuardianMesh>>& GuardianModel::GetModelMeshList() const noexcept
+	{
+		return this->ModelMeshList;
+	}
+
+	const std::map<GString, std::shared_ptr<GuardianMaterial>>& GuardianModel::GetModelMaterialList() const noexcept
+	{
+		return this->ModelMaterialList;
+	}
+
 	void GuardianModel::ProcessModelNode(std::shared_ptr<GuardianGraphics> graphics, aiNode* node, const aiScene* scene)
 	{
 		for (UINT i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			this->ModelMeshList.push_back(this->ProcessModelMesh(graphics, mesh, scene));
+			this->ModelMeshList[mesh->mName.C_Str()] = this->ProcessModelMesh(graphics, mesh, scene);
 		}
 
 		for (UINT i = 0; i < node->mNumChildren; i++)
@@ -130,9 +141,13 @@ namespace guardian
 		}
 
 		Mesh->InitializeMesh(graphics, Vertices, Indices);
-
+		
 		aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-		Mesh->GetMaterial()->SetAlbedoTexture(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
+		std::shared_ptr<GuardianMaterial> mat = std::make_shared<GuardianMaterial>();
+		mat->SetAlbedoTexture(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
+
+		Mesh->SetMeshMaterial(mat);
+		this->ModelMaterialList[material->GetName().C_Str()] = mat;
 
 		return Mesh;
 	}

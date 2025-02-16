@@ -10,6 +10,8 @@ namespace guardian
 		this->PanelScene = null;
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
+		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+			GuardianSurface("../Guardian Engine/Resources/Textures/MeshFileIcon.png"));
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
@@ -17,6 +19,8 @@ namespace guardian
 		this->PanelName = "Scene Hierarchy";
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
+		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+			GuardianSurface("../Guardian Engine/Resources/Textures/MeshFileIcon.png"));
 		this->SetScene(scene);
 	}
 
@@ -26,6 +30,7 @@ namespace guardian
 		this->SelectedEntityId = other.SelectedEntityId;
 		this->PanelName = other.PanelName;
 		this->CurrentOperation = other.CurrentOperation;
+		this->MeshFileIcon = other.MeshFileIcon;
 	}
 
 	GuardianSceneHierarchyPanel::~GuardianSceneHierarchyPanel()
@@ -79,13 +84,33 @@ namespace guardian
 		}
 
 		static bool open1 = true;
+		static bool OpenMeshBrowser = false;
+		static bool OpenMaterialBrowser = false;
 		if (open1)
 		{
 			ImGui::Begin("Properties", &open1);
 
-			this->RenderEntityComponents();
+			this->RenderEntityComponents(OpenMeshBrowser, OpenMaterialBrowser);
 
 			ImGui::End();
+		}
+
+		GString meshName;
+		this->RenderMeshBrowser(meshName, OpenMeshBrowser);
+		if (!meshName.empty())
+		{
+			GuardianMesh mesh = GuardianResourceSystem::GetMesh(meshName);
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().MeshName = meshName;
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>(mesh);
+		}
+
+		GString materialName;
+		this->RenderMaterialBrowser(materialName, OpenMaterialBrowser);
+		if (!materialName.empty())
+		{
+			GuardianMaterial material = GuardianResourceSystem::GetMaterial(materialName);
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+				Mesh->SetMeshMaterial(std::make_shared<GuardianMaterial>(material));
 		}
 	}
 
@@ -139,7 +164,7 @@ namespace guardian
 		}
 	}
 
-	void GuardianSceneHierarchyPanel::RenderEntityComponents()
+	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, bool& openMaterialBrowser)
 	{
 		if (auto SelectedEntity = this->PanelScene->GetEntity(this->SelectedEntityId))
 		{
@@ -278,6 +303,66 @@ namespace guardian
 					if (!IsScriptExists)
 					{
 						ImGui::PopStyleColor();
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
+			}
+
+			if (SelectedEntity->HasComponent<GuardianMeshComponent>())
+			{
+				auto& mesh = SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianMeshComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Mesh Component"))
+				{
+					ImGui::Text("Mesh Filter");
+					ImGui::SameLine();
+					if (ImGui::Button(SelectedEntity->GetComponent<GuardianMeshComponent>().MeshName.c_str()))
+					{
+						openMeshBrowser = true;
+					}
+
+					ImGui::Text("Mesh Material");
+					ImGui::SameLine();
+					if (ImGui::Button(GuardianResourceSystem::GetMaterialName(
+						*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()).c_str()))
+					{
+						openMaterialBrowser = true;
+					}
+
+					ImGui::Separator();
+
+					if (ImGui::TreeNodeEx((void*)typeid(GuardianMaterial).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+						GuardianResourceSystem::GetMaterialName(
+							*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()).c_str()))
+					{
+						auto material = SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial();
+
+						if (ImGui::TreeNodeEx("Albedo Color (Diffuse Color)", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							static bool UseAlbedoT = material->UsingAlbedoTexture;
+							ImGui::Checkbox("Use Texture", &UseAlbedoT);
+
+							if (!UseAlbedoT)
+							{
+								float albedoColor[3] = { material->AlbedoColor.x, material->AlbedoColor.y, material->AlbedoColor.z };
+								if (ImGui::ColorEdit3("##albedo color", albedoColor))
+								{
+									material->SetAlbedoColor(GVector3(albedoColor[0], albedoColor[1], albedoColor[2]));
+								}
+							}
+							else
+							{
+								ImGui::Button("Texture");
+							}
+
+							ImGui::TreePop();
+						}
+
+						ImGui::TreePop();
 					}
 
 					ImGui::TreePop();
@@ -547,6 +632,15 @@ namespace guardian
 					ImGui::CloseCurrentPopup();
 				}
 
+				if (ImGui::MenuItem("Mesh Component"))
+				{
+					GuardianMesh mesh = GuardianResourceSystem::GetMeshList()["Box"];
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>(mesh);
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GetComponent<GuardianMeshComponent>().MeshName = "Box";
+				}
+
 				if (ImGui::MenuItem("Model Component"))
 				{
 					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
@@ -601,6 +695,98 @@ namespace guardian
 
 				ImGui::EndPopup();
 			}
+		}
+	}
+
+	void GuardianSceneHierarchyPanel::RenderMeshBrowser(GString& meshName, bool& open)
+	{
+		if (open)
+		{
+			ImGui::Begin("Select a Mesh");
+
+			static float padding = 16.0f;
+			static float IconSize = 64.0f;
+			float CellSize = IconSize + padding;
+
+			float panelWidth = ImGui::GetContentRegionAvail().x;
+			int ColumnCount = (int)(panelWidth / CellSize);
+			if (ColumnCount < 1)
+			{
+				ColumnCount = 1;
+			}
+
+			ImGui::Columns(ColumnCount, 0, false);
+
+			for (auto& meshPair : GuardianResourceSystem::GetMeshList())
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+				ImGui::ImageButton(meshPair.first.c_str(),
+					(ImTextureID)this->MeshFileIcon.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
+				ImGui::PopStyleColor(3);
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+				{
+					meshName = meshPair.first;
+
+					open = false;
+				}
+				ImGui::TextWrapped(meshPair.first.c_str());
+
+				ImGui::NextColumn();
+			}
+
+			ImGui::Columns(1);
+
+			ImGui::End();
+		}
+	}
+
+	void GuardianSceneHierarchyPanel::RenderMaterialBrowser(GString& materialName, bool& open)
+	{
+		if (open)
+		{
+			ImGui::Begin("Select a Material");
+
+			static float padding = 16.0f;
+			static float IconSize = 64.0f;
+			float CellSize = IconSize + padding;
+
+			float panelWidth = ImGui::GetContentRegionAvail().x;
+			int ColumnCount = (int)(panelWidth / CellSize);
+			if (ColumnCount < 1)
+			{
+				ColumnCount = 1;
+			}
+
+			ImGui::Columns(ColumnCount, 0, false);
+
+			for (auto& materialPair : GuardianResourceSystem::GetMaterialList())
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+				ImGui::ImageButton(materialPair.first.c_str(),
+					(ImTextureID)this->MeshFileIcon.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
+				ImGui::PopStyleColor(3);
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+				{
+					materialName = materialPair.first;
+
+					open = false;
+				}
+				ImGui::TextWrapped(materialPair.first.c_str());
+
+				ImGui::NextColumn();
+			}
+
+			ImGui::Columns(1);
+
+			ImGui::End();
 		}
 	}
 }

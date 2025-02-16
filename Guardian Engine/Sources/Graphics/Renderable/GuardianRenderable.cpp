@@ -83,11 +83,6 @@ namespace guardian
 		}
 	}
 
-	void GuardianRenderable::SetMaterial(std::shared_ptr<GuardianMaterial> material)
-	{
-		this->RenderingMaterial = material;
-	}
-
 	void GuardianRenderable::Render(std::shared_ptr<GuardianGraphics> graphics)
 	{
 		for (auto& staticApplicable : this->GetStaticApplicableList())

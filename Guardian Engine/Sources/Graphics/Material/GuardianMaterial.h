@@ -26,8 +26,14 @@ namespace guardian
 		void SetAoColor(const float ao);
 
 		void ApplyMaterial(std::shared_ptr<GuardianGraphics> graphics);
+
+		const GuardianUUID& GetMaterialId() const noexcept;
+
+		bool operator==(const GuardianMaterial& other) const;
 		
 	private:
+		GuardianUUID MaterialId;
+
 		std::shared_ptr<GuardianTexture> AlbedoTexture;
 		bool UsingAlbedoTexture;
 
@@ -48,6 +54,8 @@ namespace guardian
 		float RoughnessColor;
 		float AoColor;
 		std::shared_ptr<GuardianMaterialConstantBuffer> MaterialConstantBuffer;
+
+		friend class GuardianSceneHierarchyPanel;
 	};
 }
 

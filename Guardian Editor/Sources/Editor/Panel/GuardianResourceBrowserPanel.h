@@ -2,6 +2,7 @@
 #define _GE_GUARDIANRESOURCEBROWSERPANEL_H_
 #include "GuardianPanel.h"
 #include <Graphics/Applicable/Texture/GuardianTexture.h>
+#include <Application/ResourceSystem/GuardianResourceSystem.h>
 
 namespace guardian
 {

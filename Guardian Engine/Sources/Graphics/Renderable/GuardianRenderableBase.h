@@ -8,6 +8,9 @@ namespace guardian
 	class GuardianRenderableBase : public GuardianRenderable
 	{
 	public:
+		GuardianRenderableBase();
+		GuardianRenderableBase(const GuardianRenderableBase& other);
+
 		void AddStaticApplicable(std::shared_ptr<GuardianApplicable> applicable);
 
 		void AddStaticVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
@@ -24,6 +27,17 @@ namespace guardian
 
 	template<typename T>
 	std::vector<std::shared_ptr<GuardianApplicable>> GuardianRenderableBase<T>::StaticApplicableList;
+
+	template<typename T>
+	inline GuardianRenderableBase<T>::GuardianRenderableBase() : GuardianRenderable()
+	{
+	}
+
+	template<typename T>
+	inline GuardianRenderableBase<T>::GuardianRenderableBase(const GuardianRenderableBase& other) : GuardianRenderable(other)
+	{
+		this->StaticApplicableList = other.StaticApplicableList;
+	}
 
 	template<typename T>
 	inline void GuardianRenderableBase<T>::AddStaticApplicable(std::shared_ptr<GuardianApplicable> applicable)
