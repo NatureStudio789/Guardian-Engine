@@ -138,7 +138,8 @@ namespace guardian
 				}
 				MeshName += Addition;
 
-				MeshResourceList[MeshName] = *mesh.second;
+				GuardianMesh m = *mesh.second.get();
+				MeshResourceList[MeshName] = m;
 			}
 
 			auto& materials = model.GetModelMaterialList();
@@ -154,7 +155,8 @@ namespace guardian
 				}
 				MaterialName += Addition;
 
-				MaterialResourceList[MaterialName] = *material.second;
+				GuardianMaterial mat = *material.second.get();
+				MaterialResourceList[MaterialName] = mat;
 			}
 
 			LoadedResourcePath.push_back(path.string());
@@ -189,7 +191,7 @@ namespace guardian
 		}
 	}
 
-	GuardianMesh GuardianResourceSystem::GetMesh(GString meshName)
+	const GuardianMesh& GuardianResourceSystem::GetMesh(GString meshName)
 	{
 		if (MeshResourceList.count(meshName) > 0)
 		{
@@ -239,7 +241,7 @@ namespace guardian
 		return "Unknown";
 	}
 
-	GuardianMaterial GuardianResourceSystem::GetMaterial(GString materialName)
+	const GuardianMaterial& GuardianResourceSystem::GetMaterial(GString materialName)
 	{
 		if (MaterialResourceList.count(materialName) > 0)
 		{
@@ -251,7 +253,7 @@ namespace guardian
 		}
 	}
 
-	GuardianMaterial GuardianResourceSystem::GetMaterial(const GuardianUUID& materialId)
+	const GuardianMaterial& GuardianResourceSystem::GetMaterial(const GuardianUUID& materialId)
 	{
 		for (auto& material : MaterialResourceList)
 		{

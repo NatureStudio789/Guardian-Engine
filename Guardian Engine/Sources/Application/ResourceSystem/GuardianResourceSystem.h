@@ -11,14 +11,14 @@ namespace guardian
 
 		static void UpdateResourceSystem();
 
-		static GuardianMesh GetMesh(GString meshName);
+		static const GuardianMesh& GetMesh(GString meshName);
 		static const GString GetMeshName(GuardianMesh mesh);
 
 		static GuardianTexture GetTexture(GString textureName);
 		static const GString GetTextureName(GuardianTexture texture);
 
-		static GuardianMaterial GetMaterial(GString materialName);
-		static GuardianMaterial GetMaterial(const GuardianUUID& materialId);
+		static const GuardianMaterial& GetMaterial(GString materialName);
+		static const GuardianMaterial& GetMaterial(const GuardianUUID& materialId);
 		static const GString GetMaterialName(GuardianMaterial material);
 
 		static std::map<GString, GuardianMesh> GetMeshList();

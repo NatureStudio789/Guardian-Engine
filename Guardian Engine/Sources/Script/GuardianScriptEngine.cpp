@@ -55,9 +55,12 @@ namespace guardian
 		InitializeMono();
 		LoadAssembly("Resources/Scripts/Guardian-ScriptCore.dll");
 
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::EntityGetTranslation", EntityGetTranslation);
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::EntitySetTranslation", EntitySetTranslation);
+		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::EntityHasComponent", EntityHasComponent);
+		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::TransformComponentGetTranslation", EntityGetTranslation);
+		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::TransformComponentSetTranslation", EntitySetTranslation);
 		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::InputIsKeyPressed", InputIsKeyPressed);
+
+		GuardianScriptRegistry::RegisterComponents();
 
 		EntityClassList.clear();
 

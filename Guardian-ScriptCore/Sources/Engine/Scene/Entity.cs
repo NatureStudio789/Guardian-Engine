@@ -22,7 +22,7 @@ namespace Guardian
         {
             get
             {
-                return GetComponent<TransformComponent>().Translation;
+                return GetComponent<GuardianTransformComponent>().Translation;
             }
 
             set
@@ -31,13 +31,13 @@ namespace Guardian
             }
         }
 
-        public bool HasComponent<T>() where T : Component, new()
+        public bool HasComponent<T>() where T : GuardianComponent, new()
         {
             Type ComponentType = typeof(T);
             return InternalMethods.EntityHasComponent(this.UUID, ComponentType);
         }
 
-        public T GetComponent<T>() where T : Component, new()
+        public T GetComponent<T>() where T : GuardianComponent, new()
         {
             if (!this.HasComponent<T>())
             {

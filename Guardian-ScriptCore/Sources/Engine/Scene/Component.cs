@@ -2,12 +2,12 @@ using Guardian;
 
 namespace Guardian
 {
-    public abstract class Component
+    public abstract class GuardianComponent
     {
         public Entity Entity { get; set; }
     }
 
-    public class TransformComponent : Component
+    public class GuardianTransformComponent : GuardianComponent
     {
         public GVector3 Translation
         {

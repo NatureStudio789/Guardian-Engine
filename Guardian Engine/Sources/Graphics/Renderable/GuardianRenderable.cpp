@@ -17,7 +17,6 @@ namespace guardian
 
 	GuardianRenderable::GuardianRenderable(const GuardianRenderable& other)
 	{
-		this->RenderableId = other.RenderableId;
 		this->RenderingVertexBuffer = other.RenderingVertexBuffer;
 		this->RenderingIndexBuffer = other.RenderingIndexBuffer;
 		this->RenderingTransformConstantBuffer = other.RenderingTransformConstantBuffer;

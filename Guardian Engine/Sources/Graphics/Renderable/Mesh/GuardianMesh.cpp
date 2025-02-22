@@ -10,6 +10,7 @@ namespace guardian
 
 	GuardianMesh::GuardianMesh(const GuardianMesh& other) : GuardianRenderableBase<GuardianMesh>(other)
 	{
+		this->RenderableId = other.RenderableId;
 		this->VertexData = other.VertexData;
 		this->IndexData = other.IndexData;
 		this->MeshFilePath = other.MeshFilePath;

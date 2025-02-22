@@ -23,7 +23,8 @@ namespace guardian
 
 	private:
 		bool RenderEntityNode(GuardianEntity* entity);
-		void RenderEntityComponents(bool& openMeshBrowser, bool& openTextureBrowser, bool& openMaterialBrowser);
+		void RenderEntityComponents(bool& openMeshBrowser, 
+			bool& openTextureBrowser, int& textureIndex, bool& openMaterialBrowser);
 		void RenderMeshBrowser(GString& meshName, bool& open);
 		void RenderTextureBrowser(GString& textureName, bool& open);
 		void RenderMaterialBrowser(GString& materialName, bool& open);

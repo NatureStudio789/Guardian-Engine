@@ -10,12 +10,11 @@ namespace guardian
 	{
 	public:
 		static void RegisterFunction(const GString& functionName, const void* functionPtr);
+		static void RegisterComponents();
 
 		static std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> GetEntityHasComponentFunctionList();
 
 	private:
-		static std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> EntityHasComponentFunctionList;
-
 		friend class GuardianScriptEngine;
 	};
 }

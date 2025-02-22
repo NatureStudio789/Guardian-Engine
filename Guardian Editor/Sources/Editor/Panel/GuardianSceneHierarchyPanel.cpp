@@ -87,11 +87,12 @@ namespace guardian
 		static bool OpenMeshBrowser = false;
 		static bool OpenMaterialBrowser = false;
 		static bool OpenTextureBrowser = false;
+		int SelectedTextureIndex = -1;
 		if (open1)
 		{
 			ImGui::Begin("Properties", &open1);
 
-			this->RenderEntityComponents(OpenMeshBrowser, OpenTextureBrowser, OpenMaterialBrowser);
+			this->RenderEntityComponents(OpenMeshBrowser, OpenTextureBrowser, SelectedTextureIndex, OpenMaterialBrowser);
 
 			ImGui::End();
 		}
@@ -119,8 +120,31 @@ namespace guardian
 		if (!textureName.empty())
 		{
 			GuardianTexture texture = GuardianResourceSystem::GetTexture(textureName);
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-				Mesh->GetMaterial()->SetAlbedoTexture(std::make_shared<GuardianTexture>(texture));
+			if (SelectedTextureIndex == 0)
+			{
+				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+					Mesh->GetMaterial()->SetAlbedoTexture(std::make_shared<GuardianTexture>(texture));
+			}
+			else if (SelectedTextureIndex == 1)
+			{
+				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+					Mesh->GetMaterial()->SetMetallicTexture(std::make_shared<GuardianTexture>(texture));
+			}
+			else if (SelectedTextureIndex == 2)
+			{
+				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+					Mesh->GetMaterial()->SetRoughnessTexture(std::make_shared<GuardianTexture>(texture));
+			}
+			else if (SelectedTextureIndex == 3)
+			{
+				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+					Mesh->GetMaterial()->SetNormalTexture(std::make_shared<GuardianTexture>(texture));
+			}
+			else if (SelectedTextureIndex == 4)
+			{
+				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+					Mesh->GetMaterial()->SetAoTexture(std::make_shared<GuardianTexture>(texture));
+			}
 		}
 	}
 
@@ -174,7 +198,8 @@ namespace guardian
 		}
 	}
 
-	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, bool& openTextureBrowser, bool& openMaterialBrowser)
+	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, 
+		bool& openTextureBrowser, int& textureIndex, bool& openMaterialBrowser)
 	{
 		if (auto SelectedEntity = this->PanelScene->GetEntity(this->SelectedEntityId))
 		{
@@ -391,9 +416,10 @@ namespace guardian
 							}
 							else
 							{
-								if (!material->AlbedoTexture->GetTextureResource())
+								if (!material->AlbedoTexture)
 								{
 									openTextureBrowser = true;
+									textureIndex = 0;
 								}
 								else
 								{
@@ -401,6 +427,7 @@ namespace guardian
 										(ImTextureID)material->AlbedoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
 									{
 										openTextureBrowser = true;
+										textureIndex = 0;
 									}
 								}
 							}
@@ -423,9 +450,10 @@ namespace guardian
 							}
 							else
 							{
-								if (!material->MetallicTexture->GetTextureResource())
+								if (!material->MetallicTexture)
 								{
 									openTextureBrowser = true;
+									textureIndex = 1;
 								}
 								else
 								{
@@ -433,6 +461,7 @@ namespace guardian
 										(ImTextureID)material->MetallicTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
 									{
 										openTextureBrowser = true;
+										textureIndex = 1;
 									}
 								}
 							}
@@ -455,9 +484,10 @@ namespace guardian
 							}
 							else
 							{
-								if (!material->RoughnessTexture->GetTextureResource())
+								if (!material->RoughnessTexture)
 								{
 									openTextureBrowser = true;
+									textureIndex = 2;
 								}
 								else
 								{
@@ -465,6 +495,7 @@ namespace guardian
 										(ImTextureID)material->RoughnessTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
 									{
 										openTextureBrowser = true;
+										textureIndex = 2;
 									}
 								}
 							}
@@ -483,9 +514,10 @@ namespace guardian
 							}
 							else
 							{
-								if (!material->NormalTexture->GetTextureResource())
+								if (!material->NormalTexture)
 								{
 									openTextureBrowser = true;
+									textureIndex = 3;
 								}
 								else
 								{
@@ -493,6 +525,7 @@ namespace guardian
 										(ImTextureID)material->NormalTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
 									{
 										openTextureBrowser = true;
+										textureIndex = 3;
 									}
 								}
 							}
@@ -515,9 +548,10 @@ namespace guardian
 							}
 							else
 							{
-								if (!material->AoTexture->GetTextureResource())
+								if (!material->AoTexture)
 								{
 									openTextureBrowser = true;
+									textureIndex = 4;
 								}
 								else
 								{
@@ -525,6 +559,7 @@ namespace guardian
 										(ImTextureID)material->AoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
 									{
 										openTextureBrowser = true;
+										textureIndex = 4;
 									}
 								}
 							}
