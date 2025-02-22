@@ -55,6 +55,7 @@ namespace guardian
 		float AoColor;
 		std::shared_ptr<GuardianMaterialConstantBuffer> MaterialConstantBuffer;
 
+		friend class GuardianResourceSystem;
 		friend class GuardianSceneHierarchyPanel;
 	};
 }

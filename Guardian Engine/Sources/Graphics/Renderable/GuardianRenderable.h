@@ -25,10 +25,14 @@ namespace guardian
 		void AddVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
 		void AddIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
 		void AddTransformConstantBuffer(std::shared_ptr<GuardianTransformConstantBuffer> transformCBuffer);
+		void AddLightConstantBuffer(std::shared_ptr<GuardianLightConstantBuffer> lightCBuffer);
+
+		void AddLightConstantBufferFromStatic();
 
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}
 
+		std::shared_ptr<GuardianLightConstantBuffer> GetLightConstantBuffer();
 		std::shared_ptr<GuardianTransformConstantBuffer> GetTransformConstantBuffer();
 		std::shared_ptr<GuardianVertexBuffer> GetVertexBuffer();
 		std::shared_ptr<GuardianIndexBuffer> GetIndexBuffer();
@@ -40,6 +44,7 @@ namespace guardian
 		std::shared_ptr<GuardianVertexBuffer> RenderingVertexBuffer;
 		std::shared_ptr<GuardianIndexBuffer> RenderingIndexBuffer;
 		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;
+		std::shared_ptr<GuardianLightConstantBuffer> RenderingLightConstantBuffer;
 		std::shared_ptr<GuardianMaterial> RenderingMaterial;
 		UINT RenderingTexturesNumber;
 

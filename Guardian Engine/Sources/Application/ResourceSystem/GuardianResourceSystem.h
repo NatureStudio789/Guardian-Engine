@@ -14,11 +14,15 @@ namespace guardian
 		static GuardianMesh GetMesh(GString meshName);
 		static const GString GetMeshName(GuardianMesh mesh);
 
+		static GuardianTexture GetTexture(GString textureName);
+		static const GString GetTextureName(GuardianTexture texture);
+
 		static GuardianMaterial GetMaterial(GString materialName);
 		static GuardianMaterial GetMaterial(const GuardianUUID& materialId);
 		static const GString GetMaterialName(GuardianMaterial material);
 
 		static std::map<GString, GuardianMesh> GetMeshList();
+		static std::map<GString, GuardianTexture> GetTextureList();
 		static std::map<GString, GuardianMaterial> GetMaterialList();
 
 	private:
@@ -28,10 +32,10 @@ namespace guardian
 		static void LoadResource(const std::filesystem::path& path);
 		
 		static std::vector<GString> LoadedResourcePath;
-		static std::map<GString, GuardianMesh> ResourceMeshList;
-		static std::map<GString, GuardianTexture> ResourceTextureList;
-		static std::map<GString, GuardianMaterial> ResourceMaterialList;
-		static std::map<GString, GuardianPhysicsMaterial> ResourcePhysicsMaterialList;
+		static std::map<GString, GuardianMesh> MeshResourceList;
+		static std::map<GString, GuardianTexture> TextureResourceList;
+		static std::map<GString, GuardianMaterial> MaterialResourceList;
+		static std::map<GString, GuardianPhysicsMaterial> PhysicsMaterialResourceList;
 	};
 }
 

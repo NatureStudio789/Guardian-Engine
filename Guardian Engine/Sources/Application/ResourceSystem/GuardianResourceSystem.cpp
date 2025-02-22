@@ -4,10 +4,10 @@
 namespace guardian
 {
 	std::vector<GString> GuardianResourceSystem::LoadedResourcePath;
-	std::map<GString, GuardianMesh> GuardianResourceSystem::ResourceMeshList;
-	std::map<GString, GuardianTexture> GuardianResourceSystem::ResourceTextureList;
-	std::map<GString, GuardianMaterial> GuardianResourceSystem::ResourceMaterialList;
-	std::map<GString, GuardianPhysicsMaterial> GuardianResourceSystem::ResourcePhysicsMaterialList;
+	std::map<GString, GuardianMesh> GuardianResourceSystem::MeshResourceList;
+	std::map<GString, GuardianTexture> GuardianResourceSystem::TextureResourceList;
+	std::map<GString, GuardianMaterial> GuardianResourceSystem::MaterialResourceList;
+	std::map<GString, GuardianPhysicsMaterial> GuardianResourceSystem::PhysicsMaterialResourceList;
 
 
 	void GuardianResourceSystem::InitializeResourceSystem()
@@ -89,8 +89,8 @@ namespace guardian
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), surface));
 		box.SetMeshMaterial(material);
 
-		ResourceMeshList["Box"] = box;
-		ResourceMaterialList["Default Material"] = *material;
+		MeshResourceList["Box"] = box;
+		MaterialResourceList["Default Material"] = *material;
 	}
 
 	void GuardianResourceSystem::IterateDirectory(const std::filesystem::path& path)
@@ -131,14 +131,14 @@ namespace guardian
 				GString MeshName = mesh.first;
 				int index = 1;
 				GString Addition;
-				while (ResourceMeshList.count(MeshName + Addition) > 0)
+				while (MeshResourceList.count(MeshName + Addition) > 0)
 				{
 					Addition = "_" + std::to_string(index);
 					index++;
 				}
 				MeshName += Addition;
 
-				ResourceMeshList[MeshName] = *mesh.second;
+				MeshResourceList[MeshName] = *mesh.second;
 			}
 
 			auto& materials = model.GetModelMaterialList();
@@ -147,19 +147,19 @@ namespace guardian
 				GString MaterialName = material.first;
 				int index = 1;
 				GString Addition;
-				while (ResourceMaterialList.count(MaterialName + Addition) > 0)
+				while (MaterialResourceList.count(MaterialName + Addition) > 0)
 				{
 					Addition = "_" + std::to_string(index);
 					index++;
 				}
 				MaterialName += Addition;
 
-				ResourceMaterialList[MaterialName] = *material.second;
+				MaterialResourceList[MaterialName] = *material.second;
 			}
 
 			LoadedResourcePath.push_back(path.string());
 		}
-		else if (extension == ".png")
+		else if (extension == ".png" || extension == ".jpg")
 		{
 			GuardianTexture texture = GuardianTexture(
 				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GuardianSurface(path.string()));
@@ -168,22 +168,22 @@ namespace guardian
 			GString TextureName;
 			if (TexturePath.find_last_of('/') != GString::npos)
 			{
-				TextureName = TexturePath.substr(TexturePath.find_last_of('/'));
+				TextureName = TexturePath.substr(TexturePath.find_last_of('/') + 1);
 			}
 			else
 			{
-				TextureName = TexturePath.substr(TexturePath.find_last_of('\\'));
+				TextureName = TexturePath.substr(TexturePath.find_last_of('\\') + 1);
 			}
 			int index = 1;
 			GString Addition;
-			while (ResourceTextureList.count(TextureName + Addition) > 0)
+			while (TextureResourceList.count(TextureName + Addition) > 0)
 			{
 				Addition = "_" + std::to_string(index);
 				index++;
 			}
 			TextureName += Addition;
 
-			ResourceTextureList[TextureName] = texture;
+			TextureResourceList[TextureName] = texture;
 
 			LoadedResourcePath.push_back(path.string());
 		}
@@ -191,9 +191,9 @@ namespace guardian
 
 	GuardianMesh GuardianResourceSystem::GetMesh(GString meshName)
 	{
-		if (ResourceMeshList.count(meshName) > 0)
+		if (MeshResourceList.count(meshName) > 0)
 		{
-			return ResourceMeshList[meshName];
+			return MeshResourceList[meshName];
 		}
 		else
 		{
@@ -203,7 +203,7 @@ namespace guardian
 
 	const GString GuardianResourceSystem::GetMeshName(GuardianMesh mesh)
 	{
-		for (auto& imesh : ResourceMeshList)
+		for (auto& imesh : MeshResourceList)
 		{
 			if (imesh.second == mesh)
 			{
@@ -214,11 +214,36 @@ namespace guardian
 		return "";
 	}
 
+	GuardianTexture GuardianResourceSystem::GetTexture(GString textureName)
+	{
+		if (TextureResourceList.count(textureName) > 0)
+		{
+			return TextureResourceList[textureName];
+		}
+		else
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Cannot find the texture called : '" + textureName + "' !");
+		}
+	}
+
+	const GString GuardianResourceSystem::GetTextureName(GuardianTexture texture)
+	{
+		for (auto& itexture : TextureResourceList)
+		{
+			if (itexture.second == texture)
+			{
+				return itexture.first;
+			}
+		}
+
+		return "Unknown";
+	}
+
 	GuardianMaterial GuardianResourceSystem::GetMaterial(GString materialName)
 	{
-		if (ResourceMaterialList.count(materialName) > 0)
+		if (MaterialResourceList.count(materialName) > 0)
 		{
-			return ResourceMaterialList[materialName];
+			return MaterialResourceList[materialName];
 		}
 		else
 		{
@@ -228,7 +253,7 @@ namespace guardian
 
 	GuardianMaterial GuardianResourceSystem::GetMaterial(const GuardianUUID& materialId)
 	{
-		for (auto& material : ResourceMaterialList)
+		for (auto& material : MaterialResourceList)
 		{
 			if (material.second.GetMaterialId() == materialId)
 			{
@@ -241,7 +266,7 @@ namespace guardian
 
 	const GString GuardianResourceSystem::GetMaterialName(GuardianMaterial material)
 	{
-		for (auto& imaterial : ResourceMaterialList)
+		for (auto& imaterial : MaterialResourceList)
 		{
 			if (imaterial.second == material)
 			{
@@ -254,11 +279,16 @@ namespace guardian
 
 	std::map<GString, GuardianMesh> GuardianResourceSystem::GetMeshList()
 	{
-		return ResourceMeshList;
+		return MeshResourceList;
+	}
+
+	std::map<GString, GuardianTexture> GuardianResourceSystem::GetTextureList()
+	{
+		return TextureResourceList;
 	}
 
 	std::map<GString, GuardianMaterial> GuardianResourceSystem::GetMaterialList()
 	{
-		return ResourceMaterialList;
+		return MaterialResourceList;
 	}
 }

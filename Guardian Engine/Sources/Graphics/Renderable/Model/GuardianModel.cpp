@@ -53,11 +53,19 @@ namespace guardian
 		}
 	}
 
-	void GuardianModel::UpdateModel(XMMATRIX transformMatrix)
+	void GuardianModel::UpdateModel(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 	{
 		for (auto& mesh : this->ModelMeshList)
 		{
-			mesh.second->GetTransformConstantBuffer()->UpdateData(transformMatrix);
+			mesh.second->GetTransformConstantBuffer()->UpdateData(GuardianTransformProperties(worldMatrix, viewMatrix, projectionMatrix));
+		}
+	}
+
+	void GuardianModel::UpdateModelLighting(GuardianLightProperties properties)
+	{
+		for (auto& mesh : this->ModelMeshList)
+		{
+			mesh.second->GetLightConstantBuffer()->UpdateData(properties);
 		}
 	}
 

@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANAPPLICABLE_H_
 #define _GE_GUARDIANAPPLICABLE_H_
-#include "../GuardianGraphics.h"
+#include "../Light/GuardianLightSystem.h"
 
 namespace guardian
 {

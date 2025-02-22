@@ -25,7 +25,8 @@ namespace guardian
 		void SetMeshMaterial(std::shared_ptr<GuardianMaterial> material);
 
 		void Update() override;
-		void UpdateMeshTransform(XMMATRIX transform);
+		void UpdateMeshTransform(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		void UpdateMeshLighting(GuardianLightProperties properties);
 
 		void Serialize(const GString& filePath) override;
 		void Deserialize(const GString& filePath) override;

@@ -9,11 +9,28 @@ struct PBRMaterial
 struct PBRPointLight
 {
     float3 LightPosition;
-    float3 LightColor;
     float LightStrength;
+    float3 LightColor;
 };
 
 const float PI = 3.14159265359f;
+
+float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D normalMap, SamplerState samplerState, float2 textureCoord)
+{
+    float3 tangentNormal = normalMap.Sample(samplerState, textureCoord).rgb * 2.0f - 1.0f;
+
+    float3 Q1 = ddx(worldPosition);
+    float3 Q2 = ddy(worldPosition);
+    float2 st1 = ddx(textureCoord);
+    float2 st2 = ddy(textureCoord);
+
+    float3 N = normal;
+    float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
+    float3 B = -normalize(cross(N, T));
+    float3x3 TBN = float3x3(T, B, N);
+
+    return normalize(mul(TBN, tangentNormal));
+}
 
 float DistributionGGX(float3 n, float3 h, float roughness)
 {
@@ -60,7 +77,7 @@ float3 FresnelSchlick(float cosTheta, float3 f0)
 }
 
 float3 CalculatePBRLighting(PBRPointLight lights[50], PBRMaterial material, const int lightNumber,
-    float3 normal, float pixelInWorldPosition, float3 viewPosition)
+    float3 normal, float3 pixelInWorldPosition, float3 viewPosition)
 {
     float3 N = normal;
     float3 V = normalize(viewPosition - pixelInWorldPosition);

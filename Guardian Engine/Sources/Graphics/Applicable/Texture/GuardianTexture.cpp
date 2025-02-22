@@ -4,17 +4,21 @@ namespace guardian
 {
 	GuardianTexture::GuardianTexture()
 	{
+		this->TextureId = GuardianUUID();
 		this->TextureAppliedSlot = 0;
 	}
 
 	GuardianTexture::GuardianTexture(
 		std::shared_ptr<GuardianGraphics> graphics, const GuardianSurface& surface, int index)
 	{
+		this->TextureId = GuardianUUID();
+
 		this->InitializeTexture(graphics, surface, index);
 	}
 
 	GuardianTexture::GuardianTexture(const GuardianTexture& other)
 	{
+		this->TextureId = other.TextureId;
 		this->TextureObject = other.TextureObject;
 		this->TextureResource = other.TextureResource;
 		this->TextureAppliedSlot = other.TextureAppliedSlot;
@@ -23,6 +27,7 @@ namespace guardian
 	GuardianTexture::~GuardianTexture()
 	{
 		this->TextureAppliedSlot = 0;
+		this->TextureId = 0;
 	}
 
 	void GuardianTexture::SetTextureAppliedSlot(int index)
@@ -82,6 +87,11 @@ namespace guardian
 		graphics->GetGraphicsDeviceContext()->PSSetShaderResources(this->TextureAppliedSlot, 1, this->TextureResource.GetAddressOf());
 	}
 
+	const GuardianUUID& GuardianTexture::GetTextureId() const noexcept
+	{
+		return this->TextureId;
+	}
+
 	WRL::ComPtr<ID3D11Texture2D> GuardianTexture::GetTextureObject()
 	{
 		return this->TextureObject;
@@ -90,6 +100,11 @@ namespace guardian
 	WRL::ComPtr<ID3D11ShaderResourceView> GuardianTexture::GetTextureResource()
 	{
 		return this->TextureResource;
+	}
+
+	bool GuardianTexture::operator==(const GuardianTexture& other) const
+	{
+		return this->TextureId == other.TextureId;
 	}
 
 	std::shared_ptr<GuardianTexture> GuardianTexture::CreateNewTexture(std::shared_ptr<GuardianGraphics> graphics, 

@@ -15,6 +15,7 @@ namespace guardian
 
 		void AddStaticVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
 		void AddStaticIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
+		void AddStaticLightConstantBuffer(std::shared_ptr<GuardianLightConstantBuffer> lightConstantBuffer);
 
 		const bool IsStaticApplicablesInitialized() const noexcept;
 
@@ -75,6 +76,16 @@ namespace guardian
 		{
 			this->RenderingIndexBuffer = indexBuffer;
 			StaticApplicableList.push_back(this->RenderingIndexBuffer);
+		}
+	}
+
+	template<typename T>
+	inline void GuardianRenderableBase<T>::AddStaticLightConstantBuffer(std::shared_ptr<GuardianLightConstantBuffer> lightConstantBuffer)
+	{
+		if (!this->RenderingLightConstantBuffer->GetConstantBufferObject().Get())
+		{
+			this->RenderingLightConstantBuffer = lightConstantBuffer;
+			StaticApplicableList.push_back(this->RenderingLightConstantBuffer);
 		}
 	}
 

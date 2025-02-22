@@ -51,14 +51,20 @@ namespace guardian
 			};
 			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));
 
+
 			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(graphics, GE_FILTER_MIN_MAG_MIP_LINEAR));
 		}
+		/*else
+		{
+			this->AddLightConstantBufferFromStatic();
+		}*/
 
 		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, 
 			(void*)vertices.data(), (UINT)vertices.size(), (UINT)sizeof(Vertex)));
 		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, indices));
 
 		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
+		this->AddLightConstantBuffer(GuardianLightConstantBuffer::CreateNewLightConstantBuffer(graphics));
 	}
 
 	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics, const GString& meshFilePath)
@@ -103,9 +109,14 @@ namespace guardian
 		
 	}
 
-	void GuardianMesh::UpdateMeshTransform(XMMATRIX transform)
+	void GuardianMesh::UpdateMeshTransform(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
 	{
-		this->RenderingTransformConstantBuffer->UpdateData(transform);
+		this->RenderingTransformConstantBuffer->UpdateData(GuardianTransformProperties(worldMatrix, viewMatrix, projectionMatrix));
+	}
+
+	void GuardianMesh::UpdateMeshLighting(GuardianLightProperties properties)
+	{
+		this->RenderingLightConstantBuffer->UpdateData(properties);
 	}
 
 	void GuardianMesh::Serialize(const GString& filePath)

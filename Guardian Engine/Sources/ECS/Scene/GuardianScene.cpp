@@ -173,6 +173,38 @@ namespace guardian
 			}
 		}
 
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianPointLightComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianPointLightComponent& PLComponent)
+				{
+					PLComponent.LightProperties.LightPosition = TComponent.Position;
+
+					if (!PLComponent.LightModel)
+					{
+						PLComponent.LightModel = GuardianModel::CreateNewModel(
+							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+							"../Guardian Engine/Resources/Models/Light/Light.obj");
+					}
+					PLComponent.LightModel->SubmitToRenderer();
+
+					GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
+					PLComponent.LightModel->UpdateModel(TComponent.GetTransformMatrix(),
+						this->EditorCamera->GetViewMatrix(),
+						this->EditorCamera->GetProjectionMatrix());
+				});
+		}
+		GuardianLightProperties LightProperties;
+		int index = 0;
+		while (!GuardianLightSystem::IsPointLightListEmpty())
+		{
+			GuardianPointLightProperties pointLight = GuardianLightSystem::ReadPointLight();
+			LightProperties.PointLightList[index] = pointLight;
+			index++;
+		}
+		LightProperties.LightNumber = index;
+		LightProperties.CameraPosition = this->EditorCamera->Position;
+
 		if (!this->SceneGrid)
 		{
 			this->SceneGrid = GuardianModel::CreateNewModel(
@@ -180,8 +212,9 @@ namespace guardian
 				"../Guardian Engine/Resources/Models/Grid/Grid.obj");
 		}
 		this->SceneGrid->SubmitToRenderer();
-		this->SceneGrid->UpdateModel(GuardianTransform().GetTransformMatrix() *
-			this->EditorCamera->GetViewMatrix() * this->EditorCamera->GetProjectionMatrix());
+		this->SceneGrid->UpdateModel(GuardianTransform().GetTransformMatrix(),
+			this->EditorCamera->GetViewMatrix(), this->EditorCamera->GetProjectionMatrix());
+		this->SceneGrid->UpdateModelLighting(LightProperties);
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
@@ -196,8 +229,8 @@ namespace guardian
 
 				GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
 					TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
-				SCComponent.SphereGeometry->UpdateGeometry(transform.GetTransformMatrix() *
-					this->EditorCamera->GetViewMatrix() *
+				SCComponent.SphereGeometry->UpdateGeometry(transform.GetTransformMatrix(),
+					this->EditorCamera->GetViewMatrix(),
 					this->EditorCamera->GetProjectionMatrix());
 
 				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, SCComponent.SphereGeometry);
@@ -217,8 +250,8 @@ namespace guardian
 
 					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
 						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
-					BCComponent.BoxGeometry->UpdateGeometry(transform.GetTransformMatrix() *
-						this->EditorCamera->GetViewMatrix() *
+					BCComponent.BoxGeometry->UpdateGeometry(transform.GetTransformMatrix(),
+						this->EditorCamera->GetViewMatrix(),
 						this->EditorCamera->GetProjectionMatrix());
 
 					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, BCComponent.BoxGeometry);
@@ -240,8 +273,8 @@ namespace guardian
 						TComponent.Quaternion, GVector3(CCComponent.CapsuleCollider->GetColliderProperties().Radius, 
 							CCComponent.CapsuleCollider->GetColliderProperties().HalfHeight * 2.0f, 
 							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
-					CCComponent.CapsuleGeometry->UpdateGeometry(transform.GetTransformMatrix() *
-						this->EditorCamera->GetViewMatrix() *
+					CCComponent.CapsuleGeometry->UpdateGeometry(transform.GetTransformMatrix(),
+						this->EditorCamera->GetViewMatrix(),
 						this->EditorCamera->GetProjectionMatrix());
 
 					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, CCComponent.CapsuleGeometry);
@@ -266,7 +299,7 @@ namespace guardian
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
-			view.each([this](const auto& e, 
+			view.each([this, &LightProperties](const auto& e, 
 				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
 			{
 				CComponent.Position = TComponent.Position;
@@ -280,20 +313,22 @@ namespace guardian
 				}
 				CComponent.CameraModel->SubmitToRenderer();
 
-				CComponent.CameraModel->UpdateModel(TComponent.GetTransformMatrix() *
-					this->EditorCamera->GetViewMatrix() *
+				CComponent.CameraModel->UpdateModel(TComponent.GetTransformMatrix(),
+					this->EditorCamera->GetViewMatrix(),
 					this->EditorCamera->GetProjectionMatrix());
+				CComponent.CameraModel->UpdateModelLighting(LightProperties);
 			});
 		}
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
-			view.each([this](const auto& e,
+			view.each([this, &LightProperties](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 				{
-					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix() *
-						this->EditorCamera->GetViewMatrix() *
+					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix(),
+						this->EditorCamera->GetViewMatrix(),
 						this->EditorCamera->GetProjectionMatrix());
+					MComponent.Mesh->UpdateMeshLighting(LightProperties);
 
 					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
 				});
@@ -301,12 +336,13 @@ namespace guardian
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
-			view.each([this](const auto& e, 
+			view.each([this, &LightProperties](const auto& e, 
 				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
 			{
-					MComponent.UpdateModel(TComponent.GetTransformMatrix() * 
-						this->EditorCamera->GetViewMatrix() * 
-						this->EditorCamera->GetProjectionMatrix());
+				MComponent.UpdateModel(TComponent.GetTransformMatrix(), 
+					this->EditorCamera->GetViewMatrix(), 
+					this->EditorCamera->GetProjectionMatrix());
+				MComponent.UpdateModelLighting(LightProperties);
 
 				MComponent.SubmitToRenderer();
 			});
@@ -549,8 +585,8 @@ namespace guardian
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 				{
-					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix() *
-						this->RuntimeCamera->GetViewMatrix() *
+					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix(),
+						this->RuntimeCamera->GetViewMatrix(),
 						this->RuntimeCamera->GetProjectionMatrix());
 
 					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
@@ -562,8 +598,8 @@ namespace guardian
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
 			{
-				MComponent.UpdateModel(TComponent.GetTransformMatrix() *
-					this->RuntimeCamera->GetViewMatrix() *
+				MComponent.UpdateModel(TComponent.GetTransformMatrix(),
+					this->RuntimeCamera->GetViewMatrix(),
 					this->RuntimeCamera->GetProjectionMatrix());
 
 				MComponent.SubmitToRenderer();

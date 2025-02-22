@@ -4,6 +4,16 @@
   GuardianWindow.cpp
   GuardianEntity.cpp
   GuardianScene.cpp
+  GuardianIndexBuffer.cpp
+  GuardianVertexBuffer.cpp
+  GuardianInputLayout.cpp
+  GuardianRasterizerState.cpp
+  GuardianSampler.cpp
+  GuardianPixelShader.cpp
+  GuardianVertexShader.cpp
+  GuardianTexture.cpp
+  GuardianTopology.cpp
+  GuardianLightSystem.cpp
   GuardianMaterial.cpp
   GuardianGeometry.cpp
   GuardianRenderable.cpp
@@ -13,5 +23,4 @@
   GuardianEngine.cpp
   GuardianScriptEngine.cpp
   GuardianScriptRegistry.cpp
-    正在创建库 ..\Build\Debug\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug\x86_64\Guardian Engine.exp
   Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Engine.dll

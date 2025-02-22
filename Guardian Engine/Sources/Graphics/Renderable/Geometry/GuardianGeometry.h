@@ -20,7 +20,7 @@ namespace guardian
 
 		void InitializeGeometry(std::shared_ptr<GuardianGraphics> graphics, const GuardianGeometryType& type);
 
-		void UpdateGeometry(XMMATRIX transform);
+		void UpdateGeometry(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
 		void Update() override;
 
 		const bool IsInitialized() const noexcept;

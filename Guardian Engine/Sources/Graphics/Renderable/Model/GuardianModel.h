@@ -20,7 +20,8 @@ namespace guardian
 			std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath);
 		void SubmitToRenderer();
 
-		void UpdateModel(XMMATRIX transformMatrix);
+		void UpdateModel(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		void UpdateModelLighting(GuardianLightProperties properties);
 
 		void ClearModelMeshList();
 

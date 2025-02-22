@@ -86,11 +86,12 @@ namespace guardian
 		static bool open1 = true;
 		static bool OpenMeshBrowser = false;
 		static bool OpenMaterialBrowser = false;
+		static bool OpenTextureBrowser = false;
 		if (open1)
 		{
 			ImGui::Begin("Properties", &open1);
 
-			this->RenderEntityComponents(OpenMeshBrowser, OpenMaterialBrowser);
+			this->RenderEntityComponents(OpenMeshBrowser, OpenTextureBrowser, OpenMaterialBrowser);
 
 			ImGui::End();
 		}
@@ -111,6 +112,15 @@ namespace guardian
 			GuardianMaterial material = GuardianResourceSystem::GetMaterial(materialName);
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
 				Mesh->SetMeshMaterial(std::make_shared<GuardianMaterial>(material));
+		}
+
+		GString textureName;
+		this->RenderTextureBrowser(textureName, OpenTextureBrowser);
+		if (!textureName.empty())
+		{
+			GuardianTexture texture = GuardianResourceSystem::GetTexture(textureName);
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
+				Mesh->GetMaterial()->SetAlbedoTexture(std::make_shared<GuardianTexture>(texture));
 		}
 	}
 
@@ -164,7 +174,7 @@ namespace guardian
 		}
 	}
 
-	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, bool& openMaterialBrowser)
+	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, bool& openTextureBrowser, bool& openMaterialBrowser)
 	{
 		if (auto SelectedEntity = this->PanelScene->GetEntity(this->SelectedEntityId))
 		{
@@ -311,6 +321,31 @@ namespace guardian
 				ImGui::Separator();
 			}
 
+			if (SelectedEntity->HasComponent<GuardianPointLightComponent>())
+			{
+				auto& PointLight = SelectedEntity->GetComponent<GuardianPointLightComponent>().LightProperties;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianPointLightComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Point Light Component"))
+				{
+					float color[3] = { PointLight.LightColor.x, PointLight.LightColor.y, PointLight.LightColor.z };
+					if (ImGui::DragFloat3("Light Color", color, 0.01f, 0.0f, 1.0f))
+					{
+						PointLight.LightColor = GVector3(color[0], color[1], color[2]);
+					}
+
+					float strength = PointLight.LightStrength;
+					if (ImGui::DragFloat("Light Strength", &strength, 1.0f))
+					{
+						PointLight.LightStrength = strength;
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
+			}
+
 			if (SelectedEntity->HasComponent<GuardianMeshComponent>())
 			{
 				auto& mesh = SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh;
@@ -320,15 +355,15 @@ namespace guardian
 				{
 					ImGui::Text("Mesh Filter");
 					ImGui::SameLine();
-					if (ImGui::Button(SelectedEntity->GetComponent<GuardianMeshComponent>().MeshName.c_str()))
+					if (ImGui::Button((SelectedEntity->GetComponent<GuardianMeshComponent>().MeshName + "##Mesh").c_str()))
 					{
 						openMeshBrowser = true;
 					}
 
 					ImGui::Text("Mesh Material");
 					ImGui::SameLine();
-					if (ImGui::Button(GuardianResourceSystem::GetMaterialName(
-						*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()).c_str()))
+					if (ImGui::Button((GuardianResourceSystem::GetMaterialName(
+						*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()) + "##Material").c_str()))
 					{
 						openMaterialBrowser = true;
 					}
@@ -356,7 +391,86 @@ namespace guardian
 							}
 							else
 							{
-								ImGui::Button("Texture");
+								if (ImGui::ImageButton("Albedo", 
+									(ImTextureID)material->AlbedoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								{
+									openTextureBrowser = true;
+								}
+							}
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNodeEx("Metallic Color", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							static bool UseMetallicT = material->UsingMetallicTexture;
+							ImGui::Checkbox("Use Texture", &UseMetallicT);
+
+							if (!UseMetallicT)
+							{
+								float metallicColor = material->MetallicColor;
+								if (ImGui::DragFloat("##metallic color", &metallicColor, 0.001f, 0.0f, 1.0f))
+								{
+									material->SetMetallicColor(metallicColor);
+								}
+							}
+							else
+							{
+								if (ImGui::ImageButton("Metallic",
+									(ImTextureID)material->MetallicTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								{
+									openTextureBrowser = true;
+								}
+							}
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNodeEx("Roughness Color", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							static bool UseRoughnessT = material->UsingRoughnessTexture;
+							ImGui::Checkbox("Use Texture", &UseRoughnessT);
+
+							if (!UseRoughnessT)
+							{
+								float roughnessColor = material->RoughnessColor;
+								if (ImGui::DragFloat("##roughness color", &roughnessColor, 0.001f, 0.0f, 1.0f))
+								{
+									material->SetRoughnessColor(roughnessColor);
+								}
+							}
+							else
+							{
+								if (ImGui::ImageButton("Roughness",
+									(ImTextureID)material->RoughnessTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								{
+									openTextureBrowser = true;
+								}
+							}
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNodeEx("Ao Color", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							static bool UseAoT = material->UsingAoTexture;
+							ImGui::Checkbox("Use Texture", &UseAoT);
+
+							if (!UseAoT)
+							{
+								float aoColor = material->AoColor;
+								if (ImGui::DragFloat("##ao color", &aoColor, 0.001f, 0.0f, 1.0f))
+								{
+									material->SetAoColor(aoColor);
+								}
+							}
+							else
+							{
+								if (ImGui::ImageButton("Ao",
+									(ImTextureID)material->AoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								{
+									openTextureBrowser = true;
+								}
 							}
 
 							ImGui::TreePop();
@@ -632,6 +746,13 @@ namespace guardian
 					ImGui::CloseCurrentPopup();
 				}
 
+				if (ImGui::MenuItem("Point Light Component"))
+				{
+					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						AddComponent<GuardianPointLightComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
 				if (ImGui::MenuItem("Mesh Component"))
 				{
 					GuardianMesh mesh = GuardianResourceSystem::GetMeshList()["Box"];
@@ -702,7 +823,7 @@ namespace guardian
 	{
 		if (open)
 		{
-			ImGui::Begin("Select a Mesh");
+			ImGui::Begin("Select a Mesh", &open);
 
 			static float padding = 16.0f;
 			static float IconSize = 64.0f;
@@ -744,11 +865,57 @@ namespace guardian
 		}
 	}
 
+	void GuardianSceneHierarchyPanel::RenderTextureBrowser(GString& textureName, bool& open)
+	{
+		if (open)
+		{
+			ImGui::Begin("Select a Texture", &open);
+
+			static float padding = 16.0f;
+			static float IconSize = 64.0f;
+			float CellSize = IconSize + padding;
+
+			float panelWidth = ImGui::GetContentRegionAvail().x;
+			int ColumnCount = (int)(panelWidth / CellSize);
+			if (ColumnCount < 1)
+			{
+				ColumnCount = 1;
+			}
+
+			ImGui::Columns(ColumnCount, 0, false);
+
+			for (auto& texturePair : GuardianResourceSystem::GetTextureList())
+			{
+				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
+				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
+
+				ImGui::ImageButton(texturePair.first.c_str(),
+					(ImTextureID)texturePair.second.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
+				ImGui::PopStyleColor(3);
+
+				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+				{
+					textureName = texturePair.first;
+
+					open = false;
+				}
+				ImGui::TextWrapped(texturePair.first.c_str());
+
+				ImGui::NextColumn();
+			}
+
+			ImGui::Columns(1);
+
+			ImGui::End();
+		}
+	}
+
 	void GuardianSceneHierarchyPanel::RenderMaterialBrowser(GString& materialName, bool& open)
 	{
 		if (open)
 		{
-			ImGui::Begin("Select a Material");
+			ImGui::Begin("Select a Material", &open);
 
 			static float padding = 16.0f;
 			static float IconSize = 64.0f;

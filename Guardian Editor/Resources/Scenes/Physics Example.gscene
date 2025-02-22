@@ -123,12 +123,21 @@ Entities:
         Restitution: 0.600000024
     RigidBody Component:
       Type: 0
-  - Entity: 15009114394896840357
+  - Entity: 7137148102451752435
     Tag Component:
-      Tag: Empty Entity
+      Tag: Pillow
     Transform Component:
-      Position: [0.350883454, 5.19396305, -19.1665211]
-      Rotation: [180, 2.01485372, 180]
+      Position: [2.99339986, 9.10281467, 0.381565869]
+      Rotation: [132.926651, -55.8296967, -5.77639548e-05]
       Scale: [1, 1, 1]
     Mesh Component:
-      Mesh Name: Body
+      Mesh Name: Pillow
+    Box Collider Component:
+      Half Size: [0.699999988, 0.600000024, 1.29999995]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 0.200000003

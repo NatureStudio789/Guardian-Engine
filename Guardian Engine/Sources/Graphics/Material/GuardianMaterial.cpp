@@ -22,9 +22,9 @@ namespace guardian
 		this->UsingAoTexture = false;
 
 		this->AlbedoColor = { 1.0f, 1.0f, 1.0f };
-		this->RoughnessColor = 0.0f;
-		this->MetallicColor = 0.0f;
-		this->AoColor = 0.0f;
+		this->RoughnessColor = 0.5f;
+		this->MetallicColor = 0.5f;
+		this->AoColor = 0.8f;
 		this->MaterialConstantBuffer = null;
 	}
 

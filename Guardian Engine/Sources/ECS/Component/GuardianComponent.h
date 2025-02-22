@@ -76,6 +76,24 @@ namespace guardian
 		GString ClassName;
 	};
 
+	class GUARDIAN_API GuardianPointLightComponent : public GuardianComponent
+	{
+	public:
+		GuardianPointLightComponent()
+		{
+			this->LightProperties = GuardianPointLightProperties();
+			this->LightModel = null;
+		}
+		GuardianPointLightComponent(const GuardianPointLightComponent& other)
+		{
+			this->LightProperties = other.LightProperties;
+			this->LightModel = other.LightModel;
+		}
+
+		GuardianPointLightProperties LightProperties;
+		std::shared_ptr<GuardianModel> LightModel;
+	};
+
 	class GUARDIAN_API GuardianMeshComponent : public GuardianComponent
 	{
 	public:

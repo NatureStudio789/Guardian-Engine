@@ -138,18 +138,36 @@ namespace guardian
 		return this->ConstantBufferData;
 	}
 
-	class GUARDIAN_API GuardianTransformConstantBuffer : public GuardianConstantBuffer<XMMATRIX>
+	struct GUARDIAN_API GuardianTransformProperties
+	{
+		GuardianTransformProperties()
+		{
+			this->TransformMatrix = XMMatrixIdentity();
+			this->WorldTransformMatrix = XMMatrixIdentity();
+		}
+
+		GuardianTransformProperties(XMMATRIX worldTransformMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+		{
+			this->TransformMatrix = worldTransformMatrix * viewMatrix * projectionMatrix;
+			this->WorldTransformMatrix = worldTransformMatrix;
+		}
+
+		XMMATRIX TransformMatrix;
+		XMMATRIX WorldTransformMatrix;
+	};
+
+	class GUARDIAN_API GuardianTransformConstantBuffer : public GuardianConstantBuffer<GuardianTransformProperties>
 	{ 
 	public:
 		GuardianTransformConstantBuffer() : GuardianConstantBuffer()
 		{
-			this->ConstantBufferData = XMMatrixIdentity();
+			this->ConstantBufferData = GuardianTransformProperties();
 		}
 		GuardianTransformConstantBuffer(
 			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
 			: GuardianConstantBuffer(graphics, GE_VERTEXSHADER_CONSTANTBUFFER, index)
 		{
-			this->ConstantBufferData = XMMatrixIdentity();
+			this->ConstantBufferData = GuardianTransformProperties();
 		}
 		GuardianTransformConstantBuffer(const GuardianTransformConstantBuffer& other) : GuardianConstantBuffer(other)
 		{
@@ -202,6 +220,57 @@ namespace guardian
 			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
 		{
 			return std::make_shared<GuardianMaterialConstantBuffer>(graphics, index);
+		}
+	};
+
+	struct GUARDIAN_API GuardianLightProperties
+	{
+	public:
+		GuardianLightProperties()
+		{
+			this->CameraPosition = GVector3(0.0f);
+			this->LightNumber = 0;
+		}
+		GuardianLightProperties(const GuardianLightProperties& other)
+		{
+			this->CameraPosition = other.CameraPosition;
+			this->LightNumber = other.LightNumber;
+
+			for (int i = 0; i < this->LightNumber; i++)
+			{
+				this->PointLightList[i] = other.PointLightList[i];
+			}
+		}
+		~GuardianLightProperties()
+		{
+		}
+
+		GVector3 CameraPosition;
+		int LightNumber;
+		GuardianPointLightProperties PointLightList[50];
+	};
+
+	class GUARDIAN_API GuardianLightConstantBuffer : public GuardianConstantBuffer<GuardianLightProperties>
+	{
+	public:
+		GuardianLightConstantBuffer() : GuardianConstantBuffer()
+		{
+			this->ConstantBufferData = GuardianLightProperties();
+		}
+		GuardianLightConstantBuffer(std::shared_ptr<GuardianGraphics> graphics, int index = 1) : 
+			GuardianConstantBuffer(graphics, GE_PIXELSHADER_CONSTANTBUFFER, index)
+		{
+			this->ConstantBufferData = GuardianLightProperties();
+		}
+		GuardianLightConstantBuffer(const GuardianLightConstantBuffer& other) : GuardianConstantBuffer(other)
+		{
+
+		}
+
+		static std::shared_ptr<GuardianLightConstantBuffer> CreateNewLightConstantBuffer(
+			std::shared_ptr<GuardianGraphics> graphics, int index = 1)
+		{
+			return std::make_shared<GuardianLightConstantBuffer>(graphics, index);
 		}
 	};
 }

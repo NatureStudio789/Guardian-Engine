@@ -8,6 +8,7 @@ namespace guardian
 		this->RenderingVertexBuffer = std::make_shared<GuardianVertexBuffer>();
 		this->RenderingIndexBuffer = std::make_shared<GuardianIndexBuffer>();
 		this->RenderingTransformConstantBuffer = std::make_shared<GuardianTransformConstantBuffer>();
+		this->RenderingLightConstantBuffer = std::make_shared<GuardianLightConstantBuffer>();
 		this->RenderingMaterial = std::make_shared<GuardianMaterial>();
 		this->RenderingTexturesNumber = 0;
 
@@ -20,6 +21,7 @@ namespace guardian
 		this->RenderingVertexBuffer = other.RenderingVertexBuffer;
 		this->RenderingIndexBuffer = other.RenderingIndexBuffer;
 		this->RenderingTransformConstantBuffer = other.RenderingTransformConstantBuffer;
+		this->RenderingLightConstantBuffer = other.RenderingLightConstantBuffer;
 		this->RenderingMaterial = other.RenderingMaterial;
 		this->RenderingTexturesNumber = other.RenderingTexturesNumber;
 		this->ApplicableList = other.ApplicableList;
@@ -47,6 +49,10 @@ namespace guardian
 		else if (typeid(*applicable) == typeid(GuardianTransformConstantBuffer))
 		{
 			throw GUARDIAN_TYPE_EXCEPTION("TransformConstantBuffer", "the type except the TransformConstantBuffer");
+		}
+		else if (typeid(*applicable) == typeid(GuardianLightConstantBuffer))
+		{
+			throw GUARDIAN_TYPE_EXCEPTION("LightConstantBuffer", "the type except the LightConstantBuffer");
 		}
 		else if (typeid(*applicable) == typeid(GuardianTexture))
 		{
@@ -83,6 +89,29 @@ namespace guardian
 		}
 	}
 
+	void GuardianRenderable::AddLightConstantBuffer(std::shared_ptr<GuardianLightConstantBuffer> lightCBuffer)
+	{
+		if (!this->RenderingLightConstantBuffer->GetConstantBufferObject().Get())
+		{
+			this->RenderingLightConstantBuffer = lightCBuffer;
+			this->ApplicableList.push_back(this->RenderingLightConstantBuffer);
+		}
+	}
+
+	void GuardianRenderable::AddLightConstantBufferFromStatic()
+	{
+		for (auto& staticApplicable : this->GetStaticApplicableList())
+		{
+			if (const auto p = dynamic_cast<GuardianLightConstantBuffer*>(staticApplicable.get()))
+			{
+				this->RenderingLightConstantBuffer = std::make_shared<GuardianLightConstantBuffer>(*p);
+				return;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION("Failed to find the static light constant buffer!");
+	}
+
 	void GuardianRenderable::Render(std::shared_ptr<GuardianGraphics> graphics)
 	{
 		for (auto& staticApplicable : this->GetStaticApplicableList())
@@ -109,6 +138,11 @@ namespace guardian
 				graphics->GetGraphicsDeviceContext()->Draw(this->RenderingVertexBuffer->GetVertexBufferDataSize(), 0);
 			}
 		}
+	}
+
+	std::shared_ptr<GuardianLightConstantBuffer> GuardianRenderable::GetLightConstantBuffer()
+	{
+		return this->RenderingLightConstantBuffer;;
 	}
 
 	std::shared_ptr<GuardianTransformConstantBuffer> GuardianRenderable::GetTransformConstantBuffer()

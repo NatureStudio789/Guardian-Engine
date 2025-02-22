@@ -102,6 +102,12 @@ namespace guardian
 			this->y = 0.0f;
 			this->z = 0.0f;
 		}
+		GVector3(float a)
+		{
+			this->x = a;
+			this->y = a;
+			this->z = a;
+		}
 		GVector3(float x, float y, float z)
 		{
 			this->x = x;

@@ -45,7 +45,6 @@ namespace guardian
 
 		const XMMATRIX GetTransformMatrix() const noexcept
 		{
-				
 			return XMMatrixScaling(this->Scale.x, this->Scale.y, this->Scale.z) *
 				XMMatrixRotationQuaternion(XMVectorSet(this->Quaternion.x, this->Quaternion.y, this->Quaternion.z, this->Quaternion.w)) * 
 				XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
