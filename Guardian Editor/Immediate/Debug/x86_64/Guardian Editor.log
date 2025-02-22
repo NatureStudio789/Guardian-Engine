@@ -1,5 +1,2 @@
-﻿  GuardianEditor.cpp
-  GuardianResourceBrowserPanel.cpp
-  GuardianSceneHierarchyPanel.cpp
-  GuardianScenePanel.cpp
+﻿  GuardianSceneHierarchyPanel.cpp
   Guardian Editor.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Editor.exe

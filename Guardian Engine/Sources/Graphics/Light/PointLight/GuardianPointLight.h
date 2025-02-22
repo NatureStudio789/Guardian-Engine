@@ -24,6 +24,8 @@ namespace guardian
 		GVector3 LightPosition;
 		float LightStrength;
 		GVector3 LightColor;
+	private:
+		float padding;
 	};
 }
 

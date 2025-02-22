@@ -13,7 +13,7 @@ struct PBRPointLight
     float3 LightColor;
 };
 
-const float PI = 3.14159265359f;
+static const float PI = 3.14159265359f;
 
 float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D normalMap, SamplerState samplerState, float2 textureCoord)
 {
@@ -24,7 +24,7 @@ float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D norma
     float2 st1 = ddx(textureCoord);
     float2 st2 = ddy(textureCoord);
 
-    float3 N = normal;
+    float3 N = normalize(normal);
     float3 T = normalize(Q1 * st2.y - Q2 * st1.y);
     float3 B = -normalize(cross(N, T));
     float3x3 TBN = float3x3(T, B, N);
@@ -34,12 +34,13 @@ float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D norma
 
 float DistributionGGX(float3 n, float3 h, float roughness)
 {
-    float a2 = roughness * roughness;
+    float a = roughness * roughness;
+    float a2 = a * a;
     float nDoth = max(dot(n, h), 0.0f);
     float nDoth2 = nDoth * nDoth;
     
     float denom = (nDoth2 * (a2 - 1.0f) + 1.0f);
-    denom = max(PI * denom * denom, 0.001f);
+    denom = PI * denom * denom;
     
     return a2 / denom;
 }
@@ -57,8 +58,8 @@ float GeometrySmith(float3 normal, float3 viewDir, float3 lightDir, float roughn
 {
     float nDotv = max(dot(normal, viewDir), 0.0f);
     float nDotl = max(dot(normal, lightDir), 0.0f);
-    float ggx1 = GeometrySchlickGGX(nDotv, roughness);
-    float ggx2 = GeometrySchlickGGX(nDotl, roughness);
+    float ggx2 = GeometrySchlickGGX(nDotv, roughness);
+    float ggx1 = GeometrySchlickGGX(nDotl, roughness);
     
     return ggx1 * ggx2;
 }
@@ -73,13 +74,55 @@ float3 GetFresnelF0(float3 albedo, float metallic)
 
 float3 FresnelSchlick(float cosTheta, float3 f0)
 {
-    return f0 + (1.0f - f0) * pow(1.0f - cosTheta, 5.0f);
+    return f0 + (1.0f - f0) * pow(clamp(1.0 - cosTheta, 0.0, 1.0), 5.0f);
+}
+
+float3 CalculatePBRSimpleLighting(PBRPointLight light, PBRMaterial material, 
+    float3 normal, float3 worldPosition, float3 viewPosition)
+{
+    float3 N = normal;
+    float3 V = normalize(viewPosition - worldPosition);
+    
+    float3 F0 = GetFresnelF0(material.Albedo, material.Metallic);
+    
+    float3 Lo = float3(0.0f, 0.0f, 0.0f);
+    
+    float3 L = normalize(light.LightPosition - worldPosition);
+    float3 H = normalize(V + L);
+    float distance = length(light.LightPosition - worldPosition);
+    float attenuation = 1.0f / (distance * distance);
+    float3 radiance = light.LightColor * light.LightStrength * attenuation;
+    
+    float NDF = DistributionGGX(N, H, material.Roughness);
+    float G = GeometrySmith(N, V, L, material.Roughness);
+    float3 F = FresnelSchlick(clamp(dot(H, V), 0.0f, 1.0f), F0);
+        
+    float3 numerator = NDF * G * F;
+    float denumerator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.0001f;
+    float3 specular = numerator / denumerator;
+        
+    float3 kS = F;
+    float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
+    kD *= 1.0f - material.Metallic;
+        
+    float NDotL = max(dot(N, L), 0.0f);
+        
+    Lo += (kD * material.Albedo / PI + specular) * radiance * NDotL;
+    
+    float3 ambient = float3(0.03f, 0.03f, 0.03f) * material.Albedo * material.Ao;
+    
+    float3 color = ambient + Lo;
+    
+    color = color / (color + float3(1.0f, 1.0f, 1.0f));
+    color = pow(color, float3(1.0f / 2.2f, 1.0f / 2.2f, 1.0f / 2.2f));
+    
+    return color;
 }
 
 float3 CalculatePBRLighting(PBRPointLight lights[50], PBRMaterial material, const int lightNumber,
     float3 normal, float3 pixelInWorldPosition, float3 viewPosition)
 {
-    float3 N = normal;
+    float3 N = normalize(normal);
     float3 V = normalize(viewPosition - pixelInWorldPosition);
     
     float3 F0 = GetFresnelF0(material.Albedo, material.Metallic);
@@ -96,10 +139,10 @@ float3 CalculatePBRLighting(PBRPointLight lights[50], PBRMaterial material, cons
         
         float NDF = DistributionGGX(N, H, material.Roughness);
         float G = GeometrySmith(N, V, L, material.Roughness);
-        float3 F = FresnelSchlick(clamp(dot(H, V), 0.0f, 1.0f), F0);
+        float3 F = FresnelSchlick(max(dot(H, V), 0.0f), F0);
         
-        float numerator = NDF * G * F;
-        float denumerator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.0001f;
+        float3 numerator = NDF * G * F;
+        float denumerator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.001f;
         float3 specular = numerator / denumerator;
         
         float3 kS = F;

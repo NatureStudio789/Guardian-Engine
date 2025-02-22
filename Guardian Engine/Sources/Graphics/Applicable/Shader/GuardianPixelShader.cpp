@@ -30,7 +30,7 @@ namespace guardian
 		GString ShaderCode(FileBuffer.str());
 
 		GWideString WideShaderFilePath = GuardianConverter::StringToWideString(shaderFilePath);
-		HRESULT hr = D3DCompile(ShaderCode.c_str(), ShaderCode.size(), shaderFilePath.c_str(), 
+		HRESULT hr = D3DCompile(ShaderCode.c_str(), ShaderCode.size(), shaderFilePath.c_str(),
 			null, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "ps_5_0", 0, 0,
 			this->PixelShaderBuffer.GetAddressOf(), null);
 		if (GFailed(hr))

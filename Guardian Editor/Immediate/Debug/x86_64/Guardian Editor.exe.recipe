@@ -8,7 +8,26 @@
       <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Editor.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\GeometryPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\GeometryVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\MeshPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\MeshVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\RenderablePixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Shaders\RenderableVertexShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

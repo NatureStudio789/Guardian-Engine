@@ -25,6 +25,6 @@ VertexOutput main( VertexInput InputData )
 	OutputData.OutputPosition = mul(float4(InputData.InputPosition, 1.0f), TransformMatrix);
 	OutputData.OutputWorldPosition = mul(float4(InputData.InputPosition, 1.0f), WorldTransformMatrix).xyz;
 	OutputData.OutputTextureCoord = InputData.InputTextureCoord;
-	OutputData.OutputNormal = normalize(mul(float4(InputData.InputNormal, 1.0f), WorldTransformMatrix).xyz);
+	OutputData.OutputNormal = mul(float4(InputData.InputNormal, 0.0f), WorldTransformMatrix).xyz;
 	return OutputData;
 }

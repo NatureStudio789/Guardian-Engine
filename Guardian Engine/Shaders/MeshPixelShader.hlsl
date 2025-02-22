@@ -1,12 +1,5 @@
 #include "PBR/PBRLightShader.hlsli"
 
-cbuffer LightCBuffer : register(b1)
-{
-	float3 CameraPosition;
-	int PointLightNumber;
-	PBRPointLight PointLights[50];
-};
-
 cbuffer MaterialCBuffer : register(b0)
 {
 	float3 AlbedoColor;
@@ -14,6 +7,13 @@ cbuffer MaterialCBuffer : register(b0)
 	float RoughnessColor;
 	float AoColor;
 	bool UsingMaps[6];
+};
+
+cbuffer LightCBuffer : register(b1)
+{
+	float3 CameraPosition;
+	int PointLightNumber;
+	PBRPointLight PointLights[50];
 };
 
 struct PixelInput
@@ -75,5 +75,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 
 	MeshMaterial.Ao = AoColor;
 
-	return float4(CalculatePBRLighting(PointLights, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition), 1.0f);
+	float3 LightColor = CalculatePBRLighting(PointLights, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
+
+	return float4(LightColor, 1.0f);
 }

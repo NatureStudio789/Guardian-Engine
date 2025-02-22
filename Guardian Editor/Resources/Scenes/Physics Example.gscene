@@ -141,3 +141,14 @@ Entities:
     RigidBody Component:
       Type: 1
       Density: 0.200000003
+  - Entity: 6782412545699369077
+    Tag Component:
+      Tag: Light
+    Transform Component:
+      Position: [-8.62835407, 15.0648661, 8.33704662]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Point Light Component:
+      Light Position: [-8.62835407, 15.0648661, 8.33704662]
+      Light Strength: 904
+      Light Color: [1, 1, 1]

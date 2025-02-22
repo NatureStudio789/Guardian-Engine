@@ -749,6 +749,15 @@ namespace guardian
 					Script.ClassName = ScriptComponent["Class"].as<GString>();
 				}
 
+				auto PointLightComponent = entity["Point Light Component"];
+				if (PointLightComponent)
+				{
+					auto& PointLight = LoadedEntity->AddComponent<GuardianPointLightComponent>().LightProperties;
+					PointLight.LightPosition = PointLightComponent["Light Position"].as<GVector3>();
+					PointLight.LightStrength = PointLightComponent["Light Strength"].as<float>();
+					PointLight.LightColor = PointLightComponent["Light Color"].as<GVector3>();
+				}
+
 				auto MeshComponent = entity["Mesh Component"];
 				if (MeshComponent)
 				{
@@ -916,6 +925,21 @@ namespace guardian
 
 			output << YAML::Key << "Class" << YAML::Value <<
 				entity->GetComponent<GuardianScriptComponent>().ClassName;
+
+			output << YAML::EndMap;
+		}
+
+		if (entity->HasComponent<GuardianPointLightComponent>())
+		{
+			output << YAML::Key << "Point Light Component";
+			output << YAML::BeginMap;
+
+			output << YAML::Key << "Light Position" <<
+				entity->GetComponent<GuardianPointLightComponent>().LightProperties.LightPosition;
+			output << YAML::Key << "Light Strength" <<
+				entity->GetComponent<GuardianPointLightComponent>().LightProperties.LightStrength;
+			output << YAML::Key << "Light Color" <<
+				entity->GetComponent<GuardianPointLightComponent>().LightProperties.LightColor;
 
 			output << YAML::EndMap;
 		}

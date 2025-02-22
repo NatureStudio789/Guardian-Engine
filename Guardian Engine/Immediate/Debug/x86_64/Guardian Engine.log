@@ -1,26 +1,6 @@
-﻿  GuardianFileDialog.cpp
-  GuardianApplication.cpp
-  GuardianResourceSystem.cpp
-  GuardianWindow.cpp
-  GuardianEntity.cpp
-  GuardianScene.cpp
-  GuardianIndexBuffer.cpp
-  GuardianVertexBuffer.cpp
-  GuardianInputLayout.cpp
-  GuardianRasterizerState.cpp
-  GuardianSampler.cpp
+﻿  GuardianScene.cpp
   GuardianPixelShader.cpp
   GuardianVertexShader.cpp
-  GuardianTexture.cpp
-  GuardianTopology.cpp
-  GuardianLightSystem.cpp
-  GuardianMaterial.cpp
   GuardianGeometry.cpp
-  GuardianRenderable.cpp
   GuardianMesh.cpp
-  GuardianModel.cpp
-  GuardianRenderer.cpp
-  GuardianEngine.cpp
-  GuardianScriptEngine.cpp
-  GuardianScriptRegistry.cpp
   Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Engine.dll

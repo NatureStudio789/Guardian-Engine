@@ -391,10 +391,17 @@ namespace guardian
 							}
 							else
 							{
-								if (ImGui::ImageButton("Albedo", 
-									(ImTextureID)material->AlbedoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								if (!material->AlbedoTexture->GetTextureResource())
 								{
 									openTextureBrowser = true;
+								}
+								else
+								{
+									if (ImGui::ImageButton("Albedo",
+										(ImTextureID)material->AlbedoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+									{
+										openTextureBrowser = true;
+									}
 								}
 							}
 
@@ -416,10 +423,17 @@ namespace guardian
 							}
 							else
 							{
-								if (ImGui::ImageButton("Metallic",
-									(ImTextureID)material->MetallicTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								if (!material->MetallicTexture->GetTextureResource())
 								{
 									openTextureBrowser = true;
+								}
+								else
+								{
+									if (ImGui::ImageButton("Metallic",
+										(ImTextureID)material->MetallicTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+									{
+										openTextureBrowser = true;
+									}
 								}
 							}
 
@@ -441,10 +455,45 @@ namespace guardian
 							}
 							else
 							{
-								if (ImGui::ImageButton("Roughness",
-									(ImTextureID)material->RoughnessTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								if (!material->RoughnessTexture->GetTextureResource())
 								{
 									openTextureBrowser = true;
+								}
+								else
+								{
+									if (ImGui::ImageButton("Roughness",
+										(ImTextureID)material->RoughnessTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+									{
+										openTextureBrowser = true;
+									}
+								}
+							}
+
+							ImGui::TreePop();
+						}
+
+						if (ImGui::TreeNodeEx("Normal", ImGuiTreeNodeFlags_DefaultOpen))
+						{
+							static bool UseNormalT = material->UsingNormalTexture;
+							ImGui::Checkbox("Use Texture", &UseNormalT);
+
+							if (!UseNormalT)
+							{
+								ImGui::Button("Default Normal");
+							}
+							else
+							{
+								if (!material->NormalTexture->GetTextureResource())
+								{
+									openTextureBrowser = true;
+								}
+								else
+								{
+									if (ImGui::ImageButton("Normal",
+										(ImTextureID)material->NormalTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+									{
+										openTextureBrowser = true;
+									}
 								}
 							}
 
@@ -466,10 +515,17 @@ namespace guardian
 							}
 							else
 							{
-								if (ImGui::ImageButton("Ao",
-									(ImTextureID)material->AoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+								if (!material->AoTexture->GetTextureResource())
 								{
 									openTextureBrowser = true;
+								}
+								else
+								{
+									if (ImGui::ImageButton("Ao",
+										(ImTextureID)material->AoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
+									{
+										openTextureBrowser = true;
+									}
 								}
 							}
 
