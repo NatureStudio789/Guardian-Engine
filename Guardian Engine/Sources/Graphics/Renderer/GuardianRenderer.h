@@ -7,15 +7,25 @@ namespace guardian
 	class GUARDIAN_API GuardianRenderer
 	{
 	public:
-		static void SubmitRenderable(GuardianSubmitPassLevel level, std::shared_ptr<GuardianRenderable> renderable);
+		static void CreateRenderingFramebuffer(const GString& framebufferName, 
+			const GuardianCamera& camera, int width, int height);
+		static void ResizeRenderingFramebuffer(const GString& framebufferName, int width, int height);
+		static void SetFramebufferCamera(const GString& framebufferName, const GuardianCamera& camera);
+		static std::shared_ptr<GuardianFramebuffer> GetRenderingFramebuffer(const GString& name);
+
+		static void SubmitRenderable(GuardianSubmitPassLevel level, 
+			const GString& submitFramebuffer, std::shared_ptr<GuardianRenderable> renderable);
+
+		static void SetClearColor(const GVector3& color);
 
 		static void RenderScene();
 
 	private:
-		static void BeginSceneRendering();
-		static void EndUpSceneRendering();
+		static std::map<GString, std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>>> RenderableList;
+		static std::map<GString, std::shared_ptr<GuardianFramebuffer>> RenderingFramebufferList;
+		static std::map<GString, GuardianCamera> RenderingCameraList;
 
-		static std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>> RenderableList;
+		static GVector3 RenderingClearColor;
 
 		friend class GuardianApplication;
 	};

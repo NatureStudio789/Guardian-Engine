@@ -65,9 +65,9 @@ namespace guardian
 		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
 	}
 
-	void GuardianGeometry::UpdateGeometry(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+	void GuardianGeometry::UpdateGeometryTransform(XMMATRIX worldMatrix)
 	{
-		this->RenderingTransformConstantBuffer->UpdateData(GuardianTransformProperties(worldMatrix, viewMatrix, projectionMatrix));
+		this->RenderingTransformConstantBuffer->SetWorldTransform(worldMatrix);
 	}
 
 	void GuardianGeometry::Update()

@@ -106,6 +106,7 @@ project "Guardian Engine"
         buildoptions {"/wd4251", "/MP"}
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4099", "/MP"}
         buildoptions { "/permissive" }
 
     filter "configurations:Release"
@@ -118,6 +119,7 @@ project "Guardian Engine"
         buildoptions {"/wd4251", "/MP"}
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4099", "/MP"}
         buildoptions { "/permissive" }
 
 project "Guardian Editor"

@@ -10,7 +10,7 @@ namespace guardian
 		GuardianSerializable() = default;
 		virtual ~GuardianSerializable() = default;
 
-		virtual void Serialize(const GString& filePath) = 0;
+		virtual const GString Serialize() = 0;
 		virtual void Deserialize(const GString& filePath) = 0;
 	};
 }

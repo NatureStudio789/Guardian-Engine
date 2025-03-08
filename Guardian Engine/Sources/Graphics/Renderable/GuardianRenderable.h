@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERABLE_H_
 #define _GE_GUARDIANRENDERABLE_H_
-#include "../Material/GuardianMaterial.h"
+#include "../MaterialSystem/GuardianMaterialSystem.h"
 
 namespace guardian 
 {
@@ -32,11 +32,11 @@ namespace guardian
 		void Render(std::shared_ptr<GuardianGraphics> graphics);
 		virtual void Update() {}
 
+		const GuardianUUID& GetRenderableId() const noexcept;
 		std::shared_ptr<GuardianLightConstantBuffer> GetLightConstantBuffer();
 		std::shared_ptr<GuardianTransformConstantBuffer> GetTransformConstantBuffer();
 		std::shared_ptr<GuardianVertexBuffer> GetVertexBuffer();
 		std::shared_ptr<GuardianIndexBuffer> GetIndexBuffer();
-		std::shared_ptr<GuardianMaterial> GetMaterial();
 		const UINT& GetTexturesNumber() const noexcept;
 
 	protected:

@@ -34,6 +34,7 @@ namespace guardian
 		GuardianPhysicsEngine::InitializePhysicsEngine();
 		GuardianScriptEngine::InitializeScriptEngine();
 
+		this->EngineScene->InitializeScene();
 		this->EngineProgram->Initialize();
 	}
 
@@ -47,7 +48,6 @@ namespace guardian
 			this->EngineScene->UpdateScene(16.6667f);
 			this->EngineProgram->Update();
 
-			GuardianApplication::ApplicationInstance->BeginRendering({0.1f, 0.1f, 0.1f});
 			{
 				GuardianRenderer::RenderScene();
 

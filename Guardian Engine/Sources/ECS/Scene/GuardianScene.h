@@ -42,10 +42,12 @@ namespace guardian
 		std::shared_ptr<GuardianEntity> GetEntity(const GuardianUUID& uuid);
 
 	private:
-		void Deserialize(const GString& filePath) override;
-		void Serialize(const GString& filePath) override;
+		void CreatePhysicsWorld();
 
-		void SaveEntity(const GString& filePath, YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
+		void Deserialize(const GString& sceneFilePath) override;
+		const GString Serialize() override;
+
+		void SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
 
 		void UpdateProjectionAspect(float newWidth, float newHeight);
 
@@ -56,7 +58,7 @@ namespace guardian
 
 		std::shared_ptr<GuardianCamera> EditorCamera;
 		bool ShouldOperateCamera;
-		std::shared_ptr<GuardianModel> SceneGrid;
+		std::shared_ptr<GuardianMesh> SceneGrid;
 		std::shared_ptr<GuardianCamera> RuntimeCamera;
 
 		PxScene* PhysicsWorld;

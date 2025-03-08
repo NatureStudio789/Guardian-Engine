@@ -6,7 +6,7 @@ cbuffer MaterialCBuffer : register(b0)
 	float MetallicColor;
 	float RoughnessColor;
 	float AoColor;
-	bool UsingMaps[6];
+	bool UsingMaps[5];
 };
 
 cbuffer LightCBuffer : register(b1)
@@ -73,7 +73,14 @@ float4 main(PixelInput InputData) : SV_TARGET
 		VertexNormal = InputData.InputNormal;
 	}
 
-	MeshMaterial.Ao = AoColor;
+	if (UsingMaps[4])
+	{
+		MeshMaterial.Ao = AoTexture.Sample(ObjectSampler, InputData.InputTextureCoord).r;
+	}
+	else
+	{
+		MeshMaterial.Ao = AoColor;
+	}
 
 	float3 LightColor = CalculatePBRLighting(PointLights, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
 

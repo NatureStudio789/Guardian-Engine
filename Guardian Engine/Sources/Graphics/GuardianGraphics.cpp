@@ -4,15 +4,13 @@ namespace guardian
 {
 	GuardianGraphics::GuardianGraphics()
 	{
-		this->GraphicsSceneFramebuffer = std::make_shared<GuardianFramebuffer>();
-		this->GraphicsGUIFramebuffer = std::make_shared<GuardianFramebuffer>();
+		this->GraphicsMainFramebuffer = std::make_shared<GuardianFramebuffer>();
 	}
 
 	GuardianGraphics::GuardianGraphics(GWindowHandle renderWindow,
 		int windowWidth, int windowHeight, bool isFullscreenWindow)
 	{
-		this->GraphicsSceneFramebuffer = std::make_shared<GuardianFramebuffer>();
-		this->GraphicsGUIFramebuffer = std::make_shared<GuardianFramebuffer>();
+		this->GraphicsMainFramebuffer = std::make_shared<GuardianFramebuffer>();
 
 		this->InitializeGraphics(renderWindow, windowWidth, windowHeight, isFullscreenWindow);
 	}
@@ -55,14 +53,7 @@ namespace guardian
 			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
 		}
 
-		this->GraphicsSceneFramebuffer->InitializeFramebuffer(
-			std::make_shared<GuardianGraphics>(*this), windowWidth, windowHeight);
-		this->GraphicsGUIFramebuffer->InitializeFramebuffer(std::make_shared<GuardianGraphics>(*this));
-	}
-
-	void GuardianGraphics::BeginRendering(const GVector3& clearColor)
-	{
-		this->GraphicsSceneFramebuffer->ApplyFramebuffer(std::make_shared<GuardianGraphics>(*this), clearColor);
+		this->GraphicsMainFramebuffer->InitializeFramebuffer(std::make_shared<GuardianGraphics>(*this));
 	}
 
 	void GuardianGraphics::EndUpRendering(int syncInterval)
@@ -78,22 +69,17 @@ namespace guardian
 	{
 		this->GraphicsDeviceContext->OMSetRenderTargets(0, null, null);
 		
-		this->GraphicsGUIFramebuffer->GetFramebufferRenderTarget()->GetRenderTargetView()->Release();
-		this->GraphicsGUIFramebuffer->GetFramebufferRenderTarget()->GetRenderTargetTexture()->Release();
-		this->GraphicsGUIFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilView()->Release();
-		this->GraphicsGUIFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilState()->Release();
-		this->GraphicsGUIFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilShaderResource()->Release();
+		this->GraphicsMainFramebuffer->GetFramebufferRenderTarget()->GetRenderTargetView()->Release();
+		this->GraphicsMainFramebuffer->GetFramebufferRenderTarget()->GetRenderTargetTexture()->Release();
+		this->GraphicsMainFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilView()->Release();
+		this->GraphicsMainFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilState()->Release();
+		this->GraphicsMainFramebuffer->GetFramebufferDepthStencil()->GetDepthStencilShaderResource()->Release();
 
 		this->GraphicsDeviceContext->Flush();
 
 		this->GraphicsSwapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
 
-		this->GraphicsGUIFramebuffer->InitializeFramebuffer(std::make_shared<GuardianGraphics>(*this));
-	}
-
-	void GuardianGraphics::UpdateSceneGraphicsResolution(int newWidth, int newHeight)
-	{
-		this->GraphicsSceneFramebuffer->ResizeFramebuffer(std::make_shared<GuardianGraphics>(*this), newWidth, newHeight);
+		this->GraphicsMainFramebuffer->InitializeFramebuffer(std::make_shared<GuardianGraphics>(*this));
 	}
 
 	WRL::ComPtr<ID3D11Device> GuardianGraphics::GetGraphicsDevice() noexcept
@@ -111,14 +97,9 @@ namespace guardian
 		return this->GraphicsSwapChain;
 	}
 
-	std::shared_ptr<GuardianFramebuffer> GuardianGraphics::GetGraphicsSceneFramebuffer() noexcept
+	std::shared_ptr<GuardianFramebuffer> GuardianGraphics::GetGraphicsMainFramebuffer() noexcept
 	{
-		return this->GraphicsSceneFramebuffer;
-	}
-
-	std::shared_ptr<GuardianFramebuffer> GuardianGraphics::GetGraphicsGUIFramebuffer() noexcept
-	{
-		return this->GraphicsGUIFramebuffer;
+		return this->GraphicsMainFramebuffer;
 	}
 
 	std::shared_ptr<GuardianGraphics> GuardianGraphics::CreateNewGraphics(

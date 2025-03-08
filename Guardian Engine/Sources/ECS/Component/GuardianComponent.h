@@ -37,7 +37,7 @@ namespace guardian
 	class GUARDIAN_API GuardianCameraComponent : public GuardianComponent, public GuardianCamera
 	{
 	public:
-		std::shared_ptr<GuardianModel> CameraModel;
+		std::shared_ptr<GuardianMesh> CameraMesh;
 	};
 
 	class GuardianScriptableEntity;
@@ -82,16 +82,16 @@ namespace guardian
 		GuardianPointLightComponent()
 		{
 			this->LightProperties = GuardianPointLightProperties();
-			this->LightModel = null;
+			this->LightMesh = null;
 		}
 		GuardianPointLightComponent(const GuardianPointLightComponent& other)
 		{
 			this->LightProperties = other.LightProperties;
-			this->LightModel = other.LightModel;
+			this->LightMesh = other.LightMesh;
 		}
 
 		GuardianPointLightProperties LightProperties;
-		std::shared_ptr<GuardianModel> LightModel;
+		std::shared_ptr<GuardianMesh> LightMesh;
 	};
 
 	class GUARDIAN_API GuardianMeshComponent : public GuardianComponent
@@ -100,21 +100,13 @@ namespace guardian
 		GuardianMeshComponent()
 		{
 			this->Mesh = std::make_shared<GuardianMesh>();
-			this->MeshName.clear();
 		}
 		GuardianMeshComponent(const GuardianMeshComponent& other)
 		{
 			this->Mesh = other.Mesh;
-			this->MeshName = other.MeshName;
 		}
 
 		std::shared_ptr<GuardianMesh> Mesh;
-		GString MeshName;
-	};
-
-	class GUARDIAN_API GuardianModelComponent : public GuardianComponent, public GuardianModel
-	{
-	public:
 	};
 
 	class GUARDIAN_API GuardianSphereColliderComponent : public GuardianComponent

@@ -22,4 +22,39 @@ namespace Guardian
             }
         }
     }
+
+    public class GuardianCameraComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianPointLightComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianSphereColliderComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianBoxColliderComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianCapsuleColliderComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianMeshColliderComponent : GuardianComponent
+    {
+
+    }
+
+    public class GuardianRigidBodyComponent : GuardianComponent
+    {
+
+    }
 }

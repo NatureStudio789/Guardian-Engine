@@ -51,23 +51,11 @@ namespace guardian
 
 	void GuardianScene::InitializeScene()
 	{
-		PxSceneDesc SceneDesc(GuardianPhysicsEngine::PhysicsObject->getTolerancesScale());
-		SceneDesc.gravity = PxVec3(this->SceneGravity.x, this->SceneGravity.y, this->SceneGravity.z);
-		SceneDesc.cpuDispatcher = GuardianPhysicsEngine::PhysicsCpuDispatcher;
-		SceneDesc.filterShader = PxDefaultSimulationFilterShader;
-		this->PhysicsWorld = GuardianPhysicsEngine::PhysicsObject->createScene(SceneDesc);
-		if (!this->PhysicsWorld)
-		{
-			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics world!");
-		}
+		GuardianRenderer::CreateRenderingFramebuffer("Scene", *this->EditorCamera,
+			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
+			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
 
-		PxPvdSceneClient* DebuggerClient = this->PhysicsWorld->getScenePvdClient();
-		if (DebuggerClient)
-		{
-			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-		}
+		GuardianRenderer::SetClearColor(GVector3(0.1f, 0.1f, 0.1f));
 	}
 
 	void GuardianScene::LoadScene(std::shared_ptr<GuardianGraphics> graphics)
@@ -106,14 +94,20 @@ namespace guardian
 			this->CurrentScenePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 		}
 
-		this->Serialize(this->CurrentScenePath);
+		auto& data = this->Serialize();
+		std::stringstream sstream(data);
+		std::ofstream outputfile(this->CurrentScenePath);
+		outputfile << sstream.rdbuf();
 	}
 
 	void GuardianScene::SaveSceneAs(const GString& filePath)
 	{
 		this->CurrentScenePath = filePath;
 
-		this->Serialize(this->CurrentScenePath);
+		auto& data = this->Serialize();
+		std::stringstream sstream(data);
+		std::ofstream outputfile(this->CurrentScenePath);
+		outputfile << sstream.rdbuf();
 	}
 
 	void GuardianScene::UpdateScene(GuardianTimestep deltaTime)
@@ -136,6 +130,8 @@ namespace guardian
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
 	{
+		GuardianRenderer::SetFramebufferCamera("Scene", *this->EditorCamera);
+
 		if (this->ShouldOperateCamera)
 		{
 			if (GuardianKeyboard::IsKeyPress('W'))
@@ -180,18 +176,22 @@ namespace guardian
 				{
 					PLComponent.LightProperties.LightPosition = TComponent.Position;
 
-					if (!PLComponent.LightModel)
+					if (!PLComponent.LightMesh)
 					{
-						PLComponent.LightModel = GuardianModel::CreateNewModel(
-							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+						PLComponent.LightMesh = std::make_shared<GuardianMesh>();
+						PLComponent.LightMesh->InitializeMesh(
+							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Light",
 							"../Guardian Engine/Resources/Models/Light/Light.obj");
 					}
-					PLComponent.LightModel->SubmitToRenderer();
+					PLComponent.LightMesh->SubmitToRenderer("Scene");
 
 					GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
-					PLComponent.LightModel->UpdateModel(TComponent.GetTransformMatrix(),
-						this->EditorCamera->GetViewMatrix(),
-						this->EditorCamera->GetProjectionMatrix());
+					GuardianTransform transform;
+					transform.Position = TComponent.Position;
+					transform.Rotation = TComponent.Rotation;
+					transform.Quaternion = TComponent.Quaternion;
+					transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
+					PLComponent.LightMesh->UpdateMeshTransform(transform.GetTransformMatrix());
 				});
 		}
 		GuardianLightProperties LightProperties;
@@ -207,14 +207,13 @@ namespace guardian
 
 		if (!this->SceneGrid)
 		{
-			this->SceneGrid = GuardianModel::CreateNewModel(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+			this->SceneGrid = std::make_shared<GuardianMesh>();
+			this->SceneGrid->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Grid",
 				"../Guardian Engine/Resources/Models/Grid/Grid.obj");
 		}
-		this->SceneGrid->SubmitToRenderer();
-		this->SceneGrid->UpdateModel(GuardianTransform().GetTransformMatrix(),
-			this->EditorCamera->GetViewMatrix(), this->EditorCamera->GetProjectionMatrix());
-		this->SceneGrid->UpdateModelLighting(LightProperties);
+		this->SceneGrid->SubmitToRenderer("Scene");
+		this->SceneGrid->UpdateMeshTransform(GuardianTransform().GetTransformMatrix());
+		this->SceneGrid->UpdateMeshLighting(LightProperties);
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
@@ -229,11 +228,9 @@ namespace guardian
 
 				GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
 					TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
-				SCComponent.SphereGeometry->UpdateGeometry(transform.GetTransformMatrix(),
-					this->EditorCamera->GetViewMatrix(),
-					this->EditorCamera->GetProjectionMatrix());
+				SCComponent.SphereGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, SCComponent.SphereGeometry);
+				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", SCComponent.SphereGeometry);
 			});
 		}
 
@@ -250,11 +247,9 @@ namespace guardian
 
 					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
 						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
-					BCComponent.BoxGeometry->UpdateGeometry(transform.GetTransformMatrix(),
-						this->EditorCamera->GetViewMatrix(),
-						this->EditorCamera->GetProjectionMatrix());
+					BCComponent.BoxGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, BCComponent.BoxGeometry);
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", BCComponent.BoxGeometry);
 				});
 		}
 
@@ -273,11 +268,9 @@ namespace guardian
 						TComponent.Quaternion, GVector3(CCComponent.CapsuleCollider->GetColliderProperties().Radius, 
 							CCComponent.CapsuleCollider->GetColliderProperties().HalfHeight * 2.0f, 
 							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
-					CCComponent.CapsuleGeometry->UpdateGeometry(transform.GetTransformMatrix(),
-						this->EditorCamera->GetViewMatrix(),
-						this->EditorCamera->GetProjectionMatrix());
+					CCComponent.CapsuleGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, CCComponent.CapsuleGeometry);
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", CCComponent.CapsuleGeometry);
 				});
 		}
 
@@ -305,18 +298,22 @@ namespace guardian
 				CComponent.Position = TComponent.Position;
 				CComponent.Direction = TComponent.Rotation;
 
-				if (!CComponent.CameraModel)
+				if (!CComponent.CameraMesh)
 				{
-					CComponent.CameraModel = GuardianModel::CreateNewModel(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+					CComponent.CameraMesh = std::make_shared<GuardianMesh>();
+					CComponent.CameraMesh->InitializeMesh(
+						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Camera",
 						"../Guardian Engine/Resources/Models/Camera/Camera.obj");
 				}
-				CComponent.CameraModel->SubmitToRenderer();
+				CComponent.CameraMesh->SubmitToRenderer("Scene");
 
-				CComponent.CameraModel->UpdateModel(TComponent.GetTransformMatrix(),
-					this->EditorCamera->GetViewMatrix(),
-					this->EditorCamera->GetProjectionMatrix());
-				CComponent.CameraModel->UpdateModelLighting(LightProperties);
+				GuardianTransform transform;
+				transform.Position = TComponent.Position;
+				transform.Rotation = TComponent.Rotation;
+				transform.Quaternion = TComponent.Quaternion;
+				transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
+				CComponent.CameraMesh->UpdateMeshTransform(transform.GetTransformMatrix());
+				CComponent.CameraMesh->UpdateMeshLighting(LightProperties);
 			});
 		}
 
@@ -325,27 +322,11 @@ namespace guardian
 			view.each([this, &LightProperties](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 				{
-					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix(),
-						this->EditorCamera->GetViewMatrix(),
-						this->EditorCamera->GetProjectionMatrix());
+					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
 					MComponent.Mesh->UpdateMeshLighting(LightProperties);
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
+					MComponent.Mesh->SubmitToRenderer("Scene");
 				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
-			view.each([this, &LightProperties](const auto& e, 
-				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
-			{
-				MComponent.UpdateModel(TComponent.GetTransformMatrix(), 
-					this->EditorCamera->GetViewMatrix(), 
-					this->EditorCamera->GetProjectionMatrix());
-				MComponent.UpdateModelLighting(LightProperties);
-
-				MComponent.SubmitToRenderer();
-			});
 		}
 	}
 
@@ -353,8 +334,11 @@ namespace guardian
 	{
 		this->SceneState = GE_SCENE_RUNTIME;
 
-		this->InitializeScene();
-		this->Serialize("Temp.gdata");
+		this->CreatePhysicsWorld();
+		auto& data = this->Serialize();
+		std::stringstream OutputStringStream(data);
+		std::ofstream OutputFile("Temp.gdata");
+		OutputFile << OutputStringStream.rdbuf();
 
 		{
 			auto view = this->SceneRegistry.view<GuardianSphereColliderComponent, GuardianRigidBodyComponent>();
@@ -517,11 +501,34 @@ namespace guardian
 
 	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
+		GuardianRenderer::SetFramebufferCamera("Scene", *this->RuntimeCamera);
+
 		{
 			this->PhysicsWorld->simulate(deltaTime.GetSecond());
 			
 			this->PhysicsWorld->fetchResults(true);
 		}
+
+		{
+			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianPointLightComponent>();
+			view.each([this](const auto& e,
+				GuardianTransformComponent& TComponent, GuardianPointLightComponent& PLComponent)
+			{
+				PLComponent.LightProperties.LightPosition = TComponent.Position;
+
+				GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
+			});
+		}
+		GuardianLightProperties LightProperties;
+		int index = 0;
+		while (!GuardianLightSystem::IsPointLightListEmpty())
+		{
+			GuardianPointLightProperties pointLight = GuardianLightSystem::ReadPointLight();
+			LightProperties.PointLightList[index] = pointLight;
+			index++;
+		}
+		LightProperties.LightNumber = index;
+		LightProperties.CameraPosition = this->RuntimeCamera->Position;
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
@@ -582,27 +589,13 @@ namespace guardian
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
-			view.each([this](const auto& e,
+			view.each([this, &LightProperties](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
-				{
-					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix(),
-						this->RuntimeCamera->GetViewMatrix(),
-						this->RuntimeCamera->GetProjectionMatrix());
-
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, MComponent.Mesh);
-				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianModelComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianModelComponent& MComponent)
 			{
-				MComponent.UpdateModel(TComponent.GetTransformMatrix(),
-					this->RuntimeCamera->GetViewMatrix(),
-					this->RuntimeCamera->GetProjectionMatrix());
+				MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
+				MComponent.Mesh->UpdateMeshLighting(LightProperties);
 
-				MComponent.SubmitToRenderer();
+				MComponent.Mesh->SubmitToRenderer("Scene");
 			});
 		}
 	}
@@ -698,15 +691,32 @@ namespace guardian
 		return null;
 	}
 
-	void GuardianScene::Deserialize(const GString& filePath)
+	void GuardianScene::CreatePhysicsWorld()
 	{
-		std::ifstream SceneFile(filePath);
+		PxSceneDesc SceneDesc(GuardianPhysicsEngine::PhysicsObject->getTolerancesScale());
+		SceneDesc.gravity = PxVec3(this->SceneGravity.x, this->SceneGravity.y, this->SceneGravity.z);
+		SceneDesc.cpuDispatcher = GuardianPhysicsEngine::PhysicsCpuDispatcher;
+		SceneDesc.filterShader = PxDefaultSimulationFilterShader;
+		this->PhysicsWorld = GuardianPhysicsEngine::PhysicsObject->createScene(SceneDesc);
+		if (!this->PhysicsWorld)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics world!");
+		}
+
+		PxPvdSceneClient* DebuggerClient = this->PhysicsWorld->getScenePvdClient();
+		if (DebuggerClient)
+		{
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+			DebuggerClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+		}
+	}
+
+	void GuardianScene::Deserialize(const GString& sceneFilePath)
+	{
+		std::ifstream SceneFile(sceneFilePath);
 		std::stringstream SceneFileStringStream;
 		SceneFileStringStream << SceneFile.rdbuf();
-		if (SceneFileStringStream.str().empty())
-		{
-			throw GUARDIAN_ERROR_EXCEPTION("Failed to load scene : '" + filePath + "' !");
-		}
 
 		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
 
@@ -762,17 +772,10 @@ namespace guardian
 				if (MeshComponent)
 				{
 					auto& MeshC = LoadedEntity->AddComponent<GuardianMeshComponent>();
-					MeshC.MeshName = MeshComponent["Mesh Name"].as<GString>();
-					MeshC.Mesh = std::make_shared<GuardianMesh>(GuardianResourceSystem::GetMesh(MeshC.MeshName));
-				}
-
-				auto ModelComponent = entity["Model Component"];
-				if (ModelComponent)
-				{
-					auto& Model = LoadedEntity->AddComponent<GuardianModelComponent>();
-					auto ModelFilePath = ModelComponent["File Path"].as<GString>();
-					Model.InitializeModel(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), ModelFilePath);
+					GString MeshName = MeshComponent["Mesh Name"].as<GString>();
+					MeshC.Mesh = std::make_shared<GuardianMesh>();
+					MeshC.Mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
+						MeshName, GuardianResourceSystem::GetMeshData(MeshName));
 				}
 
 				auto SphereColliderComponent = entity["Sphere Collider Component"];
@@ -839,7 +842,7 @@ namespace guardian
 		}
 	}
 
-	void GuardianScene::Serialize(const GString& filePath)
+	const GString GuardianScene::Serialize()
 	{
 		YAML::Emitter SceneOutput;
 		SceneOutput << YAML::BeginMap;
@@ -847,18 +850,20 @@ namespace guardian
 		SceneOutput << YAML::Value << "Unnamed";
 		SceneOutput << YAML::Key << "Entities";
 		SceneOutput << YAML::Value << YAML::BeginSeq;
+
 		for (auto& entity : this->SceneEntityList)
 		{
-			this->SaveEntity(filePath, SceneOutput, entity.second);
+			this->SaveEntity(SceneOutput, entity.second);
 		}
+		
 		SceneOutput << YAML::EndSeq;
 		SceneOutput << YAML::EndMap;
 
-		std::ofstream SceneFileOutput(filePath);
-		SceneFileOutput << SceneOutput.c_str();
+		GString OutputData = SceneOutput.c_str();
+		return OutputData;
 	}
 
-	void GuardianScene::SaveEntity(const GString& filePath, YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity)
+	void GuardianScene::SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity)
 	{
 		output << YAML::BeginMap;
 		output << YAML::Key << "Entity";
@@ -950,18 +955,7 @@ namespace guardian
 			output << YAML::BeginMap;
 
 			output << YAML::Key << "Mesh Name" << YAML::Value <<
-				entity->GetComponent<GuardianMeshComponent>().MeshName;
-
-			output << YAML::EndMap;
-		}
-
-		if (entity->HasComponent<GuardianModelComponent>())
-		{
-			output << YAML::Key << "Model Component";
-			output << YAML::BeginMap;
-
-			output << YAML::Key << "File Path" << YAML::Value << 
-				entity->GetComponent<GuardianModelComponent>().GetModelFilePath();
+				entity->GetComponent<GuardianMeshComponent>().Mesh->GetMeshName();
 
 			output << YAML::EndMap;
 		}

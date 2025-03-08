@@ -139,6 +139,11 @@ namespace guardian
 		}
 	}
 
+	const GuardianUUID& GuardianRenderable::GetRenderableId() const noexcept
+	{
+		return this->RenderableId;
+	}
+
 	std::shared_ptr<GuardianLightConstantBuffer> GuardianRenderable::GetLightConstantBuffer()
 	{
 		return this->RenderingLightConstantBuffer;;
@@ -157,11 +162,6 @@ namespace guardian
 	std::shared_ptr<GuardianIndexBuffer> GuardianRenderable::GetIndexBuffer()
 	{
 		return this->RenderingIndexBuffer;
-	}
-
-	std::shared_ptr<GuardianMaterial> GuardianRenderable::GetMaterial()
-	{
-		return this->RenderingMaterial;
 	}
 
 	const UINT& GuardianRenderable::GetTexturesNumber() const noexcept

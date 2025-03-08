@@ -34,6 +34,14 @@ namespace Guardian
             {
                 translation.x -= 0.1f;
             }
+            if (Input.IsKeyPressed(0x20))
+            {
+                translation.y += 0.1f;
+            }
+            if (Input.IsKeyPressed(0x10))
+            {
+                translation.y -= 0.1f;
+            }
 
             this.Transform.Translation = translation;
         }

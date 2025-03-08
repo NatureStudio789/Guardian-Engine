@@ -35,8 +35,7 @@ namespace guardian
 
 	void GuardianScriptRegistry::RegisterComponents()
 	{
-		RegisterComponent<GuardianTagComponent, GuardianTransformComponent, GuardianCameraComponent, GuardianNativeScriptComponent, 
-			GuardianScriptComponent, GuardianPointLightComponent, GuardianMeshComponent, GuardianModelComponent, 
+		RegisterComponent<GuardianTransformComponent, GuardianCameraComponent, GuardianPointLightComponent, 
 			GuardianSphereColliderComponent, GuardianBoxColliderComponent, GuardianCapsuleColliderComponent, 
 			GuardianMeshColliderComponent, GuardianRigidBodyComponent>();
 	}

@@ -152,7 +152,7 @@ namespace guardian
 		this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
 
 		ImGui::Render();
-		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsGUIFramebuffer()->ApplyFramebuffer(
+		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsMainFramebuffer()->ApplyFramebuffer(
 			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), { 0.0f, 0.0f, 0.0f });
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)

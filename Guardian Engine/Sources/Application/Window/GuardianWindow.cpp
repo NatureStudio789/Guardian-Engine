@@ -92,7 +92,7 @@ namespace guardian
 		this->IsWindowRunning = true;
 	}
 
-	void GuardianWindow::UpdateWinow() noexcept
+	void GuardianWindow::UpdateWindowMessage() noexcept
 	{
 		while (PeekMessage(&this->WindowMessage, null, null, null, PM_REMOVE))
 		{
@@ -115,6 +115,11 @@ namespace guardian
 	std::shared_ptr<GuardianGraphics> GuardianWindow::GetWindowGraphicsContext() noexcept
 	{
 		return this->WindowGraphicsContext;
+	}
+
+	const GuardianWindowProperties& GuardianWindow::GetWindowProperties() const noexcept
+	{
+		return this->WindowProperties;
 	}
 
 	std::shared_ptr<GuardianWindow> GuardianWindow::CreateNewWindow(

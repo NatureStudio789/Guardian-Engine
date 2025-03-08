@@ -24,7 +24,6 @@ namespace guardian
 		void DisplayWindow();
 		void UpdateApplication() noexcept;
 
-		void BeginRendering(const GVector3& clearColor = GVector3(0.2f, 0.3f, 0.3f));
 		void EndUpRendering(int syncInterval = 1);
 
 		static LRESULT CALLBACK ApplicationMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);

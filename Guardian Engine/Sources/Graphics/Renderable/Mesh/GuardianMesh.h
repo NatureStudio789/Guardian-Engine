@@ -1,47 +1,40 @@
 #ifndef _GE_GUARDIANMESH_H_
 #define _GE_GUARDIANMESH_H_
-#include "../GuardianRenderableBase.h"
+#include "../ModelImporter/GuardianModelImporter.h"
 
 namespace guardian
 {
-	class GUARDIAN_API GuardianMesh : public GuardianRenderableBase<GuardianMesh>, public GuardianSerializable
+	class GUARDIAN_API GuardianMesh : public GuardianSerializable
 	{
-	public:
-		struct Vertex
-		{
-			GVector3 Position;
-			GVector2 TextureCoord;
-			GVector3 Normal;
-		};
-
+		using GuardianMeshInstanceId = GuardianUUID;
 	public:
 		GuardianMesh();
 		GuardianMesh(const GuardianMesh& other);
-		~GuardianMesh() override;
+		~GuardianMesh();
 
 		void InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
-			std::vector<Vertex> vertices, std::vector<UINT> indices);
-		void InitializeMesh(std::shared_ptr<GuardianGraphics> graphics, const GString& meshFilePath);
-		void SetMeshMaterial(std::shared_ptr<GuardianMaterial> material);
+			const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData);
+		void InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
+			const GString& meshName, const GString& meshFilePath);
+		void SetMeshName(const GString& meshName);
+		void AddInstanceToMesh(std::shared_ptr<GuardianGraphics> graphics,
+			const GuardianMeshInstance::Data& instanceData);
 
-		void Update() override;
-		void UpdateMeshTransform(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		void UpdateMeshTransform(XMMATRIX worldMatrix);
 		void UpdateMeshLighting(GuardianLightProperties properties);
 
-		void Serialize(const GString& filePath) override;
+		void SubmitToRenderer(const GString& submitFramebuffer);
+
+		const GString Serialize() override;
 		void Deserialize(const GString& filePath) override;
 
-		const std::vector<GVector3> GetPositionVertices() const noexcept;
-		const std::vector<UINT>& GetIndices() const noexcept;
-
-		bool operator==(const GuardianMesh& other) const;
+		std::shared_ptr<GuardianMeshInstance> GetMeshInstance(const GuardianUUID& id);
+		const GString& GetMeshName() const noexcept;
 
 	private:
-		std::vector<Vertex> VertexData;
-		std::vector<UINT> IndexData;
-
-		GString MeshFilePath;
-	};	
+		GString MeshName;
+		std::vector<std::shared_ptr<GuardianMeshInstance>> MeshInstancesList;
+	};
 }
 
 #endif

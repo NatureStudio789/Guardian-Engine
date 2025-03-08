@@ -174,6 +174,11 @@ namespace guardian
 
 		}
 
+		void SetWorldTransform(XMMATRIX worldMatrix)
+		{
+			this->ConstantBufferData.WorldTransformMatrix = worldMatrix;
+		}
+
 		static std::shared_ptr<GuardianTransformConstantBuffer> CreateNewTransformConstantBuffer(
 			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
 		{
@@ -186,7 +191,7 @@ namespace guardian
 	public:
 		GuardianMaterialProperties()
 		{
-			this->UsingMaps = new bool[5];
+			this->padding = GVector2(114514.0f, 114514.0f);
 		}
 
 		GVector3 AlbedoColor;
@@ -194,7 +199,8 @@ namespace guardian
 		float RoughnessColor;
 		float AoColor;
 		GVector2 padding;
-		bool* UsingMaps;
+		bool UsingMaps[5];
+		GVector3 padding2;
 	};
 
 	class GUARDIAN_API GuardianMaterialConstantBuffer : public GuardianConstantBuffer<GuardianMaterialProperties>

@@ -1,4 +1,5 @@
 #include "GuardianScenePanel.h"
+#include <Graphics/Renderer/GuardianRenderer.h>
 #include <Application/GuardianApplication.h>
 
 namespace guardian
@@ -72,15 +73,13 @@ namespace guardian
 		{
 			LastScenePanelSize = { CurrentScenePanelSize.x, CurrentScenePanelSize.y };
 
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->UpdateSceneGraphicsResolution(
-				(int)CurrentScenePanelSize.x, (int)CurrentScenePanelSize.y);
+			GuardianRenderer::ResizeRenderingFramebuffer("Scene", (int)CurrentScenePanelSize.x, (int)CurrentScenePanelSize.y);
 			this->PanelScene->UpdateProjectionAspect(CurrentScenePanelSize.x, CurrentScenePanelSize.y);
 			IsFirst = false;
 		}
 
-		ImGui::Image((ImTextureID)
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->
-			GetGraphicsSceneFramebuffer()->GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
+		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingFramebuffer("Scene")->
+			GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCES_BROWSER_ITEM"))
@@ -111,18 +110,18 @@ namespace guardian
 				XMStoreFloat4x4(&view, this->PanelScene->EditorCamera->GetViewMatrix());
 				XMFLOAT4X4 projection;
 				XMStoreFloat4x4(&projection, this->PanelScene->EditorCamera->GetProjectionMatrix());
-				XMFLOAT4X4 trasnform;
-				XMStoreFloat4x4(&trasnform, this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().GetTransformMatrix());
+				XMFLOAT4X4 transform;
+				XMStoreFloat4x4(&transform, this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().GetTransformMatrix());
 
 				ImGuizmo::Manipulate((const float*)view.m, (const float*)projection.m, (ImGuizmo::OPERATION)this->CurrentOperation,
-					ImGuizmo::LOCAL, (float*)trasnform.m);
+					ImGuizmo::LOCAL, (float*)transform.m);
 				
 				if (ImGuizmo::IsUsing())
 				{
 					if (this->CurrentOperation == ImGuizmo::TRANSLATE)
 					{
 						XMVECTOR VScale, VTranslation, VRotation;
-						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&transform));
 						XMFLOAT3 Position;
 						XMStoreFloat3(&Position, VTranslation);
 
@@ -132,7 +131,7 @@ namespace guardian
 					else if (this->CurrentOperation == ImGuizmo::ROTATE)
 					{
 						XMVECTOR VScale, VTranslation, VRotation;
-						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&transform));
 						XMFLOAT4 Quaternion;
 						XMStoreFloat4(&Quaternion, VRotation);
 						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles(Quaternion);
@@ -143,7 +142,7 @@ namespace guardian
 					else if (this->CurrentOperation == ImGuizmo::SCALE)
 					{
 						XMVECTOR VScale, VTranslation, VRotation;
-						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&trasnform));
+						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&transform));
 						XMFLOAT3 Scale;
 						XMStoreFloat3(&Scale, VScale);
 

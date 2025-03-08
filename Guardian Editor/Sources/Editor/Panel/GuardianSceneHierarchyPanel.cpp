@@ -87,7 +87,7 @@ namespace guardian
 		static bool OpenMeshBrowser = false;
 		static bool OpenMaterialBrowser = false;
 		static bool OpenTextureBrowser = false;
-		int SelectedTextureIndex = -1;
+		static int SelectedTextureIndex = -1;
 		if (open1)
 		{
 			ImGui::Begin("Properties", &open1);
@@ -101,50 +101,10 @@ namespace guardian
 		this->RenderMeshBrowser(meshName, OpenMeshBrowser);
 		if (!meshName.empty())
 		{
-			GuardianMesh mesh = GuardianResourceSystem::GetMesh(meshName);
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().MeshName = meshName;
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>(mesh);
-		}
-
-		GString materialName;
-		this->RenderMaterialBrowser(materialName, OpenMaterialBrowser);
-		if (!materialName.empty())
-		{
-			GuardianMaterial material = GuardianResourceSystem::GetMaterial(materialName);
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-				Mesh->SetMeshMaterial(std::make_shared<GuardianMaterial>(material));
-		}
-
-		GString textureName;
-		this->RenderTextureBrowser(textureName, OpenTextureBrowser);
-		if (!textureName.empty())
-		{
-			GuardianTexture texture = GuardianResourceSystem::GetTexture(textureName);
-			if (SelectedTextureIndex == 0)
-			{
-				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-					Mesh->GetMaterial()->SetAlbedoTexture(std::make_shared<GuardianTexture>(texture));
-			}
-			else if (SelectedTextureIndex == 1)
-			{
-				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-					Mesh->GetMaterial()->SetMetallicTexture(std::make_shared<GuardianTexture>(texture));
-			}
-			else if (SelectedTextureIndex == 2)
-			{
-				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-					Mesh->GetMaterial()->SetRoughnessTexture(std::make_shared<GuardianTexture>(texture));
-			}
-			else if (SelectedTextureIndex == 3)
-			{
-				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-					Mesh->GetMaterial()->SetNormalTexture(std::make_shared<GuardianTexture>(texture));
-			}
-			else if (SelectedTextureIndex == 4)
-			{
-				this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().
-					Mesh->GetMaterial()->SetAoTexture(std::make_shared<GuardianTexture>(texture));
-			}
+			auto& meshData = GuardianResourceSystem::GetMeshData(meshName);
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
+				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), meshName, meshData);
 		}
 	}
 
@@ -279,13 +239,10 @@ namespace guardian
 						transform.Rotation = GVector3(rotation[0], rotation[1], rotation[2]);
 					}
 
-					if (!SelectedEntity->HasComponent<GuardianCameraComponent>())
+					float scaling[3] = { transform.Scale.x, transform.Scale.y, transform.Scale.z };
+					if (ImGui::DragFloat3("Scale", scaling, 0.1f, 0.0f))
 					{
-						float scale[3] = { transform.Scale.x, transform.Scale.y, transform.Scale.z };
-						if (ImGui::DragFloat3("Scale", scale, 0.1f, 0.0f))
-						{
-							transform.Scale = GVector3(scale[0], scale[1], scale[2]);
-						}
+						transform.Scale = GVector3(scaling[0], scaling[1], scaling[2]);
 					}
 
 					ImGui::TreePop();
@@ -380,14 +337,14 @@ namespace guardian
 				{
 					ImGui::Text("Mesh Filter");
 					ImGui::SameLine();
-					if (ImGui::Button((SelectedEntity->GetComponent<GuardianMeshComponent>().MeshName + "##Mesh").c_str()))
+					if (ImGui::Button((mesh->GetMeshName() + "##Mesh").c_str()))
 					{
 						openMeshBrowser = true;
 					}
 
-					ImGui::Text("Mesh Material");
+					/*ImGui::Text("Mesh Material");
 					ImGui::SameLine();
-					if (ImGui::Button((GuardianResourceSystem::GetMaterialName(
+					if (ImGui::Button((GuardianMaterialSystem::GetMaterialName(
 						*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()) + "##Material").c_str()))
 					{
 						openMaterialBrowser = true;
@@ -403,7 +360,7 @@ namespace guardian
 
 						if (ImGui::TreeNodeEx("Albedo Color (Diffuse Color)", ImGuiTreeNodeFlags_DefaultOpen))
 						{
-							static bool UseAlbedoT = material->UsingAlbedoTexture;
+							bool UseAlbedoT = material->UsingAlbedoTexture;
 							ImGui::Checkbox("Use Texture", &UseAlbedoT);
 
 							if (!UseAlbedoT)
@@ -568,38 +525,7 @@ namespace guardian
 						}
 
 						ImGui::TreePop();
-					}
-
-					ImGui::TreePop();
-				}
-
-				ImGui::Separator();
-			}
-
-			if (SelectedEntity->HasComponent<GuardianModelComponent>())
-			{
-				auto& model = SelectedEntity->GetComponent<GuardianModelComponent>();
-
-				if (ImGui::TreeNodeEx((void*)typeid(GuardianModelComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-					"Model Component"))
-				{
-					GString fileName = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('/') + 1);
-					if (fileName == model.GetModelFilePath())
-					{
-						fileName = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('\\') + 1);
-					}
-					ImGui::Text("Model File Path");
-					ImGui::SameLine();
-					if (ImGui::Button(fileName.c_str()))
-					{
-						GString filePath = GuardianFileDialog::OpenFile("Model File (*.obj)\0*.obj\0");
-						if (std::filesystem::exists(filePath) && std::filesystem::path(filePath).extension() == ".obj")
-						{
-							model.ClearModelMeshList();
-							model.InitializeModel(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-								filePath);
-						}
-					}
+					}*/
 
 					ImGui::TreePop();
 				}
@@ -625,7 +551,7 @@ namespace guardian
 					ImGui::Text("Physics Material");
 
 					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
-					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
 							collider->GetColliderMaterial().GetDynamicFriction(),
@@ -633,7 +559,7 @@ namespace guardian
 					}
 
 					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
-					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -642,7 +568,7 @@ namespace guardian
 					}
 
 					float restitution = collider->GetColliderMaterial().GetRestitution();
-					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -677,7 +603,7 @@ namespace guardian
 					ImGui::Text("Physics Material");
 
 					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
-					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
 							collider->GetColliderMaterial().GetDynamicFriction(),
@@ -685,7 +611,7 @@ namespace guardian
 					}
 
 					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
-					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -694,7 +620,7 @@ namespace guardian
 					}
 
 					float restitution = collider->GetColliderMaterial().GetRestitution();
-					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -732,7 +658,7 @@ namespace guardian
 					ImGui::Text("Physics Material");
 
 					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
-					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
 							collider->GetColliderMaterial().GetDynamicFriction(),
@@ -740,7 +666,7 @@ namespace guardian
 					}
 
 					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
-					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -749,7 +675,7 @@ namespace guardian
 					}
 
 					float restitution = collider->GetColliderMaterial().GetRestitution();
-					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.0f))
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.00001f))
 					{
 						collider->SetColliderMaterial(GuardianPhysicsMaterial(
 							collider->GetColliderMaterial().GetStaticFriction(),
@@ -816,93 +742,121 @@ namespace guardian
 
 			if (ImGui::BeginPopup("AddComponent"))
 			{
-				if (ImGui::MenuItem("Transform Component"))
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianTransformComponent>())
 				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianTransformComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Camera Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianCameraComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Script Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianScriptComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Point Light Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianPointLightComponent>();
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Mesh Component"))
-				{
-					GuardianMesh mesh = GuardianResourceSystem::GetMeshList()["Box"];
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>(mesh);
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						GetComponent<GuardianMeshComponent>().MeshName = "Box";
-				}
-
-				if (ImGui::MenuItem("Model Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianModelComponent>().InitializeModel(
-							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-							"Resources/Models/SBDS/SBDS.obj");
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Sphere Collider Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianSphereColliderComponent>().SphereCollider->SetColliderMaterial(
-							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Box Collider Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianBoxColliderComponent>().BoxCollider->SetColliderMaterial(
-							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("Capsule Collider Component"))
-				{
-					this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->SetColliderMaterial(
-							GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
-					ImGui::CloseCurrentPopup();
-				}
-
-				if (ImGui::MenuItem("RigidBody Component"))
-				{
-					auto& type = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-						AddComponent<GuardianRigidBodyComponent>().RigidBodyType;
-					if (type == GE_RIGIDBODY_STATIC)
+					if (ImGui::MenuItem("Transform Component"))
 					{
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-							GetComponent<GuardianRigidBodyComponent>().StaticRigidBody->SetRigidBodyTransform(
-								SelectedEntity->GetComponent<GuardianTransformComponent>());
+							AddComponent<GuardianTransformComponent>();
+						ImGui::CloseCurrentPopup();
 					}
-					else if (type == GE_RIGIDBODY_DYNAMIC)
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianCameraComponent>())
+				{
+					if (ImGui::MenuItem("Camera Component"))
 					{
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-							GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody->SetRigidBodyTransform(
-								SelectedEntity->GetComponent<GuardianTransformComponent>());
+							AddComponent<GuardianCameraComponent>();
+						ImGui::CloseCurrentPopup();
 					}
-					ImGui::CloseCurrentPopup();
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianScriptComponent>())
+				{
+					if (ImGui::MenuItem("Script Component"))
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianScriptComponent>();
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianPointLightComponent>())
+				{
+					if (ImGui::MenuItem("Point Light Component"))
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianPointLightComponent>();
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianMeshComponent>())
+				{
+					if (ImGui::MenuItem("Mesh Component"))
+					{
+						auto& meshData = GuardianResourceSystem::GetMeshDataList()["Box"];
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
+								GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Box", meshData);
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianSphereColliderComponent>())
+				{
+					if (ImGui::MenuItem("Sphere Collider Component"))
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianSphereColliderComponent>().SphereCollider->SetColliderMaterial(
+								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianBoxColliderComponent>())
+				{
+					if (ImGui::MenuItem("Box Collider Component"))
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianBoxColliderComponent>().BoxCollider->SetColliderMaterial(
+								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianCapsuleColliderComponent>())
+				{
+					if (ImGui::MenuItem("Capsule Collider Component"))
+					{
+						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->SetColliderMaterial(
+								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
+						ImGui::CloseCurrentPopup();
+					}
+				}
+
+				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+					HasComponent<GuardianRigidBodyComponent>())
+				{
+					if (ImGui::MenuItem("RigidBody Component"))
+					{
+						auto& type = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							AddComponent<GuardianRigidBodyComponent>().RigidBodyType;
+						if (type == GE_RIGIDBODY_STATIC)
+						{
+							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+								GetComponent<GuardianRigidBodyComponent>().StaticRigidBody->SetRigidBodyTransform(
+									SelectedEntity->GetComponent<GuardianTransformComponent>());
+						}
+						else if (type == GE_RIGIDBODY_DYNAMIC)
+						{
+							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+								GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody->SetRigidBodyTransform(
+									SelectedEntity->GetComponent<GuardianTransformComponent>());
+						}
+						ImGui::CloseCurrentPopup();
+					}
 				}
 
 				ImGui::EndPopup();
@@ -929,7 +883,7 @@ namespace guardian
 
 			ImGui::Columns(ColumnCount, 0, false);
 
-			for (auto& meshPair : GuardianResourceSystem::GetMeshList())
+			for (auto& meshPair : GuardianResourceSystem::GetMeshDataList())
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
@@ -946,98 +900,6 @@ namespace guardian
 					open = false;
 				}
 				ImGui::TextWrapped(meshPair.first.c_str());
-
-				ImGui::NextColumn();
-			}
-
-			ImGui::Columns(1);
-
-			ImGui::End();
-		}
-	}
-
-	void GuardianSceneHierarchyPanel::RenderTextureBrowser(GString& textureName, bool& open)
-	{
-		if (open)
-		{
-			ImGui::Begin("Select a Texture", &open);
-
-			static float padding = 16.0f;
-			static float IconSize = 64.0f;
-			float CellSize = IconSize + padding;
-
-			float panelWidth = ImGui::GetContentRegionAvail().x;
-			int ColumnCount = (int)(panelWidth / CellSize);
-			if (ColumnCount < 1)
-			{
-				ColumnCount = 1;
-			}
-
-			ImGui::Columns(ColumnCount, 0, false);
-
-			for (auto& texturePair : GuardianResourceSystem::GetTextureList())
-			{
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-
-				ImGui::ImageButton(texturePair.first.c_str(),
-					(ImTextureID)texturePair.second.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
-				ImGui::PopStyleColor(3);
-
-				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-				{
-					textureName = texturePair.first;
-
-					open = false;
-				}
-				ImGui::TextWrapped(texturePair.first.c_str());
-
-				ImGui::NextColumn();
-			}
-
-			ImGui::Columns(1);
-
-			ImGui::End();
-		}
-	}
-
-	void GuardianSceneHierarchyPanel::RenderMaterialBrowser(GString& materialName, bool& open)
-	{
-		if (open)
-		{
-			ImGui::Begin("Select a Material", &open);
-
-			static float padding = 16.0f;
-			static float IconSize = 64.0f;
-			float CellSize = IconSize + padding;
-
-			float panelWidth = ImGui::GetContentRegionAvail().x;
-			int ColumnCount = (int)(panelWidth / CellSize);
-			if (ColumnCount < 1)
-			{
-				ColumnCount = 1;
-			}
-
-			ImGui::Columns(ColumnCount, 0, false);
-
-			for (auto& materialPair : GuardianResourceSystem::GetMaterialList())
-			{
-				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
-				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
-				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-
-				ImGui::ImageButton(materialPair.first.c_str(),
-					(ImTextureID)this->MeshFileIcon.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
-				ImGui::PopStyleColor(3);
-
-				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-				{
-					materialName = materialPair.first;
-
-					open = false;
-				}
-				ImGui::TextWrapped(materialPair.first.c_str());
 
 				ImGui::NextColumn();
 			}

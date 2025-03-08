@@ -48,12 +48,7 @@ namespace guardian
 
 	void GuardianApplication::UpdateApplication() noexcept
 	{
-		this->ApplicationWindow->UpdateWinow();
-	}
-
-	void GuardianApplication::BeginRendering(const GVector3& clearColor)
-	{
-		this->ApplicationWindow->WindowGraphicsContext->BeginRendering(clearColor);
+		this->ApplicationWindow->UpdateWindowMessage();
 	}
 
 	void GuardianApplication::EndUpRendering(int syncInterval)

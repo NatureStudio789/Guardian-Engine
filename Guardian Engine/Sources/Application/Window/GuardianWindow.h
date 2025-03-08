@@ -44,6 +44,16 @@ namespace guardian
 			this->WindowClassName = this->WindowTitle + " Class";
 		}
 
+		const int GetWidth() const noexcept
+		{
+			return this->WindowWidth;
+		}
+
+		const int GetHeight() const noexcept
+		{
+			return this->WindowHeight;
+		}
+
 	private:
 		int WindowWidth;
 		int WindowHeight;
@@ -67,11 +77,12 @@ namespace guardian
 		void InitializeWindow(const GuardianWindowProperties& properties, WNDPROC windowProcessFunction);
 
 		void DisplayWindow();
-		void UpdateWinow() noexcept;
+		void UpdateWindowMessage() noexcept;
 
 		const bool GetIsWindowRunning() const noexcept;
 		const GWindowHandle& GetWindowHandle() const noexcept;
 		std::shared_ptr<GuardianGraphics> GetWindowGraphicsContext() noexcept;
+		const GuardianWindowProperties& GetWindowProperties() const noexcept;
 
 		static std::shared_ptr<GuardianWindow> CreateNewWindow(
 			const GuardianWindowProperties& properties, WNDPROC windowProcessFunction);

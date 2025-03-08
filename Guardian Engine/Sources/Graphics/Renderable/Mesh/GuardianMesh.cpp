@@ -1,225 +1,227 @@
 #include "GuardianMesh.h"
 #include "../../Renderer/GuardianRenderer.h"
+#include "../../../Application/GuardianApplication.h"
 
 namespace guardian
 {
-	GuardianMesh::GuardianMesh() : GuardianRenderableBase<GuardianMesh>()
+	GuardianMesh::GuardianMesh()
 	{
-		this->MeshFilePath.clear();
+		this->MeshInstancesList.clear();
+		this->MeshName.clear();
 	}
 
-	GuardianMesh::GuardianMesh(const GuardianMesh& other) : GuardianRenderableBase<GuardianMesh>(other)
+	GuardianMesh::GuardianMesh(const GuardianMesh& other)
 	{
-		this->RenderableId = other.RenderableId;
-		this->VertexData = other.VertexData;
-		this->IndexData = other.IndexData;
-		this->MeshFilePath = other.MeshFilePath;
+		this->MeshName = other.MeshName;
+		this->MeshInstancesList = other.MeshInstancesList;
 	}
 
 	GuardianMesh::~GuardianMesh()
 	{
-		for (auto& applicable : this->ApplicableList)
+		for (auto& instance : this->MeshInstancesList)
 		{
-			applicable.reset();
+			instance.reset();
+			instance = null;
 		}
-		this->ApplicableList.clear();
-
-		this->VertexData.clear();
-		this->IndexData.clear();
-		this->MeshFilePath.clear();
+		this->MeshInstancesList.clear();
+		this->MeshName.clear();
 	}
 
-	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics, std::vector<Vertex> vertices, std::vector<UINT> indices)
+	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
+		const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData)
 	{
-		this->VertexData = vertices;
-		this->IndexData = indices;
+		this->SetMeshName(meshName);
 
-		if (!this->IsStaticApplicablesInitialized())
+		for (auto& data : instanceData)
 		{
-			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_SOLID, GE_CULL_BACK));
-			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
-
-			auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/MeshVertexShader.hlsl");
-			this->AddStaticApplicable(vs);
-			this->AddStaticApplicable(
-				GuardianPixelShader::CreateNewPixelShader(graphics, "../Guardian Engine/Shaders/MeshPixelShader.hlsl"));
-
-			D3D11_INPUT_ELEMENT_DESC id[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			};
-			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));
-
-
-			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(graphics, GE_FILTER_MIN_MAG_MIP_LINEAR));
+			this->AddInstanceToMesh(graphics, data);
 		}
-		/*else
-		{
-			this->AddLightConstantBufferFromStatic();
-		}*/
-
-		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, 
-			(void*)vertices.data(), (UINT)vertices.size(), (UINT)sizeof(Vertex)));
-		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, indices));
-
-		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
-		this->AddLightConstantBuffer(GuardianLightConstantBuffer::CreateNewLightConstantBuffer(graphics));
 	}
 
-	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics, const GString& meshFilePath)
+	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
+		const GString& meshName, const GString& meshFilePath)
 	{
-		this->Deserialize(meshFilePath);
-
-		if (!this->IsStaticApplicablesInitialized())
+		if (std::filesystem::path(meshFilePath).extension() == ".obj" || 
+			std::filesystem::path(meshFilePath).extension() == ".fbx")
 		{
-			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_SOLID, GE_CULL_BACK));
-			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
-
-			auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/MeshVertexShader.hlsl");
-			this->AddStaticApplicable(vs);
-			this->AddStaticApplicable(
-				GuardianPixelShader::CreateNewPixelShader(graphics, "../Guardian Engine/Shaders/MeshPixelShader.hlsl"));
-
-			D3D11_INPUT_ELEMENT_DESC id[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			};
-			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));
-
-			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(graphics, GE_FILTER_MIN_MAG_MIP_LINEAR));
+			this->InitializeMesh(graphics, meshName, GuardianModelImporter(graphics, meshFilePath).GetModelMeshInstanceDataList());
 		}
-
-		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics,
-			(void*)this->VertexData.data(), (UINT)this->VertexData.size(), (UINT)sizeof(Vertex)));
-		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, this->IndexData));
-
-		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
+		else if (std::filesystem::path(meshFilePath).extension() == ".gmesh")
+		{
+			this->MeshName = meshName;
+			this->Deserialize(meshFilePath);
+		}
 	}
 
-	void GuardianMesh::SetMeshMaterial(std::shared_ptr<GuardianMaterial> material)
+	void GuardianMesh::SetMeshName(const GString& meshName)
 	{
-		this->RenderingMaterial = material;
+		this->MeshName = meshName;
 	}
 
-	void GuardianMesh::Update()
+	void GuardianMesh::AddInstanceToMesh(
+		std::shared_ptr<GuardianGraphics> graphics, const GuardianMeshInstance::Data& instanceData)
 	{
-		
+		auto& instance = std::make_shared<GuardianMeshInstance>();
+		instance->InitializeMeshInstance(graphics, instanceData);
+
+		this->MeshInstancesList.push_back(instance);
 	}
 
-	void GuardianMesh::UpdateMeshTransform(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix)
+	void GuardianMesh::UpdateMeshTransform(XMMATRIX worldMatrix)
 	{
-		this->RenderingTransformConstantBuffer->UpdateData(GuardianTransformProperties(worldMatrix, viewMatrix, projectionMatrix));
+		for (auto& instance : this->MeshInstancesList)
+		{
+			instance->UpdateMeshInstanceTransform(worldMatrix);
+		}
 	}
 
 	void GuardianMesh::UpdateMeshLighting(GuardianLightProperties properties)
 	{
-		this->RenderingLightConstantBuffer->UpdateData(properties);
+		for (auto& instance : this->MeshInstancesList)
+		{
+			instance->UpdateMeshInstanceLighting(properties);
+		}
 	}
 
-	void GuardianMesh::Serialize(const GString& filePath)
+	void GuardianMesh::SubmitToRenderer(const GString& submitFramebuffer)
+	{
+		for (auto& instance : this->MeshInstancesList)
+		{
+			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, submitFramebuffer, instance);
+		}
+	}
+
+	const GString GuardianMesh::Serialize()
 	{
 		YAML::Emitter MeshOutput;
 		MeshOutput << YAML::BeginMap;
 		MeshOutput << YAML::Key << "Mesh";
+		MeshOutput << YAML::Value << "Unnamed";
+		MeshOutput << YAML::Key << "Mesh Instances";
+		MeshOutput << YAML::Value << YAML::BeginSeq;
 
-		MeshOutput << YAML::BeginMap;
-		MeshOutput << YAML::Key << "Vertices" << YAML::Value << YAML::BeginSeq;
-
-		for (auto& vertex : this->VertexData)
+		for (auto& instance : this->MeshInstancesList)
 		{
 			MeshOutput << YAML::BeginMap;
+			MeshOutput << YAML::Key << "Mesh Instance";
+			MeshOutput << YAML::Value << instance->GetRenderableId();
 
-			MeshOutput << YAML::Key << "Position" << YAML::Value << vertex.Position;
-			MeshOutput << YAML::Key << "TextureCoord" << YAML::Value << vertex.TextureCoord;
-			MeshOutput << YAML::Key << "Normal" << YAML::Value << vertex.Normal;
+			MeshOutput << YAML::Key << "Name";
+			MeshOutput << YAML::Value << instance->GetMeshInstanceData().MeshInstanceName;
+			
+			MeshOutput << YAML::Key << "Material";
+			MeshOutput << YAML::Value << instance->GetMeshInstanceData().MaterialId;
+
+			MeshOutput << YAML::Key << "Vertices";
+			MeshOutput << YAML::Value << YAML::BeginSeq;
+
+			for (auto& vertex : instance->GetMeshInstanceData().VertexData)
+			{
+				MeshOutput << YAML::BeginMap;
+
+				MeshOutput << YAML::Key << "Position" << YAML::Value << vertex.Position;
+				MeshOutput << YAML::Key << "Texture Coord" << YAML::Value << vertex.TextureCoord;
+				MeshOutput << YAML::Key << "Normal" << YAML::Value << vertex.Normal;
+
+				MeshOutput << YAML::EndMap;
+			}
+
+			MeshOutput << YAML::EndSeq;
+
+			MeshOutput << YAML::Key << "Indices";
+			MeshOutput << YAML::Value << YAML::BeginSeq;
+
+			for (int i = 0; i < (int)instance->GetMeshInstanceData().IndexData.size(); i += 3)
+			{
+				MeshOutput << YAML::BeginMap;
+
+				MeshOutput << YAML::Value << GVector3(
+					(float)instance->GetMeshInstanceData().IndexData[i],
+					(float)instance->GetMeshInstanceData().IndexData[i + 1],
+					(float)instance->GetMeshInstanceData().IndexData[i + 2]);
+
+				MeshOutput << YAML::EndMap;
+			}
+
+			MeshOutput << YAML::EndSeq;
 
 			MeshOutput << YAML::EndMap;
 		}
 
 		MeshOutput << YAML::EndSeq;
 
-		MeshOutput << YAML::Key << "Indices" << YAML::Value << YAML::BeginSeq;
-
-		for (int i = 0; i < (int)this->IndexData.size(); i += 3)
-		{
-			MeshOutput << YAML::BeginMap;
-
-			MeshOutput << YAML::Value << GVector3((float)this->IndexData[i],
-				(float)this->IndexData[i + 1], (float)this->IndexData[i + 2]);
-
-			MeshOutput << YAML::EndMap;
-		}
-
-		MeshOutput << YAML::EndSeq;
 		MeshOutput << YAML::EndMap;
 
-		MeshOutput << YAML::EndMap;
+		GString OutputData = MeshOutput.c_str();
 
-		this->MeshFilePath = filePath;
-		std::ofstream MeshOutputFile(this->MeshFilePath);
-		MeshOutputFile << MeshOutput.c_str();
+		return OutputData;
 	}
 
 	void GuardianMesh::Deserialize(const GString& filePath)
 	{
-		this->MeshFilePath = filePath;
+		std::ifstream MeshFile(filePath);
+		std::stringstream MeshFileStringStream;
+		MeshFileStringStream << MeshFile.rdbuf();
 
-		std::ifstream SceneFile(this->MeshFilePath);
-		std::stringstream SceneFileStringStream;
-		SceneFileStringStream << SceneFile.rdbuf();
-		if (SceneFileStringStream.str().empty())
+		auto& MeshInput = YAML::Load(MeshFileStringStream.str());
+		auto instances = MeshInput["Mesh Instances"];
+		if (instances)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("Failed to load mesh : '" + filePath + "' !");
-		}
+			for (auto instance : instances)
+			{
+				auto& ins = std::make_shared<GuardianMeshInstance>();
+				GuardianMeshInstance::Data instanceData;
 
-		YAML::Node MeshData = YAML::Load(SceneFileStringStream.str())["Mesh"];
+				auto meshInstance = instance["Mesh Instance"].as<uint64_t>();
+				ins->RenderableId = meshInstance;
 
-		auto Vertices = MeshData["Vertices"];
-		this->VertexData.clear();
-		for (auto& vertex : Vertices)
-		{
-			Vertex v;
-			v.Position = vertex["Position"].as<GVector3>();
-			v.TextureCoord = vertex["TextureCoord"].as<GVector2>();
-			v.Normal = vertex["Normal"].as<GVector3>();
+				instanceData.MeshInstanceName = instance["Name"].as<GString>();
 
-			this->VertexData.push_back(v);
-		}
+				instanceData.MaterialId = instance["Material"].as<uint64_t>();
 
-		auto Indices = MeshData["Indices"];
-		this->IndexData.clear();
-		for (auto& index : Indices)
-		{
-			GVector3& face = index.as<GVector3>();
+				auto vertices = instance["Vertices"];
+				for (auto vertex : vertices)
+				{
+					GuardianMeshInstance::Vertex v;
+					v.Position = vertex["Position"].as<GVector3>();
+					v.TextureCoord = vertex["Texture Coord"].as<GVector2>();
+					v.Normal = vertex["Normal"].as<GVector3>();
 
-			this->IndexData.push_back((UINT)face.x);
-			this->IndexData.push_back((UINT)face.y);
-			this->IndexData.push_back((UINT)face.z);
+					instanceData.VertexData.push_back(v);
+				}
+
+				auto indices = instance["Indices"];
+				for (auto index : indices)
+				{
+					auto face = index.as<GVector3>();
+
+					instanceData.IndexData.push_back((UINT)face.x);
+					instanceData.IndexData.push_back((UINT)face.y);
+					instanceData.IndexData.push_back((UINT)face.z);
+				}
+
+				ins->InitializeMeshInstance(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), instanceData);
+
+				this->MeshInstancesList.push_back(ins);
+			}
 		}
 	}
 
-	const std::vector<GVector3> GuardianMesh::GetPositionVertices() const noexcept
+	std::shared_ptr<GuardianMeshInstance> GuardianMesh::GetMeshInstance(const GuardianUUID& id)
 	{
-		std::vector<GVector3> PositionVertices;
-		for (auto& Vertex : this->VertexData)
+		for (auto& instance : this->MeshInstancesList)
 		{
-			PositionVertices.push_back(Vertex.Position);
+			if (instance->GetRenderableId() == id)
+			{
+				return instance;
+			}
 		}
 
-		return PositionVertices;
+		throw GUARDIAN_ERROR_EXCEPTION("Failed to find the mesh instance with id : '" + std::to_string(id) + "' !");
 	}
 
-	const std::vector<UINT>& GuardianMesh::GetIndices() const noexcept
+	const GString& GuardianMesh::GetMeshName() const noexcept
 	{
-		return this->IndexData;
-	}
-
-	bool GuardianMesh::operator==(const GuardianMesh& other) const
-	{
-		return this->RenderableId == other.RenderableId;
+		return this->MeshName;
 	}
 }

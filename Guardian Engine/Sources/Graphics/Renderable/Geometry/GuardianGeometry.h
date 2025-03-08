@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANGEOMETRY_H_
 #define _GE_GUARDIANGEOMETRY_H_
-#include "../Model/GuardianModel.h"
+#include "../Mesh/GuardianMesh.h"
 
 namespace guardian
 {
@@ -20,7 +20,7 @@ namespace guardian
 
 		void InitializeGeometry(std::shared_ptr<GuardianGraphics> graphics, const GuardianGeometryType& type);
 
-		void UpdateGeometry(XMMATRIX worldMatrix, XMMATRIX viewMatrix, XMMATRIX projectionMatrix);
+		void UpdateGeometryTransform(XMMATRIX worldMatrix);
 		void Update() override;
 
 		const bool IsInitialized() const noexcept;
