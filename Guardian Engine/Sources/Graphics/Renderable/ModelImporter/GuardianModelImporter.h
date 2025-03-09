@@ -31,6 +31,8 @@ namespace guardian
 			std::shared_ptr<GuardianGraphics> graphics, aiMesh* mesh, const aiScene* scene);
 		std::shared_ptr<GuardianTexture> LoadMaterialTexture(
 			std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type);
+		std::shared_ptr<GuardianTexture> LoadMetallicTexture(
+			std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material);
 
 		GString ModelFileDirectory;
 		GString ModelFilePath;

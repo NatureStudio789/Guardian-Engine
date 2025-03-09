@@ -6,7 +6,11 @@ cbuffer MaterialCBuffer : register(b0)
 	float MetallicColor;
 	float RoughnessColor;
 	float AoColor;
-	bool UsingMaps[5];
+	int UsingAlbedoMap;
+	int UsingMetallicMap;
+	int UsingRoughnessMap;
+	int UsingNormalMap;
+	int UsingAoMap;
 };
 
 cbuffer LightCBuffer : register(b1)
@@ -37,7 +41,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 	PBRMaterial MeshMaterial;
 	float3 VertexNormal;
 
-	if (UsingMaps[0])
+	if (UsingAlbedoMap)
 	{
 		MeshMaterial.Albedo = pow(AlbedoTexture.Sample(ObjectSampler, InputData.InputTextureCoord).rgb, float3(2.2f, 2.2f, 2.2f));
 	}
@@ -46,7 +50,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 		MeshMaterial.Albedo = pow(AlbedoColor, float3(2.2f, 2.2f, 2.2f));
 	}
 
-	if (UsingMaps[1])
+	if (UsingMetallicMap)
 	{
 		MeshMaterial.Metallic = MetallicTexture.Sample(ObjectSampler, InputData.InputTextureCoord).r;
 	}
@@ -55,7 +59,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 		MeshMaterial.Metallic = MetallicColor;
 	}
 
-	if (UsingMaps[2])
+	if (UsingRoughnessMap)
 	{
 		MeshMaterial.Roughness = RoughnessTexture.Sample(ObjectSampler, InputData.InputTextureCoord).r;
 	}
@@ -64,7 +68,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 		MeshMaterial.Roughness = RoughnessColor;
 	}
 
-	if (UsingMaps[3])
+	if (UsingNormalMap)
 	{
 		VertexNormal = GetNormalFromTexture(InputData.InputWorldPosition, InputData.InputNormal, NormalTexture, ObjectSampler, InputData.InputTextureCoord);
 	}
@@ -73,7 +77,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 		VertexNormal = InputData.InputNormal;
 	}
 
-	if (UsingMaps[4])
+	if (UsingAoMap)
 	{
 		MeshMaterial.Ao = AoTexture.Sample(ObjectSampler, InputData.InputTextureCoord).r;
 	}

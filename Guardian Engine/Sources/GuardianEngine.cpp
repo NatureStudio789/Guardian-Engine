@@ -44,6 +44,7 @@ namespace guardian
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianApplication::ApplicationInstance->UpdateApplication();
+			GuardianMaterialSystem::UpdateMaterialSystem();
 			GuardianResourceSystem::UpdateResourceSystem();
 			this->EngineScene->UpdateScene(16.6667f);
 			this->EngineProgram->Update();

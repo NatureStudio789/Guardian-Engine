@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{C621EA85-32AD-574A-3BBE-DA3EA7C8B34A}</ProjectGuid>
+    <IgnoreWarnCompileDuplicatedFilename>true</IgnoreWarnCompileDuplicatedFilename>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Guardian Engine</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Build\Debug\x86_64\</OutDir>
+    <IntDir>Immediate\Debug\x86_64\</IntDir>
+    <TargetName>Guardian Engine</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>..\Build\Release\x86_64\</OutDir>
+    <IntDir>Immediate\Release\x86_64\</IntDir>
+    <TargetName>Guardian Engine</TargetName>
+    <TargetExt>.dll</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_BUILD_DLL;_WINDLL;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Setup\Includes;..\Setup\Includes\PhysX;..\ThirdParty\yaml-cpp\include;..\ThirdParty\ImGuizmo\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <AdditionalOptions>/wd4251 /wd4275 /wd4819 /wd4099 /MP /permissive %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>d3d11.lib;DirectXTK.lib;D3DCompiler.lib;DXGI.lib;DirectXTex.lib;assimp.lib;ole32.lib;windowscodecs.lib;uuid.lib;ws2_32.lib;winmm.lib;version.lib;bcrypt.lib;libmono-static-sgen.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;PhysXVehicle_static_64.lib;PhysXVehicle2_static_64.lib;PVDRuntime_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Setup\Libraries\DirectX 11\x86_64\Debug;..\Setup\Libraries\Assimp\Debug\x86_64;..\Setup\Libraries\DirectXTex\Debug;..\Setup\Libraries\mono\Debug;..\Setup\Libraries\PhysX\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>..\Build\Debug\x86_64\Guardian Engine.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_BUILD_DLL;_WINDLL;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Setup\Includes;..\Setup\Includes\PhysX;..\ThirdParty\yaml-cpp\include;..\ThirdParty\ImGuizmo\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <AdditionalOptions>/wd4251 /wd4275 /wd4819 /wd4099 /MP /permissive %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>d3d11.lib;DirectXTK.lib;D3DCompiler.lib;DXGI.lib;DirectXTex.lib;assimp.lib;ole32.lib;windowscodecs.lib;uuid.lib;ws2_32.lib;winmm.lib;version.lib;bcrypt.lib;libmono-static-sgen.lib;LowLevel_static_64.lib;LowLevelAABB_static_64.lib;LowLevelDynamics_static_64.lib;PhysX_64.lib;PhysXCharacterKinematic_static_64.lib;PhysXCommon_64.lib;PhysXCooking_64.lib;PhysXExtensions_static_64.lib;PhysXFoundation_64.lib;PhysXPvdSDK_static_64.lib;PhysXTask_static_64.lib;PhysXVehicle_static_64.lib;PhysXVehicle2_static_64.lib;PVDRuntime_64.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Setup\Libraries\DirectX 11\x86_64\Release;..\Setup\Libraries\Assimp\Release\x86_64;..\Setup\Libraries\DirectXTex\Release;..\Setup\Libraries\mono\Release;..\Setup\Libraries\PhysX\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <ImportLibrary>..\Build\Release\x86_64\Guardian Engine.lib</ImportLibrary>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Graphics\MaterialSystem\GuardianMaterialSystem.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GuardianMesh.h" />
+    <ClInclude Include="Sources\Application\Converter\GuardianConverter.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianApplicationEvent.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianEvent.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianEventDispatcher.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianEventProcesser.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianKeyboardEvent.h" />
+    <ClInclude Include="Sources\Application\Event\GuardianMouseEvent.h" />
+    <ClInclude Include="Sources\Application\Exception\GuardianException.h" />
+    <ClInclude Include="Sources\Application\FileDialog\GuardianFileDialog.h" />
+    <ClInclude Include="Sources\Application\GuardianApplication.h" />
+    <ClInclude Include="Sources\Application\Input\GuardianInput.h" />
+    <ClInclude Include="Sources\Application\Input\Keyboard\GuardianKeyboard.h" />
+    <ClInclude Include="Sources\Application\Input\Mouse\GuardianMouse.h" />
+    <ClInclude Include="Sources\Application\ResourceSystem\GuardianResourceSystem.h" />
+    <ClInclude Include="Sources\Application\Window\GuardianWindow.h" />
+    <ClInclude Include="Sources\ECS\Component\GuardianComponent.h" />
+    <ClInclude Include="Sources\ECS\Entity\GuardianEntity.h" />
+    <ClInclude Include="Sources\ECS\Entity\GuardianScriptableEntity.h" />
+    <ClInclude Include="Sources\ECS\Scene\GuardianScene.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GuardianConstantBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GuardianIndexBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GuardianVertexBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\GuardianApplicable.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\InputLayout\GuardianInputLayout.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\RasterizerState\GuardianRasterizerState.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GuardianSampler.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Shader\GuardianPixelShader.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Shader\GuardianVertexShader.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Texture\GuardianTexture.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Topology\GuardianTopology.h" />
+    <ClInclude Include="Sources\Graphics\Camera\GuardianCamera.h" />
+    <ClInclude Include="Sources\Graphics\Camera\Projection\GuardianProjection.h" />
+    <ClInclude Include="Sources\Graphics\DepthStencil\GuardianDepthStencil.h" />
+    <ClInclude Include="Sources\Graphics\Framebuffer\GuardianFramebuffer.h" />
+    <ClInclude Include="Sources\Graphics\GuardianGraphics.h" />
+    <ClInclude Include="Sources\Graphics\Light\GuardianLightSystem.h" />
+    <ClInclude Include="Sources\Graphics\Light\PointLight\GuardianPointLight.h" />
+    <ClInclude Include="Sources\Graphics\Material\GuardianMaterial.h" />
+    <ClInclude Include="Sources\Graphics\PickingRay\GuardianPickingRay.h" />
+    <ClInclude Include="Sources\Graphics\RenderTarget\GuardianRenderTarget.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\Geometry\GuardianGeometry.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\GuardianRenderable.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\GuardianRenderableBase.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GuardianMeshInstance.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\ModelImporter\GuardianModelImporter.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\GuardianRenderer.h" />
+    <ClInclude Include="Sources\Graphics\Surface\GuardianSurface.h" />
+    <ClInclude Include="Sources\Graphics\Transform\GuardianTransform.h" />
+    <ClInclude Include="Sources\Graphics\Transform\Vector\GuardianVector.h" />
+    <ClInclude Include="Sources\Graphics\Viewport\GuardianViewport.h" />
+    <ClInclude Include="Sources\GuardianEngine.h" />
+    <ClInclude Include="Sources\Physics\Collider\GuardianBoxCollider.h" />
+    <ClInclude Include="Sources\Physics\Collider\GuardianCapsuleCollider.h" />
+    <ClInclude Include="Sources\Physics\Collider\GuardianCollider.h" />
+    <ClInclude Include="Sources\Physics\Collider\GuardianMeshCollider.h" />
+    <ClInclude Include="Sources\Physics\Collider\GuardianSphereCollider.h" />
+    <ClInclude Include="Sources\Physics\GuardianPhysicsEngine.h" />
+    <ClInclude Include="Sources\Physics\PhysicsMaterial\GuardianPhysicsMaterial.h" />
+    <ClInclude Include="Sources\Physics\RigidBody\GuardianDynamicRigidBody.h" />
+    <ClInclude Include="Sources\Physics\RigidBody\GuardianStaticRigidBody.h" />
+    <ClInclude Include="Sources\Profile\Core\GuardianCore.h" />
+    <ClInclude Include="Sources\Profile\EntryPoint\GuardianEntryPoint.h" />
+    <ClInclude Include="Sources\Profile\Program\GuardianProgram.h" />
+    <ClInclude Include="Sources\Profile\Serializable\GuardianSerializable.h" />
+    <ClInclude Include="Sources\Profile\Time\GuardianTime.h" />
+    <ClInclude Include="Sources\Profile\Time\Timepoint\GuardianTimepoint.h" />
+    <ClInclude Include="Sources\Profile\Time\Timer\GuardianTimer.h" />
+    <ClInclude Include="Sources\Profile\Time\Timestep\GuardianTimestep.h" />
+    <ClInclude Include="Sources\Profile\UUID\GuardianUUID.h" />
+    <ClInclude Include="Sources\Script\GuardianScriptEngine.h" />
+    <ClInclude Include="Sources\Script\ScriptClass\GuardianScriptClass.h" />
+    <ClInclude Include="Sources\Script\ScriptRegistry\GuardianScriptRegistry.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Graphics\MaterialSystem\GuardianMaterialSystem.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GuardianMesh.cpp" />
+    <ClCompile Include="Sources\Application\Converter\GuardianConverter.cpp" />
+    <ClCompile Include="Sources\Application\Event\GuardianEventDispatcher.cpp" />
+    <ClCompile Include="Sources\Application\Exception\GuardianException.cpp" />
+    <ClCompile Include="Sources\Application\FileDialog\GuardianFileDialog.cpp" />
+    <ClCompile Include="Sources\Application\GuardianApplication.cpp" />
+    <ClCompile Include="Sources\Application\Input\GuardianInput.cpp" />
+    <ClCompile Include="Sources\Application\Input\Keyboard\GuardianKeyboard.cpp" />
+    <ClCompile Include="Sources\Application\Input\Mouse\GuardianMouse.cpp" />
+    <ClCompile Include="Sources\Application\ResourceSystem\GuardianResourceSystem.cpp" />
+    <ClCompile Include="Sources\Application\Window\GuardianWindow.cpp" />
+    <ClCompile Include="Sources\ECS\Entity\GuardianEntity.cpp" />
+    <ClCompile Include="Sources\ECS\Scene\GuardianScene.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GuardianIndexBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GuardianVertexBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\InputLayout\GuardianInputLayout.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\RasterizerState\GuardianRasterizerState.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GuardianSampler.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Shader\GuardianPixelShader.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Shader\GuardianVertexShader.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Texture\GuardianTexture.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Topology\GuardianTopology.cpp" />
+    <ClCompile Include="Sources\Graphics\DepthStencil\GuardianDepthStencil.cpp" />
+    <ClCompile Include="Sources\Graphics\Framebuffer\GuardianFramebuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\GuardianGraphics.cpp" />
+    <ClCompile Include="Sources\Graphics\Light\GuardianLightSystem.cpp" />
+    <ClCompile Include="Sources\Graphics\Material\GuardianMaterial.cpp" />
+    <ClCompile Include="Sources\Graphics\PickingRay\GuardianPickingRay.cpp" />
+    <ClCompile Include="Sources\Graphics\RenderTarget\GuardianRenderTarget.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\Geometry\GuardianGeometry.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\GuardianRenderable.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GuardianMeshInstance.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\ModelImporter\GuardianModelImporter.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\GuardianRenderer.cpp" />
+    <ClCompile Include="Sources\Graphics\Surface\GuardianSurface.cpp" />
+    <ClCompile Include="Sources\Graphics\Viewport\GuardianViewport.cpp" />
+    <ClCompile Include="Sources\GuardianEngine.cpp" />
+    <ClCompile Include="Sources\Physics\Collider\GuardianBoxCollider.cpp" />
+    <ClCompile Include="Sources\Physics\Collider\GuardianCapsuleCollider.cpp" />
+    <ClCompile Include="Sources\Physics\Collider\GuardianMeshCollider.cpp" />
+    <ClCompile Include="Sources\Physics\Collider\GuardianSphereCollider.cpp" />
+    <ClCompile Include="Sources\Physics\GuardianPhysicsEngine.cpp" />
+    <ClCompile Include="Sources\Physics\PhysicsMaterial\GuardianPhysicsMaterial.cpp" />
+    <ClCompile Include="Sources\Physics\RigidBody\GuardianDynamicRigidBody.cpp" />
+    <ClCompile Include="Sources\Physics\RigidBody\GuardianStaticRigidBody.cpp" />
+    <ClCompile Include="Sources\Profile\Serializable\GuardianSerializable.cpp" />
+    <ClCompile Include="Sources\Profile\Time\GuardianTime.cpp" />
+    <ClCompile Include="Sources\Profile\Time\Timepoint\GuardianTimepoint.cpp" />
+    <ClCompile Include="Sources\Profile\Time\Timer\GuardianTimer.cpp" />
+    <ClCompile Include="Sources\Profile\Time\Timestep\GuardianTimestep.cpp" />
+    <ClCompile Include="Sources\Profile\UUID\GuardianUUID.cpp" />
+    <ClCompile Include="Sources\Script\GuardianScriptEngine.cpp" />
+    <ClCompile Include="Sources\Script\ScriptClass\GuardianScriptClass.cpp" />
+    <ClCompile Include="Sources\Script\ScriptRegistry\GuardianScriptRegistry.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ThirdParty\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\ImGuizmo\ImGuizmo.vcxproj">
+      <Project>{36FD234F-22CA-7E5A-4BE3-6C02370FB4E8}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdParty\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

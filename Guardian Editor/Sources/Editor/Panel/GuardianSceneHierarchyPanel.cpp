@@ -342,6 +342,22 @@ namespace guardian
 						openMeshBrowser = true;
 					}
 
+					if (ImGui::TreeNodeEx((void*)typeid(GuardianMaterial).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+						"Mesh Materials"))
+					{
+						for (int i = 0; i < (int)mesh->MeshInstancesList.size(); i++)
+						{
+							ImGui::Text(("Material " + std::to_string(i)).c_str());
+
+							ImGui::SameLine();
+
+							ImGui::Image((ImTextureID)GuardianMaterialSystem::GetMaterialRenderingView(
+								mesh->MeshInstancesList[i]->GetMeshInstanceData().MaterialId)->GetFramebufferResource().Get(),
+								ImVec2(90.0f, 90.0f), { 0.0f, 0.0f }, { 1.0f, 1.0f }, { 1.0f, 1.0f, 1.0f, 1.0f }, { 0.8f, 0.8f, 0.8f, 1.0f });
+						}
+
+						ImGui::TreePop();
+					}
 					/*ImGui::Text("Mesh Material");
 					ImGui::SameLine();
 					if (ImGui::Button((GuardianMaterialSystem::GetMaterialName(

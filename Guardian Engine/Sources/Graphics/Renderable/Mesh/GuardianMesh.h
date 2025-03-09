@@ -34,6 +34,9 @@ namespace guardian
 	private:
 		GString MeshName;
 		std::vector<std::shared_ptr<GuardianMeshInstance>> MeshInstancesList;
+
+		friend class GuardianMaterialSystem;
+		friend class GuardianSceneHierarchyPanel;
 	};
 }
 

@@ -191,16 +191,18 @@ namespace guardian
 	public:
 		GuardianMaterialProperties()
 		{
-			this->padding = GVector2(114514.0f, 114514.0f);
+
 		}
 
 		GVector3 AlbedoColor;
 		float MetallicColor;
 		float RoughnessColor;
 		float AoColor;
-		GVector2 padding;
-		bool UsingMaps[5];
-		GVector3 padding2;
+		int UsingAlbedoMap;
+		int UsingMetallicMap;
+		int UsingRoughnessMap;
+		int UsingNormalMap;
+		int UsingAoMap;
 	};
 
 	class GUARDIAN_API GuardianMaterialConstantBuffer : public GuardianConstantBuffer<GuardianMaterialProperties>

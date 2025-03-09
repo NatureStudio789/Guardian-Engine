@@ -100,7 +100,7 @@ namespace guardian
 
 		GString extension = path.extension().string();
 		
-		if (extension == ".obj")
+		if (extension == ".obj" || extension == ".fbx")
 		{
 			GuardianModelImporter model(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), path.string());
 

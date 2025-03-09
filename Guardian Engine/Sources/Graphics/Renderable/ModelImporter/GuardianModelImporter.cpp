@@ -131,7 +131,47 @@ namespace guardian
 			id = GuardianMaterialSystem::CreateNewMaterial(material->GetName().C_Str());
 
 			std::shared_ptr<GuardianMaterial> mat = GuardianMaterialSystem::GetMaterial(id);
-			mat->SetAlbedoTexture(this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE));
+			auto& albedo = this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE);
+			if (albedo->GetTextureResource().Get())
+			{
+				mat->SetAlbedoTexture(albedo);
+			}
+			else
+			{
+				mat->SetAlbedoColor({ 0.3f, 0.3f, 0.3f });
+			}
+
+			auto& metallic = this->LoadMetallicTexture(graphics, material);
+			if (metallic->GetTextureResource().Get())
+			{
+				mat->SetMetallicTexture(metallic);
+			}
+			else
+			{
+				mat->SetMetallicColor(0.5f);
+			}
+
+			auto& roughness = this->LoadMaterialTexture(graphics, material, aiTextureType_SHININESS);
+			if (roughness->GetTextureResource().Get())
+			{
+				mat->SetRoughnessTexture(roughness);
+			}
+			else
+			{
+				mat->SetRoughnessColor(0.5f);
+			}
+
+			auto& normal = this->LoadMaterialTexture(graphics, material, aiTextureType_NORMALS);
+			if (normal->GetTextureResource().Get())
+			{
+				mat->SetNormalTexture(normal);
+			}
+			else
+			{
+				mat->UsingNormalTexture = false;
+			}
+
+			mat->SetAoColor(1.0f);
 		}
 		else
 		{
@@ -153,15 +193,63 @@ namespace guardian
 			aiString path;
 			material->GetTexture(type, 0, &path);
 
-			GString FilePath = this->ModelFileDirectory + "/" + path.C_Str();
-			if (!std::filesystem::exists(FilePath))
+			GString FilePath;
+			if (!std::filesystem::exists(path.C_Str()))
 			{
-				FilePath = this->ModelFileDirectory + "\\" + path.C_Str();
+				FilePath = this->ModelFileDirectory + "/" + path.C_Str();
+				if (!std::filesystem::exists(FilePath))
+				{
+					FilePath = this->ModelFileDirectory + "\\" + path.C_Str();
+				}
+			}
+			else
+			{
+				FilePath = path.C_Str();
 			}
 			Texture = GuardianTexture::CreateNewTexture(graphics, GuardianSurface(FilePath));
 		}
 
 		return Texture;
+	}
+
+	std::shared_ptr<GuardianTexture> GuardianModelImporter::LoadMetallicTexture(
+		std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material)
+	{
+		std::shared_ptr<GuardianTexture> Metallic = std::make_shared<GuardianTexture>();
+
+		for (UINT i = 0; i < material->mNumProperties; i++)
+		{
+			auto properties = material->mProperties[i];
+
+			if (properties->mType == aiPTI_String)
+			{
+				GString key = properties->mKey.data;
+				if (key == "$raw.ReflectionFactor|file")
+				{
+					UINT StrLength = *(UINT*)properties->mData;
+					GString path(properties->mData + 4, StrLength);
+
+					GString FilePath;
+					if (!std::filesystem::exists(path))
+					{
+						FilePath = this->ModelFileDirectory + "/" + path;
+
+						if (!std::filesystem::exists(FilePath))
+						{
+							FilePath = this->ModelFileDirectory + "\\" + path;
+						}
+					}
+					else
+					{
+						FilePath = path;
+					}
+
+					Metallic = GuardianTexture::CreateNewTexture(graphics, GuardianSurface(FilePath));
+				}
+			}
+		}
+
+		return Metallic;
 	}
 
 	std::shared_ptr<GuardianModelImporter> GuardianModelImporter::CreateNewModel(

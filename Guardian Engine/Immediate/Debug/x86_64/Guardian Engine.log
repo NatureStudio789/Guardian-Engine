@@ -1,19 +1,2 @@
-﻿  GuardianRenderer.cpp
-PhysXExtensions_static_64.lib(ExtDefaultSimulationFilterShader.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtDefaultSimulationFilterShader.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtDefaultStreams.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtDefaultStreams.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtDefaultErrorCallback.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtDefaultErrorCallback.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtDefaultCpuDispatcher.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtDefaultCpuDispatcher.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtRigidBodyExt.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtRigidBodyExt.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtCpuWorkerThread.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtCpuWorkerThread.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXExtensions_static_64.lib(ExtConvexCoreExt.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXExtensions_static_64.lib(ExtConvexCoreExt.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvd.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvd.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdDefaultSocketTransport.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdDefaultSocketTransport.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdImpl.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdImpl.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdDataStream.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdDataStream.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdObjectModelMetaData.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdObjectModelMetaData.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdObjectRegistrar.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdObjectRegistrar.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdMemClient.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdMemClient.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxProfileEventImpl.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxProfileEventImpl.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-PhysXPvdSDK_static_64.lib(PxPvdProfileZoneClient.obj) : warning LNK4099: 未找到 PDB“”(使用“PhysXPvdSDK_static_64.lib(PxPvdProfileZoneClient.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
-    正在创建库 ..\Build\Debug\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug\x86_64\Guardian Engine.exp
+﻿  GuardianMaterialSystem.cpp
   Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Engine.dll

@@ -155,11 +155,11 @@ namespace guardian
 		properties.MetallicColor = this->MetallicColor;
 		properties.RoughnessColor = this->RoughnessColor;
 		properties.AoColor = this->AoColor;
-		properties.UsingMaps[0] = this->UsingAlbedoTexture;
-		properties.UsingMaps[1] = this->UsingMetallicTexture;
-		properties.UsingMaps[2] = this->UsingRoughnessTexture;
-		properties.UsingMaps[3] = this->UsingNormalTexture;
-		properties.UsingMaps[4] = this->UsingAoTexture;
+		properties.UsingAlbedoMap = (int)this->UsingAlbedoTexture;
+		properties.UsingMetallicMap = (int)this->UsingMetallicTexture;
+		properties.UsingRoughnessMap = (int)this->UsingRoughnessTexture;
+		properties.UsingNormalMap = (int)this->UsingNormalTexture;
+		properties.UsingAoMap = (int)this->UsingAoTexture;
 		this->MaterialConstantBuffer->UpdateData(properties);
 
 		this->MaterialConstantBuffer->Apply(graphics);
