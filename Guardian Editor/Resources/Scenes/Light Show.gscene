@@ -8,7 +8,7 @@ Entities:
       Rotation: [180, -1.12791812, 180]
       Scale: [1, 1, 1]
     Mesh Component:
-      Mesh Name: Cerberus.fbx
+      Mesh Name: Cerberus
     Box Collider Component:
       Half Size: [1.04999995, 1.75, 7.8499999]
       Physics Material:
@@ -29,7 +29,7 @@ Entities:
       Light Strength: 1050
       Light Color: [1, 1, 1]
     Mesh Component:
-      Mesh Name: SBDS.obj
+      Mesh Name: SBDS
     Box Collider Component:
       Half Size: [1, 1, 1]
       Physics Material:
@@ -65,7 +65,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [16, 0.5, 16]
     Mesh Component:
-      Mesh Name: Ground.obj
+      Mesh Name: Ground
     Box Collider Component:
       Half Size: [16, 0.5, 16]
       Physics Material:
@@ -82,7 +82,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     Mesh Component:
-      Mesh Name: Nanosuit.obj
+      Mesh Name: Nanosuit
     Box Collider Component:
       Half Size: [3.70000005, 7.6500001, 1.14999998]
       Physics Material:
@@ -144,7 +144,7 @@ Entities:
       Rotation: [180, 0.601271331, 180]
       Scale: [1, 1, 1]
     Mesh Component:
-      Mesh Name: Cerberus.fbx
+      Mesh Name: Cerberus
     Box Collider Component:
       Half Size: [1.04999995, 1.75, 7.8499999]
       Physics Material:

@@ -4,7 +4,7 @@
 namespace guardian
 {
 	std::vector<GString> GuardianResourceSystem::LoadedResourcePath;
-	std::map<GString, std::vector<GuardianMeshInstance::Data>> GuardianResourceSystem::MeshDataResourceList;
+	std::map<GString, std::shared_ptr<GuardianMeshAsset>> GuardianResourceSystem::MeshAssetsList;
 	std::map<GString, GuardianTexture> GuardianResourceSystem::TextureResourceList;
 	std::map<GString, GuardianPhysicsMaterial> GuardianResourceSystem::PhysicsMaterialResourceList;
 
@@ -23,53 +23,7 @@ namespace guardian
 
 	void GuardianResourceSystem::AddDefaultResource()
 	{
-		std::vector<GuardianMeshInstance::Vertex> vertices;
-		std::vector<UINT> indices;
-		vertices.resize(24);
-
-		vertices[0] = { {-0.5f, -0.5f, 0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, 1.0f} };
-		vertices[1] = { {0.5f, -0.5f, 0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, 1.0f} };
-		vertices[2] = { {0.5f, 0.5f, 0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, 1.0f} };
-		vertices[3] = { {-0.5f, 0.5f, 0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f} };
-
-		vertices[4] = { {0.5f, -0.5f, -0.5f}, {0.0f, 1.0f}, {0.0f, 0.0f, -1.0f} };
-		vertices[5] = { {-0.5f, -0.5f, -0.5f}, {1.0f, 1.0f}, {0.0f, 0.0f, -1.0f} };
-		vertices[6] = { {-0.5f, 0.5f, -0.5f}, {1.0f, 0.0f}, {0.0f, 0.0f, -1.0f} };
-		vertices[7] = { {0.5f, 0.5f, -0.5f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f} };
-
-		vertices[8] = { {0.5f, -0.5f, 0.5f}, {0.0f, 1.0f}, {1.0f, 0.0f, 0.0f} };
-		vertices[9] = { {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f} };
-		vertices[10] = { {0.5f, 0.5f, -0.5f}, {1.0f, 0.0f}, {1.0f, 0.0f, 0.0f} };
-		vertices[11] = { {0.5f, 0.5f, 0.5f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f} };
-
-		vertices[12] = { {-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f}, {-1.0f, 0.0f, 0.0f} };
-		vertices[13] = { {-0.5f, -0.5f, 0.5f}, {1.0f, 1.0f}, {-1.0f, 0.0f, 0.0f} };
-		vertices[14] = { {-0.5f, 0.5f, 0.5f}, {1.0f, 0.0f}, {-1.0f, 0.0f, 0.0f} };
-		vertices[15] = { {-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f} };
-
-		vertices[16] = { {-0.5f, 0.5f, 0.5f}, {0.0f, 1.0f}, {0.0f, 1.0f, 0.0f} };
-		vertices[17] = { {0.5f, 0.5f, 0.5f}, {1.0f, 1.0f}, {0.0f, 1.0f, 0.0f} };
-		vertices[18] = { {0.5f, 0.5f, -0.5f}, {1.0f, 0.0f}, {0.0f, 1.0f, 0.0f} };
-		vertices[19] = { {-0.5f, 0.5f, -0.5f}, {0.0f, 0.0f}, {0.0f, 1.0f, 0.0f} };
-
-		vertices[20] = { {-0.5f, -0.5f, -0.5f}, {0.0f, 1.0f}, {0.0f, -1.0f, 0.0f} };
-		vertices[21] = { {0.5f, -0.5f, -0.5f}, {1.0f, 1.0f}, {0.0f, -1.0f, 0.0f} };
-		vertices[22] = { {0.5f, -0.5f, 0.5f}, {1.0f, 0.0f}, {0.0f, -1.0f, 0.0f} };
-		vertices[23] = { {-0.5f, -0.5f, 0.5f}, {0.0f, 0.0f}, {0.0f, -1.0f, 0.0f} };
-
-		indices = {
-			0, 1, 2,  2, 3, 0,
-			4, 5, 6,  6, 7, 4,
-			8, 9, 10, 10, 11, 8,
-			12, 13, 14, 14, 15, 12,
-			16, 17, 18, 18, 19, 16,
-			20, 21, 22, 22, 23, 20
-		};
-
-		auto& id = GuardianMaterialSystem::CreateNewMaterial("Default Material");
-
-		GuardianMeshInstance::Data data{ "Box", vertices, indices, id };
-		MeshDataResourceList["Box"].push_back(data);
+		MeshAssetsList["Box"] = std::make_shared<GuardianMeshAsset>("../Guardian Engine/Resources/Models/Box/Box.fbx");
 	}
 
 	void GuardianResourceSystem::IterateDirectory(const std::filesystem::path& path)
@@ -102,36 +56,8 @@ namespace guardian
 		
 		if (extension == ".obj" || extension == ".fbx")
 		{
-			GuardianModelImporter model(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), path.string());
-
-			auto& meshes = model.GetModelMeshInstanceDataList();
-			GString name;
-			if (model.GetModelFilePath().find_last_of('/') != GString::npos)
-			{
-				name = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('/') + 1,
-					model.GetModelFilePath().find('.'));
-			}
-			else
-			{
-				name = model.GetModelFilePath().substr(model.GetModelFilePath().find_last_of('\\') + 1,
-					model.GetModelFilePath().find('.'));
-			}
-			for (auto& mesh : meshes)
-			{
-				GString MeshName = mesh.MeshInstanceName;
-				int index = 1;
-				GString Addition;
-				while (MeshDataResourceList.count(MeshName + Addition) > 0)
-				{
-					Addition = "_" + std::to_string(index);
-					index++;
-				}
-				MeshName += Addition;
-
-				GuardianMeshInstance::Data m = mesh;
-				m.MeshInstanceName = MeshName;
-				MeshDataResourceList[name].push_back(m);
-			}
+			auto& assetHandle = std::make_shared<GuardianMeshAsset>(path.string());
+			MeshAssetsList[assetHandle->GetAssetName()] = assetHandle;
 
 			LoadedResourcePath.push_back(path.string());
 		}
@@ -165,11 +91,11 @@ namespace guardian
 		}
 	}
 
-	const std::vector<GuardianMeshInstance::Data>& GuardianResourceSystem::GetMeshData(GString meshName)
+	const GuardianMeshAsset& GuardianResourceSystem::GetMeshAsset(GString meshName)
 	{
-		if (MeshDataResourceList.count(meshName) > 0)
+		if (MeshAssetsList.count(meshName) > 0)
 		{
-			return MeshDataResourceList[meshName];
+			return *MeshAssetsList[meshName];
 		}
 		else
 		{
@@ -202,9 +128,9 @@ namespace guardian
 		return "Unknown";
 	}
 
-	std::map<GString, std::vector<GuardianMeshInstance::Data>> GuardianResourceSystem::GetMeshDataList()
+	std::map<GString, std::shared_ptr<GuardianMeshAsset>> GuardianResourceSystem::GetMeshAssetList()
 	{
-		return MeshDataResourceList;
+		return MeshAssetsList;
 	}
 
 	std::map<GString, GuardianTexture> GuardianResourceSystem::GetTextureList()

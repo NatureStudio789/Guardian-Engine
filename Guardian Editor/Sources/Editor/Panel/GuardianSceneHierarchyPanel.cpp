@@ -101,7 +101,7 @@ namespace guardian
 		this->RenderMeshBrowser(meshName, OpenMeshBrowser);
 		if (!meshName.empty())
 		{
-			auto& meshData = GuardianResourceSystem::GetMeshData(meshName);
+			auto& meshData = GuardianResourceSystem::GetMeshAsset(meshName).GetMeshAssetData();
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
 				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), meshName, meshData);
@@ -807,7 +807,7 @@ namespace guardian
 				{
 					if (ImGui::MenuItem("Mesh Component"))
 					{
-						auto& meshData = GuardianResourceSystem::GetMeshDataList()["Box"];
+						auto& meshData = GuardianResourceSystem::GetMeshAssetList()["Box"]->GetMeshAssetData();
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
@@ -899,7 +899,7 @@ namespace guardian
 
 			ImGui::Columns(ColumnCount, 0, false);
 
-			for (auto& meshPair : GuardianResourceSystem::GetMeshDataList())
+			for (auto& meshPair : GuardianResourceSystem::GetMeshAssetList())
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));

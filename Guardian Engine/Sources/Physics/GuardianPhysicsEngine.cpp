@@ -30,6 +30,11 @@ namespace guardian
 		}
 
 		PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(16);
+
+		if (!PxInitExtensions(*PhysicsObject, PhysicsDebugger))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to initialize physics engine extentions!");
+		}
 	}
 
 	PxMaterial* GuardianPhysicsEngine::CreatePhysicsMaterial(float staticFriction, float dynamicFriction, float restitution)

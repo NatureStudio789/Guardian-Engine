@@ -775,7 +775,7 @@ namespace guardian
 					GString MeshName = MeshComponent["Mesh Name"].as<GString>();
 					MeshC.Mesh = std::make_shared<GuardianMesh>();
 					MeshC.Mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-						MeshName, GuardianResourceSystem::GetMeshData(MeshName));
+						MeshName, GuardianResourceSystem::GetMeshAsset(MeshName).GetMeshAssetData());
 				}
 
 				auto SphereColliderComponent = entity["Sphere Collider Component"];

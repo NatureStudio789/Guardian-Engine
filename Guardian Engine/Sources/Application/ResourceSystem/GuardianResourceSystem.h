@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRESOURCESYSTEM_H_
 #define _GE_GUARDIANRESOURCESYSTEM_H_
-#include "../../Profile/Program/GuardianProgram.h"
+#include "Asset/GuardianMeshAsset.h"
 
 namespace guardian
 {
@@ -11,12 +11,12 @@ namespace guardian
 
 		static void UpdateResourceSystem();
 
-		static const std::vector<GuardianMeshInstance::Data>& GetMeshData(GString meshName);
+		static const GuardianMeshAsset& GetMeshAsset(GString meshName);
 
 		static GuardianTexture GetTexture(GString textureName);
 		static const GString GetTextureName(GuardianTexture texture);
 
-		static std::map<GString, std::vector<GuardianMeshInstance::Data>> GetMeshDataList();
+		static std::map<GString, std::shared_ptr<GuardianMeshAsset>> GetMeshAssetList();
 		static std::map<GString, GuardianTexture> GetTextureList();
 
 	private:
@@ -26,7 +26,7 @@ namespace guardian
 		static void LoadResource(const std::filesystem::path& path);
 		
 		static std::vector<GString> LoadedResourcePath;
-		static std::map<GString, std::vector<GuardianMeshInstance::Data>> MeshDataResourceList;
+		static std::map<GString, std::shared_ptr<GuardianMeshAsset>> MeshAssetsList;
 		static std::map<GString, GuardianTexture> TextureResourceList;
 		static std::map<GString, GuardianPhysicsMaterial> PhysicsMaterialResourceList;
 	};
