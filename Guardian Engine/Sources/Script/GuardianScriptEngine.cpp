@@ -53,7 +53,7 @@ namespace guardian
 	void GuardianScriptEngine::InitializeScriptEngine()
 	{
 		InitializeMono();
-		LoadAssembly("Resources/Scripts/Guardian-ScriptCore.dll");
+		LoadAssembly("Assets/Scripts/Guardian-ScriptCore.dll");
 
 		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::EntityHasComponent", EntityHasComponent);
 		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::TransformComponentGetTranslation", EntityGetTranslation);

@@ -6,17 +6,17 @@ namespace guardian
 	GuardianResourceBrowserPanel::GuardianResourceBrowserPanel()
 	{
 		this->PanelName = "Resource Browser";
-		this->ResourceDirectory = "Resources";
+		this->ResourceDirectory = "Assets";
 		this->CurrentDirectory = this->ResourceDirectory;
 
 		this->FolderIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/FolderIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/FolderIcon.png"));
 		this->ModelFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/ModelFileIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/ModelFileIcon.png"));
 		this->TextureFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/TextureFileIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/TextureFileIcon.png"));
 		this->DefaultFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/DefaultFileIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/DefaultFileIcon.png"));
 	}
 
 	GuardianResourceBrowserPanel::GuardianResourceBrowserPanel(const GString& resourcesDir)
@@ -99,9 +99,14 @@ namespace guardian
 			ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));
 			ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-			GuardianTexture icon = this->SetFileUnitIcon(directoryEntry);
-			ImGui::ImageButton(directoryEntry.path().filename().string().c_str(),
-				(ImTextureID)icon.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
+			auto icon = this->SetFileUnitIcon(directoryEntry);
+			auto filename = directoryEntry.path().filename().string();
+			if (directoryEntry.path().extension().string() == ".obj" ||
+				directoryEntry.path().extension().string() == ".fbx")
+			{
+				filename = filename.substr(0, filename.find_last_of('.'));
+			}
+			ImGui::ImageButton(filename.c_str(), (ImTextureID)icon.Get(), ImVec2(IconSize, IconSize));
 			ImGui::PopStyleColor(3);
 
 			if (ImGui::BeginDragDropSource())
@@ -120,7 +125,7 @@ namespace guardian
 					this->CurrentDirectory = directoryEntry.path().string();
 				}
 			}
-			ImGui::TextWrapped(directoryEntry.path().filename().string().c_str());
+			ImGui::TextWrapped(filename.c_str());
 
 			ImGui::NextColumn();
 		}
@@ -128,11 +133,11 @@ namespace guardian
 		ImGui::Columns(1);
 	}
 
-	GuardianTexture GuardianResourceBrowserPanel::SetFileUnitIcon(std::filesystem::directory_entry directoryEntry)
+	WRL::ComPtr<ID3D11ShaderResourceView> GuardianResourceBrowserPanel::SetFileUnitIcon(std::filesystem::directory_entry directoryEntry)
 	{
 		if (directoryEntry.is_directory())
 		{
-			return this->FolderIcon;
+			return this->FolderIcon.GetTextureResource();
 		}
 		else
 		{
@@ -141,15 +146,15 @@ namespace guardian
 			if (path.extension().string() == ".png" ||
 				path.extension().string() == ".jpg")
 			{
-				return this->TextureFileIcon;
+				return GuardianAssetSystem::GetTexture(path.filename().string()).GetTextureResource();
 			}
-			else if (path.extension().string() == ".obj")
+			else if (path.extension().string() == ".obj" || path.extension().string() == ".fbx")
 			{
-				return this->ModelFileIcon;
+				return GuardianAssetSystem::GetMeshAssetRenderingViewFromPath(path.string())->GetFramebufferResource();
 			}
 			else
 			{
-				return this->DefaultFileIcon;
+				return this->DefaultFileIcon.GetTextureResource();
 			}
 		}
 	}

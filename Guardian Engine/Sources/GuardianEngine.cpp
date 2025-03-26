@@ -30,12 +30,14 @@ namespace guardian
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
-		GuardianResourceSystem::InitializeResourceSystem();
+		GuardianAssetSystem::InitializeAssetSystem();
 		GuardianPhysicsEngine::InitializePhysicsEngine();
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		this->EngineScene->InitializeScene();
 		this->EngineProgram->Initialize();
+
+		GuardianTime::InitializeTime();
 	}
 
 	void GuardianEngine::LaunchEngine()
@@ -43,10 +45,11 @@ namespace guardian
 		GuardianApplication::ApplicationInstance->DisplayWindow();
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
+			GuardianTime::UpdateTime();
 			GuardianApplication::ApplicationInstance->UpdateApplication();
 			GuardianMaterialSystem::UpdateMaterialSystem();
-			GuardianResourceSystem::UpdateResourceSystem();
-			this->EngineScene->UpdateScene(16.6667f);
+			GuardianAssetSystem::UpdateAssetSystem();
+			this->EngineScene->UpdateScene(GuardianTime::GetDeltaTime());
 			this->EngineProgram->Update();
 
 			{

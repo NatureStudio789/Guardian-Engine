@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRESOURCEBROWSERPANEL_H_
 #include "GuardianPanel.h"
 #include <Graphics/Applicable/Texture/GuardianTexture.h>
-#include <Application/ResourceSystem/GuardianResourceSystem.h>
+#include <Application/AssetSystem/GuardianAssetSystem.h>
 
 namespace guardian
 {
@@ -21,7 +21,7 @@ namespace guardian
 	private:
 		void RenderMenuBar();
 		void RenderDirectory(const GString& directory);
-		GuardianTexture SetFileUnitIcon(std::filesystem::directory_entry directoryEntry);
+		WRL::ComPtr<ID3D11ShaderResourceView> SetFileUnitIcon(std::filesystem::directory_entry directoryEntry);
 
 		GString ResourceDirectory;
 		GString CurrentDirectory;

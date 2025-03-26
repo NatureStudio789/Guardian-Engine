@@ -42,6 +42,8 @@ namespace guardian
 		bool operator==(const GuardianMeshInstance& other) const;
 
 	private:
+		void CalculateBoundingBox();
+
 		Data InstanceData;
 
 		friend class GuardianMesh;

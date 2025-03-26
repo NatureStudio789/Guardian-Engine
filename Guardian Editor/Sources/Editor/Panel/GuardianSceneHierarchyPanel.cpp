@@ -11,7 +11,7 @@ namespace guardian
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/MeshFileIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
@@ -20,7 +20,7 @@ namespace guardian
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/MeshFileIcon.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
 		this->SetScene(scene);
 	}
 
@@ -50,6 +50,8 @@ namespace guardian
 		if (open)
 		{
 			ImGui::Begin("Scene Hierarchy", &open);
+
+			//ImGui::Text(("FPS : " + std::to_string(GuardianTime::GetFPSCount())).c_str());
 
 			std::vector<entt::entity> DeletedEntities;
 			for (auto& entity : this->PanelScene->SceneEntityList)
@@ -101,7 +103,7 @@ namespace guardian
 		this->RenderMeshBrowser(meshName, OpenMeshBrowser);
 		if (!meshName.empty())
 		{
-			auto& meshData = GuardianResourceSystem::GetMeshAsset(meshName).GetMeshAssetData();
+			auto& meshData = GuardianAssetSystem::GetMeshAsset(meshName).GetMeshAssetData();
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
 				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), meshName, meshData);
@@ -337,7 +339,28 @@ namespace guardian
 				{
 					ImGui::Text("Mesh Filter");
 					ImGui::SameLine();
-					if (ImGui::Button((mesh->GetMeshName() + "##Mesh").c_str()))
+					ImGui::Button((mesh->GetMeshName() + "##Mesh").c_str());
+
+					if (ImGui::BeginDragDropTarget())
+					{
+						if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCES_BROWSER_ITEM"))
+						{
+							GString Path = (const char*)payload->Data;
+							GString FileType = std::filesystem::path(GString((const char*)payload->Data)).extension().string();
+							if (FileType == ".obj" || FileType == ".fbx")
+							{
+								mesh.reset();
+								mesh = std::make_shared<GuardianMesh>();
+								auto& meshAsset = GuardianAssetSystem::GetMeshAssetFromPath(Path);
+								mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+									meshAsset.GetAssetName(), meshAsset.GetMeshAssetData());
+							}
+						}
+
+						ImGui::EndDragDropTarget();
+					}
+
+					if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left))
 					{
 						openMeshBrowser = true;
 					}
@@ -347,7 +370,7 @@ namespace guardian
 					{
 						for (int i = 0; i < (int)mesh->MeshInstancesList.size(); i++)
 						{
-							ImGui::Text(("Material " + std::to_string(i)).c_str());
+							ImGui::Text(("Element " + std::to_string(i)).c_str());
 
 							ImGui::SameLine();
 
@@ -807,7 +830,7 @@ namespace guardian
 				{
 					if (ImGui::MenuItem("Mesh Component"))
 					{
-						auto& meshData = GuardianResourceSystem::GetMeshAssetList()["Box"]->GetMeshAssetData();
+						auto& meshData = GuardianAssetSystem::GetMeshAssetList()["Box"]->GetMeshAssetData();
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
@@ -899,7 +922,7 @@ namespace guardian
 
 			ImGui::Columns(ColumnCount, 0, false);
 
-			for (auto& meshPair : GuardianResourceSystem::GetMeshAssetList())
+			for (auto& meshPair : GuardianAssetSystem::GetMeshAssetList())
 			{
 				ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.0f, 0.0f, 0.0f));
 				ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 0.8f));

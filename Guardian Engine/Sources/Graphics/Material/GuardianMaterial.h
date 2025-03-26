@@ -56,7 +56,7 @@ namespace guardian
 		std::shared_ptr<GuardianMaterialConstantBuffer> MaterialConstantBuffer;
 
 		friend class GuardianModelImporter;
-		friend class GuardianResourceSystem;
+		friend class GuardianAssetSystem;
 		friend class GuardianSceneHierarchyPanel;
 	};
 }

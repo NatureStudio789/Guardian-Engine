@@ -168,4 +168,9 @@ namespace guardian
 	{
 		return this->RenderingTexturesNumber;
 	}
+
+	const GuardianAABB& GuardianRenderable::GetBoundingBox() const noexcept
+	{
+		return this->RenderingBoundingBox;
+	}
 }

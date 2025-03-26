@@ -11,6 +11,7 @@ namespace guardian
 	{
 		this->RenderableId = other.RenderableId;
 		this->InstanceData = other.InstanceData;
+		this->RenderingBoundingBox = other.RenderingBoundingBox;
 	}
 
 	GuardianMeshInstance::~GuardianMeshInstance()
@@ -28,6 +29,8 @@ namespace guardian
 	void GuardianMeshInstance::InitializeMeshInstance(std::shared_ptr<GuardianGraphics> graphics, const GuardianMeshInstance::Data& data)
 	{
 		this->InstanceData = data;
+
+		this->CalculateBoundingBox();
 
 		if (!this->IsStaticApplicablesInitialized())
 		{
@@ -102,5 +105,25 @@ namespace guardian
 	bool GuardianMeshInstance::operator==(const GuardianMeshInstance& other) const
 	{
 		return this->RenderableId == other.RenderableId;
+	}
+
+	void GuardianMeshInstance::CalculateBoundingBox()
+	{
+		auto& aabb = this->RenderingBoundingBox;
+		aabb.Max = { -FLT_MAX, -FLT_MAX , -FLT_MAX };
+		aabb.Min = { FLT_MAX, FLT_MAX , FLT_MAX };
+
+		for (auto& v : this->InstanceData.VertexData)
+		{
+			auto& position = v.Position;
+
+			aabb.Min.x = std::min(position.x, aabb.Min.x);
+			aabb.Min.y = std::min(position.y, aabb.Min.y);
+			aabb.Min.z = std::min(position.z, aabb.Min.z);
+
+			aabb.Max.x = max(position.x, aabb.Max.x);
+			aabb.Max.y = max(position.y, aabb.Max.y);
+			aabb.Max.z = max(position.z, aabb.Max.z);
+		}
 	}
 }

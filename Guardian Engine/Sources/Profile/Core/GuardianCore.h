@@ -31,6 +31,7 @@
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
 #include <PhysX/PxPhysicsAPI.h>
+#include <codecvt>
 using namespace Microsoft;
 using namespace DirectX;
 using namespace physx;

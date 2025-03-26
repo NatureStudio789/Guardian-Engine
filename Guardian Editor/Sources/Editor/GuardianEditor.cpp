@@ -26,7 +26,7 @@ namespace guardian
 
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowRounding = 0.0f;
-		style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
+		style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.102f, 1.0f);
 
 		style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f);
 		style.Colors[ImGuiCol_TitleBg] = ImVec4(0.08f, 0.08f, 0.08f, 1.0f);

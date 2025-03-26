@@ -22,7 +22,7 @@ namespace guardian
         MaterialSphereMeshList[name] = std::make_shared<GuardianMesh>();
         MaterialSphereMeshList[name]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
             name + " Sphere", GuardianModelImporter(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-                "../Guardian Engine/Resources/Models/Sphere/Sphere.obj").GetModelMeshInstanceDataList());
+                "../Guardian Engine/Assets/Models/Sphere/Sphere.obj").GetModelMeshInstanceDataList());
         MaterialSphereMeshList[name]->MeshInstancesList[0]->SetMeshInstanceMaterial(MaterialList[name]->GetMaterialId());
         return MaterialList[name]->GetMaterialId();
     }
@@ -34,10 +34,10 @@ namespace guardian
             materialSphere.second->UpdateMeshTransform(XMMatrixIdentity());
 
             GuardianLightProperties Properties;
-            Properties.CameraPosition = { 0.5f, 1.0f, -2.5f };
+            Properties.CameraPosition = { 0.0f, 0.0f, -2.5f };
             Properties.LightNumber = 1;
             Properties.PointLightList[0].LightColor = { 1.0f, 1.0f, 1.0f };
-            Properties.PointLightList[0].LightPosition = { 0.0f, 0.0f, -3.0f };
+            Properties.PointLightList[0].LightPosition = { 0.5f, 1.0f, -3.0f };
             Properties.PointLightList[0].LightStrength = 300.0f;
             materialSphere.second->UpdateMeshLighting(Properties);
 

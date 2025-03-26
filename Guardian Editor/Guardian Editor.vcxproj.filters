@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{95BADD0D-01CF-05BF-CA50-A91E362402F0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Editor\GuardianEditor.h" />
+    <ClInclude Include="Sources\Editor\Panel\GuardianPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Editor\Panel\GuardianResourceBrowserPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Editor\Panel\GuardianSceneHierarchyPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Editor\Panel\GuardianScenePanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Editor\GuardianEditor.cpp" />
+    <ClCompile Include="Sources\Editor\Panel\GuardianPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Editor\Panel\GuardianResourceBrowserPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Editor\Panel\GuardianSceneHierarchyPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Editor\Panel\GuardianScenePanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

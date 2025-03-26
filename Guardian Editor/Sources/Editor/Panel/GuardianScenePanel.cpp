@@ -10,9 +10,9 @@ namespace guardian
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
 		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/StopButton.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
 	}
 
 	GuardianScenePanel::GuardianScenePanel(GuardianScene* scene)
@@ -22,9 +22,9 @@ namespace guardian
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
 		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/PlayButton.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
 		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Resources/Textures/StopButton.png"));
+			GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
 	}
 
 	GuardianScenePanel::GuardianScenePanel(const GuardianScenePanel& other)
@@ -80,6 +80,7 @@ namespace guardian
 
 		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingFramebuffer("Scene")->
 			GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCES_BROWSER_ITEM"))

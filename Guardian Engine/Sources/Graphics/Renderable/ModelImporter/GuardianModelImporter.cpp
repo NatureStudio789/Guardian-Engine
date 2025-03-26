@@ -138,7 +138,9 @@ namespace guardian
 			}
 			else
 			{
-				mat->SetAlbedoColor({ 0.3f, 0.3f, 0.3f });
+				aiColor3D Color;
+				material->Get(AI_MATKEY_COLOR_DIFFUSE, Color);
+				mat->SetAlbedoColor({ Color.r, Color.g, Color.b });
 			}
 
 			auto& metallic = this->LoadMetallicTexture(graphics, material);

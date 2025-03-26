@@ -20,19 +20,19 @@ namespace Guardian
 
             if (Input.IsKeyPressed('W'))
             {
-                translation.z -= 0.1f;
+                translation.z += 0.1f;
             }
             if (Input.IsKeyPressed('S'))
             {
-                translation.z += 0.1f;
+                translation.z -= 0.1f;
             }
             if (Input.IsKeyPressed('A'))
             {
-                translation.x += 0.1f;
+                translation.x -= 0.1f;
             }
             if (Input.IsKeyPressed('D'))
             {
-                translation.x -= 0.1f;
+                translation.x += 0.1f;
             }
             if (Input.IsKeyPressed(0x20))
             {

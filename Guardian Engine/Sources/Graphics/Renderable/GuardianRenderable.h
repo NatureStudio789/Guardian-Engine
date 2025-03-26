@@ -38,6 +38,7 @@ namespace guardian
 		std::shared_ptr<GuardianVertexBuffer> GetVertexBuffer();
 		std::shared_ptr<GuardianIndexBuffer> GetIndexBuffer();
 		const UINT& GetTexturesNumber() const noexcept;
+		const GuardianAABB& GetBoundingBox() const noexcept;
 
 	protected:
 		GuardianUUID RenderableId;
@@ -47,6 +48,7 @@ namespace guardian
 		std::shared_ptr<GuardianLightConstantBuffer> RenderingLightConstantBuffer;
 		std::shared_ptr<GuardianMaterial> RenderingMaterial;
 		UINT RenderingTexturesNumber;
+		GuardianAABB RenderingBoundingBox;
 
 		std::vector<std::shared_ptr<GuardianApplicable>> ApplicableList;
 

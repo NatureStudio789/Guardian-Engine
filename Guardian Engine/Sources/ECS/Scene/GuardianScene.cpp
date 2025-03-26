@@ -181,7 +181,7 @@ namespace guardian
 						PLComponent.LightMesh = std::make_shared<GuardianMesh>();
 						PLComponent.LightMesh->InitializeMesh(
 							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Light",
-							"../Guardian Engine/Resources/Models/Light/Light.obj");
+							"../Guardian Engine/Assets/Models/Light/Light.obj");
 					}
 					PLComponent.LightMesh->SubmitToRenderer("Scene");
 
@@ -209,7 +209,7 @@ namespace guardian
 		{
 			this->SceneGrid = std::make_shared<GuardianMesh>();
 			this->SceneGrid->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Grid",
-				"../Guardian Engine/Resources/Models/Grid/Grid.obj");
+				"../Guardian Engine/Assets/Models/Grid/Grid.obj");
 		}
 		this->SceneGrid->SubmitToRenderer("Scene");
 		this->SceneGrid->UpdateMeshTransform(GuardianTransform().GetTransformMatrix());
@@ -303,7 +303,7 @@ namespace guardian
 					CComponent.CameraMesh = std::make_shared<GuardianMesh>();
 					CComponent.CameraMesh->InitializeMesh(
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Camera",
-						"../Guardian Engine/Resources/Models/Camera/Camera.obj");
+						"../Guardian Engine/Assets/Models/Camera/Camera.obj");
 				}
 				CComponent.CameraMesh->SubmitToRenderer("Scene");
 
@@ -775,7 +775,7 @@ namespace guardian
 					GString MeshName = MeshComponent["Mesh Name"].as<GString>();
 					MeshC.Mesh = std::make_shared<GuardianMesh>();
 					MeshC.Mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-						MeshName, GuardianResourceSystem::GetMeshAsset(MeshName).GetMeshAssetData());
+						MeshName, GuardianAssetSystem::GetMeshAsset(MeshName).GetMeshAssetData());
 				}
 
 				auto SphereColliderComponent = entity["Sphere Collider Component"];

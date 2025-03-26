@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANTRANSFORM_H_
 #define _GE_GUARDIANTRANSFORM_H_
-#include "Vector/GuardianVector.h"
+#include "AABB/GuardianAABB.h"
 
 namespace guardian
 {

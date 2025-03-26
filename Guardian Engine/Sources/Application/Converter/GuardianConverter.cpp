@@ -2,7 +2,13 @@
 
 namespace guardian
 {
-    const GWideString GuardianConverter::StringToWideString(const GString& string)
+	const GString GuardianConverter::WideStringToString(const GWideString& wideString)
+	{
+		std::wstring_convert<std::codecvt_utf8<wchar_t>> Converter;
+		return Converter.to_bytes(wideString);
+	}
+
+	const GWideString GuardianConverter::StringToWideString(const GString& string)
     {
         return GWideString(string.begin(), string.end());
     }

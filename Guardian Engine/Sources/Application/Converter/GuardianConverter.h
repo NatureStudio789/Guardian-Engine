@@ -7,6 +7,7 @@ namespace guardian
 	class GUARDIAN_API GuardianConverter
 	{
 	public:
+		static const GString WideStringToString(const GWideString& wideString);
 		static const GWideString StringToWideString(const GString& string);
 
 		static const GString HRESULTToString(HRESULT hr);
