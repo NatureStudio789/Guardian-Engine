@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMODELIMPORTER_H_
 #include "../Mesh/GuardianMeshInstance.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianModelImporter
 	{

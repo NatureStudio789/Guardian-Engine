@@ -1,7 +1,7 @@
 #include "GuardianModelImporter.h"
 #include "../../Renderer/GuardianRenderer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianModelImporter::GuardianModelImporter()
 	{

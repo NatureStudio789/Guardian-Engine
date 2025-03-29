@@ -1,8 +1,8 @@
 using System;
-using Guardian;
+using GE;
 
 
-namespace Guardian
+namespace GE
 {
     public class Entity
     {

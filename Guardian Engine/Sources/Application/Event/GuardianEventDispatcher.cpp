@@ -1,6 +1,6 @@
 #include "GuardianEventDispatcher.h"
 
-namespace guardian
+namespace GE
 {
 	std::unique_ptr<GuardianEventDispatcher> GuardianEventDispatcher::DispatcherInstance = std::make_unique<GuardianEventDispatcher>();
 

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMATERIALSYSTEM_H_
 #include "../Material/GuardianMaterial.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianMesh;
 

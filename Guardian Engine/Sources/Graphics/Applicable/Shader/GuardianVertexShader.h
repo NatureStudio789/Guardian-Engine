@@ -2,7 +2,7 @@
 #define _GE_GUARDIANVERTEXSHADER_H_
 #include "../GuardianApplicable.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianVertexShader : public GuardianApplicable
 	{

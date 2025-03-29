@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTIMER_H_
 #include "../Timestep/GuardianTimestep.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianTimer
 	{

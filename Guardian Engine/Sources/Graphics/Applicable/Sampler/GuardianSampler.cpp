@@ -1,6 +1,6 @@
 #include "GuardianSampler.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianSampler::GuardianSampler()
 	{

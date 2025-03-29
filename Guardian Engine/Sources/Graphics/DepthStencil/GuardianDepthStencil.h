@@ -2,7 +2,7 @@
 #define _GE_GUARDIANDEPTHSTENCIL_H_
 #include "../../Physics/RigidBody/GuardianDynamicRigidBody.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianGraphics;
 

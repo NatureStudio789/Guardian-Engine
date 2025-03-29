@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSCRIPTCLASS_H_
 #include "../ScriptRegistry/GuardianScriptRegistry.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianScriptClass
 	{

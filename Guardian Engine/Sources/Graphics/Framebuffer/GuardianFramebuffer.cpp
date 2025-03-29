@@ -1,7 +1,7 @@
 #include "GuardianFramebuffer.h"
 #include "../GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianFramebuffer::GuardianFramebuffer()
 	{

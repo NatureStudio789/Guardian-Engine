@@ -1,6 +1,6 @@
 #include "GuardianMaterial.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianMaterial::GuardianMaterial()
 	{
@@ -160,7 +160,7 @@ namespace guardian
 		properties.UsingRoughnessMap = (int)this->UsingRoughnessTexture;
 		properties.UsingNormalMap = (int)this->UsingNormalTexture;
 		properties.UsingAoMap = (int)this->UsingAoTexture;
-		this->MaterialConstantBuffer->UpdateData(properties);
+		this->MaterialConstantBuffer->UpdateData(graphics, properties);
 
 		this->MaterialConstantBuffer->Apply(graphics);
 

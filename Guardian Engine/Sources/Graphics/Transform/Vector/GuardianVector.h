@@ -2,7 +2,7 @@
 #define _GE_GUARDIANVECTOR_H_
 #include "../../../Script/GuardianScriptEngine.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GVector2
 	{
@@ -326,9 +326,9 @@ namespace guardian
 namespace YAML
 {
 	template<>
-	struct convert<guardian::GVector2>
+	struct convert<GE::GVector2>
 	{
-		static Node encode(const guardian::GVector2& rhs)
+		static Node encode(const GE::GVector2& rhs)
 		{
 			Node node;
 			node.push_back(rhs.x);
@@ -337,7 +337,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, guardian::GVector2& rhs)
+		static bool decode(const Node& node, GE::GVector2& rhs)
 		{
 			if (!node.IsSequence() || node.size() != 2)
 			{
@@ -352,9 +352,9 @@ namespace YAML
 	};
 
 	template<>
-	struct convert<guardian::GVector3>
+	struct convert<GE::GVector3>
 	{
-		static Node encode(const guardian::GVector3& rhs)
+		static Node encode(const GE::GVector3& rhs)
 		{
 			Node node;
 			node.push_back(rhs.x);
@@ -364,7 +364,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, guardian::GVector3& rhs)
+		static bool decode(const Node& node, GE::GVector3& rhs)
 		{
 			if (!node.IsSequence() || node.size() != 3)
 			{
@@ -380,9 +380,9 @@ namespace YAML
 	};
 
 	template<>
-	struct convert<guardian::GVector4>
+	struct convert<GE::GVector4>
 	{
-		static Node encode(const guardian::GVector4& rhs)
+		static Node encode(const GE::GVector4& rhs)
 		{
 			Node node;
 			node.push_back(rhs.x);
@@ -393,7 +393,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, guardian::GVector4& rhs)
+		static bool decode(const Node& node, GE::GVector4& rhs)
 		{
 			if (!node.IsSequence() || node.size() != 4)
 			{

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANEVENTDISPATCHER_H_
 #include "GuardianEvent.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianEventProcesser;
 	using GuardianEventProcessFunction = std::function<void(GuardianEvent& e)>;

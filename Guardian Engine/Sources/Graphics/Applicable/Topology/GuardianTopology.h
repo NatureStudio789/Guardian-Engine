@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTOPOLOGY_H_
 #include "../Shader/GuardianPixelShader.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianTopologyCategory
 	{

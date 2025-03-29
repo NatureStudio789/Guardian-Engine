@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMESH_H_
 #include "../ModelImporter/GuardianModelImporter.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianMesh : public GuardianSerializable
 	{
@@ -21,7 +21,8 @@ namespace guardian
 			const GuardianMeshInstance::Data& instanceData);
 
 		void UpdateMeshTransform(XMMATRIX worldMatrix);
-		void UpdateMeshLighting(GuardianLightProperties properties);
+		void UpdateMeshLighting(std::shared_ptr<GuardianGraphics> graphics,
+			GuardianLightProperties properties);
 
 		void SubmitToRenderer(const GString& submitFramebuffer);
 

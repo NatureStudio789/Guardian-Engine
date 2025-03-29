@@ -3,7 +3,7 @@
 #include "../../Application/GuardianApplication.h"
 #include "../Renderer/GuardianRenderer.h"
 
-namespace guardian
+namespace GE
 {
     std::map<GString, std::shared_ptr<GuardianMaterial>> GuardianMaterialSystem::MaterialList;
     std::map<GString, std::shared_ptr<GuardianMesh>> GuardianMaterialSystem::MaterialSphereMeshList;
@@ -39,7 +39,7 @@ namespace guardian
             Properties.PointLightList[0].LightColor = { 1.0f, 1.0f, 1.0f };
             Properties.PointLightList[0].LightPosition = { 0.5f, 1.0f, -3.0f };
             Properties.PointLightList[0].LightStrength = 300.0f;
-            materialSphere.second->UpdateMeshLighting(Properties);
+            materialSphere.second->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), Properties);
 
             materialSphere.second->SubmitToRenderer(materialSphere.first + " Rendering");
         }

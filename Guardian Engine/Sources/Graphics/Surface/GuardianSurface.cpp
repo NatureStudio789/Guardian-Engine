@@ -1,6 +1,6 @@
 #include "GuardianSurface.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianSurface::GuardianSurface()
 	{

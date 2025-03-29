@@ -2,7 +2,7 @@
 #define _GE_GUARDIANINDEXBUFFER_H_
 #include "GuardianVertexBuffer.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianIndexBuffer : public GuardianApplicable
 	{

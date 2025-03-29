@@ -3,7 +3,7 @@
 #include "../../../Graphics/Renderable/Mesh/GuardianMeshInstance.h"
 #include "../../../Graphics/Renderable/ModelImporter/GuardianModelImporter.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianMeshAsset::GuardianMeshAsset() :
 		GuardianAsset()

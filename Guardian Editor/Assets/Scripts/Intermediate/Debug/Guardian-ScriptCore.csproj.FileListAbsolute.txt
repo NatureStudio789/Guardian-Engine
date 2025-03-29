@@ -1,0 +1,6 @@
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Intermediate\Debug\Guardian-ScriptCore.csproj.AssemblyReference.cache
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Intermediate\Debug\Guardian-ScriptCore.csproj.CoreCompileInputs.cache
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Intermediate\Debug\Guardian-ScriptCore.dll
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Intermediate\Debug\Guardian-ScriptCore.pdb
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Guardian-ScriptCore.dll
+D:\Development\C++\Nature Studio\Guardian Engine\Guardian Editor\Assets\Scripts\Guardian-ScriptCore.pdb

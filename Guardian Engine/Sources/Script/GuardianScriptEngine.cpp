@@ -2,7 +2,7 @@
 #include "../ECS/Entity/GuardianEntity.h"
 #include "../ECS/Scene/GuardianScene.h"
 
-namespace guardian
+namespace GE
 {
 	MonoDomain* GuardianScriptEngine::RootDomain = null;
 	MonoDomain* GuardianScriptEngine::ApplicationDomain = null;
@@ -55,10 +55,10 @@ namespace guardian
 		InitializeMono();
 		LoadAssembly("Assets/Scripts/Guardian-ScriptCore.dll");
 
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::EntityHasComponent", EntityHasComponent);
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::TransformComponentGetTranslation", EntityGetTranslation);
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::TransformComponentSetTranslation", EntitySetTranslation);
-		GuardianScriptRegistry::RegisterFunction("Guardian.InternalMethods::InputIsKeyPressed", InputIsKeyPressed);
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityHasComponent", EntityHasComponent);
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::TransformComponentGetTranslation", EntityGetTranslation);
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::TransformComponentSetTranslation", EntitySetTranslation);
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::InputIsKeyPressed", InputIsKeyPressed);
 
 		GuardianScriptRegistry::RegisterComponents();
 
@@ -67,7 +67,7 @@ namespace guardian
 		MonoImage* image = mono_assembly_get_image(CoreAssembly);
 		const MonoTableInfo* TypeDefinitionsTable = mono_image_get_table_info(image, MONO_TABLE_TYPEDEF);
 		int NumTypes = mono_table_info_get_rows(TypeDefinitionsTable);
-		GuardianScriptClass EntityClass = { "Guardian", "Entity" };
+		GuardianScriptClass EntityClass = { "GE", "Entity" };
 
 		for (int i = 0; i < NumTypes; i++)
 		{
@@ -117,7 +117,7 @@ namespace guardian
 			}
 
 			void* parameter = (unsigned long long*)&entity->GetEntityId();
-			EntityClassList[SComponent.ClassName]->InvokeMethod(GuardianScriptClass{ "Guardian", "Entity"}.GetClassMethod(".ctor", 1), &parameter);
+			EntityClassList[SComponent.ClassName]->InvokeMethod(GuardianScriptClass{ "GE", "Entity"}.GetClassMethod(".ctor", 1), &parameter);
 			EntityClassList[SComponent.ClassName]->InvokeMethod("Initialize", 0, null);
 		}
 	}

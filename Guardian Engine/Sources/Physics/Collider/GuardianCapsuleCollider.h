@@ -2,7 +2,7 @@
 #define _GE_GUARDIANCAPSULECOLLIDER_H_
 #include "GuardianSphereCollider.h"
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianCapsuleColliderProperties
 	{

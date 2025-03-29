@@ -1,6 +1,6 @@
 #include "GuardianException.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianException::GuardianException() noexcept : std::exception()
 	{

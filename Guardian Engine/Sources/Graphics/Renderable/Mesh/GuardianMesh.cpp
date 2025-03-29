@@ -2,7 +2,7 @@
 #include "../../Renderer/GuardianRenderer.h"
 #include "../../../Application/GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianMesh::GuardianMesh()
 	{
@@ -75,11 +75,12 @@ namespace guardian
 		}
 	}
 
-	void GuardianMesh::UpdateMeshLighting(GuardianLightProperties properties)
+	void GuardianMesh::UpdateMeshLighting(
+		std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties)
 	{
 		for (auto& instance : this->MeshInstancesList)
 		{
-			instance->UpdateMeshInstanceLighting(properties);
+			instance->UpdateMeshInstanceLighting(graphics, properties);
 		}
 	}
 

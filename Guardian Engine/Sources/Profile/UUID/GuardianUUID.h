@@ -2,7 +2,7 @@
 #define _GE_GUARDIANUUID_H_
 #include "../Core/GuardianCore.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianUUID
 	{
@@ -22,9 +22,9 @@ namespace guardian
 namespace std
 {
 	template<>
-	struct hash<guardian::GuardianUUID>
+	struct hash<GE::GuardianUUID>
 	{
-		size_t operator()(const guardian::GuardianUUID& uuid) const
+		size_t operator()(const GE::GuardianUUID& uuid) const
 		{
 			return hash<uint64_t>()((uint64_t)uuid);
 		}

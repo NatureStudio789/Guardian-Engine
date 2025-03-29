@@ -1,7 +1,7 @@
 #include "GuardianGeometry.h"
 #include "../../Renderer/GuardianRenderer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianGeometry::GuardianGeometry() : GuardianRenderableBase<GuardianGeometry>()
 	{

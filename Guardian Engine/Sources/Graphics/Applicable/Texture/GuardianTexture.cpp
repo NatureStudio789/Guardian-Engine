@@ -1,6 +1,6 @@
 #include "GuardianTexture.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTexture::GuardianTexture()
 	{

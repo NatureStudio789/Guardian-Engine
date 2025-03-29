@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTEXTURE_H_
 #include "../Buffer/GuardianConstantBuffer.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianTexture : public GuardianApplicable
 	{

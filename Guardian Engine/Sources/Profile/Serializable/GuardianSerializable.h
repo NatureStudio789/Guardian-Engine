@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSERIALIZABLE_H_
 #include "../UUID/GuardianUUID.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianSerializable
 	{

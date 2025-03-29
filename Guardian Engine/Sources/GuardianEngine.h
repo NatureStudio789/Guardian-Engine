@@ -2,7 +2,7 @@
 #define _GE_GUARDIANENGINE_H_
 #include "Application/GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianEngine
 	{

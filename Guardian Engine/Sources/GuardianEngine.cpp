@@ -1,6 +1,6 @@
 #include "GuardianEngine.h"
 
-namespace guardian
+namespace GE
 {
 	std::unique_ptr<GuardianEngine> GuardianEngine::EngineInstance = std::make_unique<GuardianEngine>();
 
@@ -53,7 +53,7 @@ namespace guardian
 			this->EngineProgram->Update();
 
 			{
-				GuardianRenderer::RenderScene();
+				GuardianRenderer::Render();
 
 				this->EngineProgram->Render();
 			}

@@ -1,6 +1,6 @@
 #include "GuardianKeyboard.h"
 
-namespace guardian
+namespace GE
 {
 	std::shared_ptr<GuardianEventProcesser> GuardianKeyboard::KeyboardEventProcesser = std::make_shared<GuardianEventProcesser>();
 	std::map<UINT, GuardianKeyboardState> GuardianKeyboard::KeyStateList;

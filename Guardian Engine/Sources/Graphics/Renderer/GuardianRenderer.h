@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRENDERER_H_
 #include "../Renderable/Geometry/GuardianGeometry.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianRenderer
 	{
@@ -18,7 +18,7 @@ namespace guardian
 
 		static void SetClearColor(const GVector3& color);
 
-		static void RenderScene();
+		static void Render();
 
 	private:
 		static std::map<GString, std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>>> RenderableList;

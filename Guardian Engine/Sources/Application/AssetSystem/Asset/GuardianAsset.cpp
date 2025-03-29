@@ -1,6 +1,6 @@
 #include "GuardianAsset.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianAsset::GuardianAsset()
 	{

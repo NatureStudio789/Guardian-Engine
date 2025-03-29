@@ -1,10 +1,18 @@
 #include "GuardianVertexBuffer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianVertexBuffer::GuardianVertexBuffer()
 	{
 		this->VertexBufferData = null;
+	}
+
+	GuardianVertexBuffer::GuardianVertexBuffer(const GuardianVertexBuffer& other)
+	{
+		this->VertexBufferData = other.VertexBufferData;
+		this->BufferDataSize = other.BufferDataSize;
+		this->BufferDataTypeStride = other.BufferDataTypeStride;
+		this->VertexBufferObject = other.VertexBufferObject;
 	}
 
 	GuardianVertexBuffer::GuardianVertexBuffer(std::shared_ptr<GuardianGraphics> graphics,
@@ -27,10 +35,10 @@ namespace guardian
 
 		D3D11_BUFFER_DESC VertexBufferDesc;
 		ZeroMemory(&VertexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-		VertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+		VertexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
 		VertexBufferDesc.ByteWidth = (UINT)(this->BufferDataTypeStride * this->BufferDataSize);
 		VertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		VertexBufferDesc.CPUAccessFlags = 0;
+		VertexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 		VertexBufferDesc.MiscFlags = 0;
 
 		D3D11_SUBRESOURCE_DATA VertexBufferResourceData;
@@ -43,6 +51,24 @@ namespace guardian
 		{
 			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
 		}
+	}
+
+	void GuardianVertexBuffer::UpdateVertices(std::shared_ptr<GuardianGraphics> graphics, void* vertices)
+	{
+		this->VertexBufferData = vertices;
+
+		D3D11_MAPPED_SUBRESOURCE MappedResource;
+		ZeroMemory(&MappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
+		HRESULT hr = graphics->GetGraphicsDeviceContext()->Map(this->VertexBufferObject.Get(),
+			0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
+		if (GFailed(hr))
+		{
+			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
+		}
+
+		CopyMemory(MappedResource.pData, this->VertexBufferData, this->BufferDataTypeStride * this->BufferDataSize);
+
+		graphics->GetGraphicsDeviceContext()->Unmap(this->VertexBufferObject.Get(), 0);
 	}
 
 	void GuardianVertexBuffer::Apply(std::shared_ptr<GuardianGraphics> graphics)

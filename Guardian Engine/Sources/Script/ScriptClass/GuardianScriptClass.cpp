@@ -1,7 +1,7 @@
 #include "GuardianScriptClass.h"
 #include "../GuardianScriptEngine.h"
 
-namespace guardian 
+namespace GE 
 {
 	GuardianScriptClass::GuardianScriptClass(const GString& classNamespace, const GString& className)
 	{

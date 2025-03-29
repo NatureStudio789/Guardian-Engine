@@ -1,6 +1,6 @@
 #include "GuardianRasterizerState.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianRasterizerState::GuardianRasterizerState()
 	{

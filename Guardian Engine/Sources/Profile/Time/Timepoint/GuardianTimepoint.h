@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTIMEPOINT_H_
 #include "../../Serializable/GuardianSerializable.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianTimepoint
 	{

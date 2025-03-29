@@ -1,6 +1,6 @@
 #include "GuardianLightSystem.h"
 
-namespace guardian
+namespace GE
 {
 	std::queue<GuardianPointLightProperties> GuardianLightSystem::PointLightList;
 

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANDYNAMICRIGIDBODY_H_
 #include "GuardianStaticRigidBody.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianDynamicRigidBody
 	{

@@ -1,7 +1,7 @@
 #include "GuardianEditor.h"
 
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-namespace guardian
+namespace GE
 {
 	GuardianEditor::GuardianEditor()
 	{
@@ -103,13 +103,15 @@ namespace guardian
 					GuardianEngine::EngineInstance->GetScene()->SaveScene();
 				}
 
-				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S") ||
+					(GuardianKeyboard::IsKeyPress(VK_CONTROL) && GuardianKeyboard::IsKeyPress(VK_SHIFT) && GuardianKeyboard::IsKeyPress('S')))
 				{
 					GString filePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 					GuardianEngine::EngineInstance->GetScene()->SaveSceneAs(filePath);
 				}
 
-				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+				if (ImGui::MenuItem("Open...", "Ctrl+O") ||
+					(GuardianKeyboard::IsKeyPress(VK_CONTROL) && GuardianKeyboard::IsKeyPress('O')))
 				{
 					GuardianEngine::EngineInstance->GetScene()->LoadScene(
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());

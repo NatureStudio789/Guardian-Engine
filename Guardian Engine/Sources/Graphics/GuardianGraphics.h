@@ -2,7 +2,7 @@
 #define _GE_GUARDIANGRAPHICS_H_
 #include "Framebuffer/GuardianFramebuffer.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianGraphics
 	{

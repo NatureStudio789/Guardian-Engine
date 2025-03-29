@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSURFACE_H_
 #include "../RenderTarget/GuardianRenderTarget.h"
 
-namespace guardian
+namespace GE
 {
 	class GuardianColor
 	{

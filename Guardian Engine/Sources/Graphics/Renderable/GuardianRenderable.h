@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRENDERABLE_H_
 #include "../MaterialSystem/GuardianMaterialSystem.h"
 
-namespace guardian 
+namespace GE 
 {
 	enum GUARDIAN_API GuardianSubmitPassLevel
 	{

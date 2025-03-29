@@ -1,6 +1,6 @@
 #include "GuardianRenderable.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianRenderable::GuardianRenderable()
 	{

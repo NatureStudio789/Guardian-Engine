@@ -1,7 +1,7 @@
 #include "GuardianAssetSystem.h"
 #include "../GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
 	std::vector<GString> GuardianAssetSystem::LoadedAssetPath;
 	std::map<GString, std::shared_ptr<GuardianMeshAsset>> GuardianAssetSystem::MeshAssetsList;
@@ -31,7 +31,8 @@ namespace guardian
 			Properties.PointLightList[0].LightColor = { 1.0f, 1.0f, 1.0f };
 			Properties.PointLightList[0].LightPosition = { 0.5f, 1.0f, -3.0f };
 			Properties.PointLightList[0].LightStrength = 300.0f;
-			MeshAssetRenderingList[meshAsset.first]->UpdateMeshLighting(Properties);
+			MeshAssetRenderingList[meshAsset.first]->UpdateMeshLighting(
+				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), Properties);
 
 			MeshAssetRenderingList[meshAsset.first]->SubmitToRenderer(meshAsset.first + " Rendering View");
 		}

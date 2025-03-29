@@ -1,7 +1,7 @@
 #include "GuardianMeshInstance.h"
 #include "../../Renderer/GuardianRenderer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianMeshInstance::GuardianMeshInstance() : GuardianRenderableBase<GuardianMeshInstance>()
 	{
@@ -76,9 +76,10 @@ namespace guardian
 		this->RenderingTransformConstantBuffer->SetWorldTransform(worldMatrix);
 	}
 
-	void GuardianMeshInstance::UpdateMeshInstanceLighting(GuardianLightProperties properties)
+	void GuardianMeshInstance::UpdateMeshInstanceLighting(
+		std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties)
 	{
-		this->RenderingLightConstantBuffer->UpdateData(properties);
+		this->RenderingLightConstantBuffer->UpdateData(graphics, properties);
 	}
 
 	const GuardianMeshInstance::Data& GuardianMeshInstance::GetMeshInstanceData() const noexcept

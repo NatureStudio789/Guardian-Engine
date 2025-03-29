@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRASTERIZERSTATE_H_
 #include "../Topology/GuardianTopology.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianFillMode
 	{

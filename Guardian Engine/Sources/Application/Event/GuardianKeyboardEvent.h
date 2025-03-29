@@ -2,7 +2,7 @@
 #define _GE_GUARDIANKEYBOARDEVENT_H_
 #include "GuardianApplicationEvent.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianKeyPressEvent : public GuardianEvent
 	{

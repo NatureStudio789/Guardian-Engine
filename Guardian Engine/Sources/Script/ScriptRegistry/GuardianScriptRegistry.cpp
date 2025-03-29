@@ -2,7 +2,7 @@
 #include "../GuardianScriptEngine.h"
 #include "../../ECS/Entity/GuardianEntity.h"
 
-namespace guardian
+namespace GE
 {
 	std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> EntityHasComponentFunctionList;
 
@@ -19,7 +19,7 @@ namespace guardian
 		{
 			GString typeName = typeid(Component).name();
 			GString StructName = typeName.substr(typeName.find_last_of(':') + 1);
-			GString ManagedTypename = "Guardian." + StructName;
+			GString ManagedTypename = "GE." + StructName;
 
 			MonoType* ManagedType = mono_reflection_type_from_name(ManagedTypename.data(),
 				mono_assembly_get_image(GuardianScriptEngine::GetCoreAssembly()));

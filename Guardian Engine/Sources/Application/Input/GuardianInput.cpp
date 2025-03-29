@@ -1,6 +1,6 @@
 #include "GuardianInput.h"
 
-namespace guardian
+namespace GE
 {
 	void GuardianInput::InitializeInput()
 	{

@@ -1,7 +1,7 @@
 #include "GuardianDepthStencil.h"
 #include "../GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianDepthStencil::GuardianDepthStencil()
 	{

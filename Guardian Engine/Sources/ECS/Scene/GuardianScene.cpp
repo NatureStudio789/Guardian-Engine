@@ -3,10 +3,11 @@
 #include "../Entity/GuardianScriptableEntity.h"
 #include "../../Application/GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianScene::GuardianScene()
 	{
+		this->SceneName = "Unnamed";
 		this->SceneEntityList.clear();
 		this->CurrentScenePath = "";
 		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 8.0f, -30.0f), 
@@ -51,11 +52,16 @@ namespace guardian
 
 	void GuardianScene::InitializeScene()
 	{
-		GuardianRenderer::CreateRenderingFramebuffer("Scene", *this->EditorCamera,
+		GuardianRenderer::CreateRenderingFramebuffer(this->SceneName + " Scene Rendering", *this->EditorCamera,
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
 
 		GuardianRenderer::SetClearColor(GVector3(0.1f, 0.1f, 0.1f));
+	}
+
+	void GuardianScene::SetSceneName(const GString& name)
+	{
+		this->SceneName = name;
 	}
 
 	void GuardianScene::LoadScene(std::shared_ptr<GuardianGraphics> graphics)
@@ -130,7 +136,7 @@ namespace guardian
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetFramebufferCamera("Scene", *this->EditorCamera);
+		GuardianRenderer::SetFramebufferCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
 
 		if (this->ShouldOperateCamera)
 		{
@@ -183,7 +189,7 @@ namespace guardian
 							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Light",
 							"../Guardian Engine/Assets/Models/Light/Light.obj");
 					}
-					PLComponent.LightMesh->SubmitToRenderer("Scene");
+					PLComponent.LightMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 
 					GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
 					GuardianTransform transform;
@@ -211,9 +217,9 @@ namespace guardian
 			this->SceneGrid->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Grid",
 				"../Guardian Engine/Assets/Models/Grid/Grid.obj");
 		}
-		this->SceneGrid->SubmitToRenderer("Scene");
+		this->SceneGrid->SubmitToRenderer(this->SceneName + " Scene Rendering");
 		this->SceneGrid->UpdateMeshTransform(GuardianTransform().GetTransformMatrix());
-		this->SceneGrid->UpdateMeshLighting(LightProperties);
+		this->SceneGrid->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
@@ -230,7 +236,7 @@ namespace guardian
 					TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
 				SCComponent.SphereGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", SCComponent.SphereGeometry);
+				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", SCComponent.SphereGeometry);
 			});
 		}
 
@@ -249,7 +255,7 @@ namespace guardian
 						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
 					BCComponent.BoxGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", BCComponent.BoxGeometry);
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", BCComponent.BoxGeometry);
 				});
 		}
 
@@ -270,7 +276,7 @@ namespace guardian
 							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
 					CCComponent.CapsuleGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, "Scene", CCComponent.CapsuleGeometry);
+					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", CCComponent.CapsuleGeometry);
 				});
 		}
 
@@ -305,7 +311,7 @@ namespace guardian
 						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Camera",
 						"../Guardian Engine/Assets/Models/Camera/Camera.obj");
 				}
-				CComponent.CameraMesh->SubmitToRenderer("Scene");
+				CComponent.CameraMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 
 				GuardianTransform transform;
 				transform.Position = TComponent.Position;
@@ -313,7 +319,7 @@ namespace guardian
 				transform.Quaternion = TComponent.Quaternion;
 				transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
 				CComponent.CameraMesh->UpdateMeshTransform(transform.GetTransformMatrix());
-				CComponent.CameraMesh->UpdateMeshLighting(LightProperties);
+				CComponent.CameraMesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
 			});
 		}
 
@@ -323,9 +329,9 @@ namespace guardian
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 				{
 					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-					MComponent.Mesh->UpdateMeshLighting(LightProperties);
+					MComponent.Mesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
 
-					MComponent.Mesh->SubmitToRenderer("Scene");
+					MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 				});
 		}
 	}
@@ -501,7 +507,7 @@ namespace guardian
 
 	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetFramebufferCamera("Scene", *this->RuntimeCamera);
+		GuardianRenderer::SetFramebufferCamera(this->SceneName + " Scene Rendering", *this->RuntimeCamera);
 
 		{
 			this->PhysicsWorld->simulate(deltaTime.GetSecond());
@@ -593,9 +599,9 @@ namespace guardian
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 			{
 				MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-				MComponent.Mesh->UpdateMeshLighting(LightProperties);
+				MComponent.Mesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
 
-				MComponent.Mesh->SubmitToRenderer("Scene");
+				MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 			});
 		}
 	}
@@ -847,7 +853,7 @@ namespace guardian
 		YAML::Emitter SceneOutput;
 		SceneOutput << YAML::BeginMap;
 		SceneOutput << YAML::Key << "Scene";
-		SceneOutput << YAML::Value << "Unnamed";
+		SceneOutput << YAML::Value << this->SceneName;
 		SceneOutput << YAML::Key << "Entities";
 		SceneOutput << YAML::Value << YAML::BeginSeq;
 

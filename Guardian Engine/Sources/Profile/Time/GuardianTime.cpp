@@ -1,6 +1,6 @@
 #include "GuardianTime.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTimer GuardianTime::FrameTimer;
 	GuardianTimestep GuardianTime::DeltaTime = 0.0f;

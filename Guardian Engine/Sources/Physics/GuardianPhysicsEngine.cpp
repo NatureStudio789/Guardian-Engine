@@ -1,6 +1,6 @@
 #include "GuardianPhysicsEngine.h"
 
-namespace guardian
+namespace GE
 {
 	PxDefaultAllocator GuardianPhysicsEngine::PhysicsAllocator;
 	PxDefaultErrorCallback GuardianPhysicsEngine::PhysicsErrorCallback;

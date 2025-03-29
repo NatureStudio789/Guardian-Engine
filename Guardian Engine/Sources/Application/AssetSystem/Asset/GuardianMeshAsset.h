@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMESHASSET_H_
 #include "GuardianAsset.h"
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianMeshInstance::Data;
 

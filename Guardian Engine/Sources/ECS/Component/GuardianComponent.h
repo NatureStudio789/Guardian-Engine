@@ -2,7 +2,7 @@
 #define _GE_GUARDIANCOMPONENT_H_
 #include "../../Graphics/Renderer/GuardianRenderer.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianComponent
 	{

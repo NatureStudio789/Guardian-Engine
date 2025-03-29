@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSCENE_H_
 #include "../Component/GuardianComponent.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianEntity;
 
@@ -21,6 +21,7 @@ namespace guardian
 		~GuardianScene() override = default;
 
 		void InitializeScene();
+		void SetSceneName(const GString& name);
 
 		void LoadScene(std::shared_ptr<GuardianGraphics> graphics);
 		void LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath);
@@ -51,6 +52,7 @@ namespace guardian
 
 		void UpdateProjectionAspect(float newWidth, float newHeight);
 
+		GString SceneName;
 		GuardianSceneState SceneState;
 		entt::registry SceneRegistry;
 		std::map<entt::entity, std::shared_ptr<GuardianEntity>> SceneEntityList;

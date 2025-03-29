@@ -2,7 +2,7 @@
 #define _GE_GUARDIANEXCAPTION_H_
 #include "../Converter/GuardianConverter.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianException : public std::exception
 	{

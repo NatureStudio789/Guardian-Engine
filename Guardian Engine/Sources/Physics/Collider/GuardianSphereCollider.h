@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSPHERECOLLIDER_H_
 #include "GuardianBoxCollider.h"
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianSphereColliderProperties
 	{

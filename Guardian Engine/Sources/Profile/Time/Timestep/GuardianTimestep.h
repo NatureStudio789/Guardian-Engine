@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTIMESTEP_H_
 #include "../Timepoint/GuardianTimepoint.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianTimestep
 	{

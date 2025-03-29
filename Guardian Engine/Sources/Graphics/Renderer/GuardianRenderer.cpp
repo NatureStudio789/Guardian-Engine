@@ -1,7 +1,7 @@
 #include "GuardianRenderer.h"
 #include "../../Application/GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
 	std::map<GString, std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>>> GuardianRenderer::RenderableList;
 	std::map<GString, std::shared_ptr<GuardianFramebuffer>> GuardianRenderer::RenderingFramebufferList;
@@ -78,7 +78,7 @@ namespace guardian
 		RenderingClearColor = color;
 	}
 
-	void GuardianRenderer::RenderScene()
+	void GuardianRenderer::Render()
 	{
 		for (auto& framebuffer : RenderingFramebufferList)
 		{
@@ -92,6 +92,7 @@ namespace guardian
 					auto& renderable = RenderableList[framebuffer.first][(GuardianSubmitPassLevel)i].front();
 
 					renderable->GetTransformConstantBuffer()->UpdateData(
+						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
 						{ renderable->GetTransformConstantBuffer()->GetConstantBufferData().WorldTransformMatrix,
 						RenderingCameraList[framebuffer.first].GetViewMatrix(), RenderingCameraList[framebuffer.first].GetProjectionMatrix() });
 					renderable->Update();

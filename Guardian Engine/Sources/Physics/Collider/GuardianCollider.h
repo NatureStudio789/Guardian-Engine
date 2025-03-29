@@ -2,7 +2,7 @@
 #define _GE_GUARDIANCOLLIDER_H_
 #include "../PhysicsMaterial/GuardianPhysicsMaterial.h"
 
-namespace guardian
+namespace GE
 {
 	class GuardianPhysicsMaterial;
 

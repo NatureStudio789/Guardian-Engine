@@ -2,7 +2,7 @@
 #define _GE_GUARDIANAPPLICABLE_H_
 #include "../Light/GuardianLightSystem.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianApplicable
 	{

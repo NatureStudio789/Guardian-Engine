@@ -1,6 +1,6 @@
 #include "GuardianUUID.h"
 
-namespace guardian
+namespace GE
 {
 	static std::random_device RandomDevice;
 	static std::mt19937_64 RandomEngine(RandomDevice());

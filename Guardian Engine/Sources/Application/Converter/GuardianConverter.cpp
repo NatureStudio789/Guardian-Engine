@@ -1,6 +1,6 @@
 #include "GuardianConverter.h"
 
-namespace guardian
+namespace GE
 {
 	const GString GuardianConverter::WideStringToString(const GWideString& wideString)
 	{

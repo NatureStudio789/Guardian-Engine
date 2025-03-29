@@ -1,6 +1,6 @@
 #include "GuardianPhysicsMaterial.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianPhysicsMaterial::GuardianPhysicsMaterial()
 	{

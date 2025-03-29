@@ -15,7 +15,7 @@ project "Guardian Engine"
     language "C++"
 
     targetdir (outputdir)
-    objdir ("%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+    objdir ("%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
     files
     {
@@ -128,7 +128,7 @@ project "Guardian Editor"
     language "C++"
 
     targetdir (outputdir)
-    objdir ("%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+    objdir ("%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
     files
     {
@@ -196,8 +196,8 @@ project "Guardian-ScriptCore"
     language "C#"
     dotnetframework "4.7.2"
 
-    targetdir ("Guardian Editor/Resources/Scripts/")
-    objdir ("Guardian Editor/Resources/Scripts/Immediate")
+    targetdir ("Guardian Editor/Assets/Scripts/")
+    objdir ("Guardian Editor/Assets/Scripts/Intermediate")
 
     files
     {
@@ -219,7 +219,7 @@ project "ImGui"
     language "C++"
 
     targetdir (outputdir)
-    objdir ("ThirdParty/%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+    objdir ("ThirdParty/%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
     files
     {
@@ -244,7 +244,7 @@ project "ImGuizmo"
     language "C++"
 
     targetdir (outputdir)
-    objdir ("ThirdParty/%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+    objdir ("ThirdParty/%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
     files
     {
@@ -274,7 +274,7 @@ project "yaml-cpp"
 	language "C++"
 
 	targetdir (outputdir)
-	objdir ("ThirdParty/%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+	objdir ("ThirdParty/%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
 	files
 	{
@@ -313,7 +313,7 @@ project "Sandbox"
     language "C++"
 
     targetdir (outputdir)
-    objdir ("%{prj.name}/Immediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+    objdir ("%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
 
     files
     {

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANVERTEXBUFFER_H_
 #include "../RasterizerState/GuardianRasterizerState.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianVertexBuffer : public GuardianApplicable
 	{
@@ -16,6 +16,7 @@ namespace guardian
 		void InitializeVertexBuffer(std::shared_ptr<GuardianGraphics> graphics,
 			void* vertices, UINT dataSize, UINT dataTypeStride);
 
+		void UpdateVertices(std::shared_ptr<GuardianGraphics> graphics, void* vertices);
 		void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
 
 		const void* GetVertexBufferData() const noexcept;

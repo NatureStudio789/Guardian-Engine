@@ -53,7 +53,7 @@ using namespace physx;
 #define GFailed FAILED
 #define GSucceeded SUCCEEDED
 
-namespace guardian
+namespace GE
 {
 	using GString = std::string;
 	using GWideString = std::wstring;

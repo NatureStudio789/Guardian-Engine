@@ -1,6 +1,6 @@
 #include "GuardianInputLayout.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianInputLayout::GuardianInputLayout(const GuardianInputLayout& other)
 	{

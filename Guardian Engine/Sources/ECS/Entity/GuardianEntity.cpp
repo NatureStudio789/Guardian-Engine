@@ -1,6 +1,6 @@
 #include "GuardianEntity.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianEntity::GuardianEntity()
 	{

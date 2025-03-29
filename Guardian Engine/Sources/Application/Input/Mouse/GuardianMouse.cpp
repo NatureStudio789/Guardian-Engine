@@ -1,6 +1,6 @@
 #include "GuardianMouse.h"
 
-namespace guardian
+namespace GE
 {
 	std::shared_ptr<GuardianEventProcesser> GuardianMouse::MouseEventProcesser = std::make_shared<GuardianEventProcesser>();
 	std::map<GuardianMouseButtonCategory, GuardianMouseButtonState> GuardianMouse::MouseButtonStateList;

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPICKINGRAY_H_
 #include "../Camera/GuardianCamera.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianPickingRay
 	{

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANCONSTANTBUFFER_H_
 #include "GuardianIndexBuffer.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianConstantBufferCategory
 	{
@@ -23,7 +23,7 @@ namespace guardian
 		void InitializeConstantBuffer(std::shared_ptr<GuardianGraphics> graphics, 
 			GuardianConstantBufferCategory category, int index = 0);
 
-		void UpdateData(T data);
+		void UpdateData(std::shared_ptr<GuardianGraphics> graphics, T data);
 		virtual void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
 
 		WRL::ComPtr<ID3D11Buffer> GetConstantBufferObject();
@@ -86,14 +86,11 @@ namespace guardian
 	}
 
 	template<typename T>
-	inline void GuardianConstantBuffer<T>::UpdateData(T data)
+	inline void GuardianConstantBuffer<T>::UpdateData(
+		std::shared_ptr<GuardianGraphics> graphics, T data)
 	{
 		this->ConstantBufferData = data;
-	}
 
-	template<typename T>
-	inline void GuardianConstantBuffer<T>::Apply(std::shared_ptr<GuardianGraphics> graphics)
-	{
 		D3D11_MAPPED_SUBRESOURCE MappedResource;
 		ZeroMemory(&MappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
 		HRESULT hr = graphics->GetGraphicsDeviceContext()->Map(this->ConstantBufferObject.Get(), 0,
@@ -106,7 +103,11 @@ namespace guardian
 		CopyMemory(MappedResource.pData, &this->ConstantBufferData, sizeof(T));
 
 		graphics->GetGraphicsDeviceContext()->Unmap(this->ConstantBufferObject.Get(), 0);
+	}
 
+	template<typename T>
+	inline void GuardianConstantBuffer<T>::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	{
 		switch (this->ConstantBufferCategory)
 		{
 			case GE_VERTEXSHADER_CONSTANTBUFFER:

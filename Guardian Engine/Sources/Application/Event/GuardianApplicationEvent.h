@@ -2,7 +2,7 @@
 #define _GE_GUARDIANAPPLICATIONEVENT_H_
 #include "GuardianEventProcesser.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianWindowResizeEvent : public GuardianEvent
 	{

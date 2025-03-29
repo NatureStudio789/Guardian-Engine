@@ -2,7 +2,7 @@
 #define _GE_GUARDIANINPUTLAYOUT_H_
 #include "../Shader/GuardianVertexShader.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianInputLayout : public GuardianApplicable
 	{

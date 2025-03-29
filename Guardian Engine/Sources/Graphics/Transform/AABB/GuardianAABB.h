@@ -3,7 +3,7 @@
 #include "../Vector/GuardianVector.h"
 #include <cmath>
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianAABB
 	{

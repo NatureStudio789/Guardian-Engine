@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSCRIPTABLEENTITY_H_
 #include "GuardianEntity.h"
 
-namespace guardian
+namespace GE
 {
 	class GuardianScriptableEntity
 	{

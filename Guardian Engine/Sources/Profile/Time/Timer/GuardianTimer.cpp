@@ -1,6 +1,6 @@
 #include "GuardianTimer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTimer::GuardianTimer()
 	{

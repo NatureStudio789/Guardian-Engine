@@ -3,7 +3,7 @@
 #include "GuardianEventDispatcher.h"
 #include "GuardianEvent.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianEventProcesser
 	{

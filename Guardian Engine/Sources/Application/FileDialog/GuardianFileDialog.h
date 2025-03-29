@@ -1,8 +1,8 @@
 #ifndef _GE_GUARDIANDIALOG_H_
 #define _GE_GUARDIANDIALOG_H_
-#include "../Exception/GuardianException.h"
+#include "../File/GuardianFile.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianFileDialog
 	{

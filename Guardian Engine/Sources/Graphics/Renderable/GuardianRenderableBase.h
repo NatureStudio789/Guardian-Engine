@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRENDREABLEBASE_H_
 #include "GuardianRenderable.h"
 
-namespace guardian
+namespace GE
 {
 	template<typename T>
 	class GuardianRenderableBase : public GuardianRenderable

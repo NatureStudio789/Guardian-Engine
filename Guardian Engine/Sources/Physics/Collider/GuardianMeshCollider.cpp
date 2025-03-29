@@ -1,6 +1,6 @@
 #include "GuardianMeshCollider.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianMeshCollider::GuardianMeshCollider()
 	{

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSCRIPTENGINE_H_
 #include "ScriptClass/GuardianScriptClass.h"
 
-namespace guardian
+namespace GE
 {
 	class GuardianEntity;
 	class GuardianScene;

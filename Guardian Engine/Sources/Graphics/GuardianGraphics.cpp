@@ -1,6 +1,6 @@
 #include "GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianGraphics::GuardianGraphics()
 	{

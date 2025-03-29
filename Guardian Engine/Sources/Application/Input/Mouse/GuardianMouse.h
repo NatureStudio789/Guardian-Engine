@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMOUSE_H_
 #include "../Keyboard/GuardianKeyboard.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianMouseButtonState
 	{

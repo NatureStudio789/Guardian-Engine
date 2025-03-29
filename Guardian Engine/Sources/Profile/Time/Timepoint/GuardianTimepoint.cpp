@@ -1,6 +1,6 @@
 #include "GuardianTimepoint.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTimepoint::GuardianTimepoint()
 	{

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSTATICRIGIDBODY_H_
 #include "../Collider/GuardianMeshCollider.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianStaticRigidBody
 	{

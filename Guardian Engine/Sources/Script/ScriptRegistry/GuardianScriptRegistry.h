@@ -2,7 +2,7 @@
 #define _GE_GUARDIANSCRIPTREGISTRY_H_
 #include "../../Application/Input/GuardianInput.h"
 
-namespace guardian
+namespace GE
 {
 	class GuardianEntity;
 

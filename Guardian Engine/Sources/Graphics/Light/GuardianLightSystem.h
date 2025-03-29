@@ -2,7 +2,7 @@
 #define _GE_GUARDIANLIGHTSYSTEM_H_
 #include "PointLight/GuardianPointLight.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianLightSystem
 	{

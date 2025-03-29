@@ -2,7 +2,7 @@
 #define _GE_GUARDIANGEOMETRY_H_
 #include "../Mesh/GuardianMesh.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianGeometryType
 	{

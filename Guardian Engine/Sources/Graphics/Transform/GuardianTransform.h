@@ -2,7 +2,7 @@
 #define _GE_GUARDIANTRANSFORM_H_
 #include "AABB/GuardianAABB.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianTransform
 	{

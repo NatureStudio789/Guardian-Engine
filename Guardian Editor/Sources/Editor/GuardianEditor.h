@@ -1,12 +1,12 @@
 #ifndef _GE_GUARDIANEDITOR_H_
 #define _GE_GUARDIANEDITOR_H_
-#include "Panel/GuardianPanel.h"
-#include "Panel/GuardianScenePanel.h"
-#include "Panel/GuardianSceneHierarchyPanel.h"
-#include "Panel/GuardianResourceBrowserPanel.h"
+#include "../Panel/GuardianPanel.h"
+#include "../Panel/GuardianScenePanel.h"
+#include "../Panel/GuardianSceneHierarchyPanel.h"
+#include "../Panel/GuardianResourceBrowserPanel.h"
 #include <Profile/EntryPoint/GuardianEntryPoint.h>
 
-namespace guardian
+namespace GE
 {
 	class GuardianEditor : public GuardianProgram
 	{
@@ -32,6 +32,6 @@ namespace guardian
 	};
 }
 
-GUARDIAN_ENGINE_PROFILE(guardian::GuardianEditor)
+GUARDIAN_ENGINE_PROFILE(GE::GuardianEditor)
 
 #endif

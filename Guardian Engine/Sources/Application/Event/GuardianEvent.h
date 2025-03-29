@@ -2,7 +2,7 @@
 #define _GE_GUARDIANEVENT_H_
 #include "../FileDialog/GuardianFileDialog.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianEventType
 	{

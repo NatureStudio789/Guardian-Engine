@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Guardian
+namespace GE
 {
     internal class InternalMethods
     {

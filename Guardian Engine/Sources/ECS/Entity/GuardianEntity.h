@@ -2,7 +2,7 @@
 #define _GE_GUARDIANENTITY_H_
 #include "../Scene/GuardianScene.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianEntity
 	{

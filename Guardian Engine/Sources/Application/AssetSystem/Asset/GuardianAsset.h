@@ -2,7 +2,7 @@
 #define _GE_GUARDIANASSET_H_
 #include "../../../Profile/Program/GuardianProgram.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianAsset
 	{

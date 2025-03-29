@@ -1,6 +1,6 @@
 #include "GuardianIndexBuffer.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianIndexBuffer::GuardianIndexBuffer()
 	{

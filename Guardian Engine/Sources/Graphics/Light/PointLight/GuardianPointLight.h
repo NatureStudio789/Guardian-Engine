@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPOINTLIGHT_H_
 #include "../../GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianPointLightProperties
 	{

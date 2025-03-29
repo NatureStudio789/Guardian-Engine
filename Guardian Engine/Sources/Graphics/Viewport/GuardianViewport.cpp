@@ -1,7 +1,7 @@
 #include "GuardianViewport.h"
 #include "../GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianViewport::GuardianViewport(const GuardianViewport& other)
 	{

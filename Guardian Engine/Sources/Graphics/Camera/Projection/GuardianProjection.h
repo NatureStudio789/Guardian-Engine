@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPROJECTION_H_
 #include "../../Transform/GuardianTransform.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianPerspectiveProjection
 	{

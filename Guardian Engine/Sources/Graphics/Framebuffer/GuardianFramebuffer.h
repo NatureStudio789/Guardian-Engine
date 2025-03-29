@@ -4,7 +4,7 @@
 #include "../Surface/GuardianSurface.h"
 #include "../DepthStencil/GuardianDepthStencil.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianFramebufferCategory
 	{

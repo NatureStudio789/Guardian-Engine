@@ -1,6 +1,6 @@
 #include "GuardianPixelShader.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianPixelShader::GuardianPixelShader(const GuardianPixelShader& other)
 	{

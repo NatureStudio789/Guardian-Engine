@@ -1,7 +1,7 @@
 #include "GuardianApplication.h"
 #include "../GuardianEngine.h"
 
-namespace guardian
+namespace GE
 {
 	std::unique_ptr<GuardianApplication> GuardianApplication::ApplicationInstance = std::make_unique<GuardianApplication>();
 

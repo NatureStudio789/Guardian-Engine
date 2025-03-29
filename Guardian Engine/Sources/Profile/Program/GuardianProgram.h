@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPROGRAM_H_
 #include "../../ECS/Entity/GuardianScriptableEntity.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianProgram
 	{

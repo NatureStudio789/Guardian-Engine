@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPHYSICSENGINE_H_
 #include "../Graphics/PickingRay/GuardianPickingRay.h"
 
-namespace guardian
+namespace GE
 {
 #define GE_GRAVITY_EARTH GVector3(0.0f, -9.81f, 0.0f)
 

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPHYSICSMATERIAL_H_
 #include "../GuardianPhysicsEngine.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianPhysicsMaterial
 	{

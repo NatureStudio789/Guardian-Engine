@@ -1,19 +1,19 @@
 #include "../../GuardianEngine.h"
 
-extern guardian::GuardianProgram* CreateProgram();
-#define GUARDIAN_ENGINE_PROFILE(Program) guardian::GuardianProgram* CreateProgram() { return new Program();  }
+extern GE::GuardianProgram* CreateProgram();
+#define GUARDIAN_ENGINE_PROFILE(Program) GE::GuardianProgram* CreateProgram() { return new Program();  }
 
 int main()
 {
 	try
 	{
-		guardian::GuardianEngine::EngineInstance->InitializeEngine(CreateProgram());
+		GE::GuardianEngine::EngineInstance->InitializeEngine(CreateProgram());
 
-		guardian::GuardianEngine::EngineInstance->LaunchEngine();
+		GE::GuardianEngine::EngineInstance->LaunchEngine();
 
-		return guardian::GE_SUCCESS;
+		return GE::GE_SUCCESS;
 	}
-	catch (const guardian::GuardianException& e)
+	catch (const GE::GuardianException& e)
 	{
 		MessageBoxA(null, e.what(), "Guardian Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
@@ -26,5 +26,5 @@ int main()
 		MessageBoxA(null, "No detail description", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
 	}
 
-	return guardian::GE_FAILURE;
+	return GE::GE_FAILURE;
 }

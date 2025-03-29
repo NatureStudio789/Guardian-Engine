@@ -1,6 +1,6 @@
 #include "GuardianCapsuleCollider.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianCapsuleCollider::GuardianCapsuleCollider()
 	{

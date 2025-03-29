@@ -1,6 +1,6 @@
 #include "GuardianDynamicRigidBody.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianDynamicRigidBody::GuardianDynamicRigidBody()
 	{

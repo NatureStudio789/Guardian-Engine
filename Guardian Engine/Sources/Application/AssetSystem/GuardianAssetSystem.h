@@ -2,7 +2,7 @@
 #define _GE_GUARDIANRESOURCESYSTEM_H_
 #include "Asset/GuardianMeshAsset.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianAssetSystem
 	{

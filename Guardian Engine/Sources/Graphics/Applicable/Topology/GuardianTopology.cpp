@@ -1,6 +1,6 @@
 #include "GuardianTopology.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTopology::GuardianTopology()
 	{

@@ -1,6 +1,6 @@
 #include "GuardianTimestep.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianTimestep::GuardianTimestep()
 	{

@@ -2,7 +2,7 @@
 #include "../Surface/GuardianSurface.h"
 #include "../GuardianGraphics.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianRenderTarget::GuardianRenderTarget(std::shared_ptr<GuardianGraphics> graphics)
 	{

@@ -2,7 +2,7 @@
 #define _GE_GUARDIANKEYBOARD_H_
 #include "../../Event/GuardianMouseEvent.h"
 
-namespace guardian
+namespace GE
 {
 	enum GUARDIAN_API GuardianKeyboardState
 	{

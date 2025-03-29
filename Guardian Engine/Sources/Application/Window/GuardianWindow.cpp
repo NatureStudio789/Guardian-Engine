@@ -1,6 +1,6 @@
 #include "GuardianWindow.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianWindow::GuardianWindow()
 	{

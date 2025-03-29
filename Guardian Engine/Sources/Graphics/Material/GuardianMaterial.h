@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMATERIAL_H_
 #include "../Applicable/Sampler/GuardianSampler.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianMaterial
 	{

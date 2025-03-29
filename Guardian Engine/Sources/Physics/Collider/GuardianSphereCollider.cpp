@@ -1,6 +1,6 @@
 #include "GuardianSphereCollider.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianSphereCollider::GuardianSphereCollider()
 	{

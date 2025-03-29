@@ -2,7 +2,7 @@
 #define _GE_GUARDIANCAMERA_H_
 #include "Projection/GuardianProjection.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianCamera
 	{

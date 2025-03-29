@@ -1,6 +1,6 @@
 #include "GuardianVertexShader.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianVertexShader::GuardianVertexShader(const GuardianVertexShader& other)
 	{

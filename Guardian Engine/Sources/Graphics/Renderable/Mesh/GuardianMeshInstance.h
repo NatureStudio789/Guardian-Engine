@@ -2,7 +2,7 @@
 #define _GE_GUARDIANMESHINSTANCE_H_
 #include "../GuardianRenderableBase.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianMeshInstance : public GuardianRenderableBase<GuardianMeshInstance>
 	{
@@ -33,7 +33,8 @@ namespace guardian
 
 		void Update() override;
 		void UpdateMeshInstanceTransform(XMMATRIX worldMatrix);
-		void UpdateMeshInstanceLighting(GuardianLightProperties properties);
+		void UpdateMeshInstanceLighting(
+			std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties);
 
 		const Data& GetMeshInstanceData() const noexcept;
 		const std::vector<GVector3> GetPositionVertices() const noexcept;

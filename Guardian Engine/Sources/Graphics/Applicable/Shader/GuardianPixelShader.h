@@ -2,7 +2,7 @@
 #define _GE_GUARDIANPIXELSHADER_H_
 #include "../InputLayout/GuardianInputLayout.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianPixelShader : public GuardianApplicable
 	{

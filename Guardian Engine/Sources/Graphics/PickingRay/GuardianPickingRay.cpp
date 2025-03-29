@@ -1,6 +1,6 @@
 #include "GuardianPickingRay.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianPickingRay::GuardianPickingRay()
 	{

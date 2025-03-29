@@ -2,7 +2,7 @@
 #define _GE_GUARDIANINPUT_H_
 #include "Mouse/GuardianMouse.h"
 
-namespace guardian
+namespace GE
 {
 	class GUARDIAN_API GuardianInput : public GuardianMouse, public GuardianKeyboard
 	{

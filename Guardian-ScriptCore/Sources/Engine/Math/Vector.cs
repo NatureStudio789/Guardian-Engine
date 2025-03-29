@@ -1,4 +1,4 @@
-namespace Guardian
+namespace GE
 {
     public struct GVector3
     {

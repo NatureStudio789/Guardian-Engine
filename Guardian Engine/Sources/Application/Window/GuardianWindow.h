@@ -2,7 +2,7 @@
 #define _GE_GUARDIANWINDOW_H_
 #include "../AssetSystem/GuardianAssetSystem.h"
 
-namespace guardian
+namespace GE
 {
 	struct GUARDIAN_API GuardianWindowProperties
 	{

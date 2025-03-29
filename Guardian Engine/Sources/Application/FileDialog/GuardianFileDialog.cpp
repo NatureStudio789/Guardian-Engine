@@ -1,7 +1,7 @@
 #include "GuardianFileDialog.h"
 #include "../GuardianApplication.h"
 
-namespace guardian
+namespace GE
 {
     const GString GuardianFileDialog::OpenFile(const char* filter)
     {

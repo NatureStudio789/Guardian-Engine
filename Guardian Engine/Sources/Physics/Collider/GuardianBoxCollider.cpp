@@ -1,6 +1,6 @@
 #include "GuardianBoxCollider.h"
 
-namespace guardian
+namespace GE
 {
 	GuardianBoxCollider::GuardianBoxCollider()
 	{
