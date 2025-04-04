@@ -51,7 +51,7 @@ namespace GE
 		{
 			ImGui::Begin("Scene Hierarchy", &open);
 
-			//ImGui::Text(("FPS : " + std::to_string(GuardianTime::GetFPSCount())).c_str());
+			ImGui::Text(("FPS : " + std::to_string(GuardianTime::GetFPSCount())).c_str());
 
 			std::vector<entt::entity> DeletedEntities;
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
@@ -699,6 +699,53 @@ namespace GE
 					{
 						collider->SetColliderProperties({ collider->GetColliderProperties().Radius, height / 2.0f });
 					}
+
+					ImGui::Separator();
+
+					ImGui::Text("Physics Material");
+
+					float staticFriction = collider->GetColliderMaterial().GetStaticFriction();
+					if (ImGui::DragFloat("Static Friction", &staticFriction, 0.01f, 0.00001f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(staticFriction,
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float dynamicFriction = collider->GetColliderMaterial().GetDynamicFriction();
+					if (ImGui::DragFloat("Dynamic Friction", &dynamicFriction, 0.01f, 0.00001f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							dynamicFriction,
+							collider->GetColliderMaterial().GetRestitution()));
+					}
+
+					float restitution = collider->GetColliderMaterial().GetRestitution();
+					if (ImGui::DragFloat("Restitution", &restitution, 0.01f, 0.00001f))
+					{
+						collider->SetColliderMaterial(GuardianPhysicsMaterial(
+							collider->GetColliderMaterial().GetStaticFriction(),
+							collider->GetColliderMaterial().GetDynamicFriction(),
+							restitution));
+					}
+
+					ImGui::TreePop();
+				}
+
+				ImGui::Separator();
+			}
+
+			if (SelectedEntity->HasComponent<GuardianMeshColliderComponent>())
+			{
+				auto& collider = SelectedEntity->GetComponent<GuardianMeshColliderComponent>().MeshCollider;
+
+				if (ImGui::TreeNodeEx((void*)typeid(GuardianMeshColliderComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
+					"Mesh Collider Component"))
+				{
+					ImGui::Text("Mesh Filter : ");
+					ImGui::SameLine();
+					ImGui::Text("Use Mesh Component");
 
 					ImGui::Separator();
 

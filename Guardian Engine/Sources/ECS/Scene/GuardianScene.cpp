@@ -545,15 +545,13 @@ namespace GE
 					{
 						TComponent.Position = RBComponent.StaticRigidBody->GetRigidBodyTransform().Position;
 						GVector4 Quaternion = RBComponent.StaticRigidBody->GetRigidBodyTransform().Quaternion;
-						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
-						TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+						TComponent.Rotation = GVector4::QuaternionToEuler({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
 					}
 					else if (RBComponent.RigidBodyType == GE_RIGIDBODY_DYNAMIC)
 					{
 						TComponent.Position = RBComponent.DynamicRigidBody->GetRigidBodyTransform().Position;
 						GVector4 Quaternion = RBComponent.DynamicRigidBody->GetRigidBodyTransform().Quaternion;
-						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
-						TComponent.Rotation = GVector3(Rotation.x, Rotation.y, Rotation.z);
+						TComponent.Rotation = GVector4::QuaternionToEuler({ Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w });
 					}
 				});
 		}
@@ -703,6 +701,10 @@ namespace GE
 		SceneDesc.gravity = PxVec3(this->SceneGravity.x, this->SceneGravity.y, this->SceneGravity.z);
 		SceneDesc.cpuDispatcher = GuardianPhysicsEngine::PhysicsCpuDispatcher;
 		SceneDesc.filterShader = PxDefaultSimulationFilterShader;
+		SceneDesc.cudaContextManager = GuardianPhysicsEngine::GetPhysicsCudaManager();
+		SceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+		SceneDesc.flags |= PxSceneFlag::eENABLE_PCM;
+		SceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
 		this->PhysicsWorld = GuardianPhysicsEngine::PhysicsObject->createScene(SceneDesc);
 		if (!this->PhysicsWorld)
 		{

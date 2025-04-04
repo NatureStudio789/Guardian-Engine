@@ -15,6 +15,7 @@ namespace GE
 			float dynamicFriction, float restitution);
 
 		static PxPhysics* GetPhysicsObject() noexcept;
+		static PxCudaContextManager* GetPhysicsCudaManager();
 
 	private:
 		static PxDefaultAllocator PhysicsAllocator;
@@ -23,6 +24,7 @@ namespace GE
 		static PxPvd* PhysicsDebugger;
 		static PxPhysics* PhysicsObject;
 		static PxDefaultCpuDispatcher* PhysicsCpuDispatcher;
+		static PxCudaContextManager* PhysicsCudaManager;
 
 		friend class GuardianScene;
 	};

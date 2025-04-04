@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Panel">
+      <UniqueIdentifier>{95BADD0D-01CF-05BF-CA50-A91E362402F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget">
+      <UniqueIdentifier>{E97974DA-D51B-9FB0-BED6-B204AA172601}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Editor\GuardianEditor.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Panel\GuardianPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Panel\GuardianResourceBrowserPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Panel\GuardianSceneHierarchyPanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Panel\GuardianScenePanel.h">
+      <Filter>Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\GuardianWidget.h">
+      <Filter>Widget</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Editor\GuardianEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Panel\GuardianPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Panel\GuardianResourceBrowserPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Panel\GuardianSceneHierarchyPanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Panel\GuardianScenePanel.cpp">
+      <Filter>Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\GuardianWidget.cpp">
+      <Filter>Widget</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

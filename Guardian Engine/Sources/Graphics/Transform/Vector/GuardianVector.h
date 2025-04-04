@@ -43,6 +43,54 @@ namespace GE
 			return GVector2(this->x * a, this->y * a);
 		}
 
+		float& operator[](UINT index)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector2 has only two components!");
+					break;
+				}
+			}
+		}
+
+		const float& operator[](UINT index) const
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector2 has only two components!");
+					break;
+				}
+			}
+		}
+
 		GVector2 operator+=(const GVector2& other)
 		{
 			this->x += other.x;
@@ -93,6 +141,7 @@ namespace GE
 		float x, y;
 	};
 
+	class GUARDIAN_API GMatrix4x4;
 	class GUARDIAN_API GVector3
 	{
 	public:
@@ -141,6 +190,68 @@ namespace GE
 			return GVector3(this->x * a, this->y * a, this->z * a);
 		}
 
+		GVector3 operator*(const GMatrix4x4& m) const;
+
+		float& operator[](UINT index)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				case 2:
+				{
+					return this->z;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector3 has only three components!");
+					break;
+				}
+			}
+		}
+
+		const float& operator[](UINT index) const
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				case 2:
+				{
+					return this->z;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector3 has only three components!");
+					break;
+				}
+			}
+		}
+
 		GVector3 operator+=(const GVector3& other)
 		{
 			this->x += other.x;
@@ -177,6 +288,8 @@ namespace GE
 			return *this;
 		}
 
+		GVector3 operator*=(const GMatrix4x4& m);
+
 		bool operator==(const GVector3& other)
 		{
 			return (this->x == other.x) && (this->y == other.y) && (this->z == other.z);
@@ -185,6 +298,27 @@ namespace GE
 		bool operator!=(const GVector3& other)
 		{
 			return (this->x != other.x) || (this->y != other.y) || (this->z != other.z);
+		}
+
+		GVector3 cross(const GVector3& other) const {
+			return GVector3(
+				y * other.z - z * other.y,
+				z * other.x - x * other.z,
+				x * other.y - y * other.x
+			);
+		}
+
+		GVector3 normalize() const {
+			float length = this->length();
+
+			if (length > 0) {
+				return GVector3(x / length, y / length, z / length);
+			}
+			return GVector3();
+		}
+
+		float dot(const GVector3& other) const {
+			return x * other.x + y * other.y + z * other.z;
 		}
 
 		const float length() const
@@ -240,6 +374,78 @@ namespace GE
 			return GVector4(this->x * a, this->y * a, this->z * a, this->w * a);
 		}
 
+		float& operator[](UINT index)
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				case 2:
+				{
+					return this->z;
+					break;
+				}
+
+				case 3:
+				{
+					return this->w;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector4 has only four components!");
+					break;
+				}
+			}
+		}
+
+		const float& operator[](UINT index) const
+		{
+			switch (index)
+			{
+				case 0:
+				{
+					return this->x;
+					break;
+				}
+
+				case 1:
+				{
+					return this->y;
+					break;
+				}
+
+				case 2:
+				{
+					return this->z;
+					break;
+				}
+
+				case 3:
+				{
+					return this->w;
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("GVector4 has only four components!");
+					break;
+				}
+			}
+		}
+
 		GVector4 operator+=(const GVector4& other)
 		{
 			this->x += other.x;
@@ -293,6 +499,51 @@ namespace GE
 		const float length() const
 		{
 			return std::sqrt(this->x * this->x + this->y * this->y + this->z * this->z + this->w * this->w);
+		}
+
+		static GVector3 QuaternionToEuler(const GVector4& quaternion)
+		{
+			float pitch, yaw, roll;
+
+			float sinPitch = 2.0f * (quaternion.w * quaternion.x + quaternion.y * quaternion.z);
+			float cosPitch = 1.0f - 2.0f * (quaternion.x * quaternion.x + quaternion.y * quaternion.y);
+			pitch = atan2(sinPitch, cosPitch);
+
+			float sinYaw = 2.0f * (quaternion.w * quaternion.y - quaternion.z * quaternion.x);
+			if (fabs(sinYaw) >= 1.0f)
+			{
+				yaw = copysign(XM_PIDIV2, sinYaw);
+			}
+			else
+			{
+				yaw = asin(sinYaw);
+			}
+
+			float sinRoll = 2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y);
+			float cosRoll = 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z);
+			roll = atan2(sinRoll, cosRoll);
+
+			return GVector3(pitch * (180.0f / XM_PI), yaw * (180.0f / XM_PI), roll * (180.0f / XM_PI));
+		}
+
+		static GVector4 EulerToQuaternion(const GVector3& euler)
+		{
+			GVector4 Quaternion = GVector4();
+			float yaw = (euler.z / 360.0f) * XM_2PI;
+			float pitch = (euler.y / 360.0f) * XM_2PI;
+			float roll = (euler.x / 360.0f) * XM_2PI;
+			float cy = cos(yaw * 0.5f);
+			float sy = sin(yaw * 0.5f);
+			float cr = cos(roll * 0.5f);
+			float sr = sin(roll * 0.5f);
+			float cp = cos(pitch * 0.5f);
+			float sp = sin(pitch * 0.5f);
+			Quaternion.w = cy * cr * cp + sy * sr * sp;
+			Quaternion.x = cy * sr * cp - sy * cr * sp;
+			Quaternion.y = cy * cr * sp + sy * sr * cp;
+			Quaternion.z = sy * cr * cp - cy * sr * sp;
+
+			return Quaternion;
 		}
 
 		float x, y, z, w;

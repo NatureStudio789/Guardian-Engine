@@ -1,7 +1,6 @@
 #ifndef _GE_GUARDIANAABB_H_
 #define _GE_GUARDIANAABB_H_
-#include "../Vector/GuardianVector.h"
-#include <cmath>
+#include "../Matrix/GuardianMatrix.h"
 
 namespace GE
 {

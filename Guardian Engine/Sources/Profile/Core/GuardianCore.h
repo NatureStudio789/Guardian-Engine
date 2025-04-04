@@ -32,6 +32,7 @@
 #include <mono/metadata/assembly.h>
 #include <PhysX/PxPhysicsAPI.h>
 #include <codecvt>
+#include <immintrin.h>
 using namespace Microsoft;
 using namespace DirectX;
 using namespace physx;

@@ -8,6 +8,7 @@ namespace GE
 	PxPvd* GuardianPhysicsEngine::PhysicsDebugger = null;
 	PxPhysics* GuardianPhysicsEngine::PhysicsObject = null;
 	PxDefaultCpuDispatcher* GuardianPhysicsEngine::PhysicsCpuDispatcher = null;
+	PxCudaContextManager* GuardianPhysicsEngine::PhysicsCudaManager = null;
 
 
 	void GuardianPhysicsEngine::InitializePhysicsEngine()
@@ -31,6 +32,14 @@ namespace GE
 
 		PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(16);
 
+		PxCudaContextManagerDesc CudaManagerDesc;
+		PhysicsCudaManager = PxCreateCudaContextManager(*PhysicsFoundation, CudaManagerDesc, 
+			PxGetProfilerCallback());
+		if (!PhysicsCudaManager)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics CUDA manager!\nYour GPU may not support the CUDA module!!!");
+		}
+
 		if (!PxInitExtensions(*PhysicsObject, PhysicsDebugger))
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to initialize physics engine extentions!");
@@ -45,5 +54,17 @@ namespace GE
 	PxPhysics* GuardianPhysicsEngine::GetPhysicsObject() noexcept
 	{
 		return PhysicsObject;
+	}
+
+	PxCudaContextManager* GuardianPhysicsEngine::GetPhysicsCudaManager()
+	{
+		if (PhysicsCudaManager)
+		{
+			return PhysicsCudaManager;
+		}
+		else
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Your GPU may not support the CUDA module!");
+		}
 	}
 }

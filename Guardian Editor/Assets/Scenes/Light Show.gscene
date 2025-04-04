@@ -75,7 +75,7 @@ Entities:
       Physics Material:
         Static Friction: 0.5
         Dynamic Friction: 0.5
-        Restitution: 0.200000003
+        Restitution: 0.5
     RigidBody Component:
       Type: 1
       Density: 1
@@ -113,29 +113,29 @@ Entities:
         NearZ: 0.100000001
         FarZ: 10000
     Script Component:
-      Class: Guardian.Player
+      Class: GE.Player
   - Entity: 6935017276103604586
     Tag Component:
       Tag: DR.EMR
     Transform Component:
       Position: [0, 21.4457855, 0]
       Rotation: [-36.0575027, 9.39150959e-06, -45.1341591]
-      Scale: [0.999999881, 1.0013386, 1]
+      Scale: [1, 1, 1]
     Point Light Component:
       Light Position: [0, 21.4457855, 0]
       Light Strength: 1050
       Light Color: [1, 1, 1]
     Mesh Component:
-      Mesh Name: SBDS
+      Mesh Name: Cube
     Box Collider Component:
       Half Size: [1, 1, 1]
       Physics Material:
         Static Friction: 0.5
         Dynamic Friction: 0.5
-        Restitution: 0.289999992
+        Restitution: 0.779999971
     RigidBody Component:
       Type: 1
-      Density: 25.2999992
+      Density: 31.8999996
   - Entity: 17366065822084978730
     Tag Component:
       Tag: Guardian2

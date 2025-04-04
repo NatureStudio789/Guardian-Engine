@@ -136,10 +136,9 @@ namespace GE
 						XMMatrixDecompose(&VScale, &VRotation, &VTranslation, XMLoadFloat4x4(&transform));
 						XMFLOAT4 Quaternion;
 						XMStoreFloat4(&Quaternion, VRotation);
-						XMFLOAT3 Rotation = GuardianConverter::QuaternionToEulerAngles(Quaternion);
 
 						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Rotation =
-							GVector3(Rotation.x, Rotation.y, Rotation.z);
+							GVector4::QuaternionToEuler(GVector4(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w));
 					}
 					else if (this->CurrentOperation == ImGuizmo::SCALE)
 					{

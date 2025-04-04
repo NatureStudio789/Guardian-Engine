@@ -49,8 +49,10 @@ namespace GE
 		PxCookingParams params(scale);
 
 		PxDefaultMemoryOutputStream writeBuffer;
-		PxTriangleMeshCookingResult::Enum result;
-		bool status = PxCookTriangleMesh(params, meshDesc, writeBuffer, &result);
+		if (!PxCookTriangleMesh(params, meshDesc, writeBuffer))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to cook triangle mesh!");
+		}
 
 		PxDefaultMemoryInputData ReadBuffer(writeBuffer.getData(), writeBuffer.getSize());
 		PxTriangleMesh* mesh = GuardianPhysicsEngine::GetPhysicsObject()->createTriangleMesh(ReadBuffer);
