@@ -1,8 +1,7 @@
 #ifndef _GE_GUARDIANSAMPLER_H_
 #define _GE_GUARDIANSAMPLER_H_
 #include "../Texture/GuardianTexture.h"
-//POINT
-//LINEAR
+
 namespace GE
 {
 	enum GUARDIAN_API GuardianSamplerFilter

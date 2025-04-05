@@ -34,7 +34,7 @@ namespace GE
 
 		friend class GuardianEngine;
 		friend class GuardianApplication;
-		friend class GuardianEditor;
+		friend class GuardianEditorEngine;
 	};
 }
 

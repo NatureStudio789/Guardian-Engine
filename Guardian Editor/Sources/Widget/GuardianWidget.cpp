@@ -1,1 +1,42 @@
 #include "GuardianWidget.h"
+
+namespace GE
+{
+	void GuardianWidget::EnableWidgetRendering()
+	{
+		this->EnableRendering = true;
+	}
+
+	void GuardianWidget::DisableWidgetRendering()
+	{
+		this->EnableRendering = false;
+	}
+
+	const bool& GuardianWidget::IsEnableRendering() const
+	{
+		return this->EnableRendering;
+	}
+
+	void GuardianWidget::AddStyleToWidget(Style style)
+	{
+		this->WidgetStyleList.push_back(style);
+	}
+
+	void GuardianWidget::SetWidgetEventProcessFunction(const std::function<void()>& function)
+	{
+		this->WidgetEventProcessFunction = function;
+	}
+
+	const std::vector<GuardianWidget::Style>& GuardianWidget::GetWidgetStyleList() const
+	{
+		return this->WidgetStyleList;
+	}
+
+	void GuardianWidget::CallWidgetEventProcessFunction()
+	{
+		if (this->WidgetEventProcessFunction)
+		{
+			this->WidgetEventProcessFunction();
+		}
+	}
+}

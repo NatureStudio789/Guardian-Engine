@@ -67,7 +67,7 @@ namespace GE
 		GVector3 SceneGravity;
 
 		friend class GuardianEntity;
-		friend class GuardianEditor;
+		friend class GuardianEditorEngine;
 		friend class GuardianSceneHierarchyPanel;
 		friend class GuardianScenePanel;
 	};

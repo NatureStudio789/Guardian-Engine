@@ -1,37 +1,28 @@
 #ifndef _GE_GUARDIANEDITOR_H_
 #define _GE_GUARDIANEDITOR_H_
-#include "../Panel/GuardianPanel.h"
-#include "../Panel/GuardianScenePanel.h"
-#include "../Panel/GuardianSceneHierarchyPanel.h"
-#include "../Panel/GuardianResourceBrowserPanel.h"
-#include <Profile/EntryPoint/GuardianEntryPoint.h>
+#include "../Widget/Panel/GuardianPanel.h"
 
 namespace GE
 {
-	class GuardianEditor : public GuardianProgram
+	class GuardianEditor
 	{
 	public:
-		GuardianEditor();
-		~GuardianEditor() override;
+		void AddWidgetToEditor(std::shared_ptr<GuardianWidget> widget);
+		void ClearEditorWidgets();
 
-		void Initialize() override;
+		virtual void Initialize() {}
 
-		void Update() override;
-		void Render() override;
-		
-		void Release() override;
-	
+		virtual void Update();
+
+		virtual void Render();
+
+	protected:
+		void RenderEditorWidgets();
+		void UpdateEditorWidgets();
+
 	private:
-		void RenderDockspace();
-		void AddPanelToEditor(std::shared_ptr<GuardianPanel> panel);
-		LRESULT CALLBACK EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
-
-		std::map<GString, std::shared_ptr<GuardianPanel>> EditorPanelList;
-		std::shared_ptr<GuardianScenePanel> EditorScenePanel;
-		std::shared_ptr<GuardianSceneHierarchyPanel> EditorSceneHierarchyPanel;
+		std::vector<std::shared_ptr<GuardianWidget>> EditorWidgetList;
 	};
 }
-
-GUARDIAN_ENGINE_PROFILE(GE::GuardianEditor)
 
 #endif
