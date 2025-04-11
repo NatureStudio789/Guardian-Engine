@@ -22,6 +22,11 @@ namespace GE
 		this->WidgetStyleList.push_back(style);
 	}
 
+	void GuardianWidget::AddColorToWidget(Color color)
+	{
+		this->WidgetColorList.push_back(color);
+	}
+
 	void GuardianWidget::SetWidgetEventProcessFunction(const std::function<void()>& function)
 	{
 		this->WidgetEventProcessFunction = function;
@@ -30,6 +35,11 @@ namespace GE
 	const std::vector<GuardianWidget::Style>& GuardianWidget::GetWidgetStyleList() const
 	{
 		return this->WidgetStyleList;
+	}
+
+	const std::vector<GuardianWidget::Color>& GuardianWidget::GetWidgetColorList() const
+	{
+		return this->WidgetColorList;
 	}
 
 	void GuardianWidget::CallWidgetEventProcessFunction()

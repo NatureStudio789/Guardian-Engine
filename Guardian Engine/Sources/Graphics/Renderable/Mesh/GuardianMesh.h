@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	class GUARDIAN_API GuardianMesh : public GuardianSerializable
+	class GUARDIAN_API GuardianMesh
 	{
 		using GuardianMeshInstanceId = GuardianUUID;
 	public:
@@ -25,9 +25,6 @@ namespace GE
 			GuardianLightProperties properties);
 
 		void SubmitToRenderer(const GString& submitFramebuffer);
-
-		const GString Serialize() override;
-		void Deserialize(const GString& filePath) override;
 
 		std::shared_ptr<GuardianMeshInstance> GetMeshInstance(const GuardianUUID& id);
 		const GString& GetMeshName() const noexcept;

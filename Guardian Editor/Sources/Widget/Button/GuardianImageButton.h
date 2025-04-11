@@ -1,23 +1,20 @@
 #ifndef _GE_GUARDIANIMAGEBUTTON_H_
 #define _GE_GUARDIANIMAGEBUTTON_H_
-#include "../GuardianWidget.h"
+#include "../Image/GuardianImage.h"
 
 namespace GE
 {
 	class GuardianImageButton : public GuardianWidget
 	{
 	public:
-		using ImageId = ImTextureID;
-
-	public:
 		GuardianImageButton() = default;
 		GuardianImageButton(const GString& stringId, const std::function<void()>& callback,
-			ImageId imageId, const GVector2& buttonSize);
+			GuardianImage::Id imageId, const GVector2& buttonSize);
 		GuardianImageButton(const GuardianImageButton&) = default;
 
 		void SetButtonCallbackFunction(const std::function<void()>& callback);
 		void SetButtonId(const GString& id);
-		void SetButtonImageId(ImageId imageId);
+		void SetButtonImageId(GuardianImage::Id imageId);
 		void SetButtonSize(const GVector2& size);
 
 		void Update() override;
@@ -25,7 +22,7 @@ namespace GE
 
 	private:
 		GString ButtonId;
-		ImageId ButtonImageId;
+		GuardianImage::Id ButtonImageId;
 		GVector2 ButtonSize;
 
 		std::function<void()> ButtonCallbackFunction;

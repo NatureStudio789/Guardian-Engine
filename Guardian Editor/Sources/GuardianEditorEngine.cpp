@@ -94,7 +94,7 @@ namespace GE
 				if (ImGui::MenuItem("New", "Ctrl+N"))
 				{
 					GuardianEngine::EngineInstance->GetScene()->RemoveAllEntity();
-					GuardianEngine::EngineInstance->GetScene()->CurrentScenePath = "";
+					GuardianEngine::EngineInstance->GetScene()->ClearFile();
 					this->EditorSceneHierarchyPanel->SelectedEntityId = 0;
 					GuardianEngine::EngineInstance->GetScene() = std::make_shared<GuardianScene>();
 				}

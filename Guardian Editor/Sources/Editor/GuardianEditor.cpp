@@ -44,9 +44,17 @@ namespace GE
 					}
 				}
 
+				for (int j = 0; j < (int)this->EditorWidgetList[i]->GetWidgetColorList().size(); j++)
+				{
+					GVector4 value = this->EditorWidgetList[i]->GetWidgetColorList()[j].Value;
+					ImGui::PushStyleColor((ImGuiCol)this->EditorWidgetList[i]->GetWidgetColorList()[j].Index,
+						ImVec4(value.x, value.y, value.z, value.w));
+				}
+
 				this->EditorWidgetList[i]->Render();
 
 				ImGui::PopStyleVar((int)this->EditorWidgetList[i]->GetWidgetStyleList().size());
+				ImGui::PopStyleColor((int)this->EditorWidgetList[i]->GetWidgetColorList().size());
 			}
 		}
 	}

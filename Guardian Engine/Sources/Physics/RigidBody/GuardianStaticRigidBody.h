@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANSTATICRIGIDBODY_H_
 #define _GE_GUARDIANSTATICRIGIDBODY_H_
-#include "../Collider/GuardianMeshCollider.h"
+#include "../Collider/GuardianMultipleCollider.h"
 
 namespace GE
 {

@@ -3,6 +3,7 @@
 #include "../Button/GuardianButton.h"
 #include "../Text/GuardianText.h"
 #include "../Button/GuardianImageButton.h"
+#include "../ColumnLayout/GuardianColumnLayout.h"
 
 namespace GE
 {

@@ -3,7 +3,7 @@
 namespace GE
 {
 	GuardianImageButton::GuardianImageButton(const GString& stringId, 
-		const std::function<void()>& callback, ImageId imageId, const GVector2& buttonSize)
+		const std::function<void()>& callback, GuardianImage::Id imageId, const GVector2& buttonSize)
 	{
 		this->SetButtonId(stringId);
 		this->SetButtonCallbackFunction(callback);
@@ -21,7 +21,7 @@ namespace GE
 		this->ButtonId = id;
 	}
 
-	void GuardianImageButton::SetButtonImageId(ImageId imageId)
+	void GuardianImageButton::SetButtonImageId(GuardianImage::Id imageId)
 	{
 		this->ButtonImageId = imageId;
 	}

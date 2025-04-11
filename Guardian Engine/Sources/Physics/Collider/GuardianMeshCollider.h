@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	struct GUARDIAN_API GuardianMeshColliderProperties
+	struct GuardianMeshColliderProperties
 	{
 		GuardianMeshColliderProperties()
 		{
@@ -20,9 +20,11 @@ namespace GE
 		std::vector<GVector3> Vertices;
 		std::vector<UINT> Indices;
 	};
-	
+
 	class GUARDIAN_API GuardianMeshCollider : public GuardianCollider
 	{
+	public:
+
 	public:
 		GuardianMeshCollider();
 		GuardianMeshCollider(const GuardianMeshCollider& other);

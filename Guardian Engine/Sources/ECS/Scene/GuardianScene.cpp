@@ -9,7 +9,6 @@ namespace GE
 	{
 		this->SceneName = "Unnamed";
 		this->SceneEntityList.clear();
-		this->CurrentScenePath = "";
 		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 8.0f, -30.0f), 
 			GVector3(15.0f, 0.0f, 0.0f), GuardianPerspectiveProjection(60.0f, 16.0f / 9.0f, 0.001f, 10000.0f));
 		this->RuntimeCamera = std::make_shared<GuardianCamera>();
@@ -40,7 +39,6 @@ namespace GE
 	{
 		this->SceneState = other.SceneState;
 		this->SceneEntityList = other.SceneEntityList;
-		this->CurrentScenePath = other.CurrentScenePath;
 		this->EditorCamera = other.EditorCamera;
 		this->RuntimeCamera = other.RuntimeCamera;
 		this->ShouldOperateCamera = other.ShouldOperateCamera;
@@ -76,7 +74,6 @@ namespace GE
 		GString sceneFilePath = GuardianFileDialog::OpenFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 
 		this->Deserialize(sceneFilePath);
-		this->CurrentScenePath = sceneFilePath;
 	}
 
 	void GuardianScene::LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
@@ -89,31 +86,23 @@ namespace GE
 		this->RemoveAllEntity();
 
 		this->Deserialize(sceneFilePath);
-
-		this->CurrentScenePath = sceneFilePath;
 	}
 
 	void GuardianScene::SaveScene()
 	{
-		if (this->CurrentScenePath.empty())
+		if (!this->IsFileExists())
 		{
-			this->CurrentScenePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
+			this->InitializeFile(GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0"));
 		}
 
-		auto& data = this->Serialize();
-		std::stringstream sstream(data);
-		std::ofstream outputfile(this->CurrentScenePath);
-		outputfile << sstream.rdbuf();
+		this->Serialize();
 	}
 
 	void GuardianScene::SaveSceneAs(const GString& filePath)
 	{
-		this->CurrentScenePath = filePath;
+		this->InitializeFile(filePath);
 
-		auto& data = this->Serialize();
-		std::stringstream sstream(data);
-		std::ofstream outputfile(this->CurrentScenePath);
-		outputfile << sstream.rdbuf();
+		this->Serialize();
 	}
 
 	void GuardianScene::UpdateScene(GuardianTimestep deltaTime)
@@ -341,10 +330,7 @@ namespace GE
 		this->SceneState = GE_SCENE_RUNTIME;
 
 		this->CreatePhysicsWorld();
-		auto& data = this->Serialize();
-		std::stringstream OutputStringStream(data);
-		std::ofstream OutputFile("Temp.gdata");
-		OutputFile << OutputStringStream.rdbuf();
+		this->Serialize("Temp.gdata", false);
 
 		{
 			auto view = this->SceneRegistry.view<GuardianSphereColliderComponent, GuardianRigidBodyComponent>();
@@ -623,7 +609,7 @@ namespace GE
 		}
 
 		this->RemoveAllEntity();
-		this->Deserialize("Temp.gdata");
+		this->Deserialize("Temp.gdata", false);
 		std::filesystem::remove("Temp.gdata");
 
 		this->SceneState = GE_SCENE_EDIT;
@@ -720,13 +706,9 @@ namespace GE
 		}
 	}
 
-	void GuardianScene::Deserialize(const GString& sceneFilePath)
+	void GuardianScene::ReadSerializationData(const GString& serializationData)
 	{
-		std::ifstream SceneFile(sceneFilePath);
-		std::stringstream SceneFileStringStream;
-		SceneFileStringStream << SceneFile.rdbuf();
-
-		YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
+		YAML::Node SceneData = YAML::Load(serializationData);
 
 		auto entities = SceneData["Entities"];
 		if (entities)
@@ -850,7 +832,7 @@ namespace GE
 		}
 	}
 
-	const GString GuardianScene::Serialize()
+	const GString GuardianScene::WriteSerializationData()
 	{
 		YAML::Emitter SceneOutput;
 		SceneOutput << YAML::BeginMap;

@@ -53,6 +53,82 @@ namespace GE
 			GVector2 Value;
 		};
 
+        struct Color
+        {
+            enum Category
+            {
+                GEColorCategory_Text,
+                GEColorCategory_TextDisabled,
+                GEColorCategory_WindowBg,              
+                GEColorCategory_ChildBg,               
+                GEColorCategory_PopupBg,               
+                GEColorCategory_Border,
+                GEColorCategory_BorderShadow,
+                GEColorCategory_FrameBg,               
+                GEColorCategory_FrameBgHovered,
+                GEColorCategory_FrameBgActive,
+                GEColorCategory_TitleBg,               
+                GEColorCategory_TitleBgActive,         
+                GEColorCategory_TitleBgCollapsed,      
+                GEColorCategory_MenuBarBg,
+                GEColorCategory_ScrollbarBg,
+                GEColorCategory_ScrollbarGrab,
+                GEColorCategory_ScrollbarGrabHovered,
+                GEColorCategory_ScrollbarGrabActive,
+                GEColorCategory_CheckMark,             
+                GEColorCategory_SliderGrab,
+                GEColorCategory_SliderGrabActive,
+                GEColorCategory_Button,
+                GEColorCategory_ButtonHovered,
+                GEColorCategory_ButtonActive,
+                GEColorCategory_Header,                
+                GEColorCategory_HeaderHovered,
+                GEColorCategory_HeaderActive,
+                GEColorCategory_Separator,
+                GEColorCategory_SeparatorHovered,
+                GEColorCategory_SeparatorActive,
+                GEColorCategory_ResizeGrip,            
+                GEColorCategory_ResizeGripHovered,
+                GEColorCategory_ResizeGripActive,
+                GEColorCategory_TabHovered,            
+                GEColorCategory_Tab,                   
+                GEColorCategory_TabSelected,           
+                GEColorCategory_TabSelectedOverline,   
+                GEColorCategory_TabDimmed,             
+                GEColorCategory_TabDimmedSelected,
+                GEColorCategory_TabDimmedSelectedOverline,
+                GEColorCategory_DockingPreview,        
+                GEColorCategory_DockingEmptyBg,        
+                GEColorCategory_PlotLines,
+                GEColorCategory_PlotLinesHovered,
+                GEColorCategory_PlotHistogram,
+                GEColorCategory_PlotHistogramHovered,
+                GEColorCategory_TableHeaderBg,         
+                GEColorCategory_TableBorderStrong,     
+                GEColorCategory_TableBorderLight,      
+                GEColorCategory_TableRowBg,            
+                GEColorCategory_TableRowBgAlt,         
+                GEColorCategory_TextLink,              
+                GEColorCategory_TextSelectedBg,
+                GEColorCategory_DragDropTarget,        
+                GEColorCategory_NavCursor,             
+                GEColorCategory_NavWindowingHighlight, 
+                GEColorCategory_NavWindowingDimBg,     
+                GEColorCategory_ModalWindowDimBg,      
+                GEColorCategory_COUNT,
+
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+                GEColorCategory_TabActive = ImGuiCol_TabSelected,                  
+                GEColorCategory_TabUnfocused = ImGuiCol_TabDimmed,                 
+                GEColorCategory_TabUnfocusedActive = ImGuiCol_TabDimmedSelected,   
+                GEColorCategory_NavHighlight = ImGuiCol_NavCursor,                 
+#endif
+            };
+
+            Category Index;
+            GVector4 Value;
+        };
+
 	public:
 		void EnableWidgetRendering();
 		void DisableWidgetRendering();
@@ -60,22 +136,23 @@ namespace GE
 		const bool& IsEnableRendering() const;
 
         void AddStyleToWidget(Style style);
+        void AddColorToWidget(Color color);
         void SetWidgetEventProcessFunction(const std::function<void()>& function);
 
         const std::vector<Style>& GetWidgetStyleList() const;
+        const std::vector<Color>& GetWidgetColorList() const;
 
 		virtual void Update() {}
 
-        /*Must call the CallWidgetEventProcessFunction in this function!!!*/
 		virtual void Render() {}
 
 	protected:
-        /*This function must be called in every widget render function!*/
         void CallWidgetEventProcessFunction();
 
         bool EnableRendering = true;
         std::function<void()> WidgetEventProcessFunction;
         std::vector<Style> WidgetStyleList;
+        std::vector<Color> WidgetColorList;
 	};
 }
 

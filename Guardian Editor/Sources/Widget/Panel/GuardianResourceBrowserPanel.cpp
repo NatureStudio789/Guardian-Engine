@@ -125,6 +125,7 @@ namespace GE
 					this->CurrentDirectory = directoryEntry.path().string();
 				}
 			}
+
 			ImGui::TextWrapped(filename.c_str());
 
 			ImGui::NextColumn();

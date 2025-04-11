@@ -49,7 +49,7 @@ namespace GE
 		else if (std::filesystem::path(meshFilePath).extension() == ".gmesh")
 		{
 			this->MeshName = meshName;
-			this->Deserialize(meshFilePath);
+			/*this->Deserialize(meshFilePath);*/
 		}
 	}
 
@@ -92,7 +92,7 @@ namespace GE
 		}
 	}
 
-	const GString GuardianMesh::Serialize()
+	/*const GString GuardianMesh::Serialize()
 	{
 		YAML::Emitter MeshOutput;
 		MeshOutput << YAML::BeginMap;
@@ -206,7 +206,7 @@ namespace GE
 				this->MeshInstancesList.push_back(ins);
 			}
 		}
-	}
+	}*/
 
 	std::shared_ptr<GuardianMeshInstance> GuardianMesh::GetMeshInstance(const GuardianUUID& id)
 	{

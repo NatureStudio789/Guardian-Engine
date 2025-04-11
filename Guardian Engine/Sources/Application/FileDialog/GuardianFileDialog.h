@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANDIALOG_H_
 #define _GE_GUARDIANDIALOG_H_
-#include "../File/GuardianFile.h"
+#include "../Exception/GuardianException.h"
 
 namespace GE
 {

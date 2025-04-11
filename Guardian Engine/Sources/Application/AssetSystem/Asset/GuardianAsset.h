@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	class GUARDIAN_API GuardianAsset
+	class GUARDIAN_API GuardianAsset : public GuardianFile
 	{
 	public:
 		GuardianAsset();

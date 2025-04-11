@@ -45,8 +45,8 @@ namespace GE
 	private:
 		void CreatePhysicsWorld();
 
-		void Deserialize(const GString& sceneFilePath) override;
-		const GString Serialize() override;
+		void ReadSerializationData(const GString& serializationData) override;
+		const GString WriteSerializationData() override;
 
 		void SaveEntity(YAML::Emitter& output, std::shared_ptr<GuardianEntity> entity);
 
@@ -56,7 +56,6 @@ namespace GE
 		GuardianSceneState SceneState;
 		entt::registry SceneRegistry;
 		std::map<entt::entity, std::shared_ptr<GuardianEntity>> SceneEntityList;
-		GString CurrentScenePath;
 
 		std::shared_ptr<GuardianCamera> EditorCamera;
 		bool ShouldOperateCamera;
