@@ -15,6 +15,7 @@ namespace GE
 		GuardianWindowProperties(const GuardianWindowProperties&) = default;
 		GuardianWindowProperties(int width, int height, const GString& title)
 		{
+			this->HasBorder = true;
 			this->SetWindowResolution(width, height);
 			this->SetWindowTitle(title);
 			this->IsWindowFullscreen = false;
@@ -28,6 +29,12 @@ namespace GE
 			this->WindowPositionY = 0;
 			this->WindowTitle = title;
 			this->IsWindowFullscreen = true;
+			this->HasBorder = false;
+		}
+
+		void SetWindowBorder(bool hasBorder)
+		{
+			this->HasBorder = hasBorder;
 		}
 
 		void SetWindowResolution(int width, int height)
@@ -55,6 +62,7 @@ namespace GE
 		}
 
 	private:
+		bool HasBorder;
 		int WindowWidth;
 		int WindowHeight;
 		GString WindowTitle;
@@ -78,6 +86,8 @@ namespace GE
 
 		void DisplayWindow();
 		void UpdateWindowMessage() noexcept;
+
+		void DestroyWindow();
 
 		const bool GetIsWindowRunning() const noexcept;
 		const GWindowHandle& GetWindowHandle() const noexcept;

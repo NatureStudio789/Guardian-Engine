@@ -34,6 +34,8 @@
 #include <PhysX/PxPhysicsAPI.h>
 #include <codecvt>
 #include <immintrin.h>
+#include <thread>
+#include <format>
 using namespace Microsoft;
 using namespace DirectX;
 using namespace physx;

@@ -96,7 +96,7 @@ namespace GE
 						{ renderable->GetTransformConstantBuffer()->GetConstantBufferData().WorldTransformMatrix,
 						RenderingCameraList[framebuffer.first].GetViewMatrix(), RenderingCameraList[framebuffer.first].GetProjectionMatrix() });
 					renderable->Update();
-
+					
 					renderable->Render(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
 
 					RenderableList[framebuffer.first][(GuardianSubmitPassLevel)i].pop();

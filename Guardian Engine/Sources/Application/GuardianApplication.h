@@ -21,13 +21,17 @@ namespace GE
 	private:
 		void InitializeApplication(const GuardianWindowProperties& windowProperties);
 
+		void LaunchStartupWindow();
+
 		void DisplayWindow();
 		void UpdateApplication() noexcept;
 
 		void EndUpRendering(int syncInterval = 1);
 
+		static LRESULT CALLBACK StartupWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK ApplicationMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+		std::shared_ptr<GuardianWindow> StartupWindow;
 		std::shared_ptr<GuardianWindow> ApplicationWindow;
 		std::unique_ptr<GuardianEventProcesser> ApplicationEventProcesser;
 		

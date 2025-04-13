@@ -51,9 +51,13 @@ namespace GE
 		WindowRectangle.top = this->WindowProperties.WindowPositionY;
 		WindowRectangle.right = this->WindowProperties.WindowPositionX + this->WindowProperties.WindowWidth;
 		WindowRectangle.bottom = this->WindowProperties.WindowPositionY + this->WindowProperties.WindowHeight;
-		if (this->WindowProperties.IsWindowFullscreen)
+		if (this->WindowProperties.IsWindowFullscreen && !this->WindowProperties.HasBorder)
 		{
 			Style = WS_POPUPWINDOW | WS_VISIBLE;
+		}
+		else if (!this->WindowProperties.IsWindowFullscreen && !this->WindowProperties.HasBorder)
+		{
+			Style = WS_POPUP;
 		}
 		else
 		{
@@ -100,6 +104,12 @@ namespace GE
 
 			DispatchMessage(&this->WindowMessage);
 		}
+	}
+
+	void GuardianWindow::DestroyWindow()
+	{
+		::DestroyWindow(this->WindowHandle);
+		UnregisterClass(GuardianConverter::StringToWideString(this->WindowProperties.WindowClassName).c_str(), GetModuleHandle(null));
 	}
 
 	const bool GuardianWindow::GetIsWindowRunning() const noexcept

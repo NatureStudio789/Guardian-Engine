@@ -15,7 +15,7 @@ namespace GE
 		static const GuardianMeshAsset& GetMeshAssetFromPath(GString meshFilePath);
 		static std::shared_ptr<GuardianFramebuffer> GetMeshAssetRenderingView(GString meshName);
 		static std::shared_ptr<GuardianFramebuffer> GetMeshAssetRenderingViewFromPath(GString meshFilePath);
-
+		
 		static GuardianTexture GetTexture(GString textureName);
 		static const GString GetTextureName(GuardianTexture texture);
 

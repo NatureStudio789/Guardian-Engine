@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANFILE_H_
 #define _GE_GUARDIANFILE_H_
-#include "../UUID/GuardianUUID.h"
+#include "../Node/GuardianNode.h"
 
 namespace GE
 {

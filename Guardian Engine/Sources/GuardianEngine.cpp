@@ -10,6 +10,7 @@ namespace GE
 		this->EngineProgram = null;
 		this->EngineEventProcesser = std::make_unique<GuardianEventProcesser>();
 		this->EngineScene = std::make_shared<GuardianScene>();
+		this->FinishedInitialization = false;
 	}
 
 	GuardianEngine::~GuardianEngine()
@@ -30,14 +31,23 @@ namespace GE
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
-		GuardianAssetSystem::InitializeAssetSystem();
-		GuardianPhysicsEngine::InitializePhysicsEngine();
-		GuardianScriptEngine::InitializeScriptEngine();
+		GuardianThread Initialization;
+		Initialization.LaunchThread([=]() 
+		{
+			GuardianAssetSystem::InitializeAssetSystem();
+			GuardianPhysicsEngine::InitializePhysicsEngine();
+			GuardianScriptEngine::InitializeScriptEngine();
 
-		this->EngineScene->InitializeScene();
-		this->EngineProgram->Initialize();
+			this->EngineScene->InitializeScene();
+			this->EngineProgram->Initialize();
 
-		GuardianTime::InitializeTime();
+			GuardianTime::InitializeTime();
+
+			this->FinishedInitialization = true;
+		});
+		Initialization.DetachMainThread();
+
+		GuardianApplication::ApplicationInstance->LaunchStartupWindow();
 	}
 
 	void GuardianEngine::LaunchEngine()

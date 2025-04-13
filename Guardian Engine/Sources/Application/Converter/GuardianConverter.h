@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANCONVERTER_H_
 #define _GE_GUARDIANCONVERTER_H_
-#include "../../Profile/Time/GuardianTime.h"
+#include "../Thread/GuardianThread.h"
 
 namespace GE
 {

@@ -26,6 +26,8 @@ namespace GE
 
 		std::unique_ptr<GuardianEventProcesser> EngineEventProcesser;
 
+		bool FinishedInitialization;
+
 		friend class GuardianEditorEngine;
 		friend class GuardianApplication;
 	};
