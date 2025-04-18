@@ -1,31 +1,32 @@
 #ifndef _GE_GUARDIANRENDERER_H_
 #define _GE_GUARDIANRENDERER_H_
-#include "../Renderable/Geometry/GuardianGeometry.h"
+#include "../RenderGraph/GuardianRenderGraph.h"
 
 namespace GE
 {
 	class GUARDIAN_API GuardianRenderer
 	{
 	public:
-		static void CreateRenderingFramebuffer(const GString& framebufferName, 
-			const GuardianCamera& camera, int width, int height);
-		static void ResizeRenderingFramebuffer(const GString& framebufferName, int width, int height);
-		static void SetFramebufferCamera(const GString& framebufferName, const GuardianCamera& camera);
-		static std::shared_ptr<GuardianFramebuffer> GetRenderingFramebuffer(const GString& name);
+		static void CreateRenderingRenderGraph(
+			const GString& renderGraphName, int width, int height);
+		static void ResizeRenderingRenderGraph(const GString& renderGraphName, int width, int height);
+		static void SetRenderingRenderGraphVertexShader(
+			const GString& renderGraphName, const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize);
+		static void SetRenderingRenderGraphPixelShader(
+			const GString& renderGraphName, const GString& shaderPath);
+		static void SetRenderingRenderGraphCamera(const GString& renderGraphName, const GuardianCamera& camera);
+		static std::shared_ptr<GuardianFramebuffer> GetRenderingRenderGraphFramebuffer(const GString& name);
 
 		static void SubmitRenderable(GuardianSubmitPassLevel level, 
-			const GString& submitFramebuffer, std::shared_ptr<GuardianRenderable> renderable);
+			const GString& submitRenderGraph, std::shared_ptr<GuardianRenderable> renderable);
 
-		static void SetClearColor(const GVector3& color);
+		static void SetRenderingRenderGraphClearColor(
+			const GString& renderGraphName, const GVector3& color);
 
 		static void Render();
 
 	private:
-		static std::map<GString, std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>>> RenderableList;
-		static std::map<GString, std::shared_ptr<GuardianFramebuffer>> RenderingFramebufferList;
-		static std::map<GString, GuardianCamera> RenderingCameraList;
-
-		static GVector3 RenderingClearColor;
+		static std::map<GString, std::shared_ptr<GuardianRenderGraph>> RenderingRenderGraphList;
 
 		friend class GuardianApplication;
 	};

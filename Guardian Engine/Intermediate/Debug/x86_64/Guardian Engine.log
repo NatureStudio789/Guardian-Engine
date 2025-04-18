@@ -1,4 +1,0 @@
-﻿  GuardianNode.cpp
-D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Sources\Profile\Node\GuardianNode.cpp(82,10): warning C4311: “类型强制转换”: 从“GE::GuardianNode *”到“unsigned long”的指针截断
-D:\Development\C++\Nature Studio\Guardian Engine\Guardian Engine\Sources\Profile\Node\GuardianNode.cpp(82,10): warning C4302: “类型强制转换”: 从“GE::GuardianNode *”到“unsigned long”截断
-  Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\Guardian Engine.dll

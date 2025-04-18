@@ -50,11 +50,24 @@ namespace GE
 
 	void GuardianScene::InitializeScene()
 	{
-		GuardianRenderer::CreateRenderingFramebuffer(this->SceneName + " Scene Rendering", *this->EditorCamera,
+		GuardianRenderer::CreateRenderingRenderGraph(this->SceneName + " Scene Rendering",
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
 
-		GuardianRenderer::SetClearColor(GVector3(0.1f, 0.1f, 0.1f));
+		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
+
+		D3D11_INPUT_ELEMENT_DESC id[] =
+		{
+			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+		};
+		GuardianRenderer::SetRenderingRenderGraphVertexShader(this->SceneName + " Scene Rendering",
+			"../Guardian Engine/Shaders/MeshVertexShader.hlsl", id, ARRAYSIZE(id));
+		GuardianRenderer::SetRenderingRenderGraphPixelShader(this->SceneName + " Scene Rendering",
+			"../Guardian Engine/Shaders/MeshPixelShader.hlsl");
+
+		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 	}
 
 	void GuardianScene::SetSceneName(const GString& name)
@@ -125,7 +138,8 @@ namespace GE
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetFramebufferCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
+		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
+		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 
 		if (this->ShouldOperateCamera)
 		{
@@ -493,7 +507,8 @@ namespace GE
 
 	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetFramebufferCamera(this->SceneName + " Scene Rendering", *this->RuntimeCamera);
+		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->RuntimeCamera);
+		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 
 		{
 			this->PhysicsWorld->simulate(deltaTime.GetSecond());

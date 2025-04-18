@@ -21,6 +21,9 @@ namespace GE
 		GuardianRenderable(const GuardianRenderable& other);
 		virtual ~GuardianRenderable();
 
+		void EnableSpecialShader();
+		void DisableSpecialShader();
+
 		void AddApplicable(std::shared_ptr<GuardianApplicable> applicable);
 		void AddVertexBuffer(std::shared_ptr<GuardianVertexBuffer> vertexBuffer);
 		void AddIndexBuffer(std::shared_ptr<GuardianIndexBuffer> indexBuffer);
@@ -44,6 +47,9 @@ namespace GE
 		GuardianUUID RenderableId;
 		std::shared_ptr<GuardianVertexBuffer> RenderingVertexBuffer;
 		std::shared_ptr<GuardianIndexBuffer> RenderingIndexBuffer;
+
+		bool UseSpecialShader = false;
+
 		std::shared_ptr<GuardianTransformConstantBuffer> RenderingTransformConstantBuffer;
 		std::shared_ptr<GuardianLightConstantBuffer> RenderingLightConstantBuffer;
 		std::shared_ptr<GuardianMaterial> RenderingMaterial;
@@ -59,6 +65,7 @@ namespace GE
 		}
 
 		friend class GuardianRenderer;
+		friend class GuardianRenderGraph;
 		template<typename T>
 		friend class GuardianRenderableBase;
 	};

@@ -82,7 +82,7 @@ namespace GE
 		graphics->GetGraphicsDeviceContext()->OMSetRenderTargets(1, 
 			this->RenderTargetView.GetAddressOf(), depthStencil->GetDepthStencilView().Get());
 
-		static const float color[] = { clearColor.x, clearColor.y, clearColor.z, 1.0f };
+		const float color[] = { clearColor.x, clearColor.y, clearColor.z, 1.0f };
 		graphics->GetGraphicsDeviceContext()->ClearRenderTargetView(this->RenderTargetView.Get(), color);
 	}
 

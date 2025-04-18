@@ -119,7 +119,7 @@ Entities:
       Tag: DR.EMR
     Transform Component:
       Position: [0, 21.4457855, 0]
-      Rotation: [-36.0575027, 9.39150959e-06, -45.1341591]
+      Rotation: [3.10540605, 3.84022164, -1.23618352]
       Scale: [1, 1, 1]
     Point Light Component:
       Light Position: [0, 21.4457855, 0]

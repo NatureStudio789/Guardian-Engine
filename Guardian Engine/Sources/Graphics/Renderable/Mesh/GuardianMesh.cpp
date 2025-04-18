@@ -84,11 +84,11 @@ namespace GE
 		}
 	}
 
-	void GuardianMesh::SubmitToRenderer(const GString& submitFramebuffer)
+	void GuardianMesh::SubmitToRenderer(const GString& submitRenderGraph)
 	{
 		for (auto& instance : this->MeshInstancesList)
 		{
-			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, submitFramebuffer, instance);
+			GuardianRenderer::SubmitRenderable(GE_SUBMIT_DEFAULT3D, submitRenderGraph, instance);
 		}
 	}
 

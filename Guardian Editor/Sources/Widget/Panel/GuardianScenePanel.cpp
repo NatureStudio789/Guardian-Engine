@@ -73,13 +73,13 @@ namespace GE
 		{
 			LastScenePanelSize = { CurrentScenePanelSize.x, CurrentScenePanelSize.y };
 
-			GuardianRenderer::ResizeRenderingFramebuffer(this->PanelScene->SceneName + " Scene Rendering", 
+			GuardianRenderer::ResizeRenderingRenderGraph(this->PanelScene->SceneName + " Scene Rendering", 
 				(int)CurrentScenePanelSize.x, (int)CurrentScenePanelSize.y);
 			this->PanelScene->UpdateProjectionAspect(CurrentScenePanelSize.x, CurrentScenePanelSize.y);
 			IsFirst = false;
 		}
 
-		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingFramebuffer(this->PanelScene->SceneName + " Scene Rendering")->
+		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingRenderGraphFramebuffer(this->PanelScene->SceneName + " Scene Rendering")->
 			GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
 
 		if (ImGui::BeginDragDropTarget())

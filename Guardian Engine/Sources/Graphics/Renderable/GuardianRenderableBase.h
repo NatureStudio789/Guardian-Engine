@@ -51,6 +51,14 @@ namespace GE
 		{
 			throw GUARDIAN_TYPE_EXCEPTION("IndexBuffer", "the type except the IndexBuffer");
 		}
+		else if (typeid(*applicable) == typeid(GuardianVertexShader) ||
+			typeid(*applicable) == typeid(GuardianPixelShader) || typeid(*applicable) == typeid(GuardianInputLayout))
+		{
+			if (!this->UseSpecialShader)
+			{
+				throw GUARDIAN_TYPE_EXCEPTION("Shader", "the special shader of this renderable is banned!");
+			}
+		}
 		else if (typeid(*applicable) == typeid(GuardianTransformConstantBuffer))
 		{
 			throw GUARDIAN_TYPE_EXCEPTION("TransformConstantBuffer", "the type except the TransformConstantBuffer");

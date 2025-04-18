@@ -17,8 +17,21 @@ namespace GE
         }
 
         MaterialList[name] = std::make_shared<GuardianMaterial>();
-        GuardianRenderer::CreateRenderingFramebuffer(name + " Rendering", 
-            { {0.0f, 0.0f, -2.5f}, {0.0f, 0.0f, 0.0f}, {60.0f, 800.0f / 800.0f, 0.01f, 1000.0f} }, 800, 800);
+        GuardianRenderer::CreateRenderingRenderGraph(name + " Rendering", 800, 800);
+        GuardianRenderer::SetRenderingRenderGraphCamera(name + " Rendering", 
+            { {0.0f, 0.0f, -2.5f}, {0.0f, 0.0f, 0.0f}, {60.0f, 800.0f / 800.0f, 0.01f, 1000.0f} });
+
+        D3D11_INPUT_ELEMENT_DESC id[] =
+        {
+            {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+            {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
+        };
+        GuardianRenderer::SetRenderingRenderGraphVertexShader(name + " Rendering",
+            "../Guardian Engine/Shaders/MeshVertexShader.hlsl", id, ARRAYSIZE(id));
+        GuardianRenderer::SetRenderingRenderGraphPixelShader(name + " Rendering",
+            "../Guardian Engine/Shaders/MeshPixelShader.hlsl");
+
         MaterialSphereMeshList[name] = std::make_shared<GuardianMesh>();
         MaterialSphereMeshList[name]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
             name + " Sphere", GuardianModelImporter(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -70,12 +83,12 @@ namespace GE
 
     std::shared_ptr<GuardianFramebuffer> GuardianMaterialSystem::GetMaterialRenderingView(const GString& materialName)
     {
-        return GuardianRenderer::GetRenderingFramebuffer(materialName + " Rendering");
+        return GuardianRenderer::GetRenderingRenderGraphFramebuffer(materialName + " Rendering");
     }
 
     std::shared_ptr<GuardianFramebuffer> GuardianMaterialSystem::GetMaterialRenderingView(const GuardianUUID& id)
     {
-        return GuardianRenderer::GetRenderingFramebuffer(GetMaterialName(id) + " Rendering");
+        return GuardianRenderer::GetRenderingRenderGraphFramebuffer(GetMaterialName(id) + " Rendering");
     }
 
     const GString& GuardianMaterialSystem::GetMaterialName(const GuardianUUID& id)

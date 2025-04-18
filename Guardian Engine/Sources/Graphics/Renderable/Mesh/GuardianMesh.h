@@ -24,7 +24,7 @@ namespace GE
 		void UpdateMeshLighting(std::shared_ptr<GuardianGraphics> graphics,
 			GuardianLightProperties properties);
 
-		void SubmitToRenderer(const GString& submitFramebuffer);
+		void SubmitToRenderer(const GString& submitRenderGraph);
 
 		std::shared_ptr<GuardianMeshInstance> GetMeshInstance(const GuardianUUID& id);
 		const GString& GetMeshName() const noexcept;

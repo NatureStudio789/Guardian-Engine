@@ -86,7 +86,7 @@ namespace GE
 
 	const bool GuardianFile::IsFileExists() const noexcept
 	{
-		return std::filesystem::exists(this->FileName);
+		return std::filesystem::exists(this->FileSpecificPath);
 	}
 
 	const GString& GuardianFile::GetFileSpecificPath() const noexcept

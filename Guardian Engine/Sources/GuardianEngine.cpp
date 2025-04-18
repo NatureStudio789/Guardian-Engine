@@ -31,12 +31,13 @@ namespace GE
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
+		GuardianScriptEngine::InitializeScriptEngine();
+
 		GuardianThread Initialization;
 		Initialization.LaunchThread([=]() 
 		{
 			GuardianAssetSystem::InitializeAssetSystem();
 			GuardianPhysicsEngine::InitializePhysicsEngine();
-			GuardianScriptEngine::InitializeScriptEngine();
 
 			this->EngineScene->InitializeScene();
 			this->EngineProgram->Initialize();

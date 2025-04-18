@@ -24,6 +24,8 @@ namespace GE
 
 	void GuardianGeometry::InitializeGeometry(std::shared_ptr<GuardianGraphics> graphics, const GuardianGeometryType& type)
 	{
+		this->EnableSpecialShader();
+
 		if (!this->IsStaticApplicablesInitialized())
 		{
 			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_WIREFRAME, GE_CULL_NONE));

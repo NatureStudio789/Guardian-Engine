@@ -5,6 +5,7 @@ namespace GE
 	GuardianRenderable::GuardianRenderable()
 	{
 		this->RenderableId = GuardianUUID();
+		this->UseSpecialShader = false;
 		this->RenderingVertexBuffer = std::make_shared<GuardianVertexBuffer>();
 		this->RenderingIndexBuffer = std::make_shared<GuardianIndexBuffer>();
 		this->RenderingTransformConstantBuffer = std::make_shared<GuardianTransformConstantBuffer>();
@@ -19,6 +20,7 @@ namespace GE
 	{
 		this->RenderingVertexBuffer = other.RenderingVertexBuffer;
 		this->RenderingIndexBuffer = other.RenderingIndexBuffer;
+		this->UseSpecialShader = other.UseSpecialShader;
 		this->RenderingTransformConstantBuffer = other.RenderingTransformConstantBuffer;
 		this->RenderingLightConstantBuffer = other.RenderingLightConstantBuffer;
 		this->RenderingMaterial = other.RenderingMaterial;
@@ -35,6 +37,16 @@ namespace GE
 		this->RenderingTexturesNumber = 0;
 	}
 
+	void GuardianRenderable::EnableSpecialShader()
+	{
+		this->UseSpecialShader = true;
+	}
+
+	void GuardianRenderable::DisableSpecialShader()
+	{
+		this->UseSpecialShader = false;
+	}
+
 	void GuardianRenderable::AddApplicable(std::shared_ptr<GuardianApplicable> applicable)
 	{
 		if (typeid(*applicable) == typeid(GuardianVertexBuffer))
@@ -44,6 +56,14 @@ namespace GE
 		else if (typeid(*applicable) == typeid(GuardianIndexBuffer))
 		{
 			throw GUARDIAN_TYPE_EXCEPTION("IndexBuffer", "the type except the IndexBuffer");
+		}
+		else if (typeid(*applicable) == typeid(GuardianVertexShader) || 
+			typeid(*applicable) == typeid(GuardianPixelShader) || typeid(*applicable) == typeid(GuardianInputLayout))
+		{
+			if (!this->UseSpecialShader)
+			{
+				throw GUARDIAN_TYPE_EXCEPTION("Shader", "the special shader of this renderable is banned!");
+			}
 		}
 		else if (typeid(*applicable) == typeid(GuardianTransformConstantBuffer))
 		{

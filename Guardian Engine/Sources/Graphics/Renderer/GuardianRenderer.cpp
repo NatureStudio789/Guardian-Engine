@@ -3,105 +3,108 @@
 
 namespace GE
 {
-	std::map<GString, std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>>> GuardianRenderer::RenderableList;
-	std::map<GString, std::shared_ptr<GuardianFramebuffer>> GuardianRenderer::RenderingFramebufferList;
-	std::map<GString, GuardianCamera> GuardianRenderer::RenderingCameraList;
+	std::map<GString, std::shared_ptr<GuardianRenderGraph>> GuardianRenderer::RenderingRenderGraphList;
 
-	GVector3 GuardianRenderer::RenderingClearColor;
-
-
-	void GuardianRenderer::CreateRenderingFramebuffer(const GString& framebufferName,
-		const GuardianCamera& camera, int width, int height)
+	void GuardianRenderer::CreateRenderingRenderGraph(const GString& renderGraphName, int width, int height)
 	{
-		if (RenderingFramebufferList.count(framebufferName) <= 0)
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			RenderingFramebufferList[framebufferName] = std::make_shared<GuardianFramebuffer>(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), width, height);
-			RenderingCameraList[framebufferName] = camera;
+			RenderingRenderGraphList[renderGraphName] = std::make_shared<GuardianRenderGraph>(
+				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), renderGraphName, width, height);
 		}
 		else
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The renderer already has had this framebuffer!");
+			throw GUARDIAN_ERROR_EXCEPTION("The renderer already has had this render graph!");
 		}
 	}
 
-	void GuardianRenderer::ResizeRenderingFramebuffer(const GString& framebufferName, int width, int height)
+	void GuardianRenderer::ResizeRenderingRenderGraph(const GString& renderGraphName, int width, int height)
 	{
-		if (RenderingFramebufferList.count(framebufferName) <= 0)
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("No framebuffers called : '" + framebufferName + "' found in the renderer!");
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
 		}
 		else
 		{
-			RenderingFramebufferList[framebufferName]->ResizeFramebuffer(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), width, height);
+			RenderingRenderGraphList[renderGraphName]->ResizeRenderGraph(width, height);
 		}
 	}
 
-	void GuardianRenderer::SetFramebufferCamera(const GString& framebufferName, const GuardianCamera& camera)
+	void GuardianRenderer::SetRenderingRenderGraphVertexShader(const GString& renderGraphName, 
+		const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize)
 	{
-		if (RenderingFramebufferList.count(framebufferName) <= 0)
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("No framebuffers called : '" + framebufferName + "' found in the renderer!");
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
 		}
 		else
 		{
-			RenderingCameraList[framebufferName] = camera;
+			RenderingRenderGraphList[renderGraphName]->SetGraphVertexShader(shaderPath, layout, layoutSize);
 		}
 	}
 
-	std::shared_ptr<GuardianFramebuffer> GuardianRenderer::GetRenderingFramebuffer(const GString& name)
+	void GuardianRenderer::SetRenderingRenderGraphPixelShader(const GString& renderGraphName, const GString& shaderPath)
 	{
-		if (RenderingFramebufferList.count(name) <= 0)
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("No framebuffers called : '" + name + "' found in the renderer!");
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
 		}
 		else
 		{
-			return RenderingFramebufferList[name];
+			RenderingRenderGraphList[renderGraphName]->SetGraphPixelShader(shaderPath);
 		}
+	}
+
+	void GuardianRenderer::SetRenderingRenderGraphCamera(const GString& renderGraphName, const GuardianCamera& camera)
+	{
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
+		}
+		else
+		{
+			RenderingRenderGraphList[renderGraphName]->SetGraphCamera(camera);
+		}
+	}
+
+	std::shared_ptr<GuardianFramebuffer> GuardianRenderer::GetRenderingRenderGraphFramebuffer(const GString& name)
+	{
+		if (RenderingRenderGraphList.count(name) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + name + "' found in the renderer!");
+		}
+		else
+		{
+			return RenderingRenderGraphList[name]->GetRenderGraphFramebuffer();
+		}
+	}
+
+	void GuardianRenderer::SetRenderingRenderGraphClearColor(const GString& renderGraphName, const GVector3& color)
+	{
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The renderer has no render graph called : '" + renderGraphName + "' !");
+		}
+
+		RenderingRenderGraphList[renderGraphName]->SetGraphClearColor(color);
 	}
 
 	void GuardianRenderer::SubmitRenderable(GuardianSubmitPassLevel level,
-		const GString& submitFramebuffer, std::shared_ptr<GuardianRenderable> renderable)
+		const GString& renderGraphName, std::shared_ptr<GuardianRenderable> renderable)
 	{
-		if (RenderingFramebufferList.count(submitFramebuffer) <= 0)
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The renderer has no framebuffers called : '" + submitFramebuffer + "' !");
+			throw GUARDIAN_ERROR_EXCEPTION("The renderer has no render graph called : '" + renderGraphName + "' !");
 		}
 
-		RenderableList[submitFramebuffer][level].push(renderable);
-	}
-
-	void GuardianRenderer::SetClearColor(const GVector3& color)
-	{
-		RenderingClearColor = color;
+		RenderingRenderGraphList[renderGraphName]->SubmitRenderable(level, renderable);
 	}
 
 	void GuardianRenderer::Render()
 	{
-		for (auto& framebuffer : RenderingFramebufferList)
+		for (auto& renderGraph : RenderingRenderGraphList)
 		{
-			framebuffer.second->ApplyFramebuffer(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), RenderingClearColor);
-
-			for (UINT i = 0; i <= (UINT)GE_SUBMIT_SPECIALLY; i++)
-			{
-				while (!RenderableList[framebuffer.first][(GuardianSubmitPassLevel)i].empty())
-				{
-					auto& renderable = RenderableList[framebuffer.first][(GuardianSubmitPassLevel)i].front();
-
-					renderable->GetTransformConstantBuffer()->UpdateData(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-						{ renderable->GetTransformConstantBuffer()->GetConstantBufferData().WorldTransformMatrix,
-						RenderingCameraList[framebuffer.first].GetViewMatrix(), RenderingCameraList[framebuffer.first].GetProjectionMatrix() });
-					renderable->Update();
-					
-					renderable->Render(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
-
-					RenderableList[framebuffer.first][(GuardianSubmitPassLevel)i].pop();
-				}
-			}
+			renderGraph.second->Render();
 		}
 	}
 }
