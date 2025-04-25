@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANMATERIAL_H_
 #define _GE_GUARDIANMATERIAL_H_
-#include "../Applicable/Sampler/GuardianSampler.h"
+#include "../ShaderSystem/GuardianShaderSystem.h"
 
 namespace GE
 {

@@ -45,16 +45,9 @@ namespace GE
 		GuardianRenderer::CreateRenderingRenderGraph(MeshAssetsList["Box"]->GetAssetName() + " Rendering View", 800, 800);
 		GuardianRenderer::SetRenderingRenderGraphCamera(MeshAssetsList["Box"]->GetAssetName() + " Rendering View", 
 			GuardianCamera({ 0.0f, 0.0f, -3.0f }, { 0.0f, 0.0f, 0.0f }, { 60.0f, 800.0f / 800.0f, 0.01f, 1000.0f }));
-		D3D11_INPUT_ELEMENT_DESC id[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
-		GuardianRenderer::SetRenderingRenderGraphVertexShader(MeshAssetsList["Box"]->GetAssetName() + " Rendering View",
-			"../Guardian Engine/Shaders/MeshVertexShader.hlsl", id, ARRAYSIZE(id));
-		GuardianRenderer::SetRenderingRenderGraphPixelShader(MeshAssetsList["Box"]->GetAssetName() + " Rendering View",
-			"../Guardian Engine/Shaders/MeshPixelShader.hlsl");
+		
+		GuardianRenderer::SetRenderingRenderGraphShaderGroup(MeshAssetsList["Box"]->GetAssetName() + " Rendering View",
+			GuardianShaderSystem::WIREFRAME_SHADER);
 
 		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()] = std::make_shared<GuardianMesh>();
 		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
@@ -97,16 +90,9 @@ namespace GE
 			GuardianRenderer::CreateRenderingRenderGraph(assetHandle->GetAssetName() + " Rendering View", 800, 800);
 			GuardianRenderer::SetRenderingRenderGraphCamera(assetHandle->GetAssetName() + " Rendering View", 
 				GuardianCamera({ 0.0f, 0.0f, -3.0f }, { 0.0f, 0.0f, 0.0f }, { 60.0f, 800.0f / 800.0f, 0.01f, 1000.0f }));
-			D3D11_INPUT_ELEMENT_DESC id[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			};
-			GuardianRenderer::SetRenderingRenderGraphVertexShader(assetHandle->GetAssetName() + " Rendering View",
-				"../Guardian Engine/Shaders/MeshVertexShader.hlsl", id, ARRAYSIZE(id));
-			GuardianRenderer::SetRenderingRenderGraphPixelShader(assetHandle->GetAssetName() + " Rendering View",
-				"../Guardian Engine/Shaders/MeshPixelShader.hlsl");
+
+			GuardianRenderer::SetRenderingRenderGraphShaderGroup(assetHandle->GetAssetName() + " Rendering View",
+				GuardianShaderSystem::WIREFRAME_SHADER);
 
 			MeshAssetRenderingList[assetHandle->GetAssetName()] = std::make_shared<GuardianMesh>();
 			MeshAssetRenderingList[assetHandle->GetAssetName()]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 

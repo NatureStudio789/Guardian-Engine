@@ -57,6 +57,8 @@ namespace GE
 		}
 
 		this->StartupWindow->DestroyWindow();
+
+		GuardianThread::Sleep(1500);
 	}
 
 	void GuardianApplication::DisplayWindow()

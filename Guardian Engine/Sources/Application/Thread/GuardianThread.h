@@ -18,6 +18,8 @@ namespace GE
 		void JoinThread();
 		void DetachMainThread();
 
+		static void Sleep(GuardianTimestep step);
+
 	private:
 		std::thread ThreadObject;
 	};

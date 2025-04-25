@@ -17,8 +17,7 @@ namespace GE
 			const GString& graphName, int width, int height);
 		void SetGraphClearColor(const GVector3& color);
 		void SetGraphCamera(const GuardianCamera& camera);
-		void SetGraphVertexShader(const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize);
-		void SetGraphPixelShader(const GString& shaderPath);
+		void SetGraphShaderGroup(const GString& groupName);
 
 		void SubmitRenderable(GuardianSubmitPassLevel level, std::shared_ptr<GuardianRenderable> renderable);
 
@@ -34,9 +33,7 @@ namespace GE
 		GVector3 GraphClearColor;
 		std::shared_ptr<GuardianGraphics> GraphGraphics;
 
-		std::shared_ptr<GuardianVertexShader> GraphVertexShader;
-		std::shared_ptr<GuardianPixelShader> GraphPixelShader;
-		std::shared_ptr<GuardianInputLayout> GraphInputLayout;
+		std::shared_ptr<GuardianShaderGroup> GraphShaderGroup;
 		
 		std::shared_ptr<GuardianFramebuffer> GraphFramebuffer;
 		GuardianCamera GraphCamera;

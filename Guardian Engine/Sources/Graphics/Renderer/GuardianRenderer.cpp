@@ -30,8 +30,7 @@ namespace GE
 		}
 	}
 
-	void GuardianRenderer::SetRenderingRenderGraphVertexShader(const GString& renderGraphName, 
-		const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize)
+	void GuardianRenderer::SetRenderingRenderGraphShaderGroup(const GString& renderGraphName, const GString& shaderGroupName)
 	{
 		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
@@ -39,19 +38,7 @@ namespace GE
 		}
 		else
 		{
-			RenderingRenderGraphList[renderGraphName]->SetGraphVertexShader(shaderPath, layout, layoutSize);
-		}
-	}
-
-	void GuardianRenderer::SetRenderingRenderGraphPixelShader(const GString& renderGraphName, const GString& shaderPath)
-	{
-		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
-		{
-			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
-		}
-		else
-		{
-			RenderingRenderGraphList[renderGraphName]->SetGraphPixelShader(shaderPath);
+			RenderingRenderGraphList[renderGraphName]->SetGraphShaderGroup(shaderGroupName);
 		}
 	}
 

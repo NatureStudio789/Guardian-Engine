@@ -56,16 +56,7 @@ namespace GE
 
 		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
 
-		D3D11_INPUT_ELEMENT_DESC id[] =
-		{
-			{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-		};
-		GuardianRenderer::SetRenderingRenderGraphVertexShader(this->SceneName + " Scene Rendering",
-			"../Guardian Engine/Shaders/MeshVertexShader.hlsl", id, ARRAYSIZE(id));
-		GuardianRenderer::SetRenderingRenderGraphPixelShader(this->SceneName + " Scene Rendering",
-			"../Guardian Engine/Shaders/MeshPixelShader.hlsl");
+		GuardianRenderer::SetRenderingRenderGraphShaderGroup(this->SceneName + " Scene Rendering", GuardianShaderSystem::PBR_MAIN_SHADER);
 
 		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 	}

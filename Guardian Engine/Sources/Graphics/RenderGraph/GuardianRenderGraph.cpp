@@ -8,9 +8,7 @@ namespace GE
 		this->GraphClearColor = { 0.0f, 0.0f, 0.0f };
 		this->GraphGraphics = null;
 
-		this->GraphVertexShader = null;
-		this->GraphPixelShader = null;
-		this->GraphInputLayout = null;
+		this->GraphShaderGroup = null;
 
 		this->GraphFramebuffer = null;
 		this->GraphCamera = {};
@@ -29,9 +27,7 @@ namespace GE
 		this->GraphClearColor = other.GraphClearColor;
 		this->GraphGraphics = other.GraphGraphics;
 
-		this->GraphVertexShader = other.GraphVertexShader;
-		this->GraphPixelShader = other.GraphPixelShader;
-		this->GraphInputLayout = other.GraphInputLayout;
+		this->GraphShaderGroup = other.GraphShaderGroup;
 
 		this->GraphFramebuffer = other.GraphFramebuffer;
 		this->GraphCamera = other.GraphCamera;
@@ -43,9 +39,7 @@ namespace GE
 		this->GraphName.clear();
 		this->GraphClearColor = { 0.0f, 0.0f, 0.0f };
 		this->GraphGraphics = null;
-		this->GraphVertexShader.reset();
-		this->GraphPixelShader.reset();
-		this->GraphInputLayout.reset();
+		this->GraphShaderGroup = null;
 		this->GraphFramebuffer.reset();
 		this->GraphCamera = {};
 		this->RenderableQueueList.clear();
@@ -70,15 +64,9 @@ namespace GE
 		this->GraphCamera = camera;
 	}
 
-	void GuardianRenderGraph::SetGraphVertexShader(const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize)
+	void GuardianRenderGraph::SetGraphShaderGroup(const GString& groupName)
 	{
-		this->GraphVertexShader = GuardianVertexShader::CreateNewVertexShader(this->GraphGraphics, shaderPath);
-		this->GraphInputLayout = GuardianInputLayout::CreateNewInputLayout(this->GraphGraphics, this->GraphVertexShader, layout, layoutSize);
-	}
-
-	void GuardianRenderGraph::SetGraphPixelShader(const GString& shaderPath)
-	{
-		this->GraphPixelShader = GuardianPixelShader::CreateNewPixelShader(this->GraphGraphics, shaderPath);
+		this->GraphShaderGroup = GuardianShaderSystem::GetShaderGroup(groupName);
 	}
 
 	void GuardianRenderGraph::SubmitRenderable(GuardianSubmitPassLevel level, std::shared_ptr<GuardianRenderable> renderable)
@@ -88,7 +76,7 @@ namespace GE
 
 	void GuardianRenderGraph::Render()
 	{
-		if (!this->GraphVertexShader || !this->GraphPixelShader)
+		if (!this->GraphShaderGroup)
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("This render graph hasn't been set shaders!");
 		}
@@ -108,10 +96,7 @@ namespace GE
 
 				if (!renderable->UseSpecialShader)
 				{
-					this->GraphVertexShader->Apply(this->GraphGraphics);
-					this->GraphInputLayout->Apply(this->GraphGraphics);
-
-					this->GraphPixelShader->Apply(this->GraphGraphics);
+					this->GraphShaderGroup->Apply(GraphGraphics);
 				}
 
 				renderable->Render(this->GraphGraphics);

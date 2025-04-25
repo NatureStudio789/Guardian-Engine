@@ -31,7 +31,7 @@ namespace GE
 			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_WIREFRAME, GE_CULL_NONE));
 			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
 
-			auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/GeometryVertexShader.hlsl");
+			/*auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/GeometryVertexShader.hlsl");
 			this->AddStaticApplicable(vs);
 			this->AddStaticApplicable(
 				GuardianPixelShader::CreateNewPixelShader(graphics, "../Guardian Engine/Shaders/GeometryPixelShader.hlsl"));
@@ -41,7 +41,8 @@ namespace GE
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));
+			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));*/
+			this->AddStaticApplicable(GuardianShaderSystem::GetShaderGroup(GuardianShaderSystem::WIREFRAME_SHADER));
 		}
 
 		std::vector<GeometryVertex> Vertices;

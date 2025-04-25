@@ -10,10 +10,7 @@ namespace GE
 		static void CreateRenderingRenderGraph(
 			const GString& renderGraphName, int width, int height);
 		static void ResizeRenderingRenderGraph(const GString& renderGraphName, int width, int height);
-		static void SetRenderingRenderGraphVertexShader(
-			const GString& renderGraphName, const GString& shaderPath, D3D11_INPUT_ELEMENT_DESC* layout, UINT layoutSize);
-		static void SetRenderingRenderGraphPixelShader(
-			const GString& renderGraphName, const GString& shaderPath);
+		static void SetRenderingRenderGraphShaderGroup(const GString& renderGraphName, const GString& shaderGroupName);
 		static void SetRenderingRenderGraphCamera(const GString& renderGraphName, const GuardianCamera& camera);
 		static std::shared_ptr<GuardianFramebuffer> GetRenderingRenderGraphFramebuffer(const GString& name);
 

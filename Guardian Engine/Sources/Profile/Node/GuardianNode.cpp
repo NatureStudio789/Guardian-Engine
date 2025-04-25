@@ -79,7 +79,7 @@ namespace GE
 
 		if (RemoveKey.empty())
 		{
-			throw GUARDIAN_ERROR_EXCEPTION(std::format("No child node found : '{}', with id : '{}', named : '{}'", (unsigned long)child.get(), 
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No child node found : '{}', with id : '{}', named : '{}'", (unsigned long long)child.get(),
 				(unsigned int)child->GetNodeId(), child->GetNodeName()));
 		}
 		else

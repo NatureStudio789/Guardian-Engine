@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANTOPOLOGY_H_
 #define _GE_GUARDIANTOPOLOGY_H_
-#include "../Shader/GuardianPixelShader.h"
+#include "../Shader/ShaderGroup/GuardianShaderGroup.h"
 
 namespace GE
 {

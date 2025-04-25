@@ -36,6 +36,8 @@ namespace GE
 		GuardianThread Initialization;
 		Initialization.LaunchThread([=]() 
 		{
+			GuardianShaderSystem::InitializeShaderSystem();
+
 			GuardianAssetSystem::InitializeAssetSystem();
 			GuardianPhysicsEngine::InitializePhysicsEngine();
 

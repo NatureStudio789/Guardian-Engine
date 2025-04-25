@@ -29,4 +29,9 @@ namespace GE
 	{
 		this->ThreadObject.detach();
 	}
+
+	void GuardianThread::Sleep(GuardianTimestep step)
+	{
+		::Sleep((DWORD)step.GetMillisecond());
+	}
 }
