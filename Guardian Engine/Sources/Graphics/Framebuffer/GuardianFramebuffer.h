@@ -1,8 +1,6 @@
 #ifndef _GE_GUARDIANFRAMEBUFFER_H_
 #define _GE_GUARDIANFRAMEBUFFER_H_
-#include "../Viewport/GuardianViewport.h"
-#include "../Surface/GuardianSurface.h"
-#include "../DepthStencil/GuardianDepthStencil.h"
+#include "../RenderTarget/GuardianRenderTarget.h"
 
 namespace GE
 {

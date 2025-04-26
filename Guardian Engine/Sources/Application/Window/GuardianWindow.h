@@ -84,6 +84,8 @@ namespace GE
 
 		void InitializeWindow(const GuardianWindowProperties& properties, WNDPROC windowProcessFunction);
 
+		void AvailableWindowGraphics();
+
 		void DisplayWindow();
 		void UpdateWindowMessage() noexcept;
 

@@ -1,9 +1,11 @@
 #ifndef _GE_GUARDIANGRAPHICS_H_
 #define _GE_GUARDIANGRAPHICS_H_
-#include "Framebuffer/GuardianFramebuffer.h"
+#include "../Physics/RigidBody/GuardianDynamicRigidBody.h"
 
 namespace GE
 {
+	class GuardianFramebuffer;
+
 	class GUARDIAN_API GuardianGraphics
 	{
 	public:
@@ -11,7 +13,7 @@ namespace GE
 		GuardianGraphics(const GuardianGraphics& ) = default;
 		GuardianGraphics(GWindowHandle renderWindow,
 			int windowWidth, int windowHeight, bool isFullscreenWindow);
-		~GuardianGraphics() = default;
+		~GuardianGraphics();
 
 		void InitializeGraphics(GWindowHandle renderWindow, 
 			int windowWidth, int windowHeight, bool isFullscreenWindow);
@@ -19,6 +21,8 @@ namespace GE
 		void EndUpRendering(int syncInterval = 1);
 
 		void UpdateGUIGraphicsResolution(int newWidth, int newHeight);
+
+		const GuardianUUID& GetGraphicsId() const noexcept;
 
 		WRL::ComPtr<ID3D11Device> GetGraphicsDevice() noexcept;
 		WRL::ComPtr<ID3D11DeviceContext> GetGraphicsDeviceContext() noexcept;
@@ -29,6 +33,8 @@ namespace GE
 			int windowWidth, int windowHeight, bool isFullscreenWindow);
 
 	private:
+		GuardianUUID GraphicsId;
+
 		WRL::ComPtr<ID3D11Device> GraphicsDevice;
 		WRL::ComPtr<ID3D11DeviceContext> GraphicsDeviceContext;
 		WRL::ComPtr<IDXGISwapChain> GraphicsSwapChain;

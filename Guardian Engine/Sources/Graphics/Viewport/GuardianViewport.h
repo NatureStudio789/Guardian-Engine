@@ -1,11 +1,9 @@
 #ifndef _GE_GUARDIANVIEWPORT_H_
 #define _GE_GUARDIANVIEWPORT_H_
-#include "../../Physics/RigidBody/GuardianDynamicRigidBody.h"
+#include "../GuardianGraphicsRegistry.h"
 	
 namespace GE
 {
-	class GUARDIAN_API GuardianGraphics;
-
 	class GUARDIAN_API GuardianViewport
 	{
 	public:

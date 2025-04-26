@@ -1,13 +1,9 @@
 #ifndef _GE_GUARDIANRENDERTARGET_H_
 #define _GE_GUARDIANRENDERTARGET_H_
-#include "../../Physics/RigidBody/GuardianDynamicRigidBody.h"
+#include "../DepthStencil/GuardianDepthStencil.h"
 
 namespace GE
 {
-	class GUARDIAN_API GuardianGraphics;
-	class GUARDIAN_API GuardianSurface;
-	class GUARDIAN_API GuardianDepthStencil;
-
 	class GUARDIAN_API GuardianRenderTarget
 	{
 	public:

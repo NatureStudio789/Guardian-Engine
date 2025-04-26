@@ -1,5 +1,4 @@
 #include "GuardianDepthStencil.h"
-#include "../GuardianGraphics.h"
 
 namespace GE
 {

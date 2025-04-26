@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANPOINTLIGHT_H_
 #define _GE_GUARDIANPOINTLIGHT_H_
-#include "../../GuardianGraphics.h"
+#include "../../Framebuffer/GuardianFramebuffer.h"
 
 namespace GE
 {

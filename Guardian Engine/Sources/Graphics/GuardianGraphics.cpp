@@ -1,18 +1,27 @@
 #include "GuardianGraphics.h"
+#include "Framebuffer/GuardianFramebuffer.h"
 
 namespace GE
 {
 	GuardianGraphics::GuardianGraphics()
 	{
+		this->GraphicsId = GuardianUUID();
 		this->GraphicsMainFramebuffer = std::make_shared<GuardianFramebuffer>();
 	}
 
 	GuardianGraphics::GuardianGraphics(GWindowHandle renderWindow,
 		int windowWidth, int windowHeight, bool isFullscreenWindow)
 	{
+		this->GraphicsId = GuardianUUID();
 		this->GraphicsMainFramebuffer = std::make_shared<GuardianFramebuffer>();
 
 		this->InitializeGraphics(renderWindow, windowWidth, windowHeight, isFullscreenWindow);
+	}
+
+	GuardianGraphics::~GuardianGraphics()
+	{
+		this->GraphicsId = 0;
+		this->GraphicsMainFramebuffer.reset();
 	}
 
 	void GuardianGraphics::InitializeGraphics(GWindowHandle renderWindow,
@@ -80,6 +89,11 @@ namespace GE
 		this->GraphicsSwapChain->ResizeBuffers(0, newWidth, newHeight, DXGI_FORMAT_UNKNOWN, 0);
 
 		this->GraphicsMainFramebuffer->InitializeFramebuffer(std::make_shared<GuardianGraphics>(*this));
+	}
+
+	const GuardianUUID& GuardianGraphics::GetGraphicsId() const noexcept
+	{
+		return this->GraphicsId;
 	}
 
 	WRL::ComPtr<ID3D11Device> GuardianGraphics::GetGraphicsDevice() noexcept

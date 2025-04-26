@@ -1,6 +1,6 @@
 #include "GuardianRenderTarget.h"
 #include "../Surface/GuardianSurface.h"
-#include "../GuardianGraphics.h"
+#include "../DepthStencil/GuardianDepthStencil.h"
 
 namespace GE
 {

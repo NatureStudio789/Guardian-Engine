@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANSURFACE_H_
 #define _GE_GUARDIANSURFACE_H_
-#include "../RenderTarget/GuardianRenderTarget.h"
+#include "../Viewport/GuardianViewport.h"
 
 namespace GE
 {

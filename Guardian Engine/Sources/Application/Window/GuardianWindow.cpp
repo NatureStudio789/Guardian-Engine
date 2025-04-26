@@ -80,6 +80,12 @@ namespace GE
 
 		this->WindowGraphicsContext = GuardianGraphics::CreateNewGraphics(this->WindowHandle, 
 			this->WindowProperties.WindowWidth, this->WindowProperties.WindowHeight, this->WindowProperties.IsWindowFullscreen);
+		GuardianGraphicsRegistry::RegisterGraphics(this->WindowProperties.WindowTitle + " - Graphics", this->WindowGraphicsContext);
+	}
+
+	void GuardianWindow::AvailableWindowGraphics()
+	{
+		GuardianGraphicsRegistry::SetCurrentGraphics(this->WindowGraphicsContext->GetGraphicsId());
 	}
 
 	void GuardianWindow::DisplayWindow()

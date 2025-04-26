@@ -31,6 +31,7 @@ namespace GE
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
+		GuardianApplication::ApplicationInstance->ApplicationWindow->AvailableWindowGraphics();
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		GuardianThread Initialization;
