@@ -8,9 +8,9 @@ namespace GE
 		this->ModelMeshInstanceDataList.clear();
 	}
 
-	GuardianModelImporter::GuardianModelImporter(std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath)
+	GuardianModelImporter::GuardianModelImporter(const GString& modelFilePath)
 	{
-		this->ImportModel(graphics, modelFilePath);
+		this->ImportModel(modelFilePath);
 	}
 
 	GuardianModelImporter::GuardianModelImporter(const GuardianModelImporter& other)
@@ -25,7 +25,7 @@ namespace GE
 		this->ClearModelMeshList();
 	}
 
-	void GuardianModelImporter::ImportModel(std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath)
+	void GuardianModelImporter::ImportModel(const GString& modelFilePath)
 	{
 		this->ModelFilePath = modelFilePath;
 		this->ModelFileDirectory = modelFilePath.substr(0, modelFilePath.find_last_of('/'));
@@ -42,7 +42,7 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION(Importer.GetErrorString());
 		}
 
-		this->ProcessModelNode(graphics, ModelScene->mRootNode, ModelScene);
+		this->ProcessModelNode(ModelScene->mRootNode, ModelScene);
 	}
 
 	void GuardianModelImporter::ClearModelMeshList()
@@ -65,21 +65,21 @@ namespace GE
 		return this->ModelMeshInstanceDataList;
 	}
 
-	void GuardianModelImporter::ProcessModelNode(std::shared_ptr<GuardianGraphics> graphics, aiNode* node, const aiScene* scene)
+	void GuardianModelImporter::ProcessModelNode(aiNode* node, const aiScene* scene)
 	{
 		for (UINT i = 0; i < node->mNumMeshes; i++)
 		{
 			aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
-			this->ModelMeshInstanceDataList.push_back(this->ProcessModelMeshInstanceData(graphics, mesh, scene));
+			this->ModelMeshInstanceDataList.push_back(this->ProcessModelMeshInstanceData(mesh, scene));
 		}
 
 		for (UINT i = 0; i < node->mNumChildren; i++)
 		{
-			this->ProcessModelNode(graphics, node->mChildren[i], scene);
+			this->ProcessModelNode(node->mChildren[i], scene);
 		}
 	}
 
-	GuardianMeshInstance::Data GuardianModelImporter::ProcessModelMeshInstanceData(std::shared_ptr<GuardianGraphics> graphics, aiMesh* mesh, const aiScene* scene)
+	GuardianMeshInstance::Data GuardianModelImporter::ProcessModelMeshInstanceData(aiMesh* mesh, const aiScene* scene)
 	{
 		GuardianMeshInstance::Data MeshInstanceData;
 		std::vector<GuardianMeshInstance::Vertex> Vertices;
@@ -131,7 +131,7 @@ namespace GE
 			id = GuardianMaterialSystem::CreateNewMaterial(material->GetName().C_Str());
 
 			std::shared_ptr<GuardianMaterial> mat = GuardianMaterialSystem::GetMaterial(id);
-			auto& albedo = this->LoadMaterialTexture(graphics, material, aiTextureType_DIFFUSE);
+			auto& albedo = this->LoadMaterialTexture(material, aiTextureType_DIFFUSE);
 			if (albedo->GetTextureResource().Get())
 			{
 				mat->SetAlbedoTexture(albedo);
@@ -143,7 +143,7 @@ namespace GE
 				mat->SetAlbedoColor({ Color.r, Color.g, Color.b });
 			}
 
-			auto& metallic = this->LoadMetallicTexture(graphics, material);
+			auto& metallic = this->LoadMetallicTexture(material);
 			if (metallic->GetTextureResource().Get())
 			{
 				mat->SetMetallicTexture(metallic);
@@ -153,7 +153,7 @@ namespace GE
 				mat->SetMetallicColor(0.5f);
 			}
 
-			auto& roughness = this->LoadMaterialTexture(graphics, material, aiTextureType_SHININESS);
+			auto& roughness = this->LoadMaterialTexture(material, aiTextureType_SHININESS);
 			if (roughness->GetTextureResource().Get())
 			{
 				mat->SetRoughnessTexture(roughness);
@@ -163,7 +163,7 @@ namespace GE
 				mat->SetRoughnessColor(0.5f);
 			}
 
-			auto& normal = this->LoadMaterialTexture(graphics, material, aiTextureType_NORMALS);
+			auto& normal = this->LoadMaterialTexture(material, aiTextureType_NORMALS);
 			if (normal->GetTextureResource().Get())
 			{
 				mat->SetNormalTexture(normal);
@@ -185,8 +185,7 @@ namespace GE
 		return MeshInstanceData;
 	}
 
-	std::shared_ptr<GuardianTexture> GuardianModelImporter::LoadMaterialTexture(
-		std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material, aiTextureType type)
+	std::shared_ptr<GuardianTexture> GuardianModelImporter::LoadMaterialTexture(aiMaterial* material, aiTextureType type)
 	{
 		std::shared_ptr<GuardianTexture> Texture = std::make_shared<GuardianTexture>();
 
@@ -208,14 +207,13 @@ namespace GE
 			{
 				FilePath = path.C_Str();
 			}
-			Texture = GuardianTexture::CreateNewTexture(graphics, GuardianSurface(FilePath));
+			Texture = GuardianTexture::CreateNewTexture(GuardianSurface(FilePath));
 		}
 
 		return Texture;
 	}
 
-	std::shared_ptr<GuardianTexture> GuardianModelImporter::LoadMetallicTexture(
-		std::shared_ptr<GuardianGraphics> graphics, aiMaterial* material)
+	std::shared_ptr<GuardianTexture> GuardianModelImporter::LoadMetallicTexture(aiMaterial* material)
 	{
 		std::shared_ptr<GuardianTexture> Metallic = std::make_shared<GuardianTexture>();
 
@@ -246,7 +244,7 @@ namespace GE
 						FilePath = path;
 					}
 
-					Metallic = GuardianTexture::CreateNewTexture(graphics, GuardianSurface(FilePath));
+					Metallic = GuardianTexture::CreateNewTexture(GuardianSurface(FilePath));
 				}
 			}
 		}
@@ -254,9 +252,8 @@ namespace GE
 		return Metallic;
 	}
 
-	std::shared_ptr<GuardianModelImporter> GuardianModelImporter::CreateNewModel(
-		std::shared_ptr<GuardianGraphics> graphics, const GString& modelFilePath)
+	std::shared_ptr<GuardianModelImporter> GuardianModelImporter::CreateNewModel(const GString& modelFilePath)
 	{
-		return std::make_shared<GuardianModelImporter>(graphics, modelFilePath);
+		return std::make_shared<GuardianModelImporter>(modelFilePath);
 	}
 }

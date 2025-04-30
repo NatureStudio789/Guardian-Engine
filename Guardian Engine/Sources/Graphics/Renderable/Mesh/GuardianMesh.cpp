@@ -27,24 +27,22 @@ namespace GE
 		this->MeshName.clear();
 	}
 
-	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
-		const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData)
+	void GuardianMesh::InitializeMesh(const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData)
 	{
 		this->SetMeshName(meshName);
 
 		for (auto& data : instanceData)
 		{
-			this->AddInstanceToMesh(graphics, data);
+			this->AddInstanceToMesh(data);
 		}
 	}
 
-	void GuardianMesh::InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
-		const GString& meshName, const GString& meshFilePath)
+	void GuardianMesh::InitializeMesh(const GString& meshName, const GString& meshFilePath)
 	{
 		if (std::filesystem::path(meshFilePath).extension() == ".obj" || 
 			std::filesystem::path(meshFilePath).extension() == ".fbx")
 		{
-			this->InitializeMesh(graphics, meshName, GuardianModelImporter(graphics, meshFilePath).GetModelMeshInstanceDataList());
+			this->InitializeMesh( meshName, GuardianModelImporter(meshFilePath).GetModelMeshInstanceDataList());
 		}
 		else if (std::filesystem::path(meshFilePath).extension() == ".gmesh")
 		{
@@ -58,11 +56,10 @@ namespace GE
 		this->MeshName = meshName;
 	}
 
-	void GuardianMesh::AddInstanceToMesh(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianMeshInstance::Data& instanceData)
+	void GuardianMesh::AddInstanceToMesh(const GuardianMeshInstance::Data& instanceData)
 	{
 		auto& instance = std::make_shared<GuardianMeshInstance>();
-		instance->InitializeMeshInstance(graphics, instanceData);
+		instance->InitializeMeshInstance(instanceData);
 
 		this->MeshInstancesList.push_back(instance);
 	}
@@ -75,12 +72,11 @@ namespace GE
 		}
 	}
 
-	void GuardianMesh::UpdateMeshLighting(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties)
+	void GuardianMesh::UpdateMeshLighting(GuardianLightProperties properties)
 	{
 		for (auto& instance : this->MeshInstancesList)
 		{
-			instance->UpdateMeshInstanceLighting(graphics, properties);
+			instance->UpdateMeshInstanceLighting(properties);
 		}
 	}
 

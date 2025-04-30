@@ -10,8 +10,7 @@ namespace GE
 		this->PanelScene = null;
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
-		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
+		this->MeshFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
@@ -19,8 +18,7 @@ namespace GE
 		this->PanelName = "Scene Hierarchy";
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
-		this->MeshFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
+		this->MeshFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
 		this->SetScene(scene);
 	}
 
@@ -113,8 +111,7 @@ namespace GE
 		{
 			auto& meshData = GuardianAssetSystem::GetMeshAsset(meshName).GetMeshAssetData();
 			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), meshName, meshData);
+			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(meshName, meshData);
 		}
 	}
 
@@ -360,8 +357,7 @@ namespace GE
 								mesh.reset();
 								mesh = std::make_shared<GuardianMesh>();
 								auto& meshAsset = GuardianAssetSystem::GetMeshAssetFromPath(Path);
-								mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-									meshAsset.GetAssetName(), meshAsset.GetMeshAssetData());
+								mesh->InitializeMesh(meshAsset.GetAssetName(), meshAsset.GetMeshAssetData());
 							}
 						}
 
@@ -889,8 +885,7 @@ namespace GE
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
 						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
-							GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(
-								GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Box", meshData);
+							GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh("Box", meshData);
 					}
 				}
 

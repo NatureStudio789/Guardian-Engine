@@ -18,7 +18,7 @@ namespace GE
 		GuardianGeometry(const GuardianGeometry& other);
 		~GuardianGeometry();
 
-		void InitializeGeometry(std::shared_ptr<GuardianGraphics> graphics, const GuardianGeometryType& type);
+		void InitializeGeometry(const GuardianGeometryType& type);
 
 		void UpdateGeometryTransform(XMMATRIX worldMatrix);
 		void Update() override;

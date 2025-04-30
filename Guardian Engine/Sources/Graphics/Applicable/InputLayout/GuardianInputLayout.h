@@ -9,19 +9,18 @@ namespace GE
 	public:
 		GuardianInputLayout() = default;
 		GuardianInputLayout(const GuardianInputLayout& other);
-		GuardianInputLayout(std::shared_ptr<GuardianGraphics> graphics, 
+		GuardianInputLayout(
 			std::shared_ptr<GuardianVertexShader> vertexShader, D3D11_INPUT_ELEMENT_DESC data[], int dataSize);
 		~GuardianInputLayout() override;
 
-		void InitializeInputLayout(std::shared_ptr<GuardianGraphics> graphics,
+		void InitializeInputLayout(
 			std::shared_ptr<GuardianVertexShader> vertexShader, D3D11_INPUT_ELEMENT_DESC data[], int dataSize);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+		void Apply() override;
 
 		WRL::ComPtr<ID3D11InputLayout> GetInputLayoutObject();
 
 		static std::shared_ptr<GuardianInputLayout> CreateNewInputLayout(
-			std::shared_ptr<GuardianGraphics> graphics,
 			std::shared_ptr<GuardianVertexShader> vertexShader, D3D11_INPUT_ELEMENT_DESC data[], int dataSize);
 
 	private:

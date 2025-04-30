@@ -1,5 +1,4 @@
 #include "GuardianRenderer.h"
-#include "../../Application/GuardianApplication.h"
 
 namespace GE
 {
@@ -9,8 +8,7 @@ namespace GE
 	{
 		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
 		{
-			RenderingRenderGraphList[renderGraphName] = std::make_shared<GuardianRenderGraph>(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), renderGraphName, width, height);
+			RenderingRenderGraphList[renderGraphName] = std::make_shared<GuardianRenderGraph>(renderGraphName, width, height);
 		}
 		else
 		{

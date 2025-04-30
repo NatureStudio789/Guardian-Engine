@@ -29,7 +29,7 @@ namespace GE
 
 		void SetTopologyCategory(const GuardianTopologyCategory& topology);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+		void Apply() override;
 
 		const GuardianTopologyCategory& GetTopologyCategory() const noexcept;
 

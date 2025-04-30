@@ -31,8 +31,7 @@ namespace GE
 			Properties.PointLightList[0].LightColor = { 1.0f, 1.0f, 1.0f };
 			Properties.PointLightList[0].LightPosition = { 0.5f, 1.0f, -3.0f };
 			Properties.PointLightList[0].LightStrength = 300.0f;
-			MeshAssetRenderingList[meshAsset.first]->UpdateMeshLighting(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), Properties);
+			MeshAssetRenderingList[meshAsset.first]->UpdateMeshLighting(Properties);
 
 			MeshAssetRenderingList[meshAsset.first]->SubmitToRenderer(meshAsset.first + " Rendering View");
 		}
@@ -50,7 +49,7 @@ namespace GE
 			GuardianShaderSystem::WIREFRAME_SHADER);
 
 		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()] = std::make_shared<GuardianMesh>();
-		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
+		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()]->InitializeMesh(
 			MeshAssetsList["Box"]->GetAssetName(), MeshAssetsList[MeshAssetsList["Box"]->GetAssetName()]->GetMeshAssetData());
 	}
 
@@ -95,15 +94,14 @@ namespace GE
 				GuardianShaderSystem::WIREFRAME_SHADER);
 
 			MeshAssetRenderingList[assetHandle->GetAssetName()] = std::make_shared<GuardianMesh>();
-			MeshAssetRenderingList[assetHandle->GetAssetName()]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
+			MeshAssetRenderingList[assetHandle->GetAssetName()]->InitializeMesh(
 				assetHandle->GetAssetName(), MeshAssetsList[assetHandle->GetAssetName()]->GetMeshAssetData());
 
 			LoadedAssetPath.push_back(path.string());
 		}
 		else if (extension == ".png" || extension == ".jpg")
 		{
-			GuardianTexture texture = GuardianTexture(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GuardianSurface(path.string()));
+			GuardianTexture texture = GuardianTexture(GuardianSurface(path.string()));
 
 			GString TexturePath = path.string();
 			GString TextureName;

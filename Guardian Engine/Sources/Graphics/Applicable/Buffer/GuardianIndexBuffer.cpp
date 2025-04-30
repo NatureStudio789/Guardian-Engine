@@ -18,12 +18,12 @@ namespace GE
 		this->IndexBufferData.clear();
 	}
 
-	GuardianIndexBuffer::GuardianIndexBuffer(std::shared_ptr<GuardianGraphics> graphics, std::vector<UINT> indices)
+	GuardianIndexBuffer::GuardianIndexBuffer(std::vector<UINT> indices)
 	{
-		this->InitializeIndexBuffer(graphics, indices);
+		this->InitializeIndexBuffer(indices);
 	}
 
-	void GuardianIndexBuffer::InitializeIndexBuffer(std::shared_ptr<GuardianGraphics> graphics, std::vector<UINT> indices)
+	void GuardianIndexBuffer::InitializeIndexBuffer(std::vector<UINT> indices)
 	{
 		this->IndexBufferData = indices;
 
@@ -39,7 +39,7 @@ namespace GE
 		ZeroMemory(&IndexBufferResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 		IndexBufferResourceData.pSysMem = (const void*)this->IndexBufferData.data();
 
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateBuffer(&IndexBufferDesc, &IndexBufferResourceData,
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDevice()->CreateBuffer(&IndexBufferDesc, &IndexBufferResourceData,
 			this->IndexBufferObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -47,9 +47,10 @@ namespace GE
 		}
 	}
 
-	void GuardianIndexBuffer::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianIndexBuffer::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->IASetIndexBuffer(this->IndexBufferObject.Get(), DXGI_FORMAT_R32_UINT, 0);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->IASetIndexBuffer(this->IndexBufferObject.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
 
 	WRL::ComPtr<ID3D11Buffer> GuardianIndexBuffer::GetIndexBufferObject() noexcept
@@ -62,9 +63,8 @@ namespace GE
 		return this->IndexBufferData;
 	}
 
-	std::shared_ptr<GuardianIndexBuffer> GuardianIndexBuffer::CreateNewIndexBuffer(
-		std::shared_ptr<GuardianGraphics> graphics, std::vector<UINT> indices)
+	std::shared_ptr<GuardianIndexBuffer> GuardianIndexBuffer::CreateNewIndexBuffer(std::vector<UINT> indices)
 	{
-		return std::make_shared<GuardianIndexBuffer>(graphics, indices);
+		return std::make_shared<GuardianIndexBuffer>(indices);
 	}
 }

@@ -6,7 +6,6 @@ namespace GE
 	{
 		this->GraphName = "";
 		this->GraphClearColor = { 0.0f, 0.0f, 0.0f };
-		this->GraphGraphics = null;
 
 		this->GraphShaderGroup = null;
 
@@ -15,17 +14,15 @@ namespace GE
 		this->RenderableQueueList.clear();
 	}
 
-	GuardianRenderGraph::GuardianRenderGraph(
-		std::shared_ptr<GuardianGraphics> graphGraphics, const GString& graphName, int width, int height)
+	GuardianRenderGraph::GuardianRenderGraph(const GString& graphName, int width, int height)
 	{
-		this->InitializeRenderGraph(graphGraphics, graphName, width, height);
+		this->InitializeRenderGraph(graphName, width, height);
 	}
 
 	GuardianRenderGraph::GuardianRenderGraph(const GuardianRenderGraph& other)
 	{
 		this->GraphName = other.GraphName;
 		this->GraphClearColor = other.GraphClearColor;
-		this->GraphGraphics = other.GraphGraphics;
 
 		this->GraphShaderGroup = other.GraphShaderGroup;
 
@@ -38,20 +35,18 @@ namespace GE
 	{
 		this->GraphName.clear();
 		this->GraphClearColor = { 0.0f, 0.0f, 0.0f };
-		this->GraphGraphics = null;
 		this->GraphShaderGroup = null;
 		this->GraphFramebuffer.reset();
 		this->GraphCamera = {};
 		this->RenderableQueueList.clear();
 	}
 
-	void GuardianRenderGraph::InitializeRenderGraph(std::shared_ptr<GuardianGraphics> graphGraphics, const GString& graphName, int width, int height)
+	void GuardianRenderGraph::InitializeRenderGraph(const GString& graphName, int width, int height)
 	{
-		this->GraphGraphics = graphGraphics;
 		this->GraphName = graphName;
 
 		this->GraphFramebuffer = std::make_shared<GuardianFramebuffer>(
-			this->GraphGraphics, width, height);
+			GuardianGraphicsRegistry::GetCurrentGraphics(), width, height);
 	}
 
 	void GuardianRenderGraph::SetGraphClearColor(const GVector3& color)
@@ -81,7 +76,7 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION("This render graph hasn't been set shaders!");
 		}
 
-		this->GraphFramebuffer->ApplyFramebuffer(this->GraphGraphics, this->GraphClearColor);
+		this->GraphFramebuffer->ApplyFramebuffer(GuardianGraphicsRegistry::GetCurrentGraphics(), this->GraphClearColor);
 
 		for (UINT i = 0; i <= (UINT)GE_SUBMIT_SPECIALLY; i++)
 		{
@@ -89,17 +84,17 @@ namespace GE
 			{
 				auto& renderable = this->RenderableQueueList[(GuardianSubmitPassLevel)i].front();
 
-				renderable->GetTransformConstantBuffer()->UpdateData(this->GraphGraphics,
+				renderable->GetTransformConstantBuffer()->UpdateData(
 					{ renderable->GetTransformConstantBuffer()->GetConstantBufferData().WorldTransformMatrix,
 					this->GraphCamera.GetViewMatrix(), this->GraphCamera.GetProjectionMatrix() });
 				renderable->Update();
 
 				if (!renderable->UseSpecialShader)
 				{
-					this->GraphShaderGroup->Apply(GraphGraphics);
+					this->GraphShaderGroup->Apply();
 				}
 
-				renderable->Render(this->GraphGraphics);
+				renderable->Render();
 
 				this->RenderableQueueList[(GuardianSubmitPassLevel)i].pop();
 			}
@@ -108,7 +103,7 @@ namespace GE
 
 	void GuardianRenderGraph::ResizeRenderGraph(int width, int height)
 	{
-		this->GraphFramebuffer->ResizeFramebuffer(this->GraphGraphics, width, height);
+		this->GraphFramebuffer->ResizeFramebuffer(GuardianGraphicsRegistry::GetCurrentGraphics(), width, height);
 	}
 
 	std::shared_ptr<GuardianFramebuffer> GuardianRenderGraph::GetRenderGraphFramebuffer()

@@ -27,14 +27,12 @@ namespace GE
 		GuardianMeshInstance(const GuardianMeshInstance& other);
 		~GuardianMeshInstance() override;
 
-		void InitializeMeshInstance(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianMeshInstance::Data& data);
+		void InitializeMeshInstance(const GuardianMeshInstance::Data& data);
 		void SetMeshInstanceMaterial(const GuardianUUID& materialId);
 
 		void Update() override;
 		void UpdateMeshInstanceTransform(XMMATRIX worldMatrix);
-		void UpdateMeshInstanceLighting(
-			std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties);
+		void UpdateMeshInstanceLighting(GuardianLightProperties properties);
 
 		const Data& GetMeshInstanceData() const noexcept;
 		const std::vector<GVector3> GetPositionVertices() const noexcept;

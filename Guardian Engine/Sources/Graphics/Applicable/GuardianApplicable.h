@@ -11,7 +11,7 @@ namespace GE
 		GuardianApplicable(const GuardianApplicable&) = default;
 		virtual ~GuardianApplicable() = default;
 
-		virtual void Apply(std::shared_ptr<GuardianGraphics> graphics) = 0;
+		virtual void Apply() = 0;
 	};
 }
 

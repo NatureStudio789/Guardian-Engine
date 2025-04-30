@@ -1,5 +1,4 @@
 #include "GuardianMeshAsset.h"
-#include "../../../Application/GuardianApplication.h"
 #include "../../../Graphics/Renderable/Mesh/GuardianMeshInstance.h"
 #include "../../../Graphics/Renderable/ModelImporter/GuardianModelImporter.h"
 
@@ -26,7 +25,7 @@ namespace GE
 	{
 		this->SetAssetPath(filePath);
 
-		GuardianModelImporter importer = GuardianModelImporter(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), filePath);
+		GuardianModelImporter importer = GuardianModelImporter(filePath);
 		this->MeshAssetData = importer.GetModelMeshInstanceDataList();
 	}
 

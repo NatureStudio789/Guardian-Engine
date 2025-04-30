@@ -8,9 +8,9 @@ namespace GE
 		this->SamplerAppliedSlot = 0;
 	}
 
-	GuardianSampler::GuardianSampler(std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index)
+	GuardianSampler::GuardianSampler(GuardianSamplerFilter filter, int index)
 	{
-		this->InitializeSampler(graphics, filter, index);
+		this->InitializeSampler(filter, index);
 	}
 
 	GuardianSampler::GuardianSampler(const GuardianSampler& other)
@@ -20,8 +20,7 @@ namespace GE
 		this->SamplerAppliedSlot = other.SamplerAppliedSlot;
 	}
 
-	void GuardianSampler::InitializeSampler(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index)
+	void GuardianSampler::InitializeSampler(GuardianSamplerFilter filter, int index)
 	{
 		this->SamplerFilter = filter;
 		this->SamplerAppliedSlot = index;
@@ -33,16 +32,18 @@ namespace GE
 		SamplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
 		SamplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateSamplerState(&SamplerDesc, this->SamplerState.GetAddressOf());
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDevice()->CreateSamplerState(&SamplerDesc, this->SamplerState.GetAddressOf());
 		if (GFailed(hr))
 		{
 			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
 		}
 	}
 
-	void GuardianSampler::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianSampler::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->PSSetSamplers(this->SamplerAppliedSlot, 1, this->SamplerState.GetAddressOf());
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->PSSetSamplers(this->SamplerAppliedSlot, 1, this->SamplerState.GetAddressOf());
 	}
 
 	WRL::ComPtr<ID3D11SamplerState> GuardianSampler::GetSamplerState() noexcept
@@ -55,9 +56,8 @@ namespace GE
 		return this->SamplerFilter;
 	}
 
-	std::shared_ptr<GuardianSampler> GuardianSampler::CreateNewSampler(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index)
+	std::shared_ptr<GuardianSampler> GuardianSampler::CreateNewSampler(GuardianSamplerFilter filter, int index)
 	{
-		return std::make_shared<GuardianSampler>(graphics, filter, index);
+		return std::make_shared<GuardianSampler>(filter, index);
 	}
 }

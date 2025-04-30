@@ -8,12 +8,11 @@ namespace GE
 		this->TextureAppliedSlot = 0;
 	}
 
-	GuardianTexture::GuardianTexture(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianSurface& surface, int index)
+	GuardianTexture::GuardianTexture(const GuardianSurface& surface, int index)
 	{
 		this->TextureId = GuardianUUID();
 
-		this->InitializeTexture(graphics, surface, index);
+		this->InitializeTexture(surface, index);
 	}
 
 	GuardianTexture::GuardianTexture(const GuardianTexture& other)
@@ -35,8 +34,7 @@ namespace GE
 		this->TextureAppliedSlot = index;
 	}
 
-	void GuardianTexture::InitializeTexture(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianSurface& surface, int index)
+	void GuardianTexture::InitializeTexture(const GuardianSurface& surface, int index)
 	{
 		this->SetTextureAppliedSlot(index);
 
@@ -60,7 +58,8 @@ namespace GE
 		TextureResourceData.pSysMem = surface.GetBufferData();
 		TextureResourceData.SysMemPitch = surface.GetSurfaceWidth() * sizeof(GuardianColor);
 
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateTexture2D(
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDevice()->CreateTexture2D(
 			&TextureDesc, &TextureResourceData, &this->TextureObject);
 		if (GFailed(hr))
 		{
@@ -74,7 +73,8 @@ namespace GE
 		ShaderResourceView.Texture2D.MipLevels = 1;
 		ShaderResourceView.Texture2D.MostDetailedMip = 0;
 
-		hr = graphics->GetGraphicsDevice()->CreateShaderResourceView(
+		hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDevice()->CreateShaderResourceView(
 			this->TextureObject.Get(), &ShaderResourceView, this->TextureResource.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -82,9 +82,10 @@ namespace GE
 		}
 	}
 
-	void GuardianTexture::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianTexture::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->PSSetShaderResources(this->TextureAppliedSlot, 1, this->TextureResource.GetAddressOf());
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->PSSetShaderResources(this->TextureAppliedSlot, 1, this->TextureResource.GetAddressOf());
 	}
 
 	const GuardianUUID& GuardianTexture::GetTextureId() const noexcept
@@ -107,9 +108,8 @@ namespace GE
 		return this->TextureId == other.TextureId;
 	}
 
-	std::shared_ptr<GuardianTexture> GuardianTexture::CreateNewTexture(std::shared_ptr<GuardianGraphics> graphics, 
-		const GuardianSurface& surface, int index)
+	std::shared_ptr<GuardianTexture> GuardianTexture::CreateNewTexture(const GuardianSurface& surface, int index)
 	{
-		return std::make_shared<GuardianTexture>(graphics, surface, index);
+		return std::make_shared<GuardianTexture>(surface, index);
 	}
 }

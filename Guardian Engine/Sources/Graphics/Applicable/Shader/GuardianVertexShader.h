@@ -9,18 +9,17 @@ namespace GE
 	public:
 		GuardianVertexShader() = default;
 		GuardianVertexShader(const GuardianVertexShader& other);
-		GuardianVertexShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		GuardianVertexShader(const GString& shaderFilePath);
 		~GuardianVertexShader() override;
 
-		void InitializeVertexShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		void InitializeVertexShader(const GString& shaderFilePath);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics);
+		void Apply() override;
 
 		WRL::ComPtr<ID3D11VertexShader> GetVertexShaderObject() noexcept;
 		WRL::ComPtr<ID3D10Blob> GetVertexShaderBuffer() noexcept;
 
-		static std::shared_ptr<GuardianVertexShader> CreateNewVertexShader(
-			std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		static std::shared_ptr<GuardianVertexShader> CreateNewVertexShader(const GString& shaderFilePath);
 
 	private:
 		WRL::ComPtr<ID3D11VertexShader> VertexShaderObject;

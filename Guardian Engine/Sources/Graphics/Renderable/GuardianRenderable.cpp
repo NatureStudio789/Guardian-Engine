@@ -131,30 +131,31 @@ namespace GE
 		throw GUARDIAN_ERROR_EXCEPTION("Failed to find the static light constant buffer!");
 	}
 
-	void GuardianRenderable::Render(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianRenderable::Render()
 	{
 		for (auto& staticApplicable : this->GetStaticApplicableList())
 		{
-			staticApplicable->Apply(graphics);
+			staticApplicable->Apply();
 		}
 
 		for (auto& applicable : this->ApplicableList)
 		{
-			applicable->Apply(graphics);
+			applicable->Apply();
 		}
 
-		this->RenderingMaterial->ApplyMaterial(graphics);
+		this->RenderingMaterial->ApplyMaterial();
 
 		if (this->RenderingVertexBuffer->GetVertexBufferObject().Get())
 		{
 			if (this->RenderingIndexBuffer->GetIndexBufferObject().Get())
 			{
-				graphics->GetGraphicsDeviceContext()->DrawIndexed(
+				GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDeviceContext()->DrawIndexed(
 					(UINT)this->RenderingIndexBuffer->GetIndexBufferData().size(), 0, 0);
 			}
 			else
 			{
-				graphics->GetGraphicsDeviceContext()->Draw(this->RenderingVertexBuffer->GetVertexBufferDataSize(), 0);
+				GuardianGraphicsRegistry::GetCurrentGraphics()->
+					GetGraphicsDeviceContext()->Draw(this->RenderingVertexBuffer->GetVertexBufferDataSize(), 0);
 			}
 		}
 	}

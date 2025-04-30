@@ -8,10 +8,9 @@ namespace GE
 		this->RasterizerStateCullMode = GE_CULL_NONE;
 	}
 
-	GuardianRasterizerState::GuardianRasterizerState(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
+	GuardianRasterizerState::GuardianRasterizerState(const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
 	{
-		this->InitializeRasterizerState(graphics, fillMode, cullMode);
+		this->InitializeRasterizerState(fillMode, cullMode);
 	}
 
 	GuardianRasterizerState::GuardianRasterizerState(const GuardianRasterizerState& other)
@@ -21,8 +20,7 @@ namespace GE
 		this->RasterizerStateCullMode = other.RasterizerStateCullMode;
 	}
 
-	void GuardianRasterizerState::InitializeRasterizerState(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
+	void GuardianRasterizerState::InitializeRasterizerState(const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
 	{
 		this->RasterizerStateFillMode = fillMode;
 		this->RasterizerStateCullMode = cullMode;
@@ -32,7 +30,7 @@ namespace GE
 
 		RasterizerStateDesc.FillMode = (D3D11_FILL_MODE)this->RasterizerStateFillMode;
 		RasterizerStateDesc.CullMode = (D3D11_CULL_MODE)this->RasterizerStateCullMode;
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateRasterizerState(
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDevice()->CreateRasterizerState(
 			&RasterizerStateDesc, this->RasterizerStateObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -40,9 +38,10 @@ namespace GE
 		}
 	}
 
-	void GuardianRasterizerState::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianRasterizerState::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->RSSetState(this->RasterizerStateObject.Get());
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->RSSetState(this->RasterizerStateObject.Get());
 	}
 
 	WRL::ComPtr<ID3D11RasterizerState> GuardianRasterizerState::GetRasterizerStateObject() noexcept
@@ -61,8 +60,8 @@ namespace GE
 	}
 
 	std::shared_ptr<GuardianRasterizerState> GuardianRasterizerState::CreateNewRasterizerState(
-		std::shared_ptr<GuardianGraphics> graphics, const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
+		const GuardianFillMode& fillMode, const GuardianCullMode& cullMode)
 	{
-		return std::make_shared<GuardianRasterizerState>(graphics, fillMode, cullMode);
+		return std::make_shared<GuardianRasterizerState>(fillMode, cullMode);
 	}
 }

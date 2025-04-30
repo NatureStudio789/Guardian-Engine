@@ -32,7 +32,7 @@ namespace GE
 
 		void AddLightConstantBufferFromStatic();
 
-		void Render(std::shared_ptr<GuardianGraphics> graphics);
+		void Render();
 		virtual void Update() {}
 
 		const GuardianUUID& GetRenderableId() const noexcept;

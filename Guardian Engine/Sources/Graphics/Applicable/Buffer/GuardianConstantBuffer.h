@@ -15,16 +15,14 @@ namespace GE
 	{
 	public:
 		GuardianConstantBuffer();
-		GuardianConstantBuffer(std::shared_ptr<GuardianGraphics> graphics,
-			GuardianConstantBufferCategory category, int index = 0);
+		GuardianConstantBuffer(GuardianConstantBufferCategory category, int index = 0);
 		GuardianConstantBuffer(const GuardianConstantBuffer& other);
 		virtual ~GuardianConstantBuffer() override = default;
 
-		void InitializeConstantBuffer(std::shared_ptr<GuardianGraphics> graphics, 
-			GuardianConstantBufferCategory category, int index = 0);
+		void InitializeConstantBuffer(GuardianConstantBufferCategory category, int index = 0);
 
-		void UpdateData(std::shared_ptr<GuardianGraphics> graphics, T data);
-		virtual void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+		void UpdateData(T data);
+		virtual void Apply() override;
 
 		WRL::ComPtr<ID3D11Buffer> GetConstantBufferObject();
 		const T& GetConstantBufferData() const;
@@ -45,10 +43,9 @@ namespace GE
 	}
 
 	template<typename T>
-	inline GuardianConstantBuffer<T>::GuardianConstantBuffer(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianConstantBufferCategory category, int index)
+	inline GuardianConstantBuffer<T>::GuardianConstantBuffer(GuardianConstantBufferCategory category, int index)
 	{
-		this->InitializeConstantBuffer(graphics, category, index);
+		this->InitializeConstantBuffer(category, index);
 	}
 
 	template<typename T>
@@ -61,8 +58,7 @@ namespace GE
 	}
 
 	template<typename T>
-	inline void GuardianConstantBuffer<T>::InitializeConstantBuffer(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianConstantBufferCategory category, int index)
+	inline void GuardianConstantBuffer<T>::InitializeConstantBuffer(GuardianConstantBufferCategory category, int index)
 	{
 		this->ConstantBufferCategory = category;
 		this->ConstantBufferAppliedSlot = index;
@@ -77,7 +73,7 @@ namespace GE
 		ConstantBufferDesc.ByteWidth = (UINT)(sizeof(T) + (16 - (sizeof(T) % 16)));
 		ConstantBufferDesc.StructureByteStride = 0;
 
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateBuffer(
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDevice()->CreateBuffer(
 			&ConstantBufferDesc, null, this->ConstantBufferObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -86,14 +82,14 @@ namespace GE
 	}
 
 	template<typename T>
-	inline void GuardianConstantBuffer<T>::UpdateData(
-		std::shared_ptr<GuardianGraphics> graphics, T data)
+	inline void GuardianConstantBuffer<T>::UpdateData(T data)
 	{
 		this->ConstantBufferData = data;
 
 		D3D11_MAPPED_SUBRESOURCE MappedResource;
 		ZeroMemory(&MappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		HRESULT hr = graphics->GetGraphicsDeviceContext()->Map(this->ConstantBufferObject.Get(), 0,
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->Map(this->ConstantBufferObject.Get(), 0,
 			D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 		if (GFailed(hr))
 		{
@@ -102,24 +98,24 @@ namespace GE
 
 		CopyMemory(MappedResource.pData, &this->ConstantBufferData, sizeof(T));
 
-		graphics->GetGraphicsDeviceContext()->Unmap(this->ConstantBufferObject.Get(), 0);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDeviceContext()->Unmap(this->ConstantBufferObject.Get(), 0);
 	}
 
 	template<typename T>
-	inline void GuardianConstantBuffer<T>::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	inline void GuardianConstantBuffer<T>::Apply()
 	{
 		switch (this->ConstantBufferCategory)
 		{
 			case GE_VERTEXSHADER_CONSTANTBUFFER:
 			{
-				graphics->GetGraphicsDeviceContext()->VSSetConstantBuffers(
+				GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDeviceContext()->VSSetConstantBuffers(
 					this->ConstantBufferAppliedSlot, 1, this->ConstantBufferObject.GetAddressOf());
 				break;
 			}
 
 			case GE_PIXELSHADER_CONSTANTBUFFER:
 			{
-				graphics->GetGraphicsDeviceContext()->PSSetConstantBuffers(
+				GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDeviceContext()->PSSetConstantBuffers(
 					this->ConstantBufferAppliedSlot, 1, this->ConstantBufferObject.GetAddressOf());
 				break;
 			}
@@ -164,9 +160,8 @@ namespace GE
 		{
 			this->ConstantBufferData = GuardianTransformProperties();
 		}
-		GuardianTransformConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
-			: GuardianConstantBuffer(graphics, GE_VERTEXSHADER_CONSTANTBUFFER, index)
+		GuardianTransformConstantBuffer(int index)
+			: GuardianConstantBuffer(GE_VERTEXSHADER_CONSTANTBUFFER, index)
 		{
 			this->ConstantBufferData = GuardianTransformProperties();
 		}
@@ -180,10 +175,13 @@ namespace GE
 			this->ConstantBufferData.WorldTransformMatrix = worldMatrix;
 		}
 
-		static std::shared_ptr<GuardianTransformConstantBuffer> CreateNewTransformConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
+		static std::shared_ptr<GuardianTransformConstantBuffer> CreateNewTransformConstantBuffer()
 		{
-			return std::make_shared<GuardianTransformConstantBuffer>(graphics, index);
+			return std::make_shared<GuardianTransformConstantBuffer>(0);
+		}
+		static std::shared_ptr<GuardianTransformConstantBuffer> CreateNewTransformConstantBuffer(int index)
+		{
+			return std::make_shared<GuardianTransformConstantBuffer>(index);
 		}
 	};
 
@@ -213,9 +211,8 @@ namespace GE
 		{
 			this->ConstantBufferData = GuardianMaterialProperties();
 		}
-		GuardianMaterialConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
-			: GuardianConstantBuffer(graphics, GE_PIXELSHADER_CONSTANTBUFFER, index)
+		GuardianMaterialConstantBuffer(int index)
+			: GuardianConstantBuffer(GE_PIXELSHADER_CONSTANTBUFFER, index)
 		{
 			this->ConstantBufferData = GuardianMaterialProperties();
 		}
@@ -225,10 +222,13 @@ namespace GE
 
 		}
 
-		static std::shared_ptr<GuardianMaterialConstantBuffer> CreateNewMaterialConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int index = 0)
+		static std::shared_ptr<GuardianMaterialConstantBuffer> CreateNewMaterialConstantBuffer()
 		{
-			return std::make_shared<GuardianMaterialConstantBuffer>(graphics, index);
+			return std::make_shared<GuardianMaterialConstantBuffer>(0);
+		}
+		static std::shared_ptr<GuardianMaterialConstantBuffer> CreateNewMaterialConstantBuffer(int index)
+		{
+			return std::make_shared<GuardianMaterialConstantBuffer>(index);
 		}
 	};
 
@@ -266,8 +266,8 @@ namespace GE
 		{
 			this->ConstantBufferData = GuardianLightProperties();
 		}
-		GuardianLightConstantBuffer(std::shared_ptr<GuardianGraphics> graphics, int index = 1) : 
-			GuardianConstantBuffer(graphics, GE_PIXELSHADER_CONSTANTBUFFER, index)
+		GuardianLightConstantBuffer(int index) : 
+			GuardianConstantBuffer(GE_PIXELSHADER_CONSTANTBUFFER, index)
 		{
 			this->ConstantBufferData = GuardianLightProperties();
 		}
@@ -276,10 +276,13 @@ namespace GE
 
 		}
 
-		static std::shared_ptr<GuardianLightConstantBuffer> CreateNewLightConstantBuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int index = 1)
+		static std::shared_ptr<GuardianLightConstantBuffer> CreateNewLightConstantBuffer()
 		{
-			return std::make_shared<GuardianLightConstantBuffer>(graphics, index);
+			return std::make_shared<GuardianLightConstantBuffer>(1);
+		}
+		static std::shared_ptr<GuardianLightConstantBuffer> CreateNewLightConstantBuffer(int index)
+		{
+			return std::make_shared<GuardianLightConstantBuffer>(index);
 		}
 	};
 }

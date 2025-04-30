@@ -21,21 +21,20 @@ namespace GE
 	{
 	public:
 		GuardianRasterizerState();
-		GuardianRasterizerState(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianFillMode& fillMode, const GuardianCullMode& cullMode);
+		GuardianRasterizerState(const GuardianFillMode& fillMode, const GuardianCullMode& cullMode);
 		GuardianRasterizerState(const GuardianRasterizerState& other);
 		~GuardianRasterizerState() override = default;
 
-		void InitializeRasterizerState(std::shared_ptr<GuardianGraphics> graphics,
+		void InitializeRasterizerState(
 			const GuardianFillMode& fillMode, const GuardianCullMode& cullMode);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+		void Apply() override;
 
 		WRL::ComPtr<ID3D11RasterizerState> GetRasterizerStateObject() noexcept;
 		const GuardianFillMode& GetRasterizerStateFillMode() const noexcept;
 		const GuardianCullMode& GetRasterizerStateCullMode() const noexcept;
 
-		static std::shared_ptr<GuardianRasterizerState> CreateNewRasterizerState(std::shared_ptr<GuardianGraphics> graphics, 
+		static std::shared_ptr<GuardianRasterizerState> CreateNewRasterizerState(
 			const GuardianFillMode& fillMode, const GuardianCullMode& cullMode);
 
 	private:

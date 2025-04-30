@@ -8,16 +8,16 @@ namespace GE
 		this->PixelShaderObject = other.PixelShaderObject;
 	}
 
-	GuardianPixelShader::GuardianPixelShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	GuardianPixelShader::GuardianPixelShader(const GString& shaderFilePath)
 	{
-		this->InitializePixelShader(graphics, shaderFilePath);
+		this->InitializePixelShader(shaderFilePath);
 	}
 
 	GuardianPixelShader::~GuardianPixelShader()
 	{
 	}
 
-	void GuardianPixelShader::InitializePixelShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	void GuardianPixelShader::InitializePixelShader(const GString& shaderFilePath)
 	{
 		std::ifstream ShaderFile(shaderFilePath.c_str());
 		std::stringstream FileBuffer;
@@ -38,7 +38,8 @@ namespace GE
 			throw GUARDIAN_GRAPHICS_EXCEPTION(hr);
 		}
 
-		hr = graphics->GetGraphicsDevice()->CreatePixelShader(this->PixelShaderBuffer->GetBufferPointer(),
+		hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDevice()->CreatePixelShader(this->PixelShaderBuffer->GetBufferPointer(),
 			this->PixelShaderBuffer->GetBufferSize(), null, this->PixelShaderObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -46,9 +47,10 @@ namespace GE
 		}
 	}
 
-	void GuardianPixelShader::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianPixelShader::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->PSSetShader(this->PixelShaderObject.Get(), null, 0);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->PSSetShader(this->PixelShaderObject.Get(), null, 0);
 	}
 
 	WRL::ComPtr<ID3D11PixelShader> GuardianPixelShader::GetPixelShaderObject() noexcept
@@ -61,9 +63,8 @@ namespace GE
 		return this->PixelShaderBuffer;
 	}
 
-	std::shared_ptr<GuardianPixelShader> GuardianPixelShader::CreateNewPixelShader(
-		std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	std::shared_ptr<GuardianPixelShader> GuardianPixelShader::CreateNewPixelShader(const GString& shaderFilePath)
 	{
-		return std::make_shared<GuardianPixelShader>(graphics, shaderFilePath);
+		return std::make_shared<GuardianPixelShader>(shaderFilePath);
 	}
 }

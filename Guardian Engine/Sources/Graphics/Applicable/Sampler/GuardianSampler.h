@@ -48,19 +48,18 @@ namespace GE
 	{
 	public:
 		GuardianSampler();
-        GuardianSampler(std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index = 0);
+        GuardianSampler(GuardianSamplerFilter filter, int index = 0);
         GuardianSampler(const GuardianSampler& other);
         ~GuardianSampler() override = default;
 
-        void InitializeSampler(std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index = 0);
+        void InitializeSampler(GuardianSamplerFilter filter, int index = 0);
 
-        void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+        void Apply() override;
 
         WRL::ComPtr<ID3D11SamplerState> GetSamplerState() noexcept;
         const GuardianSamplerFilter& GetSamplerFilter() const noexcept;
 
-        static std::shared_ptr<GuardianSampler> CreateNewSampler(
-            std::shared_ptr<GuardianGraphics> graphics, GuardianSamplerFilter filter, int index = 0);
+        static std::shared_ptr<GuardianSampler> CreateNewSampler(GuardianSamplerFilter filter, int index = 0);
 
     private:
         WRL::ComPtr<ID3D11SamplerState> SamplerState;

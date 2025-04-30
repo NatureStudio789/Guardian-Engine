@@ -179,9 +179,7 @@ namespace GE
 					if (!PLComponent.LightMesh)
 					{
 						PLComponent.LightMesh = std::make_shared<GuardianMesh>();
-						PLComponent.LightMesh->InitializeMesh(
-							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Light",
-							"../Guardian Engine/Assets/Models/Light/Light.obj");
+						PLComponent.LightMesh->InitializeMesh("Light", "../Guardian Engine/Assets/Models/Light/Light.obj");
 					}
 					PLComponent.LightMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 
@@ -208,12 +206,11 @@ namespace GE
 		if (!this->SceneGrid)
 		{
 			this->SceneGrid = std::make_shared<GuardianMesh>();
-			this->SceneGrid->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Grid",
-				"../Guardian Engine/Assets/Models/Grid/Grid.obj");
+			this->SceneGrid->InitializeMesh("Grid", "../Guardian Engine/Assets/Models/Grid/Grid.obj");
 		}
 		this->SceneGrid->SubmitToRenderer(this->SceneName + " Scene Rendering");
 		this->SceneGrid->UpdateMeshTransform(GuardianTransform().GetTransformMatrix());
-		this->SceneGrid->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
+		this->SceneGrid->UpdateMeshLighting(LightProperties);
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
@@ -222,8 +219,7 @@ namespace GE
 			{
 				if (!SCComponent.SphereGeometry->IsInitialized())
 				{
-					SCComponent.SphereGeometry->InitializeGeometry(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_SPHERE);
+					SCComponent.SphereGeometry->InitializeGeometry(GE_GEOMETRY_SPHERE);
 				}
 
 				GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
@@ -241,8 +237,7 @@ namespace GE
 				{
 					if (!BCComponent.BoxGeometry->IsInitialized())
 					{
-						BCComponent.BoxGeometry->InitializeGeometry(
-							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_BOX);
+						BCComponent.BoxGeometry->InitializeGeometry(GE_GEOMETRY_BOX);
 					}
 
 					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
@@ -260,8 +255,7 @@ namespace GE
 				{
 					if (!CCComponent.CapsuleGeometry->IsInitialized())
 					{
-						CCComponent.CapsuleGeometry->InitializeGeometry(
-							GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), GE_GEOMETRY_CAPSULE);
+						CCComponent.CapsuleGeometry->InitializeGeometry(GE_GEOMETRY_CAPSULE);
 					}
 
 					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
@@ -301,9 +295,7 @@ namespace GE
 				if (!CComponent.CameraMesh)
 				{
 					CComponent.CameraMesh = std::make_shared<GuardianMesh>();
-					CComponent.CameraMesh->InitializeMesh(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), "Camera",
-						"../Guardian Engine/Assets/Models/Camera/Camera.obj");
+					CComponent.CameraMesh->InitializeMesh("Camera", "../Guardian Engine/Assets/Models/Camera/Camera.obj");
 				}
 				CComponent.CameraMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 
@@ -313,7 +305,7 @@ namespace GE
 				transform.Quaternion = TComponent.Quaternion;
 				transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
 				CComponent.CameraMesh->UpdateMeshTransform(transform.GetTransformMatrix());
-				CComponent.CameraMesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
+				CComponent.CameraMesh->UpdateMeshLighting(LightProperties);
 			});
 		}
 
@@ -323,7 +315,7 @@ namespace GE
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 				{
 					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-					MComponent.Mesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
+					MComponent.Mesh->UpdateMeshLighting(LightProperties);
 
 					MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 				});
@@ -589,7 +581,7 @@ namespace GE
 				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
 			{
 				MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-				MComponent.Mesh->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), LightProperties);
+				MComponent.Mesh->UpdateMeshLighting(LightProperties);
 
 				MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
 			});
@@ -770,8 +762,7 @@ namespace GE
 					auto& MeshC = LoadedEntity->AddComponent<GuardianMeshComponent>();
 					GString MeshName = MeshComponent["Mesh Name"].as<GString>();
 					MeshC.Mesh = std::make_shared<GuardianMesh>();
-					MeshC.Mesh->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-						MeshName, GuardianAssetSystem::GetMeshAsset(MeshName).GetMeshAssetData());
+					MeshC.Mesh->InitializeMesh(MeshName, GuardianAssetSystem::GetMeshAsset(MeshName).GetMeshAssetData());
 				}
 
 				auto SphereColliderComponent = entity["Sphere Collider Component"];

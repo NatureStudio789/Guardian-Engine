@@ -22,9 +22,10 @@ namespace GE
 		this->TopologyCategory = topology;
 	}
 
-	void GuardianTopology::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianTopology::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)this->TopologyCategory);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->IASetPrimitiveTopology((D3D11_PRIMITIVE_TOPOLOGY)this->TopologyCategory);
 	}
 
 	const GuardianTopologyCategory& GuardianTopology::GetTopologyCategory() const noexcept

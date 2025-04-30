@@ -9,18 +9,17 @@ namespace GE
 	public:
 		GuardianPixelShader() = default;
 		GuardianPixelShader(const GuardianPixelShader& other);
-		GuardianPixelShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		GuardianPixelShader(const GString& shaderFilePath);
 		~GuardianPixelShader() override;
 
-		void InitializePixelShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		void InitializePixelShader(const GString& shaderFilePath);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics);
+		void Apply() override;
 
 		WRL::ComPtr<ID3D11PixelShader> GetPixelShaderObject() noexcept;
 		WRL::ComPtr<ID3D10Blob> GetPixelShaderBuffer() noexcept;
 
-		static std::shared_ptr<GuardianPixelShader> CreateNewPixelShader(
-			std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath);
+		static std::shared_ptr<GuardianPixelShader> CreateNewPixelShader(const GString& shaderFilePath);
 
 	private:
 		WRL::ComPtr<ID3D11PixelShader> PixelShaderObject;

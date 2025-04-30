@@ -9,10 +9,8 @@ namespace GE
 		this->PanelName = "Scene";
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
-		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
-		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
+		this->PlayButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
+		this->StopButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
 	}
 
 	GuardianScenePanel::GuardianScenePanel(GuardianScene* scene)
@@ -21,10 +19,8 @@ namespace GE
 		this->PanelScene = scene;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->SelectedEntityId = 0;
-		this->PlayButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
-		this->StopButtonTexture.InitializeTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
+		this->PlayButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
+		this->StopButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
 	}
 
 	GuardianScenePanel::GuardianScenePanel(const GuardianScenePanel& other)

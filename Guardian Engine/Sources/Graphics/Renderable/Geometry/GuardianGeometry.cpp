@@ -22,26 +22,15 @@ namespace GE
 		this->ApplicableList.clear();
 	}
 
-	void GuardianGeometry::InitializeGeometry(std::shared_ptr<GuardianGraphics> graphics, const GuardianGeometryType& type)
+	void GuardianGeometry::InitializeGeometry(const GuardianGeometryType& type)
 	{
 		this->EnableSpecialShader();
 
 		if (!this->IsStaticApplicablesInitialized())
 		{
-			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_WIREFRAME, GE_CULL_NONE));
+			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(GE_FILL_WIREFRAME, GE_CULL_NONE));
 			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
 
-			/*auto vs = GuardianVertexShader::CreateNewVertexShader(graphics, "../Guardian Engine/Shaders/GeometryVertexShader.hlsl");
-			this->AddStaticApplicable(vs);
-			this->AddStaticApplicable(
-				GuardianPixelShader::CreateNewPixelShader(graphics, "../Guardian Engine/Shaders/GeometryPixelShader.hlsl"));
-
-			D3D11_INPUT_ELEMENT_DESC id[] =
-			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
-				{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
-			};
-			this->AddStaticApplicable(GuardianInputLayout::CreateNewInputLayout(graphics, vs, id, ARRAYSIZE(id)));*/
 			this->AddStaticApplicable(GuardianShaderSystem::GetShaderGroup(GuardianShaderSystem::WIREFRAME_SHADER));
 		}
 
@@ -61,11 +50,11 @@ namespace GE
 			this->GenerateCapsule(Vertices, Indices);
 		}
 
-		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, (void*)Vertices.data(), 
+		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer((void*)Vertices.data(), 
 			(UINT)Vertices.size(), (UINT)sizeof(GeometryVertex)));
-		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, Indices));
+		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(Indices));
 		
-		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
+		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer());
 	}
 
 	void GuardianGeometry::UpdateGeometryTransform(XMMATRIX worldMatrix)

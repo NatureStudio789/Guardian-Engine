@@ -12,17 +12,13 @@ namespace GE
 		GuardianMesh(const GuardianMesh& other);
 		~GuardianMesh();
 
-		void InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
-			const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData);
-		void InitializeMesh(std::shared_ptr<GuardianGraphics> graphics,
-			const GString& meshName, const GString& meshFilePath);
+		void InitializeMesh(const GString& meshName, std::vector<GuardianMeshInstance::Data> instanceData);
+		void InitializeMesh(const GString& meshName, const GString& meshFilePath);
 		void SetMeshName(const GString& meshName);
-		void AddInstanceToMesh(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianMeshInstance::Data& instanceData);
+		void AddInstanceToMesh(const GuardianMeshInstance::Data& instanceData);
 
 		void UpdateMeshTransform(XMMATRIX worldMatrix);
-		void UpdateMeshLighting(std::shared_ptr<GuardianGraphics> graphics,
-			GuardianLightProperties properties);
+		void UpdateMeshLighting(GuardianLightProperties properties);
 
 		void SubmitToRenderer(const GString& submitRenderGraph);
 

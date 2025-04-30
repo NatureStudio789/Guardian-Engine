@@ -1,6 +1,5 @@
 #include "GuardianMaterialSystem.h"
 #include "../Renderable/Mesh/GuardianMesh.h"
-#include "../../Application/GuardianApplication.h"
 #include "../Renderer/GuardianRenderer.h"
 
 namespace GE
@@ -24,9 +23,8 @@ namespace GE
         GuardianRenderer::SetRenderingRenderGraphShaderGroup(name + " Rendering", GuardianShaderSystem::PBR_MAIN_SHADER);
 
         MaterialSphereMeshList[name] = std::make_shared<GuardianMesh>();
-        MaterialSphereMeshList[name]->InitializeMesh(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-            name + " Sphere", GuardianModelImporter(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-                "../Guardian Engine/Assets/Models/Sphere/Sphere.obj").GetModelMeshInstanceDataList());
+        MaterialSphereMeshList[name]->InitializeMesh(
+            name + " Sphere", GuardianModelImporter("../Guardian Engine/Assets/Models/Sphere/Sphere.obj").GetModelMeshInstanceDataList());
         MaterialSphereMeshList[name]->MeshInstancesList[0]->SetMeshInstanceMaterial(MaterialList[name]->GetMaterialId());
         return MaterialList[name]->GetMaterialId();
     }
@@ -43,7 +41,7 @@ namespace GE
             Properties.PointLightList[0].LightColor = { 1.0f, 1.0f, 1.0f };
             Properties.PointLightList[0].LightPosition = { 0.5f, 1.0f, -3.0f };
             Properties.PointLightList[0].LightStrength = 300.0f;
-            materialSphere.second->UpdateMeshLighting(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), Properties);
+            materialSphere.second->UpdateMeshLighting(Properties);
 
             materialSphere.second->SubmitToRenderer(materialSphere.first + " Rendering");
         }

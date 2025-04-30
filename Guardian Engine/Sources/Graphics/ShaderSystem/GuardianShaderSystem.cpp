@@ -1,5 +1,4 @@
 #include "GuardianShaderSystem.h"
-#include "../../Application/GuardianApplication.h"
 
 namespace GE
 {
@@ -21,11 +20,9 @@ namespace GE
 				{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			auto& vs = GuardianVertexShader::CreateNewVertexShader(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-				"../Guardian Engine/Shaders/PBRShader.gvsh");
-			auto& ps = GuardianPixelShader::CreateNewPixelShader(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-				"../Guardian Engine/Shaders/PBRShader.gpsh");
-			PBRShaderGroup->SetVertexShader(vs, id, ARRAYSIZE(id), GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
+			auto& vs = GuardianVertexShader::CreateNewVertexShader("../Guardian Engine/Shaders/PBRShader.gvsh");
+			auto& ps = GuardianPixelShader::CreateNewPixelShader("../Guardian Engine/Shaders/PBRShader.gpsh");
+			PBRShaderGroup->SetVertexShader(vs, id, ARRAYSIZE(id));
 			PBRShaderGroup->SetPixelShader(ps);
 
 			AddShaderGroup(PBRShaderGroup);
@@ -40,11 +37,9 @@ namespace GE
 				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
 				{"COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0},
 			};
-			auto& vs = GuardianVertexShader::CreateNewVertexShader(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-				"../Guardian Engine/Shaders/Wireframe.gvsh");
-			auto& ps = GuardianPixelShader::CreateNewPixelShader(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-				"../Guardian Engine/Shaders/Wireframe.gpsh");
-			WireframeShaderGroup->SetVertexShader(vs, id, ARRAYSIZE(id), GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
+			auto& vs = GuardianVertexShader::CreateNewVertexShader("../Guardian Engine/Shaders/Wireframe.gvsh");
+			auto& ps = GuardianPixelShader::CreateNewPixelShader("../Guardian Engine/Shaders/Wireframe.gpsh");
+			WireframeShaderGroup->SetVertexShader(vs, id, ARRAYSIZE(id));
 			WireframeShaderGroup->SetPixelShader(ps);
 
 			AddShaderGroup(WireframeShaderGroup);

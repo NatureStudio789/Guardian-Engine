@@ -143,11 +143,11 @@ namespace GE
 		this->AoColor = ao;
 	}
 
-	void GuardianMaterial::ApplyMaterial(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianMaterial::ApplyMaterial()
 	{
 		if (!this->MaterialConstantBuffer)
 		{
-			this->MaterialConstantBuffer = GuardianMaterialConstantBuffer::CreateNewMaterialConstantBuffer(graphics);
+			this->MaterialConstantBuffer = GuardianMaterialConstantBuffer::CreateNewMaterialConstantBuffer();
 		}
 
 		GuardianMaterialProperties properties;
@@ -160,29 +160,29 @@ namespace GE
 		properties.UsingRoughnessMap = (int)this->UsingRoughnessTexture;
 		properties.UsingNormalMap = (int)this->UsingNormalTexture;
 		properties.UsingAoMap = (int)this->UsingAoTexture;
-		this->MaterialConstantBuffer->UpdateData(graphics, properties);
+		this->MaterialConstantBuffer->UpdateData(properties);
 
-		this->MaterialConstantBuffer->Apply(graphics);
+		this->MaterialConstantBuffer->Apply();
 
 		if (this->UsingAlbedoTexture)
 		{
-			this->AlbedoTexture->Apply(graphics);
+			this->AlbedoTexture->Apply();
 		}
 		if (this->UsingMetallicTexture)
 		{
-			this->MetallicTexture->Apply(graphics);
+			this->MetallicTexture->Apply();
 		}
 		if (this->UsingRoughnessTexture)
 		{
-			this->RoughnessTexture->Apply(graphics);
+			this->RoughnessTexture->Apply();
 		}
 		if (this->UsingNormalTexture)
 		{
-			this->NormalTexture->Apply(graphics);
+			this->NormalTexture->Apply();
 		}
 		if (this->UsingAoTexture)
 		{
-			this->AoTexture->Apply(graphics);
+			this->AoTexture->Apply();
 		}
 	}
 

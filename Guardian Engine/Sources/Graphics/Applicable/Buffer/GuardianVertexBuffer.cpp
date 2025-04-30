@@ -15,10 +15,10 @@ namespace GE
 		this->VertexBufferObject = other.VertexBufferObject;
 	}
 
-	GuardianVertexBuffer::GuardianVertexBuffer(std::shared_ptr<GuardianGraphics> graphics,
+	GuardianVertexBuffer::GuardianVertexBuffer(
 		void* vertices, UINT dataSize, UINT dataTypeStride)
 	{
-		this->InitializeVertexBuffer(graphics, vertices, dataSize, dataTypeStride);
+		this->InitializeVertexBuffer(vertices, dataSize, dataTypeStride);
 	}
 
 	GuardianVertexBuffer::~GuardianVertexBuffer()
@@ -26,7 +26,7 @@ namespace GE
 		this->VertexBufferData = null;
 	}
 
-	void GuardianVertexBuffer::InitializeVertexBuffer(std::shared_ptr<GuardianGraphics> graphics,
+	void GuardianVertexBuffer::InitializeVertexBuffer(
 		void* vertices, UINT dataSize, UINT dataTypeStride)
 	{
 		this->VertexBufferData = vertices;
@@ -45,7 +45,7 @@ namespace GE
 		ZeroMemory(&VertexBufferResourceData, sizeof(D3D11_SUBRESOURCE_DATA));
 		VertexBufferResourceData.pSysMem = this->VertexBufferData;
 
-		HRESULT hr = graphics->GetGraphicsDevice()->CreateBuffer(&VertexBufferDesc, &VertexBufferResourceData,
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDevice()->CreateBuffer(&VertexBufferDesc, &VertexBufferResourceData,
 			this->VertexBufferObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -53,13 +53,14 @@ namespace GE
 		}
 	}
 
-	void GuardianVertexBuffer::UpdateVertices(std::shared_ptr<GuardianGraphics> graphics, void* vertices)
+	void GuardianVertexBuffer::UpdateVertices(void* vertices)
 	{
 		this->VertexBufferData = vertices;
 
 		D3D11_MAPPED_SUBRESOURCE MappedResource;
 		ZeroMemory(&MappedResource, sizeof(D3D11_MAPPED_SUBRESOURCE));
-		HRESULT hr = graphics->GetGraphicsDeviceContext()->Map(this->VertexBufferObject.Get(),
+		HRESULT hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->Map(this->VertexBufferObject.Get(),
 			0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
 		if (GFailed(hr))
 		{
@@ -68,13 +69,14 @@ namespace GE
 
 		CopyMemory(MappedResource.pData, this->VertexBufferData, this->BufferDataTypeStride * this->BufferDataSize);
 
-		graphics->GetGraphicsDeviceContext()->Unmap(this->VertexBufferObject.Get(), 0);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->GetGraphicsDeviceContext()->Unmap(this->VertexBufferObject.Get(), 0);
 	}
 
-	void GuardianVertexBuffer::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianVertexBuffer::Apply()
 	{
 		static UINT offset = 0;
-		graphics->GetGraphicsDeviceContext()->IASetVertexBuffers(0, 1, this->VertexBufferObject.GetAddressOf(),
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->IASetVertexBuffers(0, 1, this->VertexBufferObject.GetAddressOf(),
 			&this->BufferDataTypeStride, &offset);
 	}
 
@@ -94,9 +96,8 @@ namespace GE
 	}
 
 	std::shared_ptr<GuardianVertexBuffer> GuardianVertexBuffer::CreateNewVertexBuffer(
-		std::shared_ptr<GuardianGraphics> graphics,
 		void* vertices, UINT dataSize, UINT dataTypeStride)
 	{
-		return std::make_shared<GuardianVertexBuffer>(graphics, vertices, dataSize, dataTypeStride);
+		return std::make_shared<GuardianVertexBuffer>(vertices, dataSize, dataTypeStride);
 	}
 }

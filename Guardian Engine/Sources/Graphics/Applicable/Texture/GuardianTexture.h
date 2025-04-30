@@ -8,16 +8,14 @@ namespace GE
 	{
 	public:
 		GuardianTexture();
-		GuardianTexture(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianSurface& surface, int index = 0);
+		GuardianTexture(const GuardianSurface& surface, int index = 0);
 		GuardianTexture(const GuardianTexture& other);
 		~GuardianTexture() override;
 
 		void SetTextureAppliedSlot(int index);
-		void InitializeTexture(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianSurface& surface, int index = 0);
+		void InitializeTexture(const GuardianSurface& surface, int index = 0);
 
-		void Apply(std::shared_ptr<GuardianGraphics> graphics) override;
+		void Apply() override;
 
 		const GuardianUUID& GetTextureId() const noexcept;
 		WRL::ComPtr<ID3D11Texture2D> GetTextureObject();
@@ -25,8 +23,7 @@ namespace GE
 
 		bool operator==(const GuardianTexture& other) const;
 
-		static std::shared_ptr<GuardianTexture> CreateNewTexture(std::shared_ptr<GuardianGraphics> graphics,
-			const GuardianSurface& surface, int index = 0);
+		static std::shared_ptr<GuardianTexture> CreateNewTexture(const GuardianSurface& surface, int index = 0);
 
 	private:
 		GuardianUUID TextureId;

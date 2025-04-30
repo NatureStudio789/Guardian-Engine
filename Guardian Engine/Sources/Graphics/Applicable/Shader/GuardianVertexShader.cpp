@@ -8,16 +8,16 @@ namespace GE
 		this->VertexShaderObject = other.VertexShaderObject;
 	}
 
-	GuardianVertexShader::GuardianVertexShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	GuardianVertexShader::GuardianVertexShader(const GString& shaderFilePath)
 	{
-		this->InitializeVertexShader(graphics, shaderFilePath);
+		this->InitializeVertexShader(shaderFilePath);
 	}
 
 	GuardianVertexShader::~GuardianVertexShader()
 	{
 	}
 
-	void GuardianVertexShader::InitializeVertexShader(std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	void GuardianVertexShader::InitializeVertexShader(const GString& shaderFilePath)
 	{
 		std::ifstream ShaderFile(shaderFilePath.c_str());
 		std::stringstream FileBuffer;
@@ -39,7 +39,8 @@ namespace GE
 		}
 
 
-		hr = graphics->GetGraphicsDevice()->CreateVertexShader(this->VertexShaderBuffer->GetBufferPointer(),
+		hr = GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDevice()->CreateVertexShader(this->VertexShaderBuffer->GetBufferPointer(),
 			this->VertexShaderBuffer->GetBufferSize(), null, this->VertexShaderObject.GetAddressOf());
 		if (GFailed(hr))
 		{
@@ -47,9 +48,10 @@ namespace GE
 		}
 	}
 
-	void GuardianVertexShader::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianVertexShader::Apply()
 	{
-		graphics->GetGraphicsDeviceContext()->VSSetShader(this->VertexShaderObject.Get(), null, 0);
+		GuardianGraphicsRegistry::GetCurrentGraphics()->
+			GetGraphicsDeviceContext()->VSSetShader(this->VertexShaderObject.Get(), null, 0);
 	}
 
 	WRL::ComPtr<ID3D11VertexShader> GuardianVertexShader::GetVertexShaderObject() noexcept
@@ -62,9 +64,8 @@ namespace GE
 		return this->VertexShaderBuffer;
 	}
 
-	std::shared_ptr<GuardianVertexShader> GuardianVertexShader::CreateNewVertexShader(
-		std::shared_ptr<GuardianGraphics> graphics, const GString& shaderFilePath)
+	std::shared_ptr<GuardianVertexShader> GuardianVertexShader::CreateNewVertexShader(const GString& shaderFilePath)
 	{
-		return std::make_shared<GuardianVertexShader>(graphics, shaderFilePath);
+		return std::make_shared<GuardianVertexShader>(shaderFilePath);
 	}
 }

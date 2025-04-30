@@ -26,7 +26,7 @@ namespace GE
 		this->InstanceData.IndexData.clear();
 	}
 
-	void GuardianMeshInstance::InitializeMeshInstance(std::shared_ptr<GuardianGraphics> graphics, const GuardianMeshInstance::Data& data)
+	void GuardianMeshInstance::InitializeMeshInstance(const GuardianMeshInstance::Data& data)
 	{
 		this->InstanceData = data;
 
@@ -34,18 +34,18 @@ namespace GE
 
 		if (!this->IsStaticApplicablesInitialized())
 		{
-			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(graphics, GE_FILL_SOLID, GE_CULL_BACK));
+			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(GE_FILL_SOLID, GE_CULL_BACK));
 			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
 
-			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(graphics, GE_FILTER_MIN_MAG_MIP_LINEAR));
+			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(GE_FILTER_MIN_MAG_MIP_LINEAR));
 		}
 
-		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer(graphics, 
+		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer( 
 			(void*)this->InstanceData.VertexData.data(), (UINT)this->InstanceData.VertexData.size(), (UINT)sizeof(Vertex)));
-		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(graphics, this->InstanceData.IndexData));
+		this->AddIndexBuffer(GuardianIndexBuffer::CreateNewIndexBuffer(this->InstanceData.IndexData));
 
-		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer(graphics));
-		this->AddLightConstantBuffer(GuardianLightConstantBuffer::CreateNewLightConstantBuffer(graphics));
+		this->AddTransformConstantBuffer(GuardianTransformConstantBuffer::CreateNewTransformConstantBuffer());
+		this->AddLightConstantBuffer(GuardianLightConstantBuffer::CreateNewLightConstantBuffer());
 	}
 
 	void GuardianMeshInstance::SetMeshInstanceMaterial(const GuardianUUID& materialId)
@@ -63,10 +63,9 @@ namespace GE
 		this->RenderingTransformConstantBuffer->SetWorldTransform(worldMatrix);
 	}
 
-	void GuardianMeshInstance::UpdateMeshInstanceLighting(
-		std::shared_ptr<GuardianGraphics> graphics, GuardianLightProperties properties)
+	void GuardianMeshInstance::UpdateMeshInstanceLighting(GuardianLightProperties properties)
 	{
-		this->RenderingLightConstantBuffer->UpdateData(graphics, properties);
+		this->RenderingLightConstantBuffer->UpdateData(properties);
 	}
 
 	const GuardianMeshInstance::Data& GuardianMeshInstance::GetMeshInstanceData() const noexcept

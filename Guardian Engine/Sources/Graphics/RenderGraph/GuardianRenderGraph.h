@@ -8,13 +8,11 @@ namespace GE
 	{
 	public:
 		GuardianRenderGraph();
-		GuardianRenderGraph(std::shared_ptr<GuardianGraphics> graphGraphics, 
-			const GString& graphName, int width, int height);
+		GuardianRenderGraph(const GString& graphName, int width, int height);
 		GuardianRenderGraph(const GuardianRenderGraph& other);
 		virtual ~GuardianRenderGraph();
 
-		void InitializeRenderGraph(std::shared_ptr<GuardianGraphics> graphGraphics, 
-			const GString& graphName, int width, int height);
+		void InitializeRenderGraph(const GString& graphName, int width, int height);
 		void SetGraphClearColor(const GVector3& color);
 		void SetGraphCamera(const GuardianCamera& camera);
 		void SetGraphShaderGroup(const GString& groupName);
@@ -31,7 +29,6 @@ namespace GE
 		GString GraphName;
 
 		GVector3 GraphClearColor;
-		std::shared_ptr<GuardianGraphics> GraphGraphics;
 
 		std::shared_ptr<GuardianShaderGroup> GraphShaderGroup;
 		

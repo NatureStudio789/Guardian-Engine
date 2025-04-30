@@ -9,14 +9,10 @@ namespace GE
 		this->ResourceDirectory = "Assets";
 		this->CurrentDirectory = this->ResourceDirectory;
 
-		this->FolderIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/FolderIcon.png"));
-		this->ModelFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/ModelFileIcon.png"));
-		this->TextureFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/TextureFileIcon.png"));
-		this->DefaultFileIcon = GuardianTexture(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-			GuardianSurface("../Guardian Engine/Assets/Textures/DefaultFileIcon.png"));
+		this->FolderIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/FolderIcon.png"));
+		this->ModelFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/ModelFileIcon.png"));
+		this->TextureFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/TextureFileIcon.png"));
+		this->DefaultFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/DefaultFileIcon.png"));
 	}
 
 	GuardianResourceBrowserPanel::GuardianResourceBrowserPanel(const GString& resourcesDir)

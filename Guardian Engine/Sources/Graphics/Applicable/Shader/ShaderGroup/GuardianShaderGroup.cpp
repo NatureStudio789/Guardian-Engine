@@ -12,11 +12,10 @@ namespace GE
 		this->GroupPixelShader = null;
 	}
 
-	GuardianShaderGroup::GuardianShaderGroup(std::shared_ptr<GuardianGraphics> graphics,
-		const GString& name, std::shared_ptr<GuardianVertexShader> vs,
+	GuardianShaderGroup::GuardianShaderGroup(const GString& name, std::shared_ptr<GuardianVertexShader> vs,
 		D3D11_INPUT_ELEMENT_DESC layoutData[], int dataSize, std::shared_ptr<GuardianPixelShader> ps)
 	{
-		this->InitializeShaderGroup(graphics, name, vs, layoutData, dataSize, ps);
+		this->InitializeShaderGroup(name, vs, layoutData, dataSize, ps);
 	}
 
 	GuardianShaderGroup::GuardianShaderGroup(const GuardianShaderGroup& other)
@@ -37,15 +36,14 @@ namespace GE
 		this->GroupInputLayout = null;
 	}
 
-	void GuardianShaderGroup::InitializeShaderGroup(std::shared_ptr<GuardianGraphics> graphics, 
-		const GString& name, std::shared_ptr<GuardianVertexShader> vs,
+	void GuardianShaderGroup::InitializeShaderGroup(const GString& name, std::shared_ptr<GuardianVertexShader> vs,
 		D3D11_INPUT_ELEMENT_DESC layoutData[], int dataSize, std::shared_ptr<GuardianPixelShader> ps)
 	{
 		this->GroupId = GuardianUUID();
 		this->GroupName = name;
 
 		this->GroupVertexShader = vs;
-		this->GroupInputLayout = GuardianInputLayout::CreateNewInputLayout(graphics, this->GroupVertexShader,
+		this->GroupInputLayout = GuardianInputLayout::CreateNewInputLayout(this->GroupVertexShader,
 			layoutData, dataSize);
 
 		this->GroupPixelShader = ps;
@@ -57,10 +55,10 @@ namespace GE
 	}
 
 	void GuardianShaderGroup::SetVertexShader(std::shared_ptr<GuardianVertexShader> shader,
-		D3D11_INPUT_ELEMENT_DESC layoutData[], int dataSize, std::shared_ptr<GuardianGraphics> graphics)
+		D3D11_INPUT_ELEMENT_DESC layoutData[], int dataSize)
 	{
 		this->GroupVertexShader = shader;
-		this->GroupInputLayout = GuardianInputLayout::CreateNewInputLayout(graphics, this->GroupVertexShader,
+		this->GroupInputLayout = GuardianInputLayout::CreateNewInputLayout(this->GroupVertexShader,
 			layoutData, dataSize);
 	}
 
@@ -69,12 +67,12 @@ namespace GE
 		this->GroupPixelShader = shader;
 	}
 
-	void GuardianShaderGroup::Apply(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianShaderGroup::Apply()
 	{
-		this->GroupVertexShader->Apply(graphics);
-		this->GroupInputLayout->Apply(graphics);
+		this->GroupVertexShader->Apply();
+		this->GroupInputLayout->Apply();
 
-		this->GroupPixelShader->Apply(graphics);
+		this->GroupPixelShader->Apply();
 	}
 
 	const GuardianUUID& GuardianShaderGroup::GetGroupId() const noexcept

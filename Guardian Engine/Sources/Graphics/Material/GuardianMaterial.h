@@ -25,7 +25,7 @@ namespace GE
 		void SetAoTexture(std::shared_ptr<GuardianTexture> ao);
 		void SetAoColor(const float ao);
 
-		void ApplyMaterial(std::shared_ptr<GuardianGraphics> graphics);
+		void ApplyMaterial();
 
 		const GuardianUUID& GetMaterialId() const noexcept;
 
