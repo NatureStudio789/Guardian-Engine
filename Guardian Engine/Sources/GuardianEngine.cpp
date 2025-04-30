@@ -25,7 +25,7 @@ namespace GE
 		{
 			throw GUARDIAN_VALUE_EXCEPTION((long long)this->EngineProgram);
 		}
-
+		
 		GuardianWindowProperties EngineWindowProperties;
 		EngineWindowProperties.SetWindowResolution((int)(GetSystemMetrics(SM_CXSCREEN) * 0.8), (int)(GetSystemMetrics(SM_CYSCREEN) * 0.8));
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());

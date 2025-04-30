@@ -41,6 +41,14 @@ namespace GE
 			KeyStateList[event.KeyCode] = GE_KEY_RELEASE;
 		});
 
+		KeyboardEventProcesser->OnEvent<GuardianWindowLostFocusEvent>([](const GuardianWindowLostFocusEvent& event)
+		{
+			for (UINT i = 0; i < 256; i++)
+			{
+				KeyStateList[i] = GE_KEY_RELEASE;
+			}
+		});
+
 		KeyboardEventProcesser->OnEvent<GuardianCharEvent>([](const GuardianCharEvent& event)
 		{
 			CharEventList.push_back(event.CharCode);
