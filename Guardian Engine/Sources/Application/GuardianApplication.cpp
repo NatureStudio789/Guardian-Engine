@@ -4,6 +4,7 @@
 namespace GE
 {
 	std::unique_ptr<GuardianApplication> GuardianApplication::ApplicationInstance = std::make_unique<GuardianApplication>();
+	GuardianApplication::CommandLineArgument GuardianApplication::ApplicationCommandLineArgument;
 
 
 	GuardianApplication::GuardianApplication()
@@ -94,6 +95,14 @@ namespace GE
 	std::shared_ptr<GuardianGraphics> GuardianApplication::GetApplicationGraphicsContext() noexcept
 	{
 		return this->ApplicationWindow->GetWindowGraphicsContext();
+	}
+
+	void GuardianApplication::SetCommandLineArgument(int argc, char* argv[])
+	{
+		for (int i = 0; i < argc; i++)
+		{
+			ApplicationCommandLineArgument.ArgumentList.push_back(argv[i]);
+		}
 	}
 
 	LRESULT GuardianApplication::StartupWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)

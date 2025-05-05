@@ -63,6 +63,13 @@ namespace GE
 		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 
 		this->AddEditorToEngine(std::make_shared<GuardianRendererEditor>());
+
+		if (!GuardianApplication::ApplicationCommandLineArgument.IsEmpty())
+		{
+			GuardianEngine::EngineInstance->GetScene()->LoadSceneAs(
+				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
+				GuardianApplication::ApplicationCommandLineArgument.ArgumentList[GuardianApplication::CommandLineArgument::SCENE_PATH_ARGUMENT_INDEX]);
+		}
 	}
 
 	void GuardianEditorEngine::RenderDockspace()

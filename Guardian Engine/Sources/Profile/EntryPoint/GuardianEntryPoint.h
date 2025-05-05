@@ -3,10 +3,11 @@
 extern GE::GuardianProgram* CreateProgram();
 #define GUARDIAN_ENGINE_PROFILE(Program) GE::GuardianProgram* CreateProgram() { return new Program();  }
 
-int main()
+int main(int argc, char* argv[])
 {
 	try
 	{
+		GE::GuardianApplication::SetCommandLineArgument(argc, argv);
 		GE::GuardianEngine::EngineInstance->InitializeEngine(CreateProgram());
 
 		GE::GuardianEngine::EngineInstance->LaunchEngine();

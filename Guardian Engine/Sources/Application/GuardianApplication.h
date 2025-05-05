@@ -7,6 +7,18 @@ namespace GE
 	class GUARDIAN_API GuardianApplication
 	{
 	public:
+		struct CommandLineArgument
+		{
+			bool IsEmpty() const
+			{
+				return this->ArgumentList.empty();
+			}
+			static const int SCENE_PATH_ARGUMENT_INDEX = 1;
+
+			std::vector<GString> ArgumentList;
+		};
+
+	public:
 		GuardianApplication();
 		GuardianApplication(const GuardianApplication&) = delete;
 		~GuardianApplication();
@@ -17,6 +29,9 @@ namespace GE
 		std::shared_ptr<GuardianGraphics> GetApplicationGraphicsContext() noexcept;
 
 		static std::unique_ptr<GuardianApplication> ApplicationInstance;
+
+		static void SetCommandLineArgument(int argc, char* argv[]);
+		static CommandLineArgument ApplicationCommandLineArgument;
 
 	private:
 		void InitializeApplication(const GuardianWindowProperties& windowProperties);
