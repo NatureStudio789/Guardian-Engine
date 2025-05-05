@@ -7,6 +7,11 @@ workspace "Guardian Engine"
         "Release"
     }
 
+    flags
+    {
+        "MultiProcessorCompile"
+    }
+
 outputdir = "Build/%{cfg.buildcfg}/%{cfg.architecture}/"
 
 project "Guardian Engine"

@@ -87,6 +87,10 @@ float4 main(PixelInput InputData) : SV_TARGET
 	}
 
 	float3 LightColor = CalculatePBRLighting(PointLights, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
+	
+	float3 PixelColor = LightColor;
 
-	return float4(LightColor, 1.0f);
+	PixelColor = GammaCorrection(LightColor);
+
+	return float4(PixelColor, 1.0f);
 }

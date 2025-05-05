@@ -27,8 +27,21 @@ namespace GE
 
             set
             {
-                
+                InternalMethods.TransformComponentSetTranslation(this.UUID, ref value);
             }
+        }
+
+        public T CreateComponent<T>() where T : GuardianComponent, new()
+        {
+            if (HasComponent<T>())
+            {
+                return GetComponent<T>();
+            }
+
+            Type ComponentType = typeof(T);
+            InternalMethods.EntityCreateComponent(this.UUID, ComponentType);
+            T component = new T { Entity = this };
+            return component;
         }
 
         public bool HasComponent<T>() where T : GuardianComponent, new()

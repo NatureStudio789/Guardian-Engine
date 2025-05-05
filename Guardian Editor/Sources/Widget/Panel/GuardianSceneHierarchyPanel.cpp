@@ -49,8 +49,6 @@ namespace GE
 		{
 			ImGui::Begin("Scene Hierarchy", &open);
 
-			ImGui::Text(("FPS : " + std::to_string(GuardianTime::GetFPSCount())).c_str());
-
 			std::vector<entt::entity> DeletedEntities;
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
 			bool nodeOpened = ImGui::TreeNodeEx(this->PanelScene->SceneName.c_str(), flags);
@@ -297,6 +295,56 @@ namespace GE
 					if (ImGui::InputText("Class", buffer, sizeof(buffer)))
 					{
 						script.ClassName = buffer;
+					}
+
+					if (IsScriptExists)
+					{
+						if (this->PanelScene->GetSceneState() == GE_SCENE_RUNTIME)
+						{
+							auto entityClass = GuardianScriptEngine::GetEntityClass(script.ClassName);
+							for (const auto& field : entityClass->GetClassFieldList())
+							{
+								if (field.second.Type == GuardianScriptClass::ScriptField::GE_FLOAT)
+								{
+									float data = *(float*)entityClass->GetFieldValue(field.first);
+									if (ImGui::DragFloat(field.first.c_str(), &data, 0.1f))
+									{
+										entityClass->SetFieldValue(field.first, (void*)&data);
+									}
+								}
+								else if (field.second.Type == GuardianScriptClass::ScriptField::GE_INT)
+								{
+									int data = *(int*)entityClass->GetFieldValue(field.first);
+									if (ImGui::DragInt(field.first.c_str(), &data))
+									{
+										entityClass->SetFieldValue(field.first, (void*)&data);
+									}
+								}
+							}
+						}
+						else if (this->PanelScene->GetSceneState() == GE_SCENE_EDIT)
+						{
+							auto entityClass = GuardianScriptEngine::GetEntityClass(script.ClassName);
+							for (auto& field : entityClass->GetClassFieldList())
+							{
+								if (field.second.Type == GuardianScriptClass::ScriptField::GE_FLOAT)
+								{
+									float data = field.second.GetValue<float>();
+									if (ImGui::DragFloat(field.first.c_str(), &data, 0.1f))
+									{
+										field.second.SetValue(data);
+									}
+								}
+								else if (field.second.Type == GuardianScriptClass::ScriptField::GE_INT)
+								{
+									int data = field.second.GetValue<int>();
+									if (ImGui::DragInt(field.first.c_str(), &data))
+									{
+										field.second.SetValue(data);
+									}
+								}
+							}
+						}
 					}
 
 					if (!IsScriptExists)

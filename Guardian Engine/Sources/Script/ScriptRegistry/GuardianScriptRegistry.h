@@ -12,7 +12,9 @@ namespace GE
 		static void RegisterFunction(const GString& functionName, const void* functionPtr);
 		static void RegisterComponents();
 
+		static std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> GetEntityCreateComponentFunctionList();
 		static std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> GetEntityHasComponentFunctionList();
+		static std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> GetEntityRemoveComponentFunctionList();
 
 	private:
 		friend class GuardianScriptEngine;

@@ -49,6 +49,16 @@ namespace GE
 		PxRigidBodyExt::updateMassAndInertia(*this->RigidBodyObject, this->RigidBodyDensity);
 	}
 
+	void GuardianDynamicRigidBody::AddForce(const GVector3& force, const GuardianForceMode& mode)
+	{
+		this->RigidBodyObject->addForce(PxVec3(force.x, force.y, force.z), (PxForceMode::Enum)mode);
+	}
+
+	void GuardianDynamicRigidBody::AddTorque(const GVector3& torque, const GuardianForceMode& mode)
+	{
+		this->RigidBodyObject->addTorque(PxVec3(torque.x, torque.y, torque.z), (PxForceMode::Enum)mode);
+	}
+
 	void GuardianDynamicRigidBody::SetRigidBodyTransform(const GuardianTransform& transform)
 	{
 		this->RigidBodyTransform = transform;

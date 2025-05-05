@@ -12,6 +12,55 @@ namespace GE
 	std::unordered_map<GString, std::shared_ptr<GuardianScriptClass>> GuardianScriptEngine::EntityClassList;
 	std::shared_ptr<GuardianScene> GuardianScriptEngine::SceneContext;
 
+	static std::map<GString, GuardianScriptClass::ScriptField::Category> ScriptFieldTypeList =
+	{
+		{"System.Single", GuardianScriptClass::ScriptField::GE_FLOAT}, 
+		{"System.Double", GuardianScriptClass::ScriptField::GE_DOUBLE}, 
+		{"System.Bool", GuardianScriptClass::ScriptField::GE_BOOL}, 
+		{"System.Byte", GuardianScriptClass::ScriptField::GE_BYTE}, 
+		{"System.Short", GuardianScriptClass::ScriptField::GE_SHORT}, 
+		{"System.Int32", GuardianScriptClass::ScriptField::GE_INT}, 
+		{"System.Long", GuardianScriptClass::ScriptField::GE_LONG}, 
+		{"System.UByte", GuardianScriptClass::ScriptField::GE_UBYTE}, 
+		{"System.UShort", GuardianScriptClass::ScriptField::GE_USHORT}, 
+		{"System.UInt", GuardianScriptClass::ScriptField::GE_UINT}, 
+		{"System.ULong", GuardianScriptClass::ScriptField::GE_ULONG}, 
+
+		{"GE.GVector2", GuardianScriptClass::ScriptField::GE_GVECTOR2}, 
+		{"GE.GVector3", GuardianScriptClass::ScriptField::GE_GVECTOR3}, 
+		{"GE.GVector4", GuardianScriptClass::ScriptField::GE_GVECTOR4}, 
+
+		{"GE.Entity", GuardianScriptClass::ScriptField::GE_ENTITY}
+	};
+
+
+	static GuardianScriptClass::ScriptField::Category MonoTypeToScriptFieldType(MonoType* monoType)
+	{
+		GString typeName = mono_type_get_name(monoType);
+
+		if (ScriptFieldTypeList.count(typeName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No supported type of '{}' to script field type!", typeName));
+		}
+
+		return ScriptFieldTypeList[typeName];
+	}
+
+	static void EntityCreateComponent(unsigned long long uuid, MonoReflectionType* reflectionType)
+	{
+		auto entity = GuardianScriptEngine::GetSceneContext()->GetEntity(uuid);
+
+		MonoType* managedType = mono_reflection_type_get_type(reflectionType);
+		const auto& CreateComponentFunctionList = GuardianScriptRegistry::GetEntityCreateComponentFunctionList();
+		if (CreateComponentFunctionList.find(managedType) == CreateComponentFunctionList.end())
+		{
+			GString ManagedTypeName = mono_type_get_name(managedType);
+			printf((("Cannot find the type : '" + ManagedTypeName + "' !").c_str()));
+			return;
+		}
+
+		CreateComponentFunctionList.at(managedType)(entity);
+	}
 
 	static bool EntityHasComponent(unsigned long long uuid, MonoReflectionType* componentType)
 	{
@@ -29,6 +78,22 @@ namespace GE
 		}
 
 		return HasComponentFunctionList.at(monoComponentType)(entity);
+	}
+
+	static void EntityRemoveComponent(unsigned long long uuid, MonoReflectionType* reflectionType)
+	{
+		auto entity = GuardianScriptEngine::GetSceneContext()->GetEntity(uuid);
+
+		MonoType* managedType = mono_reflection_type_get_type(reflectionType);
+		const auto& RemoveComponentFunctionList = GuardianScriptRegistry::GetEntityRemoveComponentFunctionList();
+		if (RemoveComponentFunctionList.find(managedType) == RemoveComponentFunctionList.end())
+		{
+			GString ManagedTypeName = mono_type_get_name(managedType);
+			printf((("Cannot find the type : '" + ManagedTypeName + "' !\n").c_str()));
+			return;
+		}
+
+		RemoveComponentFunctionList.at(managedType)(entity);
 	}
 
 	static void EntityGetTranslation(unsigned long long uuid, GVector3* translation)
@@ -55,7 +120,9 @@ namespace GE
 		InitializeMono();
 		LoadAssembly("Assets/Scripts/Guardian-ScriptCore.dll");
 
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityCreateComponent", EntityCreateComponent);
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityHasComponent", EntityHasComponent);
+		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityRemoveComponent", EntityRemoveComponent);
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::TransformComponentGetTranslation", EntityGetTranslation);
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::TransformComponentSetTranslation", EntitySetTranslation);
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::InputIsKeyPressed", InputIsKeyPressed);
@@ -94,9 +161,31 @@ namespace GE
 			}
 
 			bool isEntity = mono_class_is_subclass_of(Class.ClassInstance, EntityClass.ClassInstance, false);
-			if (isEntity)
+			if (!isEntity)
 			{
-				EntityClassList[fullName] = std::make_shared<GuardianScriptClass>(Class);
+				continue;
+			}
+
+			std::shared_ptr<GuardianScriptClass> ScriptClass = std::make_shared<GuardianScriptClass>(Class);
+			EntityClassList[fullName] = ScriptClass;
+
+			MonoClass* monoClass = mono_class_from_name(mono_assembly_get_image(CoreAssembly), nameSpace.c_str(), name.c_str());
+
+			void* iterator = null;
+			printf("%s has %d fields.\n", name.c_str(), mono_class_num_fields(monoClass));
+			while (MonoClassField* field = mono_class_get_fields(monoClass, &iterator))
+			{
+				GString FieldName = mono_field_get_name(field);
+				uint32_t flags = mono_field_get_flags(field);
+				if (flags & FIELD_ATTRIBUTE_PUBLIC)
+				{
+					printf("    %s\n", FieldName.c_str());
+
+					ScriptClass->ClassFieldList[FieldName] = {};
+					ScriptClass->ClassFieldList[FieldName].Name = FieldName;
+					ScriptClass->ClassFieldList[FieldName].ClassField = field;
+					ScriptClass->ClassFieldList[FieldName].Type = MonoTypeToScriptFieldType(mono_field_get_type(field));
+				}
 			}
 		}
 	}
@@ -116,6 +205,11 @@ namespace GE
 				EntityClassList[SComponent.ClassName]->InstantiateObject();
 			}
 
+			for (auto& field : EntityClassList[SComponent.ClassName]->ClassFieldList)
+			{
+				EntityClassList[SComponent.ClassName]->SetFieldValue(field.first, (void*)field.second.GetValueBuffer());
+			}
+
 			void* parameter = (unsigned long long*)&entity->GetEntityId();
 			EntityClassList[SComponent.ClassName]->InvokeMethod(GuardianScriptClass{ "GE", "Entity"}.GetClassMethod(".ctor", 1), &parameter);
 			EntityClassList[SComponent.ClassName]->InvokeMethod("Initialize", 0, null);
@@ -127,7 +221,7 @@ namespace GE
 		const auto& SComponent = entity->GetComponent<GuardianScriptComponent>();
 		if (IsEntityClassExists(SComponent.ClassName))
 		{
-			float deltaTime = 16.6667f;
+			float deltaTime = GuardianTime::GetDeltaTime();
 			void* parameter = &deltaTime;
 
 			EntityClassList[SComponent.ClassName]->InvokeMethod("Update", 1, &parameter);
@@ -146,6 +240,16 @@ namespace GE
 	void GuardianScriptEngine::StopRuntime()
 	{
 		SceneContext = null;
+	}
+
+	std::shared_ptr<GuardianScriptClass> GuardianScriptEngine::GetEntityClass(const GString& name)
+	{
+		if (EntityClassList.count(name) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No script entity class named : '{}' found!", name));
+		}
+
+		return EntityClassList[name];
 	}
 
 	void GuardianScriptEngine::LoadAssembly(const GString& filePath)

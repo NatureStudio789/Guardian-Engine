@@ -4,8 +4,25 @@
 
 namespace GE
 {
+	std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> EntityCreateComponentFunctionList;
 	std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> EntityHasComponentFunctionList;
+	std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> EntityRemoveComponentFunctionList;
 
+
+	static void EntityCreateComponent(unsigned long long uuid, MonoReflectionType* reflectionType)
+	{
+		auto entity = GuardianScriptEngine::GetSceneContext()->GetEntity(uuid);
+
+		MonoType* managedType = mono_reflection_type_get_type(reflectionType);
+		if (EntityCreateComponentFunctionList.find(managedType) == EntityCreateComponentFunctionList.end())
+		{
+			GString ManagedTypeName = mono_type_get_name(managedType);
+			printf((("Cannot find the type : '" + ManagedTypeName + "' !").c_str()));
+			return;
+		}
+
+		EntityCreateComponentFunctionList.at(managedType)(entity);
+	}
 
 	void GuardianScriptRegistry::RegisterFunction(const GString& functionName, const void* functionPtr)
 	{
@@ -29,7 +46,9 @@ namespace GE
 				return;
 			}
 
+			EntityCreateComponentFunctionList[ManagedType] = [](std::shared_ptr<GuardianEntity> entity) { entity->AddComponent<Component>(); };
 			EntityHasComponentFunctionList[ManagedType] = [](std::shared_ptr<GuardianEntity> entity) { return entity->HasComponent<Component>(); };
+			EntityRemoveComponentFunctionList[ManagedType] = [](std::shared_ptr<GuardianEntity> entity) { entity->RemoveComponent<Component>(); };
 		}(), ...);
 	}
 
@@ -40,8 +59,18 @@ namespace GE
 			GuardianMeshColliderComponent, GuardianRigidBodyComponent>();
 	}
 
+	std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> GuardianScriptRegistry::GetEntityCreateComponentFunctionList()
+	{
+		return EntityCreateComponentFunctionList;
+	}
+
 	std::unordered_map<MonoType*, std::function<bool(std::shared_ptr<GuardianEntity>)>> GuardianScriptRegistry::GetEntityHasComponentFunctionList()
 	{
 		return EntityHasComponentFunctionList;
+	}
+
+	std::unordered_map<MonoType*, std::function<void(std::shared_ptr<GuardianEntity>)>> GuardianScriptRegistry::GetEntityRemoveComponentFunctionList()
+	{
+		return EntityRemoveComponentFunctionList;
 	}
 }

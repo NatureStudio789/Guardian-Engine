@@ -109,7 +109,11 @@ namespace GE
 					(GuardianKeyboard::IsKeyPress(VK_CONTROL) && GuardianKeyboard::IsKeyPress(VK_SHIFT) && GuardianKeyboard::IsKeyPress('S')))
 				{
 					GString filePath = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
-					GuardianEngine::EngineInstance->GetScene()->SaveSceneAs(filePath);
+
+					if (!filePath.empty())
+					{
+						GuardianEngine::EngineInstance->GetScene()->SaveSceneAs(filePath);
+					}
 				}
 
 				if (ImGui::MenuItem("Open...", "Ctrl+O") ||

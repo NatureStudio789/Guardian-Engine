@@ -31,6 +31,7 @@
 #include <commdlg.h>
 #include <mono/jit/jit.h>
 #include <mono/metadata/assembly.h>
+#include <mono/metadata/tabledefs.h>
 #include <PhysX/PxPhysicsAPI.h>
 #include <codecvt>
 #include <immintrin.h>

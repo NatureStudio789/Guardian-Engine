@@ -5,5 +5,4 @@
   imgui_impl_win32.cpp
   imgui_tables.cpp
   imgui_widgets.cpp
-  正在生成代码...
   ImGui.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\ImGui.lib

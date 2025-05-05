@@ -96,7 +96,12 @@ namespace GE
 	{
 		if (!this->IsFileExists())
 		{
-			this->InitializeFile(GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0"));
+			GString path = GuardianFileDialog::SaveFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
+			if (path.find_last_of('.') == GString::npos)
+			{
+				path += ".gscene";
+			}
+			this->InitializeFile(path);
 		}
 
 		this->Serialize();
@@ -745,6 +750,45 @@ namespace GE
 				{
 					auto& Script = LoadedEntity->AddComponent<GuardianScriptComponent>();
 					Script.ClassName = ScriptComponent["Class"].as<GString>();
+
+					auto ScriptField = ScriptComponent["Class Fields"];
+					if (ScriptField)
+					{
+						for (auto scriptField : ScriptField)
+						{
+							GString name = scriptField["Field Name"].as<GString>();
+							GString TypeName = scriptField["Category"].as<GString>();
+							GuardianScriptClass::ScriptField::Category type = 
+								GuardianScriptClass::ScriptField::StringToFieldType(TypeName);
+							auto entityClass = GuardianScriptEngine::GetEntityClass(Script.ClassName);
+							if (entityClass->HasField(name))
+							{
+								auto& field = entityClass->GetClassField(name);
+#define DESERIALIZE_SET_FIELD_VALUE(category, dataType) case category: field.SetValue<dataType>(scriptField["Data"].as<dataType>()); break;
+								switch (field.Type)
+								{
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_FLOAT, float)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_DOUBLE, double)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_BOOL, bool)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_CHAR, char)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_BYTE, byte)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_SHORT, short)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_INT, int)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_LONG, long)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_UBYTE, byte)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_USHORT, USHORT)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_UINT, UINT)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_ULONG, ULONG)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_GVECTOR2, GVector2)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_GVECTOR3, GVector3)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_GVECTOR4, GVector4)
+									DESERIALIZE_SET_FIELD_VALUE(GuardianScriptClass::ScriptField::GE_ENTITY, ULONGLONG)
+								default:
+									field.SetValue<int>(0);
+								}
+							}
+						}
+					}
 				}
 
 				auto PointLightComponent = entity["Point Light Component"];
@@ -917,6 +961,48 @@ namespace GE
 
 			output << YAML::Key << "Class" << YAML::Value <<
 				entity->GetComponent<GuardianScriptComponent>().ClassName;
+
+			if (GuardianScriptEngine::IsEntityClassExists(entity->GetComponent<GuardianScriptComponent>().ClassName))
+			{
+				auto entityClass = GuardianScriptEngine::GetEntityClass(entity->GetComponent<GuardianScriptComponent>().ClassName);
+				if (entityClass->GetClassFieldList().size() > 0)
+				{
+					output << YAML::Key << "Class Fields" << YAML::Value << YAML::BeginSeq;
+
+					for (auto& field : entityClass->GetClassFieldList())
+					{
+						output << YAML::BeginMap;
+
+						output << YAML::Key << "Field Name" << YAML::Value << field.first;
+						output << YAML::Key << "Category" << YAML::Value << field.second.GetFieldStringType();
+
+						switch (field.second.Type)
+						{
+						case GuardianScriptClass::ScriptField::GE_NONE:		output << YAML::Key << "Data" << YAML::Value << 0; break;
+						case GuardianScriptClass::ScriptField::GE_FLOAT:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<float>(); break;
+						case GuardianScriptClass::ScriptField::GE_DOUBLE:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<double>(); break;
+						case GuardianScriptClass::ScriptField::GE_BOOL:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<bool>(); break;
+						case GuardianScriptClass::ScriptField::GE_CHAR:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<char>(); break;
+						case GuardianScriptClass::ScriptField::GE_BYTE:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<byte>(); break;
+						case GuardianScriptClass::ScriptField::GE_SHORT:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<short>(); break;
+						case GuardianScriptClass::ScriptField::GE_INT:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<int>(); break;
+						case GuardianScriptClass::ScriptField::GE_LONG:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<long>(); break;
+						case GuardianScriptClass::ScriptField::GE_UBYTE:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<byte>(); break;
+						case GuardianScriptClass::ScriptField::GE_USHORT:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<USHORT>(); break;
+						case GuardianScriptClass::ScriptField::GE_UINT:		output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<UINT>(); break;
+						case GuardianScriptClass::ScriptField::GE_ULONG:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<ULONG>(); break;
+						case GuardianScriptClass::ScriptField::GE_GVECTOR2: output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<GVector2>(); break;
+						case GuardianScriptClass::ScriptField::GE_GVECTOR3: output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<GVector3>(); break;
+						case GuardianScriptClass::ScriptField::GE_GVECTOR4: output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<GVector4>(); break;
+						case GuardianScriptClass::ScriptField::GE_ENTITY:	output << YAML::Key << "Data" << YAML::Value << field.second.GetValue<ULONGLONG>(); break;
+						}
+
+						output << YAML::EndMap;
+					}
+
+					output << YAML::EndSeq;
+				}
+			}
 
 			output << YAML::EndMap;
 		}

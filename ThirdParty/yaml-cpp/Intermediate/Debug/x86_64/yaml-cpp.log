@@ -18,8 +18,6 @@
   nodeevents.cpp
   null.cpp
   ostream_wrapper.cpp
-  正在生成代码...
-  正在编译...
   parse.cpp
   parser.cpp
   regex_yaml.cpp
@@ -31,5 +29,4 @@
   singledocparser.cpp
   stream.cpp
   tag.cpp
-  正在生成代码...
   yaml-cpp.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\yaml-cpp.lib

@@ -6,6 +6,7 @@ namespace GE
 {
 	class GuardianEntity;
 	class GuardianScene;
+
 	class GUARDIAN_API GuardianScriptEngine
 	{
 	public:
@@ -18,6 +19,8 @@ namespace GE
 		static void OnUpdateEntity(std::shared_ptr<GuardianEntity> entity);
 		static void OnReleaseEntity(std::shared_ptr<GuardianEntity> entity);
 		static void StopRuntime();
+
+		static std::shared_ptr<GuardianScriptClass> GetEntityClass(const GString& name);
 
 		static const bool IsEntityClassExists(const GString& fullName);
 		static std::shared_ptr<GuardianScene> GetSceneContext();
