@@ -62,6 +62,7 @@ namespace GE
 
 		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 
+		this->AddEditorToEngine(std::make_shared<GuardianConsoleEditor>());
 		this->AddEditorToEngine(std::make_shared<GuardianRendererEditor>());
 
 		if (!GuardianApplication::ApplicationCommandLineArgument.IsEmpty())

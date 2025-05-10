@@ -18,6 +18,7 @@ namespace GE
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics foundation!");
 		}
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Created engine physics foundation.");
 
 		PhysicsDebugger = PxCreatePvd(*PhysicsFoundation);
 		PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
@@ -29,6 +30,7 @@ namespace GE
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics object!");
 		}
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Created engine physics object.");
 
 		PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(16);
 
@@ -44,6 +46,9 @@ namespace GE
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to initialize physics engine extentions!");
 		}
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Initialized physics extentions.");
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize physics engine.");
 	}
 
 	PxMaterial* GuardianPhysicsEngine::CreatePhysicsMaterial(float staticFriction, float dynamicFriction, float restitution)

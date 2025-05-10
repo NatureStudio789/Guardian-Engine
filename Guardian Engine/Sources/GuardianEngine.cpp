@@ -25,6 +25,8 @@ namespace GE
 		{
 			throw GUARDIAN_VALUE_EXCEPTION((long long)this->EngineProgram);
 		}
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Guardian Engine v1.0d");
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_WARNING, "Current engine is a debug version.");
 		
 		GuardianWindowProperties EngineWindowProperties;
 		EngineWindowProperties.SetWindowResolution((int)(GetSystemMetrics(SM_CXSCREEN) * 0.8), (int)(GetSystemMetrics(SM_CYSCREEN) * 0.8));
@@ -32,6 +34,8 @@ namespace GE
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
 		GuardianApplication::ApplicationInstance->ApplicationWindow->AvailableWindowGraphics();
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Availabled engine graphics.");
+
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		GuardianThread Initialization;
@@ -50,6 +54,7 @@ namespace GE
 			this->FinishedInitialization = true;
 		});
 		Initialization.DetachMainThread();
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Guardian Engine Initialization Successful!");
 
 		GuardianApplication::ApplicationInstance->LaunchStartupWindow();
 	}

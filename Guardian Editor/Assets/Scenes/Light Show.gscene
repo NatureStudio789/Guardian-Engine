@@ -17,28 +17,6 @@ Entities:
         Restitution: 0.600000024
     RigidBody Component:
       Type: 0
-  - Entity: 6935017276103604586
-    Tag Component:
-      Tag: DR.EMR
-    Transform Component:
-      Position: [0, 21.4457855, 0]
-      Rotation: [3.10540605, 3.84022164, -1.23618352]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [0, 21.4457855, 0]
-      Light Strength: 1050
-      Light Color: [1, 1, 1]
-    Mesh Component:
-      Mesh Name: Cube
-    Box Collider Component:
-      Half Size: [1, 1, 1]
-      Physics Material:
-        Static Friction: 0.5
-        Dynamic Friction: 0.5
-        Restitution: 0.779999971
-    RigidBody Component:
-      Type: 1
-      Density: 31.8999996
   - Entity: 13698351670626693965
     Tag Component:
       Tag: Camera
@@ -78,7 +56,7 @@ Entities:
       Rotation: [0, 0, 0]
       Scale: [16, 0.5, 16]
     Mesh Component:
-      Mesh Name: Ground
+      Mesh Name: SBDS
     Box Collider Component:
       Half Size: [16, 0.5, 16]
       Physics Material:
@@ -105,50 +83,6 @@ Entities:
     RigidBody Component:
       Type: 1
       Density: 1
-  - Entity: 2539364697823311462
-    Tag Component:
-      Tag: Light1
-    Transform Component:
-      Position: [0, 6.47866106, -8.49391079]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [0, 6.47866106, -8.49391079]
-      Light Strength: 100
-      Light Color: [1, 1, 1]
-  - Entity: 6270719525947334646
-    Tag Component:
-      Tag: Light2
-    Transform Component:
-      Position: [-7.69472742, 7.96424484, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [-7.69472742, 7.96424484, 0]
-      Light Strength: 100
-      Light Color: [1, 1, 1]
-  - Entity: 627790747521193976
-    Tag Component:
-      Tag: Light3
-    Transform Component:
-      Position: [9.62231159, 7.66716099, 0]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [9.62231159, 7.66716099, 0]
-      Light Strength: 100
-      Light Color: [1, 1, 1]
-  - Entity: 14504833497311438013
-    Tag Component:
-      Tag: Light4
-    Transform Component:
-      Position: [0, 7.00290155, 9.13317776]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [0, 7.00290155, 9.13317776]
-      Light Strength: 100
-      Light Color: [1, 1, 1]
   - Entity: 5983712648153706305
     Tag Component:
       Tag: Guardian1
@@ -166,3 +100,21 @@ Entities:
         Restitution: 0.600000024
     RigidBody Component:
       Type: 0
+  - Entity: 18129241060098380412
+    Tag Component:
+      Tag: DR.EMR
+    Transform Component:
+      Position: [0, 22.9759121, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [1, 1, 1]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 1

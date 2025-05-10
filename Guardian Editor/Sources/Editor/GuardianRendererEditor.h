@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDEREREDITOR_H_
 #define _GE_GUARDIANRENDEREREDITOR_H_
-#include "GuardianEditor.h"
+#include "GuardianConsoleEditor.h"
 
 namespace GE
 {

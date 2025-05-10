@@ -26,6 +26,8 @@ namespace GE
 			PBRShaderGroup->SetPixelShader(ps);
 
 			AddShaderGroup(PBRShaderGroup);
+
+			GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded engine shader group '{}'", PBR_MAIN_SHADER));
 		}
 
 		{
@@ -43,7 +45,11 @@ namespace GE
 			WireframeShaderGroup->SetPixelShader(ps);
 
 			AddShaderGroup(WireframeShaderGroup);
+
+			GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded engine shader group '{}'", WIREFRAME_SHADER));
 		}
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize shader system.");
 	}
 
 	void GuardianShaderSystem::AddShaderGroup(std::shared_ptr<GuardianShaderGroup> shaderGroup)

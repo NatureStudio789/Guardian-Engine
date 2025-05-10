@@ -28,8 +28,10 @@ namespace GE
 			StartupWindowProperties, StartupWindowMessageProcessFunction);
 		this->ApplicationWindow = GuardianWindow::CreateNewWindow(
 			windowProperties, GuardianApplication::ApplicationMessageProcessFunction);
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to create engine window.");
 
 		GuardianInput::InitializeInput();
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize input system.");
 
 		this->ApplicationEventProcesser->OnEvent<GuardianWindowCloseEvent>([this](const GuardianWindowCloseEvent& event)
 		{
@@ -46,11 +48,14 @@ namespace GE
 				this->ApplicationWindow->WindowGraphicsContext->UpdateGUIGraphicsResolution(event.ResizeWidth, event.ResizeHeight);
 			}
 		});
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize engine application.");
 	}
 
 	void GuardianApplication::LaunchStartupWindow()
 	{
 		this->StartupWindow->DisplayWindow();
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Displayed startup window.");
 
 		while (!GuardianEngine::EngineInstance->FinishedInitialization)
 		{

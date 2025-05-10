@@ -11,6 +11,7 @@ namespace GE
 
 		static void UpdateTime();
 
+		static const GString GetCurrentTimeExpression();
 		static const GuardianTimestep& GetDeltaTime();
 		static const int& GetFPSCount();
 

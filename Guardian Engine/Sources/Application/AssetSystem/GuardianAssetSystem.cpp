@@ -16,6 +16,8 @@ namespace GE
 		AddDefaultAsset();
 
 		IterateDirectory("Assets\\");
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize engine asset system.");
 	}
 
 	void GuardianAssetSystem::UpdateAssetSystem()
@@ -46,7 +48,7 @@ namespace GE
 			GuardianCamera({ 0.0f, 0.0f, -3.0f }, { 0.0f, 0.0f, 0.0f }, { 60.0f, 800.0f / 800.0f, 0.01f, 1000.0f }));
 		
 		GuardianRenderer::SetRenderingRenderGraphShaderGroup(MeshAssetsList["Box"]->GetAssetName() + " Rendering View",
-			GuardianShaderSystem::WIREFRAME_SHADER);
+			GuardianShaderSystem::PBR_MAIN_SHADER);
 
 		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()] = std::make_shared<GuardianMesh>();
 		MeshAssetRenderingList[MeshAssetsList["Box"]->GetAssetName()]->InitializeMesh(
@@ -91,7 +93,7 @@ namespace GE
 				GuardianCamera({ 0.0f, 0.0f, -3.0f }, { 0.0f, 0.0f, 0.0f }, { 60.0f, 800.0f / 800.0f, 0.01f, 1000.0f }));
 
 			GuardianRenderer::SetRenderingRenderGraphShaderGroup(assetHandle->GetAssetName() + " Rendering View",
-				GuardianShaderSystem::WIREFRAME_SHADER);
+				GuardianShaderSystem::PBR_MAIN_SHADER);
 
 			MeshAssetRenderingList[assetHandle->GetAssetName()] = std::make_shared<GuardianMesh>();
 			MeshAssetRenderingList[assetHandle->GetAssetName()]->InitializeMesh(

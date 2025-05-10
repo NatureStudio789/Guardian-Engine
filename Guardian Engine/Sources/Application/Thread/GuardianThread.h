@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANTHREAD_H_
 #define _GE_GUARDIANTHREAD_H_
-#include "../../Profile/Time/GuardianTime.h"
+#include "../Log/GuardianLogger.h"
 
 namespace GE
 {

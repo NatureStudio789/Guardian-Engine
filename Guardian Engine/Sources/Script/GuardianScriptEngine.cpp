@@ -119,6 +119,7 @@ namespace GE
 	{
 		InitializeMono();
 		LoadAssembly("Assets/Scripts/Guardian-ScriptCore.dll");
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to load engine core script library.");
 
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityCreateComponent", EntityCreateComponent);
 		GuardianScriptRegistry::RegisterFunction("GE.InternalMethods::EntityHasComponent", EntityHasComponent);
@@ -188,6 +189,8 @@ namespace GE
 				}
 			}
 		}
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize script engine.");
 	}
 
 	void GuardianScriptEngine::StartRuntime(GuardianScene* scene)

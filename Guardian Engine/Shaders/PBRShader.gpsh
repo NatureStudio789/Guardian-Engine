@@ -17,7 +17,7 @@ cbuffer LightCBuffer : register(b1)
 {
 	float3 CameraPosition;
 	int PointLightNumber;
-	PBRPointLight PointLights[50];
+	PointLight PointLightList[50];
 };
 
 struct PixelInput
@@ -38,7 +38,7 @@ Texture2D AoTexture : register(t4);
 
 float4 main(PixelInput InputData) : SV_TARGET
 {
-	PBRMaterial MeshMaterial;
+	Material MeshMaterial;
 	float3 VertexNormal;
 
 	if (UsingAlbedoMap)
@@ -86,11 +86,17 @@ float4 main(PixelInput InputData) : SV_TARGET
 		MeshMaterial.Ao = AoColor;
 	}
 
-	float3 LightColor = CalculatePBRLighting(PointLights, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
-	
-	float3 PixelColor = LightColor;
+	float3 LightColor = CalculateMultiplePointLights(PointLightList, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
+	DirectionalLight light;
+	light.LightDirection = float3(45.0f, 0.0f, 0.0f);
+	light.LightColor = float3(1.0f, 1.0f, 1.0f);
+	light.LightStrength = 48.0f;
+	LightColor += CalculateDirectionalLight(light, MeshMaterial, VertexNormal, InputData.InputWorldPosition, CameraPosition);
 
-	PixelColor = GammaCorrection(LightColor);
+	float3 PixelColor = LightColor + GetAmbient(MeshMaterial.Albedo, 
+		MeshMaterial.Ao);
+
+	PixelColor = GammaCorrection(PixelColor);
 
 	return float4(PixelColor, 1.0f);
 }

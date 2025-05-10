@@ -408,7 +408,7 @@ namespace GE
 								mesh->InitializeMesh(meshAsset.GetAssetName(), meshAsset.GetMeshAssetData());
 							}
 						}
-
+						
 						ImGui::EndDragDropTarget();
 					}
 
@@ -433,190 +433,6 @@ namespace GE
 
 						ImGui::TreePop();
 					}
-					/*ImGui::Text("Mesh Material");
-					ImGui::SameLine();
-					if (ImGui::Button((GuardianMaterialSystem::GetMaterialName(
-						*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()) + "##Material").c_str()))
-					{
-						openMaterialBrowser = true;
-					}
-
-					ImGui::Separator();
-
-					if (ImGui::TreeNodeEx((void*)typeid(GuardianMaterial).hash_code(), ImGuiTreeNodeFlags_DefaultOpen,
-						GuardianResourceSystem::GetMaterialName(
-							*SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial()).c_str()))
-					{
-						auto material = SelectedEntity->GetComponent<GuardianMeshComponent>().Mesh->GetMaterial();
-
-						if (ImGui::TreeNodeEx("Albedo Color (Diffuse Color)", ImGuiTreeNodeFlags_DefaultOpen))
-						{
-							bool UseAlbedoT = material->UsingAlbedoTexture;
-							ImGui::Checkbox("Use Texture", &UseAlbedoT);
-
-							if (!UseAlbedoT)
-							{
-								float albedoColor[3] = { material->AlbedoColor.x, material->AlbedoColor.y, material->AlbedoColor.z };
-								if (ImGui::ColorEdit3("##albedo color", albedoColor))
-								{
-									material->SetAlbedoColor(GVector3(albedoColor[0], albedoColor[1], albedoColor[2]));
-								}
-							}
-							else
-							{
-								if (!material->AlbedoTexture)
-								{
-									openTextureBrowser = true;
-									textureIndex = 0;
-								}
-								else
-								{
-									if (ImGui::ImageButton("Albedo",
-										(ImTextureID)material->AlbedoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
-									{
-										openTextureBrowser = true;
-										textureIndex = 0;
-									}
-								}
-							}
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::TreeNodeEx("Metallic Color", ImGuiTreeNodeFlags_DefaultOpen))
-						{
-							static bool UseMetallicT = material->UsingMetallicTexture;
-							ImGui::Checkbox("Use Texture", &UseMetallicT);
-
-							if (!UseMetallicT)
-							{
-								float metallicColor = material->MetallicColor;
-								if (ImGui::DragFloat("##metallic color", &metallicColor, 0.001f, 0.0f, 1.0f))
-								{
-									material->SetMetallicColor(metallicColor);
-								}
-							}
-							else
-							{
-								if (!material->MetallicTexture)
-								{
-									openTextureBrowser = true;
-									textureIndex = 1;
-								}
-								else
-								{
-									if (ImGui::ImageButton("Metallic",
-										(ImTextureID)material->MetallicTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
-									{
-										openTextureBrowser = true;
-										textureIndex = 1;
-									}
-								}
-							}
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::TreeNodeEx("Roughness Color", ImGuiTreeNodeFlags_DefaultOpen))
-						{
-							static bool UseRoughnessT = material->UsingRoughnessTexture;
-							ImGui::Checkbox("Use Texture", &UseRoughnessT);
-
-							if (!UseRoughnessT)
-							{
-								float roughnessColor = material->RoughnessColor;
-								if (ImGui::DragFloat("##roughness color", &roughnessColor, 0.001f, 0.0f, 1.0f))
-								{
-									material->SetRoughnessColor(roughnessColor);
-								}
-							}
-							else
-							{
-								if (!material->RoughnessTexture)
-								{
-									openTextureBrowser = true;
-									textureIndex = 2;
-								}
-								else
-								{
-									if (ImGui::ImageButton("Roughness",
-										(ImTextureID)material->RoughnessTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
-									{
-										openTextureBrowser = true;
-										textureIndex = 2;
-									}
-								}
-							}
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::TreeNodeEx("Normal", ImGuiTreeNodeFlags_DefaultOpen))
-						{
-							static bool UseNormalT = material->UsingNormalTexture;
-							ImGui::Checkbox("Use Texture", &UseNormalT);
-
-							if (!UseNormalT)
-							{
-								ImGui::Button("Default Normal");
-							}
-							else
-							{
-								if (!material->NormalTexture)
-								{
-									openTextureBrowser = true;
-									textureIndex = 3;
-								}
-								else
-								{
-									if (ImGui::ImageButton("Normal",
-										(ImTextureID)material->NormalTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
-									{
-										openTextureBrowser = true;
-										textureIndex = 3;
-									}
-								}
-							}
-
-							ImGui::TreePop();
-						}
-
-						if (ImGui::TreeNodeEx("Ao Color", ImGuiTreeNodeFlags_DefaultOpen))
-						{
-							static bool UseAoT = material->UsingAoTexture;
-							ImGui::Checkbox("Use Texture", &UseAoT);
-
-							if (!UseAoT)
-							{
-								float aoColor = material->AoColor;
-								if (ImGui::DragFloat("##ao color", &aoColor, 0.001f, 0.0f, 1.0f))
-								{
-									material->SetAoColor(aoColor);
-								}
-							}
-							else
-							{
-								if (!material->AoTexture)
-								{
-									openTextureBrowser = true;
-									textureIndex = 4;
-								}
-								else
-								{
-									if (ImGui::ImageButton("Ao",
-										(ImTextureID)material->AoTexture->GetTextureResource().Get(), ImVec2(50.0f, 50.0f)))
-									{
-										openTextureBrowser = true;
-										textureIndex = 4;
-									}
-								}
-							}
-
-							ImGui::TreePop();
-						}
-
-						ImGui::TreePop();
-					}*/
 
 					ImGui::TreePop();
 				}
@@ -1027,7 +843,7 @@ namespace GE
 				ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
 				ImGui::ImageButton(meshPair.first.c_str(),
-					(ImTextureID)this->MeshFileIcon.GetTextureResource().Get(), ImVec2(IconSize, IconSize));
+					(ImTextureID)GuardianAssetSystem::GetMeshAssetRenderingView(meshPair.first)->GetFramebufferResource().Get(), ImVec2(IconSize, IconSize));
 				ImGui::PopStyleColor(3);
 
 				if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))

@@ -28,6 +28,19 @@ namespace GE
 		}
 	}
 
+	const GString GuardianTime::GetCurrentTimeExpression()
+	{
+		SYSTEMTIME SystemTime;
+		GetLocalTime(&SystemTime);
+
+		std::stringstream TimeExprStream;
+		TimeExprStream << "[" << SystemTime.wYear << " - " <<
+			SystemTime.wMonth << " - " << SystemTime.wDay << " ";
+		TimeExprStream << SystemTime.wHour << " : " << SystemTime.wMinute << " : " << SystemTime.wSecond << "]";
+
+		return TimeExprStream.str();
+	}
+
 	const GuardianTimestep& GuardianTime::GetDeltaTime()
 	{
 		return DeltaTime;

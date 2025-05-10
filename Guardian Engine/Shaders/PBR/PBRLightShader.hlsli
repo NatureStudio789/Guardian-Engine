@@ -1,4 +1,4 @@
-struct PBRMaterial
+struct Material
 {
     float3 Albedo;
     float Metallic;
@@ -6,13 +6,14 @@ struct PBRMaterial
     float Ao;
 };
 
-struct PBRDirectionLight
+struct DirectionalLight
 {
     float3 LightDirection;
+    float LightStrength;
     float3 LightColor;
 };
 
-struct PBRPointLight
+struct PointLight
 {
     float3 LightPosition;
     float LightStrength;
@@ -35,7 +36,7 @@ float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D norma
     float3 B = -normalize(cross(N, T));
     float3x3 TBN = float3x3(T, B, N);
 
-    return normalize(mul(TBN, tangentNormal));
+    return mul(TBN, tangentNormal);
 }
 
 float DistributionGGX(float3 n, float3 h, float roughness)
@@ -96,75 +97,31 @@ float3 GetAmbient(float3 albedo, float ao)
     return float3(0.03f, 0.03f, 0.03f) * albedo * ao;
 }
 
-float3 CalculatePBRSimpleLighting(PBRPointLight light, PBRMaterial material, 
-    float3 normal, float3 worldPosition, float3 viewPosition)
+float3 CalculateLight(float3 L, float3 radiance, float3 N, float3 V, 
+    float3 albedo, float metallic, float roughness)
 {
-    float3 N = normal;
-    float3 V = normalize(viewPosition - worldPosition);
-    
-    float3 F0 = GetFresnelF0(material.Albedo, material.Metallic);
-    
-    float3 Lo = float3(0.0f, 0.0f, 0.0f);
-    
-    float3 L = normalize(light.LightPosition - worldPosition);
     float3 H = normalize(V + L);
-    float distance = length(light.LightPosition - worldPosition);
-    float attenuation = 1.0f / (distance * distance);
-    float3 radiance = light.LightColor * light.LightStrength * attenuation;
     
-    float NDF = DistributionGGX(N, H, material.Roughness);
-    float G = GeometrySmith(N, V, L, material.Roughness);
-    float3 F = FresnelSchlick(clamp(dot(H, V), 0.0f, 1.0f), F0);
-        
-    float3 numerator = NDF * G * F;
-    float denumerator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.0001f;
-    float3 specular = numerator / denumerator;
-        
-    float3 kS = F;
-    float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
-    kD *= 1.0f - material.Metallic;
-        
-    float NDotL = max(dot(N, L), 0.0f);
-        
-    Lo += (kD * material.Albedo / PI + specular) * radiance * NDotL;
-
-    float3 color = GetAmbient(material.Albedo, material.Ao) + Lo;
+    float3 F0 = GetFresnelF0(albedo, roughness);
     
-    return color;
-}
-
-float3 CalculateDirectionLight(PBRDirectionLight light, PBRMaterial material, 
-    float3 normal, float3 worldPosition, float3 viewPosition)
-{
-    float3 N = normal;
-    float3 V = normalize(viewPosition - worldPosition);
-    float3 L = normalize(-light.LightDirection);
-    float3 H = normalize(V + L);
-
-    float3 F0 = GetFresnelF0(material.Albedo, material.Metallic);
-
-    float NDF = DistributionGGX(N, H, material.Roughness);
-    float G = GeometrySmith(N, V, L, material.Roughness);
+    float NDF = DistributionGGX(N, H, roughness);
+    float G = GeometrySmith(N, V, L, roughness);
     float3 F = FresnelSchlick(max(dot(H, V), 0.0f), F0);
 
-    float3 nominator = NDF * G * F;
-    float denominator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.001f;
-    float3 specular = nominator / denominator;
-
+    float3 numerator = NDF * G * F;
+    float denomiator = 4.0f * max(dot(N, V), 0.0f) * max(dot(N, L), 0.0f) + 0.0001f;
+    float3 specular = numerator / denomiator;
+    
     float3 kS = F;
     float3 kD = float3(1.0f, 1.0f, 1.0f) - kS;
-    kD *= 1.0f - material.Metallic;
-
+    kD *= 1.0f - metallic;
+    float3 diffuse = kD * albedo / PI;
+    
     float NdotL = max(dot(N, L), 0.0f);
-
-    float Lo = (kD / PI + specular) * light.LightColor * NdotL;
-
-    float3 color = Lo;
-
-    return color;
+    return (diffuse + specular) * radiance * NdotL;
 }
 
-float3 CalculatePBRLighting(PBRPointLight lights[50], PBRMaterial material, const int lightNumber,
+/*float3 CalculatePBRLighting(PointLight lights[50], Material material, const int lightNumber,
     float3 normal, float3 pixelInWorldPosition, float3 viewPosition)
 {
     float3 N = normalize(normal);
@@ -202,4 +159,42 @@ float3 CalculatePBRLighting(PBRPointLight lights[50], PBRMaterial material, cons
     float3 color = GetAmbient(material.Albedo, material.Ao) + Lo;
     
     return color;
+}*/
+
+float3 CalculatePointLight(PointLight light, Material material, 
+    float3 normal, float3 worldPosition, float3 viewPosition)
+{
+    float3 LVector = light.LightPosition - worldPosition;
+    float distance = length(LVector);
+    float3 L = LVector / distance;
+    
+    float attenuation = 1.0f / (distance * distance);
+    float3 radiance = light.LightColor * light.LightStrength * attenuation;
+    
+    return CalculateLight(L, radiance, normalize(normal), normalize(viewPosition - worldPosition),
+            material.Albedo, material.Metallic, material.Roughness);
 }
+
+float3 CalculateMultiplePointLights(PointLight lights[50], Material material, const int lightNumber,
+    float3 normal, float3 pixelInWorldPosition, float3 viewPosition)
+{
+    float3 LightColor = float3(0.0f, 0.0f, 0.0f);
+    
+    for (int i = 0; i < min(lightNumber, 50); i++)
+    {
+        LightColor += CalculatePointLight(lights[i], material, normal, pixelInWorldPosition, viewPosition);
+    }
+    
+    return LightColor;
+}
+
+float3 CalculateDirectionalLight(DirectionalLight light, Material material, 
+    float3 normal, float3 worldPosition, float3 viewPosition)
+{
+    float3 L = normalize(-light.LightDirection);
+    float3 radiance = light.LightColor * light.LightStrength;
+    
+    return CalculateLight(L, radiance, normalize(normal), normalize(viewPosition - worldPosition),
+        material.Albedo, material.Metallic, material.Roughness);
+}
+
