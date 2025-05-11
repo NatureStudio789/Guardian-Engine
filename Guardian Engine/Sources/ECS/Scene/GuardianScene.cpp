@@ -53,11 +53,8 @@ namespace GE
 		GuardianRenderer::CreateRenderingRenderGraph(this->SceneName + " Scene Rendering",
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
-
 		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
-
 		GuardianRenderer::SetRenderingRenderGraphShaderGroup(this->SceneName + " Scene Rendering", GuardianShaderSystem::PBR_MAIN_SHADER);
-
 		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 	}
 
@@ -78,6 +75,8 @@ namespace GE
 		GString sceneFilePath = GuardianFileDialog::OpenFile("Guardian Engine Scene (*.gscene)\0*.gscene\0");
 
 		this->Deserialize(sceneFilePath);
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded scene : {}", sceneFilePath));
 	}
 
 	void GuardianScene::LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
@@ -90,6 +89,8 @@ namespace GE
 		this->RemoveAllEntity();
 
 		this->Deserialize(sceneFilePath);
+
+		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded scene : {}", sceneFilePath));
 	}
 
 	void GuardianScene::SaveScene()
@@ -134,7 +135,7 @@ namespace GE
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
+		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera); 
 		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
 
 		if (this->ShouldOperateCamera)

@@ -23,13 +23,13 @@ namespace GE
 		this->InitializeFramebuffer(graphics);
 	}
 
-	GuardianFramebuffer::GuardianFramebuffer(std::shared_ptr<GuardianGraphics> graphics, int width, int height)
+	GuardianFramebuffer::GuardianFramebuffer(std::shared_ptr<GuardianGraphics> graphics, int width, int height, bool isDepthGraph)
 	{
 		this->RenderTarget = std::make_shared<GuardianRenderTarget>();
 		this->DepthStencil = std::make_shared<GuardianDepthStencil>();
 		this->Viewport = std::make_shared<GuardianViewport>();
 
-		this->InitializeFramebuffer(graphics, width, height);
+		this->InitializeFramebuffer(graphics, width, height, isDepthGraph);
 	}
 
 	GuardianFramebuffer::GuardianFramebuffer(const GuardianFramebuffer& other)
@@ -61,7 +61,7 @@ namespace GE
 			GVector2((float)this->FramebufferWidth, (float)this->FramebufferHeight));
 	}
 
-	void GuardianFramebuffer::InitializeFramebuffer(std::shared_ptr<GuardianGraphics> graphics, int width, int height)
+	void GuardianFramebuffer::InitializeFramebuffer(std::shared_ptr<GuardianGraphics> graphics, int width, int height, bool isDepthGraph)
 	{
 		this->FramebufferCategory = GE_SHADERRESOURCE_FRAMEBUFFER;
 		this->FramebufferWidth = width;
@@ -69,7 +69,7 @@ namespace GE
 
 		this->RenderTarget->InitializeRenderTarget(graphics, this->FramebufferWidth, this->FramebufferHeight);
 
-		this->DepthStencil->InitializeDepthStencil(graphics, this->FramebufferWidth, this->FramebufferHeight);
+		this->DepthStencil->InitializeDepthStencil(graphics, this->FramebufferWidth, this->FramebufferHeight, isDepthGraph);
 		this->Viewport->InitializeViewport(GVector2(0.0f, 0.0f),
 			GVector2((float)this->FramebufferWidth, (float)this->FramebufferHeight));
 	}

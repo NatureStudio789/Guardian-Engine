@@ -16,13 +16,13 @@ namespace GE
 		GuardianFramebuffer();
 		GuardianFramebuffer(std::shared_ptr<GuardianGraphics> graphics);
 		GuardianFramebuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int width, int height);
+			std::shared_ptr<GuardianGraphics> graphics, int width, int height, bool isDepthGraph = false);
 		GuardianFramebuffer(const GuardianFramebuffer& other);
 		~GuardianFramebuffer();
 
 		void InitializeFramebuffer(std::shared_ptr<GuardianGraphics> graphics);
 		void InitializeFramebuffer(
-			std::shared_ptr<GuardianGraphics> graphics, int width, int height);
+			std::shared_ptr<GuardianGraphics> graphics, int width, int height, bool isDepthGraph = false);
 
 		void ApplyFramebuffer(
 			std::shared_ptr<GuardianGraphics> graphics, const GVector3& clearColor);

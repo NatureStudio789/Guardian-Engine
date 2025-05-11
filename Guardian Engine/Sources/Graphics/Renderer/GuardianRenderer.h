@@ -12,6 +12,9 @@ namespace GE
 		static void ResizeRenderingRenderGraph(const GString& renderGraphName, int width, int height);
 		static void SetRenderingRenderGraphShaderGroup(const GString& renderGraphName, const GString& shaderGroupName);
 		static void SetRenderingRenderGraphCamera(const GString& renderGraphName, const GuardianCamera& camera);
+		static void CreateRenderingRenderGraphDepthGraph(const GString& renderGraphName, 
+			const GString& depthGraphName, int width, int height);
+		static std::shared_ptr<GuardianDepthGraph> GetRenderingRenderGraphDepthGraph(const GString& renderGraphName, const GString& depthGraphName);
 		static std::shared_ptr<GuardianFramebuffer> GetRenderingRenderGraphFramebuffer(const GString& name);
 
 		static void SubmitRenderable(GuardianSubmitPassLevel level, 

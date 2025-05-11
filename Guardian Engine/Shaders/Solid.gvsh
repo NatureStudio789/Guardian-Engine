@@ -1,0 +1,21 @@
+cbuffer TransformCBuffer : register(b0)
+{
+	row_major float4x4 TransformMatrix;
+};
+
+struct VertexInput
+{
+	float3 InputPosition : POSITION;
+};
+
+struct VertexOutput
+{
+	float4 OutputPosition : SV_POSITION;
+};
+
+VertexOutput main( VertexInput InputData )
+{
+	VertexOutput OutputData;
+	OutputData.OutputPosition = mul(float4(InputData.InputPosition, 1.0f), TransformMatrix);\
+	return OutputData;
+}

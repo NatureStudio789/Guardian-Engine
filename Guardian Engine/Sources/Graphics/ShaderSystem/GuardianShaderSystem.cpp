@@ -4,6 +4,7 @@ namespace GE
 {
 	const GString GuardianShaderSystem::PBR_MAIN_SHADER = "PBR - Main";
 	const GString GuardianShaderSystem::WIREFRAME_SHADER = "Wireframe";
+	const GString GuardianShaderSystem::SOLID_SHADER = "Solid";
 
 	std::map<GString, std::shared_ptr<GuardianShaderGroup>> GuardianShaderSystem::ShaderGroupList;
 
@@ -47,6 +48,24 @@ namespace GE
 			AddShaderGroup(WireframeShaderGroup);
 
 			GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded engine shader group '{}'", WIREFRAME_SHADER));
+		}
+
+		{
+			std::shared_ptr<GuardianShaderGroup> SolidShaderGroup = std::make_shared<GuardianShaderGroup>();
+			SolidShaderGroup->SetGroupName(SOLID_SHADER);
+
+			D3D11_INPUT_ELEMENT_DESC id[] =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0},
+			};
+			auto& vs = GuardianVertexShader::CreateNewVertexShader("../Guardian Engine/Shaders/Solid.gvsh");
+			auto& ps = GuardianPixelShader::CreateNewPixelShader("../Guardian Engine/Shaders/Solid.gpsh");
+			SolidShaderGroup->SetVertexShader(vs, id, ARRAYSIZE(id));
+			SolidShaderGroup->SetPixelShader(ps);
+
+			AddShaderGroup(SolidShaderGroup);
+
+			GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded engine shader group '{}'", SOLID_SHADER));
 		}
 
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize shader system.");

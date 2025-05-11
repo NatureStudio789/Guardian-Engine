@@ -12,7 +12,7 @@ namespace GE
 		GuardianDepthStencil(const GuardianDepthStencil& other);
 		~GuardianDepthStencil();
 
-		void InitializeDepthStencil(std::shared_ptr<GuardianGraphics> graphics, int width, int height);
+		void InitializeDepthStencil(std::shared_ptr<GuardianGraphics> graphics, int width, int height, bool isDepthGraph = false);
 
 		void ClearDepthStencil(std::shared_ptr<GuardianGraphics> graphics);
 

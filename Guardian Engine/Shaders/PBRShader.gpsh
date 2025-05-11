@@ -88,7 +88,7 @@ float4 main(PixelInput InputData) : SV_TARGET
 
 	float3 LightColor = CalculateMultiplePointLights(PointLightList, MeshMaterial, PointLightNumber, VertexNormal, InputData.InputWorldPosition, CameraPosition);
 	DirectionalLight light;
-	light.LightDirection = float3(45.0f, 0.0f, 0.0f);
+	light.LightDirection = float3(0.0f, 0.0f, 45.0f);
 	light.LightColor = float3(1.0f, 1.0f, 1.0f);
 	light.LightStrength = 48.0f;
 	LightColor += CalculateDirectionalLight(light, MeshMaterial, VertexNormal, InputData.InputWorldPosition, CameraPosition);

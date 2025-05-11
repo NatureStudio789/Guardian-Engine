@@ -52,6 +52,31 @@ namespace GE
 		}
 	}
 
+	void GuardianRenderer::CreateRenderingRenderGraphDepthGraph(
+		const GString& renderGraphName, const GString& depthGraphName, int width, int height)
+	{
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
+		}
+		else
+		{
+			RenderingRenderGraphList[renderGraphName]->AddDepthGraph(depthGraphName, width, height);
+		}
+	}
+
+	std::shared_ptr<GuardianDepthGraph> GuardianRenderer::GetRenderingRenderGraphDepthGraph(const GString& renderGraphName, const GString& depthGraphName)
+	{
+		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + renderGraphName + "' found in the renderer!");
+		}
+		else
+		{
+			return RenderingRenderGraphList[renderGraphName]->GetDepthGraph(depthGraphName);
+		}
+	}
+
 	std::shared_ptr<GuardianFramebuffer> GuardianRenderer::GetRenderingRenderGraphFramebuffer(const GString& name)
 	{
 		if (RenderingRenderGraphList.count(name) <= 0)

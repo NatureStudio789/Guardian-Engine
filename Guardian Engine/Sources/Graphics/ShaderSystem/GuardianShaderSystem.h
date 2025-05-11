@@ -16,6 +16,7 @@ namespace GE
 
 		const static GString PBR_MAIN_SHADER;
 		const static GString WIREFRAME_SHADER;
+		const static GString SOLID_SHADER;
 
 	private:
 		static std::map<GString, std::shared_ptr<GuardianShaderGroup>> ShaderGroupList;

@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANRENDERGRAPH_H_
 #define _GE_GUARDIANRENDERGRAPH_H_
-#include "../Renderable/Geometry/GuardianGeometry.h"
+#include "GuardianDepthGraph.h"
 
 namespace GE
 {
@@ -16,6 +16,11 @@ namespace GE
 		void SetGraphClearColor(const GVector3& color);
 		void SetGraphCamera(const GuardianCamera& camera);
 		void SetGraphShaderGroup(const GString& groupName);
+
+		void AddDepthGraph(const GString& name, int width, int height);
+		void SetDepthGraphCamera(const GString& name, const GuardianCamera& camera);
+		std::shared_ptr<GuardianDepthGraph> GetDepthGraph(const GString& name);
+		std::shared_ptr<GuardianDepthStencil> GetDepthGraphDepthStencil(const GString& name);
 
 		void SubmitRenderable(GuardianSubmitPassLevel level, std::shared_ptr<GuardianRenderable> renderable);
 
@@ -35,6 +40,8 @@ namespace GE
 		std::shared_ptr<GuardianFramebuffer> GraphFramebuffer;
 		GuardianCamera GraphCamera;
 		std::map<GuardianSubmitPassLevel, std::queue<std::shared_ptr<GuardianRenderable>>> RenderableQueueList;
+
+		std::map<GString, std::shared_ptr<GuardianDepthGraph>> DepthGraphList;
 	
 	private:
 
