@@ -86,10 +86,12 @@ namespace GE
 		}
 		GuardianPointLightComponent(const GuardianPointLightComponent& other)
 		{
+			this->LightId = other.LightId;
 			this->LightProperties = other.LightProperties;
 			this->LightMesh = other.LightMesh;
 		}
 
+		GuardianUUID LightId = GuardianUUID();
 		GuardianPointLightProperties LightProperties;
 		std::shared_ptr<GuardianMesh> LightMesh;
 	};

@@ -51,6 +51,18 @@ namespace GE
 	void GuardianScenePanel::Render()
 	{
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+		ImGui::Begin("Depth");
+
+		for (auto& map : GuardianRenderer::RenderingSceneGraphList["Unnamed"]->DepthGraphList)
+		{
+			ImGui::Image((ImTextureID)map.second->GetGraphDepthStencil()->GetDepthStencilShaderResource().Get(),
+				ImVec2(1024, 1024));
+		}
+
+		ImGui::End();
+		ImGui::PopStyleVar();
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin(this->PanelScene->SceneName.c_str());
 
 		if (ImGui::IsWindowFocused())
@@ -69,13 +81,13 @@ namespace GE
 		{
 			LastScenePanelSize = { CurrentScenePanelSize.x, CurrentScenePanelSize.y };
 
-			GuardianRenderer::ResizeRenderingRenderGraph(this->PanelScene->SceneName + " Scene Rendering", 
+			GuardianRenderer::GetRenderingSceneGraph(this->PanelScene)->ResizeSceneGraph(
 				(int)CurrentScenePanelSize.x, (int)CurrentScenePanelSize.y);
 			this->PanelScene->UpdateProjectionAspect(CurrentScenePanelSize.x, CurrentScenePanelSize.y);
 			IsFirst = false;
 		}
 
-		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingRenderGraphFramebuffer(this->PanelScene->SceneName + " Scene Rendering")->
+		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingSceneGraph(this->PanelScene)->GetSceneGraphFramebuffer()->
 			GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
 
 		if (ImGui::BeginDragDropTarget())

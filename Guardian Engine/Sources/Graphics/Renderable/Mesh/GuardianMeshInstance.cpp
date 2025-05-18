@@ -37,7 +37,7 @@ namespace GE
 			this->AddStaticApplicable(GuardianRasterizerState::CreateNewRasterizerState(GE_FILL_SOLID, GE_CULL_BACK));
 			this->AddStaticApplicable(GuardianTopology::CreateNewTopology(GE_TOPOLOGY_TRIANGLELIST));
 
-			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(GE_FILTER_MIN_MAG_MIP_LINEAR));
+			this->AddStaticApplicable(GuardianSampler::CreateNewSampler(GuardianSampler::Properties()));
 		}
 
 		this->AddVertexBuffer(GuardianVertexBuffer::CreateNewVertexBuffer( 

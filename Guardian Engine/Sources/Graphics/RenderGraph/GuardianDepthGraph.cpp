@@ -2,6 +2,9 @@
 
 namespace GE
 {
+	std::shared_ptr<GuardianSampler> GuardianDepthGraph::DepthMapSampler;
+
+
 	GuardianDepthGraph::GuardianDepthGraph()
 	{
 		this->GraphName = "";

@@ -12,6 +12,7 @@ namespace GE
 			this->LightPosition = GVector3(0.0f, 0.0f, 0.0f);
 			this->LightColor = GVector3(1.0f, 1.0f, 1.0f);
 			this->LightStrength = 100.0f;
+			this->LightViewMatrix = XMMatrixIdentity();
 		}
 		GuardianPointLightProperties(const GVector3& lightPosition,
 			const GVector3& lightColor, const float lightStrength)
@@ -26,6 +27,8 @@ namespace GE
 		GVector3 LightColor;
 	private:
 		float padding;
+	public:
+		XMMATRIX LightViewMatrix;
 	};
 }
 

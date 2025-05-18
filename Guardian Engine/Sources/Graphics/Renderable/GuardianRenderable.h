@@ -66,6 +66,7 @@ namespace GE
 
 		friend class GuardianRenderer;
 		friend class GuardianRenderGraph;
+		friend class GuardianSceneGraph;
 		template<typename T>
 		friend class GuardianRenderableBase;
 	};

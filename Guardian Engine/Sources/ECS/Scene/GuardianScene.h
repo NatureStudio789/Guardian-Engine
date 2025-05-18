@@ -65,6 +65,8 @@ namespace GE
 		PxScene* PhysicsWorld;
 		GVector3 SceneGravity;
 
+		friend class GuardianRenderer;
+		friend class GuardianSceneGraph;
 		friend class GuardianEntity;
 		friend class GuardianEditorEngine;
 		friend class GuardianSceneHierarchyPanel;

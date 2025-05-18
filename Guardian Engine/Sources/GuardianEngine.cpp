@@ -41,17 +41,33 @@ namespace GE
 		GuardianThread Initialization;
 		Initialization.LaunchThread([=]() 
 		{
-			GuardianShaderSystem::InitializeShaderSystem();
+			try
+			{
+				GuardianShaderSystem::InitializeShaderSystem();
+				GuardianRenderer::InitializeRenderer();
 
-			GuardianAssetSystem::InitializeAssetSystem();
-			GuardianPhysicsEngine::InitializePhysicsEngine();
+				GuardianAssetSystem::InitializeAssetSystem();
+				GuardianPhysicsEngine::InitializePhysicsEngine();
 
-			this->EngineScene->InitializeScene();
-			this->EngineProgram->Initialize();
+				this->EngineScene->InitializeScene();
+				this->EngineProgram->Initialize();
 
-			GuardianTime::InitializeTime();
+				GuardianTime::InitializeTime();
 
-			this->FinishedInitialization = true;
+				this->FinishedInitialization = true;
+			}
+			catch (const GE::GuardianException& e)
+			{
+				MessageBoxA(null, e.what(), "Guardian Exception", MB_OK | MB_ICONEXCLAMATION);
+			}
+			catch (const std::exception& e)
+			{
+				MessageBoxA(null, e.what(), "Standard Exception", MB_OK | MB_ICONEXCLAMATION);
+			}
+			catch (...)
+			{
+				MessageBoxA(null, "No detail description", "Unknown Exception", MB_OK | MB_ICONEXCLAMATION);
+			}
 		});
 		Initialization.DetachMainThread();
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Guardian Engine Initialization Successful!");

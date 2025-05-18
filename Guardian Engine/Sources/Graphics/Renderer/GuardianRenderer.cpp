@@ -1,8 +1,18 @@
 #include "GuardianRenderer.h"
+#include "../../ECS/Scene/GuardianScene.h"
 
 namespace GE
 {
 	std::map<GString, std::shared_ptr<GuardianRenderGraph>> GuardianRenderer::RenderingRenderGraphList;
+	std::map<GString, std::shared_ptr<GuardianSceneGraph>> GuardianRenderer::RenderingSceneGraphList;
+
+
+	void GuardianRenderer::InitializeRenderer()
+	{
+		GuardianDepthGraph::DepthMapSampler =
+			std::make_shared<GuardianSampler>(GuardianSampler::Properties(GuardianSampler::GE_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT,
+				GuardianSampler::GE_TEXTURE_ADDRESS_BORDER, GuardianSampler::GE_TEXTURE_ADDRESS_BORDER, GuardianSampler::GE_TEXTURE_ADDRESS_BORDER), 1);
+	}
 
 	void GuardianRenderer::CreateRenderingRenderGraph(const GString& renderGraphName, int width, int height)
 	{
@@ -89,6 +99,30 @@ namespace GE
 		}
 	}
 
+	void GuardianRenderer::CreateRenderingSceneGraph(GuardianScene* scene, int width, int height)
+	{
+		if (RenderingSceneGraphList.count(scene->SceneName) <= 0)
+		{
+			RenderingSceneGraphList[scene->SceneName] = std::make_shared<GuardianSceneGraph>(scene, width, height);
+		}
+		else
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The renderer already has had this render graph!");
+		}
+	}
+
+	std::shared_ptr<GuardianSceneGraph> GuardianRenderer::GetRenderingSceneGraph(GuardianScene* scene)
+	{
+		if (RenderingSceneGraphList.count(scene->SceneName) <= 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("No render graph called : '" + scene->SceneName + "' found in the renderer!");
+		}
+		else
+		{
+			return RenderingSceneGraphList[scene->SceneName];
+		}
+	}
+
 	void GuardianRenderer::SetRenderingRenderGraphClearColor(const GString& renderGraphName, const GVector3& color)
 	{
 		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
@@ -100,18 +134,29 @@ namespace GE
 	}
 
 	void GuardianRenderer::SubmitRenderable(GuardianSubmitPassLevel level,
-		const GString& renderGraphName, std::shared_ptr<GuardianRenderable> renderable)
+		const GString& graphName, std::shared_ptr<GuardianRenderable> renderable)
 	{
-		if (RenderingRenderGraphList.count(renderGraphName) <= 0)
+		if (RenderingRenderGraphList.count(graphName) > 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The renderer has no render graph called : '" + renderGraphName + "' !");
+			RenderingRenderGraphList[graphName]->SubmitRenderable(level, renderable);
 		}
-
-		RenderingRenderGraphList[renderGraphName]->SubmitRenderable(level, renderable);
+		else if (RenderingSceneGraphList.count(graphName) > 0)
+		{
+			RenderingSceneGraphList[graphName]->SubmitRenderable(level, renderable);
+		}
+		else
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The renderer has no graph called : '" + graphName + "' !");
+		}
 	}
 
 	void GuardianRenderer::Render()
 	{
+		for (auto& sceneGraph : RenderingSceneGraphList)
+		{
+			sceneGraph.second->Render();
+		}
+
 		for (auto& renderGraph : RenderingRenderGraphList)
 		{
 			renderGraph.second->Render();

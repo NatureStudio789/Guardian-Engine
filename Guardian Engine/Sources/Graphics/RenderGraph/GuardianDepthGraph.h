@@ -24,6 +24,8 @@ namespace GE
 		std::shared_ptr<GuardianFramebuffer> GetGraphFramebuffer();
 		std::shared_ptr<GuardianDepthStencil> GetGraphDepthStencil();
 
+		static std::shared_ptr<GuardianSampler> DepthMapSampler;
+
 	protected:
 		GString GraphName;
 		

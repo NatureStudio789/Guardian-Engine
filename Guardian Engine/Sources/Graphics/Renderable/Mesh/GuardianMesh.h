@@ -20,7 +20,7 @@ namespace GE
 		void UpdateMeshTransform(XMMATRIX worldMatrix);
 		void UpdateMeshLighting(GuardianLightProperties properties);
 
-		void SubmitToRenderer(const GString& submitRenderGraph);
+		void SubmitToRenderer(const GString& submitRenderGraph, GuardianSubmitPassLevel level = GE_SUBMIT_DEFAULT3D);
 
 		std::shared_ptr<GuardianMeshInstance> GetMeshInstance(const GuardianUUID& id);
 		const GString& GetMeshName() const noexcept;

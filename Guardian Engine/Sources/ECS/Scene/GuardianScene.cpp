@@ -50,12 +50,11 @@ namespace GE
 
 	void GuardianScene::InitializeScene()
 	{
-		GuardianRenderer::CreateRenderingRenderGraph(this->SceneName + " Scene Rendering",
+		GuardianRenderer::CreateRenderingSceneGraph(this,
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
 			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
-		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera);
-		GuardianRenderer::SetRenderingRenderGraphShaderGroup(this->SceneName + " Scene Rendering", GuardianShaderSystem::PBR_MAIN_SHADER);
-		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
+
+		GuardianRenderer::GetRenderingSceneGraph(this)->SetGraphClearColor({ 0.1f, 0.1f, 0.1f });
 	}
 
 	void GuardianScene::SetSceneName(const GString& name)
@@ -135,9 +134,6 @@ namespace GE
 
 	void GuardianScene::UpdateEditScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->EditorCamera); 
-		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
-
 		if (this->ShouldOperateCamera)
 		{
 			if (GuardianKeyboard::IsKeyPress('W'))
@@ -176,105 +172,6 @@ namespace GE
 		}
 
 		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianPointLightComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianPointLightComponent& PLComponent)
-				{
-					PLComponent.LightProperties.LightPosition = TComponent.Position;
-
-					if (!PLComponent.LightMesh)
-					{
-						PLComponent.LightMesh = std::make_shared<GuardianMesh>();
-						PLComponent.LightMesh->InitializeMesh("Light", "../Guardian Engine/Assets/Models/Light/Light.obj");
-					}
-					PLComponent.LightMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
-
-					GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
-					GuardianTransform transform;
-					transform.Position = TComponent.Position;
-					transform.Rotation = TComponent.Rotation;
-					transform.Quaternion = TComponent.Quaternion;
-					transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
-					PLComponent.LightMesh->UpdateMeshTransform(transform.GetTransformMatrix());
-				});
-		}
-		GuardianLightProperties LightProperties;
-		int index = 0;
-		while (!GuardianLightSystem::IsPointLightListEmpty())
-		{
-			GuardianPointLightProperties pointLight = GuardianLightSystem::ReadPointLight();
-			LightProperties.PointLightList[index] = pointLight;
-			index++;
-		}
-		LightProperties.LightNumber = index;
-		LightProperties.CameraPosition = this->EditorCamera->Position;
-
-		if (!this->SceneGrid)
-		{
-			this->SceneGrid = std::make_shared<GuardianMesh>();
-			this->SceneGrid->InitializeMesh("Grid", "../Guardian Engine/Assets/Models/Grid/Grid.obj");
-		}
-		this->SceneGrid->SubmitToRenderer(this->SceneName + " Scene Rendering");
-		this->SceneGrid->UpdateMeshTransform(GuardianTransform().GetTransformMatrix());
-		this->SceneGrid->UpdateMeshLighting(LightProperties);
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianSphereColliderComponent>();
-			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
-				GuardianSphereColliderComponent& SCComponent)
-			{
-				if (!SCComponent.SphereGeometry->IsInitialized())
-				{
-					SCComponent.SphereGeometry->InitializeGeometry(GE_GEOMETRY_SPHERE);
-				}
-
-				GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
-					TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
-				SCComponent.SphereGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
-
-				GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", SCComponent.SphereGeometry);
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianBoxColliderComponent>();
-			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
-				GuardianBoxColliderComponent& BCComponent)
-				{
-					if (!BCComponent.BoxGeometry->IsInitialized())
-					{
-						BCComponent.BoxGeometry->InitializeGeometry(GE_GEOMETRY_BOX);
-					}
-
-					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
-						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
-					BCComponent.BoxGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
-
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", BCComponent.BoxGeometry);
-				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCapsuleColliderComponent>();
-			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
-				GuardianCapsuleColliderComponent& CCComponent)
-				{
-					if (!CCComponent.CapsuleGeometry->IsInitialized())
-					{
-						CCComponent.CapsuleGeometry->InitializeGeometry(GE_GEOMETRY_CAPSULE);
-					}
-
-					GuardianTransform transform = GuardianTransform(TComponent.Position, TComponent.Rotation,
-						TComponent.Quaternion, GVector3(CCComponent.CapsuleCollider->GetColliderProperties().Radius, 
-							CCComponent.CapsuleCollider->GetColliderProperties().HalfHeight * 2.0f, 
-							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
-					CCComponent.CapsuleGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
-
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->SceneName + " Scene Rendering", CCComponent.CapsuleGeometry);
-				});
-		}
-
-		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
 			view.each([this](const auto& e,
 				GuardianTransformComponent& TComponent, GuardianRigidBodyComponent& RBComponent)
@@ -288,43 +185,6 @@ namespace GE
 					RBComponent.DynamicRigidBody->SetRigidBodyTransform(TComponent);
 				}
 			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
-			view.each([this, &LightProperties](const auto& e, 
-				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
-			{
-				CComponent.Position = TComponent.Position;
-				CComponent.Direction = TComponent.Rotation;
-
-				if (!CComponent.CameraMesh)
-				{
-					CComponent.CameraMesh = std::make_shared<GuardianMesh>();
-					CComponent.CameraMesh->InitializeMesh("Camera", "../Guardian Engine/Assets/Models/Camera/Camera.obj");
-				}
-				CComponent.CameraMesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
-
-				GuardianTransform transform;
-				transform.Position = TComponent.Position;
-				transform.Rotation = TComponent.Rotation;
-				transform.Quaternion = TComponent.Quaternion;
-				transform.Scale = GVector3(1.0f, 1.0f, 1.0f);
-				CComponent.CameraMesh->UpdateMeshTransform(transform.GetTransformMatrix());
-				CComponent.CameraMesh->UpdateMeshLighting(LightProperties);
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
-			view.each([this, &LightProperties](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
-				{
-					MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-					MComponent.Mesh->UpdateMeshLighting(LightProperties);
-
-					MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
-				});
 		}
 	}
 
@@ -496,35 +356,11 @@ namespace GE
 
 	void GuardianScene::UpdateRuntimeScene(GuardianTimestep deltaTime)
 	{
-		GuardianRenderer::SetRenderingRenderGraphCamera(this->SceneName + " Scene Rendering", *this->RuntimeCamera);
-		GuardianRenderer::SetRenderingRenderGraphClearColor(this->SceneName + " Scene Rendering", GVector3(0.1f, 0.1f, 0.1f));
-
 		{
 			this->PhysicsWorld->simulate(deltaTime.GetSecond());
 			
 			this->PhysicsWorld->fetchResults(true);
 		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianPointLightComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianPointLightComponent& PLComponent)
-			{
-				PLComponent.LightProperties.LightPosition = TComponent.Position;
-
-				GuardianLightSystem::SubmitPointLight(PLComponent.LightProperties);
-			});
-		}
-		GuardianLightProperties LightProperties;
-		int index = 0;
-		while (!GuardianLightSystem::IsPointLightListEmpty())
-		{
-			GuardianPointLightProperties pointLight = GuardianLightSystem::ReadPointLight();
-			LightProperties.PointLightList[index] = pointLight;
-			index++;
-		}
-		LightProperties.LightNumber = index;
-		LightProperties.CameraPosition = this->RuntimeCamera->Position;
 
 		{
 			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianRigidBodyComponent>();
@@ -562,35 +398,6 @@ namespace GE
 
 					GuardianScriptEngine::OnUpdateEntity(entity);
 				});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianCameraComponent>();
-			view.each([this](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianCameraComponent& CComponent)
-			{
-				CComponent.Position = TComponent.Position;
-				CComponent.Direction = TComponent.Rotation;
-
-				this->RuntimeCamera->Position = CComponent.Position;
-				this->RuntimeCamera->Direction = CComponent.Direction;
-				this->RuntimeCamera->IsFreelook = CComponent.IsFreelook;
-				this->RuntimeCamera->Projection.FarZ = CComponent.Projection.FarZ;
-				this->RuntimeCamera->Projection.NearZ = CComponent.Projection.NearZ;
-				this->RuntimeCamera->Projection.FOV = CComponent.Projection.FOV;
-			});
-		}
-
-		{
-			auto view = this->SceneRegistry.view<GuardianTransformComponent, GuardianMeshComponent>();
-			view.each([this, &LightProperties](const auto& e,
-				GuardianTransformComponent& TComponent, GuardianMeshComponent& MComponent)
-			{
-				MComponent.Mesh->UpdateMeshTransform(TComponent.GetTransformMatrix());
-				MComponent.Mesh->UpdateMeshLighting(LightProperties);
-
-				MComponent.Mesh->SubmitToRenderer(this->SceneName + " Scene Rendering");
-			});
 		}
 	}
 
