@@ -9,7 +9,7 @@ namespace GE
 	{
 		this->EngineProgram = null;
 		this->EngineEventProcesser = std::make_unique<GuardianEventProcesser>();
-		this->EngineScene = std::make_shared<GuardianScene>();
+		this->EngineProject = std::make_shared<GuardianProject>();
 		this->FinishedInitialization = false;
 	}
 
@@ -46,10 +46,9 @@ namespace GE
 				GuardianShaderSystem::InitializeShaderSystem();
 				GuardianRenderer::InitializeRenderer();
 
-				GuardianAssetSystem::InitializeAssetSystem();
 				GuardianPhysicsEngine::InitializePhysicsEngine();
 
-				this->EngineScene->InitializeScene();
+				this->EngineProject->InitializeProject("Guardian Example", "Guardian Example\\");
 				this->EngineProgram->Initialize();
 
 				GuardianTime::InitializeTime();
@@ -84,7 +83,7 @@ namespace GE
 			GuardianApplication::ApplicationInstance->UpdateApplication();
 			GuardianMaterialSystem::UpdateMaterialSystem();
 			GuardianAssetSystem::UpdateAssetSystem();
-			this->EngineScene->UpdateScene(GuardianTime::GetDeltaTime());
+			this->EngineProject->UpdateProject();
 			this->EngineProgram->Update();
 
 			{
@@ -95,14 +94,16 @@ namespace GE
 			GuardianApplication::ApplicationInstance->EndUpRendering();
 		}
 
-		if (this->EngineScene->GetSceneState() == GE_SCENE_RUNTIME)
+		if (this->EngineProject->GetProjectState() == GE_SCENE_RUNTIME)
 		{
-			this->EngineScene->StopRuntime();
+			this->EngineProject->StopRuntime();
 		}
+
+		this->EngineProject->SaveProject("Guardian Example/GuardianExample.gproject");
 	}
 
 	std::shared_ptr<GuardianScene> GuardianEngine::GetScene() noexcept
 	{
-		return this->EngineScene;
+		return this->EngineProject->GetCurrentScene();
 	}
 }

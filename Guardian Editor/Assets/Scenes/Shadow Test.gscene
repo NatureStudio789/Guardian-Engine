@@ -1,5 +1,25 @@
 Scene: Unnamed
 Entities:
+  - Entity: 15944445982340494586
+    Tag Component:
+      Tag: Pillow
+    Transform Component:
+      Position: [-0.239880085, 1.73972726, 2.77501845]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Pillow
+  - Entity: 13464209691675240129
+    Tag Component:
+      Tag: Light
+    Transform Component:
+      Position: [0, 4.17824841, -8.62014198]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Point Light Component:
+      Light Position: [0, 4.17824841, -8.62014198]
+      Light Strength: 1707
+      Light Color: [1, 1, 1]
   - Entity: 9090149209729683250
     Tag Component:
       Tag: Cube_1
@@ -9,14 +29,3 @@ Entities:
       Scale: [1, 1, 1]
     Mesh Component:
       Mesh Name: Box
-  - Entity: 13464209691675240129
-    Tag Component:
-      Tag: Light
-    Transform Component:
-      Position: [0, 4.17824841, -21.5373592]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Point Light Component:
-      Light Position: [0, 4.17824841, -21.5373592]
-      Light Strength: 1707
-      Light Color: [1, 1, 1]

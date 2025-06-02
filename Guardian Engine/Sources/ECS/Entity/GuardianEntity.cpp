@@ -7,6 +7,7 @@ namespace GE
 		this->EntityId = GuardianUUID();
 		this->EntityName = "Unnamed Entity";
 		this->EntityScene = null;
+		this->IsEntitySelected = false;
 	}
 
 	GuardianEntity::GuardianEntity(entt::entity handle, const GString name, GuardianScene* scene)
@@ -15,6 +16,7 @@ namespace GE
 		this->EntityHandle = handle;
 		this->EntityName = name;
 		this->EntityScene = scene;
+		this->IsEntitySelected = false;
 	}
 
 	GuardianEntity::GuardianEntity(entt::entity handle, const GString name, 
@@ -24,6 +26,7 @@ namespace GE
 		this->EntityHandle = handle;
 		this->EntityName = name;
 		this->EntityScene = scene;
+		this->IsEntitySelected = false;
 	}
 
 	GuardianEntity::GuardianEntity(const GuardianEntity& other)
@@ -32,11 +35,27 @@ namespace GE
 		this->EntityId = other.EntityId;
 		this->EntityName = other.EntityName;
 		this->EntityScene = other.EntityScene;
+		this->IsEntitySelected = other.IsEntitySelected;
 	}
 
 	GuardianEntity::~GuardianEntity()
 	{
 		this->EntityScene = null;
+	}
+
+	void GuardianEntity::SelectEntity()
+	{
+		this->IsEntitySelected = true;
+	}
+
+	void GuardianEntity::UnselectEntity()
+	{
+		this->IsEntitySelected = false;
+	}
+
+	const bool& GuardianEntity::IsSelected() const noexcept
+	{
+		return this->IsEntitySelected;
 	}
 
 	const GString& GuardianEntity::GetEntityName() const noexcept

@@ -73,6 +73,10 @@ namespace GE
 
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			{
+				if (auto selected = this->PanelScene->GetEntity(this->SelectedEntityId))
+				{
+					selected->UnselectEntity();
+				}
 				this->SelectedEntityId = 0;
 			}
 
@@ -131,7 +135,13 @@ namespace GE
 			entity->GetComponent<GuardianTagComponent>().Tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
+			if (auto selected = this->PanelScene->GetEntity(this->SelectedEntityId))
+			{
+				selected->UnselectEntity();
+			}
+
 			this->SelectedEntityId = entity->GetEntityId();
+			entity->SelectEntity();
 		}
 
 		bool EntityDeleted = false;
@@ -154,6 +164,7 @@ namespace GE
 
 		if (EntityDeleted)
 		{
+			entity->UnselectEntity();
 			this->SelectedEntityId = 0;
 			return false;
 		}

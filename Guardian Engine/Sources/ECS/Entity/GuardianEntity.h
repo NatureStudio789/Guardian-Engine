@@ -14,6 +14,11 @@ namespace GE
 		GuardianEntity(const GuardianEntity& other);
 		~GuardianEntity();
 
+		void SelectEntity();
+		void UnselectEntity();
+
+		const bool& IsSelected() const noexcept;
+
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args)
 		{
@@ -64,6 +69,8 @@ namespace GE
 		GuardianUUID EntityId;
 		GString EntityName;
 		GuardianScene* EntityScene;
+
+		bool IsEntitySelected;
 	};
 }
 

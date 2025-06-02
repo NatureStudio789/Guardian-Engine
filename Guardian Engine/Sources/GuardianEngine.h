@@ -22,7 +22,7 @@ namespace GE
 	private:
 		GuardianProgram* EngineProgram;
 		
-		std::shared_ptr<GuardianScene> EngineScene;
+		std::shared_ptr<GuardianProject> EngineProject;
 
 		std::unique_ptr<GuardianEventProcesser> EngineEventProcesser;
 

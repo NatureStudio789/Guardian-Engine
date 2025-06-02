@@ -1,5 +1,6 @@
 #include "GuardianSceneGraph.h"
 #include "../../ECS/Scene/GuardianScene.h"
+#include "../../ECS/Entity/GuardianEntity.h"
 
 namespace GE
 {
@@ -206,8 +207,8 @@ namespace GE
 			{
 				PLComponent.LightProperties.LightPosition = TComponent.Position;
 				PLComponent.LightProperties.LightViewMatrix =
-					GuardianCamera(TComponent.Position, TComponent.Rotation, GuardianPerspectiveProjection(60.0f, 1024.0f / 1024.0f, 3.0f, 1000.0f)).GetViewMatrix() *
-					GuardianCamera(TComponent.Position, TComponent.Rotation, GuardianPerspectiveProjection(60.0f, 1024.0f / 1024.0f, 3.0f, 1000.0f)).GetProjectionMatrix();
+					XMMatrixTranspose(GuardianCamera(TComponent.Position, TComponent.Rotation, GuardianPerspectiveProjection(60.0f, 1024.0f / 1024.0f, 3.0f, 1000.0f)).GetViewMatrix() *
+					GuardianCamera(TComponent.Position, TComponent.Rotation, GuardianPerspectiveProjection(60.0f, 1024.0f / 1024.0f, 3.0f, 1000.0f)).GetProjectionMatrix());
 
 				if (!PLComponent.LightMesh)
 				{
@@ -267,13 +268,16 @@ namespace GE
 						TComponent.Quaternion, GVector3(1.0f, 1.0f, 1.0f) * SCComponent.SphereCollider->GetColliderProperties().Radius);
 					SCComponent.SphereGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, SCComponent.SphereGeometry);
+					if (this->GraphScene->SceneEntityList[e]->IsSelected())
+					{
+						GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, SCComponent.SphereGeometry);
+					}
 				});
 		}
 
 		{
 			auto view = this->GraphScene->SceneRegistry.view<GuardianTransformComponent, GuardianBoxColliderComponent>();
-			view.each([this](const auto& e, GuardianTransformComponent& TComponent,
+			view.each([this](const entt::entity& e, GuardianTransformComponent& TComponent,
 				GuardianBoxColliderComponent& BCComponent)
 				{
 					if (!BCComponent.BoxGeometry->IsInitialized())
@@ -285,7 +289,10 @@ namespace GE
 						TComponent.Quaternion, BCComponent.BoxCollider->GetColliderProperties().BoxHalfsize * 2.0f);
 					BCComponent.BoxGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, BCComponent.BoxGeometry);
+					if (this->GraphScene->SceneEntityList[e]->IsSelected())
+					{
+						GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, BCComponent.BoxGeometry);
+					}
 				});
 		}
 
@@ -305,7 +312,10 @@ namespace GE
 							CCComponent.CapsuleCollider->GetColliderProperties().Radius));
 					CCComponent.CapsuleGeometry->UpdateGeometryTransform(transform.GetTransformMatrix());
 
-					GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, CCComponent.CapsuleGeometry);
+					if (this->GraphScene->SceneEntityList[e]->IsSelected())
+					{
+						GuardianRenderer::SubmitRenderable(GE_SUBMIT_SPECIALLY, this->GraphScene->SceneName, CCComponent.CapsuleGeometry);
+					}
 				});
 		}
 

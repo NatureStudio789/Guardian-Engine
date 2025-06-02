@@ -7,15 +7,16 @@ namespace GE
 	std::map<GString, std::shared_ptr<GuardianMeshAsset>> GuardianAssetSystem::MeshAssetsList;
 	std::map<GString, GuardianTexture> GuardianAssetSystem::TextureAssetList;
 	std::map<GString, GuardianPhysicsMaterial> GuardianAssetSystem::PhysicsMaterialResourceList;
+	std::map<GString, std::shared_ptr<GuardianScene>> GuardianAssetSystem::SceneAssetList;
 
 	std::map<GString, std::shared_ptr<GuardianMesh>> GuardianAssetSystem::MeshAssetRenderingList;
 
 
-	void GuardianAssetSystem::InitializeAssetSystem()
+	void GuardianAssetSystem::InitializeAssetSystem(GString assetDirectoryPath)
 	{
 		AddDefaultAsset();
 
-		IterateDirectory("Assets\\");
+		IterateDirectory(assetDirectoryPath);
 
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to initialize engine asset system.");
 	}
@@ -128,6 +129,15 @@ namespace GE
 
 			LoadedAssetPath.push_back(path.string());
 		}
+		else if (extension == ".gscene")
+		{
+			auto scene = std::make_shared<GuardianScene>();
+			scene->LoadSceneAs(path.string());
+			
+			SceneAssetList[scene->GetFileName()] = scene;
+
+			LoadedAssetPath.push_back(path.string());
+		}
 	}
 
 	const GuardianMeshAsset& GuardianAssetSystem::GetMeshAsset(GString meshName)
@@ -190,6 +200,18 @@ namespace GE
 		return "Unknown";
 	}
 
+	std::shared_ptr<GuardianScene> GuardianAssetSystem::GetScene(GString sceneName)
+	{
+		if (SceneAssetList.count(sceneName) > 0)
+		{
+			return SceneAssetList[sceneName];
+		}
+		else
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Cannot find the scene called : '" + sceneName + "' !");
+		}
+	}
+
 	std::map<GString, std::shared_ptr<GuardianMeshAsset>> GuardianAssetSystem::GetMeshAssetList()
 	{
 		return MeshAssetsList;
@@ -198,5 +220,10 @@ namespace GE
 	std::map<GString, GuardianTexture> GuardianAssetSystem::GetTextureList()
 	{
 		return TextureAssetList;
+	}
+
+	std::map<GString, std::shared_ptr<GuardianScene>> GuardianAssetSystem::GetSceneList()
+	{
+		return SceneAssetList;
 	}
 }

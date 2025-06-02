@@ -7,7 +7,7 @@ namespace GE
 	class GUARDIAN_API GuardianAssetSystem
 	{
 	public:
-		static void InitializeAssetSystem();
+		static void InitializeAssetSystem(GString assetDirectoryPath);
 
 		static void UpdateAssetSystem();
 
@@ -19,8 +19,11 @@ namespace GE
 		static GuardianTexture GetTexture(GString textureName);
 		static const GString GetTextureName(GuardianTexture texture);
 
+		static std::shared_ptr<GuardianScene> GetScene(GString sceneName);
+
 		static std::map<GString, std::shared_ptr<GuardianMeshAsset>> GetMeshAssetList();
 		static std::map<GString, GuardianTexture> GetTextureList();
+		static std::map<GString, std::shared_ptr<GuardianScene>> GetSceneList();
 
 	private:
 		static void AddDefaultAsset();
@@ -32,6 +35,7 @@ namespace GE
 		static std::map<GString, std::shared_ptr<GuardianMeshAsset>> MeshAssetsList;
 		static std::map<GString, GuardianTexture> TextureAssetList;
 		static std::map<GString, GuardianPhysicsMaterial> PhysicsMaterialResourceList;
+		static std::map<GString, std::shared_ptr<GuardianScene>> SceneAssetList;
 
 		static std::map<GString, std::shared_ptr<GuardianMesh>> MeshAssetRenderingList;
 	};

@@ -1,6 +1,7 @@
 #include "GuardianScenePanel.h"
 #include <Graphics/Renderer/GuardianRenderer.h>
 #include <Application/GuardianApplication.h>
+#include <GuardianEngine.h>
 
 namespace GE
 {
@@ -53,7 +54,7 @@ namespace GE
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Depth");
 
-		for (auto& map : GuardianRenderer::RenderingSceneGraphList["Unnamed"]->DepthGraphList)
+		for (auto& map : GuardianRenderer::RenderingSceneGraphList[this->PanelScene->SceneName]->DepthGraphList)
 		{
 			ImGui::Image((ImTextureID)map.second->GetGraphDepthStencil()->GetDepthStencilShaderResource().Get(),
 				ImVec2(1024, 1024));
@@ -96,8 +97,7 @@ namespace GE
 			{
 				if (std::filesystem::path(GString((const char*)payload->Data)).extension().string() == ".gscene")
 				{
-					this->PanelScene->LoadSceneAs(GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(),
-						GString((const char*)payload->Data));
+					this->PanelScene->LoadSceneAs(GString((const char*)payload->Data));
 				}
 			}
 

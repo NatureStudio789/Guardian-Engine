@@ -16,15 +16,15 @@ namespace GE
 	{
 	public:
 		GuardianScene();
-		GuardianScene(std::shared_ptr<GuardianGraphics> graphics);
+		GuardianScene(const GString& sceneFilePath);
 		GuardianScene(const GuardianScene& other);
 		~GuardianScene() override = default;
 
 		void InitializeScene();
 		void SetSceneName(const GString& name);
 
-		void LoadScene(std::shared_ptr<GuardianGraphics> graphics);
-		void LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath);
+		void LoadScene();
+		void LoadSceneAs(const GString& sceneFilePath);
 		void SaveScene();
 		void SaveSceneAs(const GString& filePath);
 

@@ -21,6 +21,36 @@ struct PointLight
     float4x4 LightMatrix;
 };
 
+cbuffer MaterialCBuffer : register(b0)
+{
+	float3 AlbedoColor;
+	float MetallicColor;
+	float RoughnessColor;
+	float AoColor;
+	int UsingAlbedoMap;
+	int UsingMetallicMap;
+	int UsingRoughnessMap;
+	int UsingNormalMap;
+	int UsingAoMap;
+};
+
+cbuffer LightCBuffer : register(b1)
+{
+	float3 CameraPosition;
+	int PointLightNumber;
+	PointLight PointLightList[50];
+};
+
+SamplerState ObjectSampler : register(s0);
+SamplerState ShadowMapSampler : register(s1);
+
+Texture2D AlbedoTexture : register(t0);
+Texture2D MetallicTexture : register(t1);
+Texture2D RoughnessTexture : register(t2);
+Texture2D NormalTexture : register(t3);
+Texture2D AoTexture : register(t4);
+Texture2D ShadowTexture : register(t5);
+
 static const float PI = 3.14159265359f;
 
 float3 GetNormalFromTexture(float3 worldPosition, float3 normal, Texture2D normalMap, SamplerState samplerState, float2 textureCoord)
@@ -100,18 +130,16 @@ float3 GetAmbient(float3 albedo, float ao)
 
 float CalculateShadow(float4 positionLightSpace, Texture2D shadowMap, SamplerState samplerState)
 {
-    float3 projectionCoords = positionLightSpace.xyz / positionLightSpace.w;
-    projectionCoords = projectionCoords * 0.5f + 0.5f;
+    positionLightSpace.xyz = positionLightSpace.xyz / positionLightSpace.w;
     
-    float closestDepth = shadowMap.Sample(samplerState, projectionCoords.xy).r;
-    float currentDepth = projectionCoords.z - 0.005f;
-    float shadow = currentDepth > closestDepth ? 1.0f : 0.0f;
-    
-    return shadow;
+    //Test commmend;
+    float Depth = shadowMap.Sample(samplerState, positionLightSpace.xy).r;
+    float3 Homo = float3(114514.0f, 114514.0f, 114514.0f);
+    return Depth;
 }
 
 float3 CalculateLight(float3 L, float3 radiance, float3 N, float3 V, 
-    float3 albedo, float metallic, float roughness, float4 positionLightSpace, Texture2D shadowMap, SamplerState samplerState)
+    float3 albedo, float metallic, float roughness)
 {
     float3 H = normalize(V + L);
     
@@ -131,7 +159,7 @@ float3 CalculateLight(float3 L, float3 radiance, float3 N, float3 V,
     float3 diffuse = kD * albedo / PI;
     
     float NdotL = max(dot(N, L), 0.0f);
-    return (diffuse + specular) * radiance * NdotL * (1.0f - CalculateShadow(positionLightSpace, shadowMap, samplerState));
+    return (diffuse + specular) * radiance * NdotL;
 }
 
 /*float3 CalculatePBRLighting(PointLight lights[50], Material material, const int lightNumber,
@@ -175,7 +203,7 @@ float3 CalculateLight(float3 L, float3 radiance, float3 N, float3 V,
 }*/
 
 float3 CalculatePointLight(PointLight light, Material material, 
-    float3 normal, float3 worldPosition, float3 viewPosition, float4 positionLightSpace, Texture2D shadowMap, SamplerState samplerState)
+    float3 normal, float3 worldPosition, float3 viewPosition)
 {
     float3 LVector = light.LightPosition - worldPosition;
     float distance = length(LVector);
@@ -185,29 +213,29 @@ float3 CalculatePointLight(PointLight light, Material material,
     float3 radiance = light.LightColor * light.LightStrength * attenuation;
     
     return CalculateLight(L, radiance, normalize(normal), normalize(viewPosition - worldPosition),
-            material.Albedo, material.Metallic, material.Roughness, positionLightSpace, shadowMap, samplerState);
+            material.Albedo, material.Metallic, material.Roughness);
 }
 
 float3 CalculateMultiplePointLights(PointLight lights[50], Material material, const int lightNumber,
-    float3 normal, float3 pixelInWorldPosition, float3 viewPosition, float4 positionLightSpace, Texture2D shadowMap, SamplerState samplerState)
+    float3 normal, float3 pixelInWorldPosition, float3 viewPosition)
 {
     float3 LightColor = float3(0.0f, 0.0f, 0.0f);
     
     for (int i = 0; i < min(lightNumber, 50); i++)
     {
-        LightColor += CalculatePointLight(lights[i], material, normal, pixelInWorldPosition, viewPosition, positionLightSpace, shadowMap, samplerState);
+        LightColor += CalculatePointLight(lights[i], material, normal, pixelInWorldPosition, viewPosition);
     }
     
     return LightColor;
 }
 
 float3 CalculateDirectionalLight(DirectionalLight light, Material material, 
-    float3 normal, float3 worldPosition, float3 viewPosition, float4 positionLightSpace, Texture2D shadowMap, SamplerState samplerState)
+    float3 normal, float3 worldPosition, float3 viewPosition)
 {
     float3 L = normalize(-light.LightDirection);
     float3 radiance = light.LightColor * light.LightStrength;
     
     return CalculateLight(L, radiance, normalize(normal), normalize(viewPosition - worldPosition),
-        material.Albedo, material.Metallic, material.Roughness, positionLightSpace, shadowMap, samplerState);
+        material.Albedo, material.Metallic, material.Roughness);
 }
 

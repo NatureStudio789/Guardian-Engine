@@ -53,24 +53,17 @@ namespace GE
 
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
 
-		this->EditorScenePanel = std::make_shared<GuardianScenePanel>(GuardianEngine::EngineInstance->EngineScene.get());
+		this->EditorScenePanel = std::make_shared<GuardianScenePanel>(GuardianEngine::EngineInstance->GetScene().get());
 		this->AddPanelToEditor(this->EditorScenePanel);
 
 		this->EditorSceneHierarchyPanel = 
-			std::make_shared<GuardianSceneHierarchyPanel>(GuardianEngine::EngineInstance->EngineScene.get());
+			std::make_shared<GuardianSceneHierarchyPanel>(GuardianEngine::EngineInstance->GetScene().get());
 		this->AddPanelToEditor(this->EditorSceneHierarchyPanel);
 
 		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 
 		this->AddEditorToEngine(std::make_shared<GuardianConsoleEditor>());
 		this->AddEditorToEngine(std::make_shared<GuardianRendererEditor>());
-
-		if (!GuardianApplication::ApplicationCommandLineArgument.IsEmpty())
-		{
-			GuardianEngine::EngineInstance->GetScene()->LoadSceneAs(
-				GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), 
-				GuardianApplication::ApplicationCommandLineArgument.ArgumentList[GuardianApplication::CommandLineArgument::SCENE_PATH_ARGUMENT_INDEX]);
-		}
 	}
 
 	void GuardianEditorEngine::RenderDockspace()
@@ -127,8 +120,7 @@ namespace GE
 				if (ImGui::MenuItem("Open...", "Ctrl+O") ||
 					(GuardianKeyboard::IsKeyPress(VK_CONTROL) && GuardianKeyboard::IsKeyPress('O')))
 				{
-					GuardianEngine::EngineInstance->GetScene()->LoadScene(
-						GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext());
+					GuardianEngine::EngineInstance->GetScene()->LoadScene();
 				}
 
 				ImGui::EndMenu();

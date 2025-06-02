@@ -1,6 +1,6 @@
 #ifndef _GE_GUARDIANWINDOW_H_
 #define _GE_GUARDIANWINDOW_H_
-#include "../AssetSystem/GuardianAssetSystem.h"
+#include "../Project/GuardianProject.h"
 
 namespace GE
 {

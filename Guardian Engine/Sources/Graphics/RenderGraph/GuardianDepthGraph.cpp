@@ -64,7 +64,7 @@ namespace GE
 
 			renderable->GetTransformConstantBuffer()->UpdateData(
 				{ renderable->GetTransformConstantBuffer()->GetConstantBufferData().WorldTransformMatrix,
-				this->GraphCamera.GetViewMatrix(), this->GraphCamera.GetProjectionMatrix() });
+				this->GraphCamera.GetViewMatrix(), this->GraphCamera.GetProjectionMatrix()});
 			renderable->Update();
 
 			GuardianShaderSystem::GetShaderGroup(GuardianShaderSystem::SOLID_SHADER)->Apply();

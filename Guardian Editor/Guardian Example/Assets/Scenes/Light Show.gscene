@@ -1,0 +1,228 @@
+Scene: Unnamed
+Entities:
+  - Entity: 107836199489490231
+    Tag Component:
+      Tag: Ball
+    Transform Component:
+      Position: [-3.44546628, 21.7698364, -12.4592171]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Sphere
+    Sphere Collider Component:
+      Radius: 1
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 0.200000003
+  - Entity: 16448122746107505866
+    Tag Component:
+      Tag: PointLight
+    Transform Component:
+      Position: [-1.77767587, 16.7240696, 0.307404757]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Point Light Component:
+      Light Position: [-1.77767587, 16.7240696, 0.307404757]
+      Light Strength: 1007
+      Light Color: [1, 1, 1]
+  - Entity: 18129241060098380412
+    Tag Component:
+      Tag: Brick
+    Transform Component:
+      Position: [0, 22.9759121, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [1, 1, 1]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.180000007
+    RigidBody Component:
+      Type: 1
+      Density: 2.79999995
+  - Entity: 5983712648153706305
+    Tag Component:
+      Tag: Guardian1
+    Transform Component:
+      Position: [5.42399979, 10, 0]
+      Rotation: [180, 0.601271331, 180]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Cerberus
+    Box Collider Component:
+      Half Size: [1.04999995, 2.5, 7.8499999]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 20
+  - Entity: 4360003372159284551
+    Tag Component:
+      Tag: Nanosuit
+    Transform Component:
+      Position: [0, 10.9007816, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Nanosuit
+    Box Collider Component:
+      Half Size: [3.70000005, 7.6500001, 1.14999998]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.00100000005
+    RigidBody Component:
+      Type: 1
+      Density: 80
+  - Entity: 9501117103713229413
+    Tag Component:
+      Tag: Ground
+    Transform Component:
+      Position: [0, -12.5, 0]
+      Rotation: [0, 0, 0]
+      Scale: [16, 0.5, 16]
+    Mesh Component:
+      Mesh Name: Ground
+    Box Collider Component:
+      Half Size: [16, 0.5, 16]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 0
+  - Entity: 13698351670626693965
+    Tag Component:
+      Tag: Camera
+    Transform Component:
+      Position: [0, 6.55702591, -36.0305061]
+      Rotation: [14.297473, 0, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [0, 6.55702591, -36.0305061]
+      Direction: [14.297473, 0, 0]
+      Is Freelook: true
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.77777779
+        NearZ: 0.100000001
+        FarZ: 10000
+    Script Component:
+      Class: GE.Player
+      Class Fields:
+        - Field Name: Mass
+          Category: Float
+          Data: 0
+        - Field Name: Speed
+          Category: Float
+          Data: 0.111000001
+        - Field Name: State
+          Category: Int
+          Data: 0
+        - Field Name: TimeStep
+          Category: Float
+          Data: 0
+  - Entity: 17366065822084978730
+    Tag Component:
+      Tag: Guardian2
+    Transform Component:
+      Position: [-5.42384863, 10, 0]
+      Rotation: [180, -1.12791812, 180]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Cerberus
+    Box Collider Component:
+      Half Size: [1.04999995, 2.5, 7.8499999]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 20
+  - Entity: 8367183271025845764
+    Tag Component:
+      Tag: Barrier
+    Transform Component:
+      Position: [0, -8.68416882, 0]
+      Rotation: [11.4141579, 0, 0]
+      Scale: [13, 0.100000001, 15]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [13, 0.100000001, 15]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 0
+  - Entity: 17598683651778242354
+    Tag Component:
+      Tag: Wall_3
+    Transform Component:
+      Position: [0, 0, 17]
+      Rotation: [0, 0, 0]
+      Scale: [16, 13, 1]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [16, 13, 1]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.150000006
+    RigidBody Component:
+      Type: 0
+  - Entity: 9964085428892815567
+    Tag Component:
+      Tag: Wall_2
+    Transform Component:
+      Position: [17, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 13, 16]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [1, 13, 16]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.150000006
+    RigidBody Component:
+      Type: 0
+  - Entity: 1227350634409366489
+    Tag Component:
+      Tag: Wall_1
+    Transform Component:
+      Position: [-17, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 13, 16]
+    Mesh Component:
+      Mesh Name: Brick
+    Box Collider Component:
+      Half Size: [1, 13, 16]
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.150000006
+    RigidBody Component:
+      Type: 0
+  - Entity: 14579886373552238606
+    Tag Component:
+      Tag: Terrain
+    Transform Component:
+      Position: [0, -20.282486, -2.41786074e-06]
+      Rotation: [90, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Terrain

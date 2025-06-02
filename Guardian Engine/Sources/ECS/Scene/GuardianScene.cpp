@@ -20,7 +20,7 @@ namespace GE
 		this->SceneGravity = GE_GRAVITY_EARTH;
 	}
 
-	GuardianScene::GuardianScene(std::shared_ptr<GuardianGraphics> graphics)
+	GuardianScene::GuardianScene(const GString& sceneFilePath)
 	{
 		this->EditorCamera = std::make_shared<GuardianCamera>(GVector3(0.0f, 8.0f, -30.0f),
 			GVector3(0.0f, 0.0f, 0.0f), GuardianPerspectiveProjection(60.0f, 16.0f / 9.0f, 0.001f, 10000.0f));
@@ -32,11 +32,13 @@ namespace GE
 		this->PhysicsWorld = null;
 		this->SceneGravity = GE_GRAVITY_EARTH;
 
-		this->LoadScene(graphics);
+		this->LoadSceneAs(sceneFilePath);
 	}
 
-	GuardianScene::GuardianScene(const GuardianScene& other)
+	GuardianScene::GuardianScene(const GuardianScene& other) :
+		GuardianSerializable(other)
 	{
+		this->SceneName = other.SceneName;
 		this->SceneState = other.SceneState;
 		this->SceneEntityList = other.SceneEntityList;
 		this->EditorCamera = other.EditorCamera;
@@ -62,7 +64,7 @@ namespace GE
 		this->SceneName = name;
 	}
 
-	void GuardianScene::LoadScene(std::shared_ptr<GuardianGraphics> graphics)
+	void GuardianScene::LoadScene()
 	{
 		if (this->SceneState == GE_SCENE_RUNTIME)
 		{
@@ -75,10 +77,11 @@ namespace GE
 
 		this->Deserialize(sceneFilePath);
 
+		this->SceneName = this->FileName;
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded scene : {}", sceneFilePath));
 	}
 
-	void GuardianScene::LoadSceneAs(std::shared_ptr<GuardianGraphics> graphics, const GString& sceneFilePath)
+	void GuardianScene::LoadSceneAs(const GString& sceneFilePath)
 	{
 		if (this->SceneState == GE_SCENE_RUNTIME)
 		{
@@ -89,6 +92,7 @@ namespace GE
 
 		this->Deserialize(sceneFilePath);
 
+		this->SceneName = this->FileName;
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, std::format("Loaded scene : {}", sceneFilePath));
 	}
 

@@ -1,25 +1,5 @@
 #include "PBR/PBRLightShader.hlsli"
 
-cbuffer MaterialCBuffer : register(b0)
-{
-	float3 AlbedoColor;
-	float MetallicColor;
-	float RoughnessColor;
-	float AoColor;
-	int UsingAlbedoMap;
-	int UsingMetallicMap;
-	int UsingRoughnessMap;
-	int UsingNormalMap;
-	int UsingAoMap;
-};
-
-cbuffer LightCBuffer : register(b1)
-{
-	float3 CameraPosition;
-	int PointLightNumber;
-	PointLight PointLightList[50];
-};
-
 struct PixelInput
 {
 	float4 InputPosition : SV_POSITION;
@@ -27,16 +7,6 @@ struct PixelInput
 	float2 InputTextureCoord : TEXCOORD;
 	float3 InputNormal : NORMAL;
 };
-
-SamplerState ObjectSampler : register(s0);
-SamplerState ShadowMapSampler : register(s1);
-
-Texture2D AlbedoTexture : register(t0);
-Texture2D MetallicTexture : register(t1);
-Texture2D RoughnessTexture : register(t2);
-Texture2D NormalTexture : register(t3);
-Texture2D AoTexture : register(t4);
-Texture2D ShadowTexture : register(t5);
 
 float4 main(PixelInput InputData) : SV_TARGET
 {
@@ -88,15 +58,14 @@ float4 main(PixelInput InputData) : SV_TARGET
 		MeshMaterial.Ao = AoColor;
 	}
 
-	float4 PixelLightPosition = mul(PointLightList[0].LightMatrix, float4(InputData.InputWorldPosition, 1.0f));
+	float4 PixelLightPosition = mul(float4(InputData.InputWorldPosition, 1.0f), PointLightList[0].LightMatrix);
 	float3 LightColor = CalculateMultiplePointLights(PointLightList, MeshMaterial, PointLightNumber, VertexNormal, 
-		InputData.InputWorldPosition, CameraPosition, PixelLightPosition, ShadowTexture, ShadowMapSampler);
+		InputData.InputWorldPosition, CameraPosition);
 	DirectionalLight light;
 	light.LightDirection = float3(0.0f, 0.0f, 45.0f);
 	light.LightColor = float3(1.0f, 1.0f, 1.0f);
 	light.LightStrength = 48.0f;
-    LightColor += CalculateDirectionalLight(light, MeshMaterial, VertexNormal, InputData.InputWorldPosition, CameraPosition, 
-		PixelLightPosition, ShadowTexture, ShadowMapSampler);
+    LightColor += CalculateDirectionalLight(light, MeshMaterial, VertexNormal, InputData.InputWorldPosition, CameraPosition);
 
 	float3 PixelColor = LightColor + GetAmbient(MeshMaterial.Albedo, 
 		MeshMaterial.Ao);

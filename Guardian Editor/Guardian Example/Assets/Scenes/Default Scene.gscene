@@ -1,0 +1,18 @@
+Scene: Default Scene
+Entities:
+  - Entity: 13858052204867555899
+    Tag Component:
+      Tag: Camera
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      Position: [0, 2, -3]
+      Direction: [0, 0, 0]
+      Is Freelook: false
+      Perspective Projection:
+        FOV: 60
+        Aspect: 1.77777779
+        NearZ: 0.100000001
+        FarZ: 10000
