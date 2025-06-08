@@ -102,6 +102,11 @@ namespace GE
 		this->IsWindowRunning = true;
 	}
 
+	void GuardianWindow::HideWindow()
+	{
+		ShowWindow(this->WindowHandle, SW_HIDE);
+	}
+
 	void GuardianWindow::UpdateWindowMessage() noexcept
 	{
 		while (PeekMessage(&this->WindowMessage, null, null, null, PM_REMOVE))

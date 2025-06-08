@@ -4,24 +4,29 @@
 
 namespace GE
 {
+	GuardianConsoleEditor::GuardianConsoleEditor()
+	{
+		this->EditorName = "Console Editor";
+	}
+
 	void GuardianConsoleEditor::Initialize()
 	{
-		this->ConsolePanel = std::make_shared<GuardianPanel>();
+		this->ConsolePanel = std::make_shared<EUI::GuardianPanel>();
 		this->ConsolePanel->SetPanelName("Console");
 
-		this->ConsoleLog = std::make_shared<GuardianText>();
+		this->ConsoleLog = std::make_shared<EUI::GuardianText>();
 
-		this->ButtonLayout = std::make_shared<GuardianColumnLayout>();
+		this->ButtonLayout = std::make_shared<EUI::GuardianColumnLayout>();
 		this->ButtonLayout->SetColumnCount(2);
 
-		this->ClearLogButton = std::make_shared<GuardianButton>(
+		this->ClearLogButton = std::make_shared<EUI::GuardianButton>(
 			"Clear",
 			[]()
 			{
 				GuardianLogger::ClearMessageList();
 			}, GVector2{ 50.0f, 30.0f });
 
-		this->ExportLogButton = std::make_shared<GuardianButton>(
+		this->ExportLogButton = std::make_shared<EUI::GuardianButton>(
 			"Export",
 			[]()
 			{

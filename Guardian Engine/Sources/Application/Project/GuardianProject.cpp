@@ -205,16 +205,26 @@ namespace GE
 		if (this->ProjectFileDirectory[this->ProjectFileDirectory.size() - 1] == '/' ||
 			this->ProjectFileDirectory[this->ProjectFileDirectory.size() - 1] == '\\')
 		{
-			this->ProjectAssetPath = this->ProjectFileDirectory + "Assets/";
+			this->ProjectAssetPath = this->ProjectFileDirectory + "Assets\\";
 		}
 		else
 		{
-			this->ProjectAssetPath = this->ProjectFileDirectory + "/Assets/";
+			this->ProjectAssetPath = this->ProjectFileDirectory + "\\Assets\\";
 		}
 
 		this->CurrentSceneName = ProjectData["Default Scene"].as<GString>();
 
 		GuardianAssetSystem::InitializeAssetSystem(this->ProjectAssetPath);
+
+		for (auto& scene : GuardianAssetSystem::GetSceneList())
+		{
+			this->ProjectSceneList[scene.first] = scene.second;
+		}
+
+		for (auto& scene : this->ProjectSceneList)
+		{
+			scene.second->InitializeScene();
+		}
 	}
 
 	void GuardianProject::UpdateEditProject()

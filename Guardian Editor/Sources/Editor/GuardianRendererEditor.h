@@ -4,10 +4,10 @@
 
 namespace GE
 {
-	class GuardianRendererEditor : public GuardianEditor
+	class GuardianRendererEditor : public EUI::GuardianEditor
 	{
 	public:
-		GuardianRendererEditor() = default;
+		GuardianRendererEditor();
 		GuardianRendererEditor(const GuardianRendererEditor&) = default;
 
 		void Initialize() override;
@@ -15,10 +15,10 @@ namespace GE
 		void Update() override;
 
 	private:
-		std::shared_ptr<GuardianPanel> MainPanel;
-		std::shared_ptr<GuardianButton> TestButton;
-		std::shared_ptr<GuardianText> FPSText;
-		std::shared_ptr<GuardianText> EventText;
+		std::shared_ptr<EUI::GuardianPanel> MainPanel;
+		std::shared_ptr<EUI::GuardianButton> TestButton;
+		std::shared_ptr<EUI::GuardianText> FPSText;
+		std::shared_ptr<EUI::GuardianText> EventText;
 	};
 }
 

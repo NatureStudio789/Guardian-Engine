@@ -87,6 +87,7 @@ namespace GE
 		void AvailableWindowGraphics();
 
 		void DisplayWindow();
+		void HideWindow();
 		void UpdateWindowMessage() noexcept;
 
 		void DestroyWindow();

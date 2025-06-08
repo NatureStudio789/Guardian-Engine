@@ -127,9 +127,9 @@ project "Guardian Engine"
         buildoptions {"/wd4099", "/MP"}
         buildoptions { "/permissive" }
 
-project "Guardian Editor"
-    location "Guardian Editor"
-    kind "ConsoleApp"
+project "Guardian EUI"
+    location "Guardian EUI"
+    kind "StaticLib"
     language "C++"
 
     targetdir (outputdir)
@@ -147,12 +147,79 @@ project "Guardian Editor"
         "ThirdParty/yaml-cpp/include/",
         "ThirdParty/ImGuizmo/Sources/",
         "Setup/Includes/",
+    }
+
+    links
+    {
+        "ImGui",
+        "ImGuizmo",
+    }
+
+    defines
+    {
+        "YAML_CPP_STATIC_DEFINE",
+    }
+
+    filter "system:windows"
+        cppdialect "C++20"
+        staticruntime "Off"
+        systemversion "latest"
+
+        defines
+        {
+            "GE_PLATFORM_WINDOWS",
+        }
+
+    filter "configurations:Debug"
+        runtime "Debug"
+        defines
+        {
+            "GE_DEBUG"
+        }
+
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+
+    filter "configurations:Release"
+        runtime "Release"
+        defines
+        {
+            "GE_RELEASE"
+        }
+
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+
+project "Guardian Editor"
+    location "Guardian Editor"
+    kind "ConsoleApp"
+    language "C++"
+
+    targetdir (outputdir)
+    objdir ("%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
+
+    files
+    {
+        "%{prj.name}/Sources/**.h",
+        "%{prj.name}/Sources/**.cpp",
+    }
+
+    includedirs
+    {
+        "Guardian Engine/Sources/",
+        "Guardian EUI/Sources/",
+        "ThirdParty/yaml-cpp/include/",
+        "ThirdParty/ImGuizmo/Sources/",
+        "Setup/Includes/",
         "Setup/Includes/PhysX/",
     }
 
     links
     {
         "Guardian Engine",
+        "Guardian EUI",
         "ImGui",
         "ImGuizmo",
         "yaml-cpp",
@@ -311,58 +378,3 @@ project "yaml-cpp"
 	filter "configurations:Release"
 		runtime "Release"
 		optimize "on"
-
-project "Sandbox"
-    location "Sandbox"
-    kind "ConsoleApp"
-    language "C++"
-
-    targetdir (outputdir)
-    objdir ("%{prj.name}/Intermediate/%{cfg.buildcfg}/%{cfg.architecture}/")
-
-    files
-    {
-        "%{prj.name}/Sources/**.h",
-        "%{prj.name}/Sources/**.cpp",
-    }
-
-    includedirs
-    {
-        "Guardian Engine/Sources/",
-        "Setup/Includes/",
-    }
-
-    links
-    {
-        "Guardian Engine"
-    }
-
-    filter "system:windows"
-        cppdialect "C++20"
-        staticruntime "Off"
-        systemversion "latest"
-
-        defines
-        {
-            "GE_PLATFORM_WINDOWS"
-        }
-
-    filter "configurations:Debug"
-        runtime "Debug"
-        defines
-        {
-            "GE_DEBUG"
-        }
-
-        buildoptions {"/wd4251", "/MP"}
-        buildoptions {"/wd4275", "/MP"}
-
-    filter "configurations:Release"
-        runtime "Release"
-        defines
-        {
-            "GE_RELEASE"
-        }
-
-        buildoptions {"/wd4251", "/MP"}
-        buildoptions {"/wd4275", "/MP"}

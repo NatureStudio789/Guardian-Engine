@@ -36,10 +36,13 @@ namespace GE
 		GuardianApplication::ApplicationInstance->ApplicationWindow->AvailableWindowGraphics();
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Availabled engine graphics.");
 
+		this->EngineProgram->Initialize();
+		this->LaunchCreator();
+
 		GuardianScriptEngine::InitializeScriptEngine();
 
 		GuardianThread Initialization;
-		Initialization.LaunchThread([=]() 
+		Initialization.LaunchThread([=]()
 		{
 			try
 			{
@@ -48,8 +51,7 @@ namespace GE
 
 				GuardianPhysicsEngine::InitializePhysicsEngine();
 
-				this->EngineProject->InitializeProject("Guardian Example", "Guardian Example\\");
-				this->EngineProgram->Initialize();
+				this->EngineProject->LoadProject("Guardian Example\\GuardianExample.gproject");
 
 				GuardianTime::InitializeTime();
 
@@ -76,6 +78,9 @@ namespace GE
 
 	void GuardianEngine::LaunchEngine()
 	{
+		this->EngineProgram->SetProgramMode(GuardianProgram::GE_STANDARD_MODE);
+		this->EngineProgram->LaunchProgram();
+
 		GuardianApplication::ApplicationInstance->DisplayWindow();
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
@@ -105,5 +110,25 @@ namespace GE
 	std::shared_ptr<GuardianScene> GuardianEngine::GetScene() noexcept
 	{
 		return this->EngineProject->GetCurrentScene();
+	}
+
+	void GuardianEngine::LaunchCreator()
+	{
+		this->EngineProgram->SetProgramMode(GuardianProgram::GE_CREATOR_MODE);
+		this->EngineProgram->LaunchProgram();
+
+		GuardianApplication::ApplicationInstance->DisplayWindow();
+		while (GuardianApplication::ApplicationInstance->IsApplicationRunning() && 
+			this->EngineProgram->IsProgramRunning())
+		{
+			GuardianApplication::ApplicationInstance->UpdateApplication();
+			
+			this->EngineProgram->Update();
+			this->EngineProgram->Render();
+
+			GuardianApplication::ApplicationInstance->EndUpRendering();						
+		}
+
+		GuardianApplication::ApplicationInstance->ApplicationWindow->HideWindow();
 	}
 }

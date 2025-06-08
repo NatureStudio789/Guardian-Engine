@@ -54,6 +54,9 @@ using namespace physx;
 
 #endif
 
+#define GE_EDITOR_PROGRAM "Guardian Engine - <Nature Software>"
+#define GE_LAUNCHER_PROGRAM "Guardian Engine - <Nature Software> (Launcher)"
+
 #define null NULL
 #define GFailed FAILED
 #define GSucceeded SUCCEEDED

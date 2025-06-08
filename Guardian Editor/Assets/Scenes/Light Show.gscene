@@ -1,23 +1,5 @@
-Scene: Unnamed
+Scene: Light Show
 Entities:
-  - Entity: 107836199489490231
-    Tag Component:
-      Tag: Ball
-    Transform Component:
-      Position: [-3.44546628, 21.7698364, -12.4592171]
-      Rotation: [0, 0, 0]
-      Scale: [1, 1, 1]
-    Mesh Component:
-      Mesh Name: Sphere
-    Sphere Collider Component:
-      Radius: 1
-      Physics Material:
-        Static Friction: 0.5
-        Dynamic Friction: 0.5
-        Restitution: 0.600000024
-    RigidBody Component:
-      Type: 1
-      Density: 0.200000003
   - Entity: 16448122746107505866
     Tag Component:
       Tag: PointLight
@@ -226,3 +208,21 @@ Entities:
       Scale: [1, 1, 1]
     Mesh Component:
       Mesh Name: Terrain
+  - Entity: 107836199489490231
+    Tag Component:
+      Tag: Ball
+    Transform Component:
+      Position: [-3.44546628, 21.7698364, -12.4592171]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Mesh Component:
+      Mesh Name: Sphere
+    Sphere Collider Component:
+      Radius: 1
+      Physics Material:
+        Static Friction: 0.5
+        Dynamic Friction: 0.5
+        Restitution: 0.600000024
+    RigidBody Component:
+      Type: 1
+      Density: 0.200000003

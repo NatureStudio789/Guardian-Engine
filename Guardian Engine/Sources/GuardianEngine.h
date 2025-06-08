@@ -20,6 +20,8 @@ namespace GE
 		static std::unique_ptr<GuardianEngine> EngineInstance;
 
 	private:
+		void LaunchCreator();
+
 		GuardianProgram* EngineProgram;
 		
 		std::shared_ptr<GuardianProject> EngineProject;

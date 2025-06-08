@@ -1,6 +1,0 @@
-﻿  GraphEditor.cpp
-  ImCurveEdit.cpp
-  ImGradient.cpp
-  ImGuizmo.cpp
-  ImSequencer.cpp
-  ImGuizmo.vcxproj -> D:\Development\C++\Nature Studio\Guardian Engine\Build\Debug\x86_64\ImGuizmo.lib

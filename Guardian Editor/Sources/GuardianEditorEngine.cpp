@@ -5,7 +5,7 @@ namespace GE
 {
 	GuardianEditorEngine::GuardianEditorEngine()
 	{
-		this->ProgramName = "Guardian Engine - <Nature Software>";
+		this->ProgramName = GE_EDITOR_PROGRAM;
 		this->EditorPanelList.clear();
 	}
 
@@ -62,8 +62,8 @@ namespace GE
 
 		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
 
-		this->AddEditorToEngine(std::make_shared<GuardianConsoleEditor>());
-		this->AddEditorToEngine(std::make_shared<GuardianRendererEditor>());
+		this->AddStandardEditorToEngine(std::make_shared<GuardianConsoleEditor>());
+		this->AddStandardEditorToEngine(std::make_shared<GuardianRendererEditor>());
 	}
 
 	void GuardianEditorEngine::RenderDockspace()
@@ -132,28 +132,55 @@ namespace GE
 		ImGui::End();
 	}
 
-	void GuardianEditorEngine::AddEditorToEngine(std::shared_ptr<GuardianEditor> editor)
+	void GuardianEditorEngine::AddStandardEditorToEngine(std::shared_ptr<EUI::GuardianEditor> editor)
 	{
 		editor->Initialize();
 
-		this->EngineEditorList.push_back(editor);
+		this->StandardEditorList[editor->GetEditorName()] = editor;
 	}
 
-	void GuardianEditorEngine::AddPanelToEditor(std::shared_ptr<GuardianPanel> panel)
+	void GuardianEditorEngine::AddCreatorEditorToEngine(std::shared_ptr<EUI::GuardianEditor> editor)
+	{
+		editor->Initialize();
+
+		this->CreatorEditorList[editor->GetEditorName()] = editor;
+	}
+
+	void GuardianEditorEngine::AddPanelToEditor(std::shared_ptr<EUI::GuardianPanel> panel)
 	{
 		this->EditorPanelList[panel->GetPanelName()] = panel;
 	}
 
 	void GuardianEditorEngine::Update()
 	{
-		for (int i = 0; i < (int)this->EngineEditorList.size(); i++)
+		if (!this->IsProgramExecuted)
 		{
-			this->EngineEditorList[i]->Update();
+			return;
+		}
+
+		if (this->ProgramMode == GE_CREATOR_MODE)
+		{
+			for (auto& editor : this->CreatorEditorList)
+			{
+				editor.second->Update();
+			}
+		}
+		else if (this->ProgramMode == GE_STANDARD_MODE)
+		{
+			for (auto& editor : this->StandardEditorList)
+			{
+				editor.second->Update();
+			}
 		}
 	}
 
 	void GuardianEditorEngine::Render()
 	{
+		if (!this->IsProgramExecuted)
+		{
+			return;
+		}
+
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -162,17 +189,24 @@ namespace GE
 
 		this->RenderDockspace();
 
-		for (auto& editor : this->EngineEditorList)
+		if (this->ProgramMode == GE_CREATOR_MODE)
 		{
-			editor->Render();
-		}
 
-		for (auto& panel : this->EditorPanelList)
-		{
-			panel.second->Render();
 		}
-		this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
-		this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
+		else if (this->ProgramMode == GE_STANDARD_MODE)
+		{
+			for (auto& editor : this->StandardEditorList)
+			{
+				editor.second->Render();
+			}
+
+			for (auto& panel : this->EditorPanelList)
+			{
+				panel.second->Render();
+			}
+			this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
+			this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
+		}
 
 		ImGui::Render();
 		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsMainFramebuffer()->ApplyFramebuffer(
