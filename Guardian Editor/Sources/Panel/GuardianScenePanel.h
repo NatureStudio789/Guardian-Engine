@@ -10,7 +10,6 @@ namespace GE
 	{
 	public:
 		GuardianScenePanel();
-		GuardianScenePanel(GuardianScene* scene);
 		GuardianScenePanel(const GuardianScenePanel& other);
 		~GuardianScenePanel();
 
@@ -22,7 +21,6 @@ namespace GE
 	private:
 		GuardianUUID SelectedEntityId;
 		int CurrentOperation;
-		GuardianScene* PanelScene;
 		GuardianTexture PlayButtonTexture;
 		GuardianTexture StopButtonTexture;
 

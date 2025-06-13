@@ -1,14 +1,15 @@
 #include "../../GuardianEngine.h"
 
+extern GE::GuardianCreator* CreateCreator();
 extern GE::GuardianProgram* CreateProgram();
-#define GUARDIAN_ENGINE_PROFILE(Program) GE::GuardianProgram* CreateProgram() { return new Program();  }
+#define GUARDIAN_ENGINE_PROFILE(Creator, Program) GE::GuardianCreator* CreateCreator() { return new Creator();  } GE::GuardianProgram* CreateProgram() { return new Program();  }
 
 int main(int argc, char* argv[])
 {
 	try
 	{
 		GE::GuardianApplication::SetCommandLineArgument(argc, argv);
-		GE::GuardianEngine::EngineInstance->InitializeEngine(CreateProgram());
+		GE::GuardianEngine::EngineInstance->InitializeEngine(CreateCreator(), CreateProgram());
 
 		GE::GuardianEngine::EngineInstance->LaunchEngine();
 

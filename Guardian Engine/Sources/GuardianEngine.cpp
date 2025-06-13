@@ -18,8 +18,14 @@ namespace GE
 		this->EngineProgram = null;
 	}
 
-	void GuardianEngine::InitializeEngine(GuardianProgram* program)
+	void GuardianEngine::InitializeEngine(GuardianCreator* creator, GuardianProgram* program)
 	{
+		this->EngineCreator = creator;
+		if (!this->EngineCreator)
+		{
+			throw GUARDIAN_VALUE_EXCEPTION((long long)this->EngineCreator);
+		}
+
 		this->EngineProgram = program;
 		if (!this->EngineProgram)
 		{
@@ -33,10 +39,10 @@ namespace GE
 		EngineWindowProperties.SetWindowTitle(this->EngineProgram->GetProgramName());
 
 		GuardianApplication::ApplicationInstance->InitializeApplication(EngineWindowProperties);
-		GuardianApplication::ApplicationInstance->ApplicationWindow->AvailableWindowGraphics();
+		GuardianApplication::ApplicationInstance->MainWindow->AvailableWindowGraphics();
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Availabled engine graphics.");
 
-		this->EngineProgram->Initialize();
+		this->EngineCreator->Initialize();
 		this->LaunchCreator();
 
 		GuardianScriptEngine::InitializeScriptEngine();
@@ -52,6 +58,7 @@ namespace GE
 				GuardianPhysicsEngine::InitializePhysicsEngine();
 
 				this->EngineProject->LoadProject("Guardian Example\\GuardianExample.gproject");
+				this->EngineProgram->Initialize();
 
 				GuardianTime::InitializeTime();
 
@@ -78,10 +85,7 @@ namespace GE
 
 	void GuardianEngine::LaunchEngine()
 	{
-		this->EngineProgram->SetProgramMode(GuardianProgram::GE_STANDARD_MODE);
-		this->EngineProgram->LaunchProgram();
-
-		GuardianApplication::ApplicationInstance->DisplayWindow();
+		GuardianApplication::ApplicationInstance->DisplayMainWindow();
 		while (GuardianApplication::ApplicationInstance->IsApplicationRunning())
 		{
 			GuardianTime::UpdateTime();
@@ -107,6 +111,11 @@ namespace GE
 		this->EngineProject->SaveProject("Guardian Example/GuardianExample.gproject");
 	}
 
+	void GuardianEngine::SetCurrentScene(const GString& sceneName)
+	{
+		this->EngineProject->SetCurrentScene(sceneName);
+	}
+
 	std::shared_ptr<GuardianScene> GuardianEngine::GetScene() noexcept
 	{
 		return this->EngineProject->GetCurrentScene();
@@ -114,21 +123,18 @@ namespace GE
 
 	void GuardianEngine::LaunchCreator()
 	{
-		this->EngineProgram->SetProgramMode(GuardianProgram::GE_CREATOR_MODE);
-		this->EngineProgram->LaunchProgram();
-
-		GuardianApplication::ApplicationInstance->DisplayWindow();
-		while (GuardianApplication::ApplicationInstance->IsApplicationRunning() && 
-			this->EngineProgram->IsProgramRunning())
+		GuardianApplication::ApplicationInstance->DisplayCreatorWindow();
+		while (GuardianApplication::ApplicationInstance->CreatorWindow->GetIsWindowRunning())
 		{
-			GuardianApplication::ApplicationInstance->UpdateApplication();
+			GuardianApplication::ApplicationInstance->CreatorWindow->UpdateWindowMessage();
 			
-			this->EngineProgram->Update();
-			this->EngineProgram->Render();
+			this->EngineCreator->Update();
+			this->EngineCreator->Render();
 
-			GuardianApplication::ApplicationInstance->EndUpRendering();						
+			GuardianApplication::ApplicationInstance->CreatorWindow->GetWindowGraphicsContext()->EndUpRendering();
 		}
 
-		GuardianApplication::ApplicationInstance->ApplicationWindow->HideWindow();
+		GuardianApplication::ApplicationInstance->CreatorWindow->HideWindow();
+		this->EngineCreator->Release();
 	}
 }

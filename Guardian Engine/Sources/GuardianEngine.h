@@ -7,14 +7,22 @@ namespace GE
 	class GUARDIAN_API GuardianEngine
 	{
 	public:
+		enum Mode
+		{
+			GE_ENGINE_EDITOR,
+			GE_ENGINE_RUNTIME
+		};
+
+	public:
 		GuardianEngine();
 		GuardianEngine(const GuardianEngine&) = delete;
 		~GuardianEngine();
 
-		void InitializeEngine(GuardianProgram* program);
+		void InitializeEngine(GuardianCreator* creator, GuardianProgram* program);
 
 		void LaunchEngine();
 
+		void SetCurrentScene(const GString& sceneName);
 		std::shared_ptr<GuardianScene> GetScene() noexcept;
 
 		static std::unique_ptr<GuardianEngine> EngineInstance;
@@ -22,6 +30,7 @@ namespace GE
 	private:
 		void LaunchCreator();
 
+		GuardianCreator* EngineCreator;
 		GuardianProgram* EngineProgram;
 		
 		std::shared_ptr<GuardianProject> EngineProject;

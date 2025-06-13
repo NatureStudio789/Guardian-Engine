@@ -10,7 +10,7 @@ namespace GE
         ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
 
         OpenFileName.lStructSize = sizeof(OPENFILENAME);
-        OpenFileName.hwndOwner = GuardianApplication::ApplicationInstance->GetApplicationWindowHandle();
+        OpenFileName.hwndOwner = GuardianApplication::ApplicationInstance->GetMainWindowHandle();
         OpenFileName.lpstrFile = szFile;
         OpenFileName.nMaxFile = sizeof(szFile);
         OpenFileName.lpstrFilter = filter;
@@ -31,7 +31,7 @@ namespace GE
         ZeroMemory(&OpenFileName, sizeof(OPENFILENAME));
 
         OpenFileName.lStructSize = sizeof(OPENFILENAME);
-        OpenFileName.hwndOwner = GuardianApplication::ApplicationInstance->GetApplicationWindowHandle();
+        OpenFileName.hwndOwner = GuardianApplication::ApplicationInstance->GetMainWindowHandle();
         OpenFileName.lpstrFile = szFile;
         OpenFileName.nMaxFile = sizeof(szFile);
         OpenFileName.lpstrFilter = filter;

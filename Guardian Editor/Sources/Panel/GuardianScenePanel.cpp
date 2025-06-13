@@ -14,16 +14,6 @@ namespace GE
 		this->StopButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
 	}
 
-	GuardianScenePanel::GuardianScenePanel(GuardianScene* scene)
-	{
-		this->PanelName = "Scene";
-		this->PanelScene = scene;
-		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
-		this->SelectedEntityId = 0;
-		this->PlayButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/PlayButton.png"));
-		this->StopButtonTexture.InitializeTexture(GuardianSurface("../Guardian Engine/Assets/Textures/StopButton.png"));
-	}
-
 	GuardianScenePanel::GuardianScenePanel(const GuardianScenePanel& other)
 	{
 		this->PanelName = other.PanelName;
@@ -35,7 +25,7 @@ namespace GE
 
 	GuardianScenePanel::~GuardianScenePanel()
 	{
-		this->PanelScene = null;
+		GuardianEngine::EngineInstance->GetScene() = null;
 		this->SelectedEntityId = 0;
 	}
 
@@ -54,7 +44,7 @@ namespace GE
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 		ImGui::Begin("Depth");
 
-		for (auto& map : GuardianRenderer::RenderingSceneGraphList[this->PanelScene->SceneName]->DepthGraphList)
+		for (auto& map : GuardianRenderer::RenderingSceneGraphList[GuardianEngine::EngineInstance->GetScene()->SceneName]->DepthGraphList)
 		{
 			ImGui::Image((ImTextureID)map.second->GetGraphDepthStencil()->GetDepthStencilShaderResource().Get(),
 				ImVec2(1024, 1024));
@@ -68,11 +58,11 @@ namespace GE
 
 		if (ImGui::IsWindowFocused())
 		{
-			this->PanelScene->ShouldOperateCamera = true;
+			GuardianEngine::EngineInstance->GetScene()->ShouldOperateCamera = true;
 		}
 		else
 		{
-			this->PanelScene->ShouldOperateCamera = false;
+			GuardianEngine::EngineInstance->GetScene()->ShouldOperateCamera = false;
 		}
 
 		ImVec2 CurrentScenePanelSize = ImGui::GetContentRegionAvail();
@@ -82,23 +72,20 @@ namespace GE
 		{
 			LastScenePanelSize = { CurrentScenePanelSize.x, CurrentScenePanelSize.y };
 
-			GuardianRenderer::GetRenderingSceneGraph(this->PanelScene)->ResizeSceneGraph(
+			GuardianRenderer::GetRenderingSceneGraph(GuardianEngine::EngineInstance->GetScene().get())->ResizeSceneGraph(
 				(int)CurrentScenePanelSize.x, (int)CurrentScenePanelSize.y);
-			this->PanelScene->UpdateProjectionAspect(CurrentScenePanelSize.x, CurrentScenePanelSize.y);
+			GuardianEngine::EngineInstance->GetScene()->UpdateProjectionAspect(CurrentScenePanelSize.x, CurrentScenePanelSize.y);
 			IsFirst = false;
 		}
 
-		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingSceneGraph(this->PanelScene)->GetSceneGraphFramebuffer()->
+		ImGui::Image((ImTextureID)GuardianRenderer::GetRenderingSceneGraph(GuardianEngine::EngineInstance->GetScene().get())->GetSceneGraphFramebuffer()->
 			GetFramebufferResource().Get(), ImGui::GetContentRegionAvail());
 
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("RESOURCES_BROWSER_ITEM"))
 			{
-				if (std::filesystem::path(GString((const char*)payload->Data)).extension().string() == ".gscene")
-				{
-					this->PanelScene->LoadSceneAs(GString((const char*)payload->Data));
-				}
+				GuardianEngine::EngineInstance->SetCurrentScene(GString((const char*)payload->Data));
 			}
 
 			ImGui::EndDragDropTarget();
@@ -106,10 +93,10 @@ namespace GE
 
 		ImGui::PopStyleVar();
 
-		if (this->PanelScene->GetEntity(this->SelectedEntityId) && 
-			this->PanelScene->GetEntity(this->SelectedEntityId)->HasComponent<GuardianTransformComponent>())
+		if (GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId) && 
+			GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->HasComponent<GuardianTransformComponent>())
 		{
-			if (this->PanelScene->GetSceneState() == GE_SCENE_EDIT)
+			if (GuardianEngine::EngineInstance->GetScene()->GetSceneState() == GE_SCENE_EDIT)
 			{
 				ImGuizmo::SetOrthographic(false);
 				ImGuizmo::SetDrawlist();
@@ -117,11 +104,11 @@ namespace GE
 				ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowWidth(), ImGui::GetWindowHeight());
 
 				XMFLOAT4X4 view;
-				XMStoreFloat4x4(&view, this->PanelScene->EditorCamera->GetViewMatrix());
+				XMStoreFloat4x4(&view, GuardianEngine::EngineInstance->GetScene()->EditorCamera->GetViewMatrix());
 				XMFLOAT4X4 projection;
-				XMStoreFloat4x4(&projection, this->PanelScene->EditorCamera->GetProjectionMatrix());
+				XMStoreFloat4x4(&projection, GuardianEngine::EngineInstance->GetScene()->EditorCamera->GetProjectionMatrix());
 				XMFLOAT4X4 transform;
-				XMStoreFloat4x4(&transform, this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().GetTransformMatrix());
+				XMStoreFloat4x4(&transform, GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().GetTransformMatrix());
 
 				ImGuizmo::Manipulate((const float*)view.m, (const float*)projection.m, (ImGuizmo::OPERATION)this->CurrentOperation,
 					ImGuizmo::LOCAL, (float*)transform.m);
@@ -135,7 +122,7 @@ namespace GE
 						XMFLOAT3 Position;
 						XMStoreFloat3(&Position, VTranslation);
 
-						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Position =
+						GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Position =
 							GVector3(Position.x, Position.y, Position.z);
 					}
 					else if (this->CurrentOperation == ImGuizmo::ROTATE)
@@ -145,7 +132,7 @@ namespace GE
 						XMFLOAT4 Quaternion;
 						XMStoreFloat4(&Quaternion, VRotation);
 
-						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Rotation =
+						GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Rotation =
 							GVector4::QuaternionToEuler(GVector4(Quaternion.x, Quaternion.y, Quaternion.z, Quaternion.w));
 					}
 					else if (this->CurrentOperation == ImGuizmo::SCALE)
@@ -155,7 +142,7 @@ namespace GE
 						XMFLOAT3 Scale;
 						XMStoreFloat3(&Scale, VScale);
 
-						this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Scale =
+						GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianTransformComponent>().Scale =
 							GVector3(Scale.x, Scale.y, Scale.z);
 					}
 				}
@@ -170,18 +157,18 @@ namespace GE
 			ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
 		float size = ImGui::GetContentRegionAvail().y - 4.0f;
-		GuardianTexture icon = this->PanelScene->SceneState == GE_SCENE_EDIT ? this->PlayButtonTexture : this->StopButtonTexture;
+		GuardianTexture icon = GuardianEngine::EngineInstance->GetScene()->SceneState == GE_SCENE_EDIT ? this->PlayButtonTexture : this->StopButtonTexture;
 		ImGui::SameLine((ImGui::GetContentRegionMax().x * 0.5f) - (size * 0.5f));
 		if (ImGui::ImageButton("PlayButton",
 			(ImTextureID)icon.GetTextureResource().Get(), ImVec2(size, size)))
 		{
-			if (this->PanelScene->SceneState == GE_SCENE_RUNTIME)
+			if (GuardianEngine::EngineInstance->GetScene()->SceneState == GE_SCENE_RUNTIME)
 			{
-				this->PanelScene->StopRuntime();
+				GuardianEngine::EngineInstance->GetScene()->StopRuntime();
 			}
-			else if (this->PanelScene->SceneState == GE_SCENE_EDIT)
+			else if (GuardianEngine::EngineInstance->GetScene()->SceneState == GE_SCENE_EDIT)
 			{
-				this->PanelScene->StartRuntime();
+				GuardianEngine::EngineInstance->GetScene()->StartRuntime();
 			}
 		}
 

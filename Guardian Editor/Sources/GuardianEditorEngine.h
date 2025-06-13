@@ -1,9 +1,6 @@
 #ifndef _GE_GUARDIANEDITORENGINE_H_
 #define _GE_GUARDIANEDITORENGINE_H_
-#include "Panel/GuardianScenePanel.h"
-#include "Panel/GuardianSceneHierarchyPanel.h"
-#include "Panel/GuardianResourceBrowserPanel.h"
-#include "Editor/GuardianRendererEditor.h"
+#include "GuardianEditorCreator.h"
 #include <Profile/EntryPoint/GuardianEntryPoint.h>
 
 namespace GE
@@ -24,11 +21,9 @@ namespace GE
 	private:
 		void RenderDockspace();
 		void AddStandardEditorToEngine(std::shared_ptr<EUI::GuardianEditor> editor);
-		void AddCreatorEditorToEngine(std::shared_ptr<EUI::GuardianEditor> editor);
 		void AddPanelToEditor(std::shared_ptr<EUI::GuardianPanel> panel);
 		LRESULT CALLBACK EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
 
-		std::map<GString, std::shared_ptr<EUI::GuardianEditor>> CreatorEditorList;
 		std::map<GString, std::shared_ptr<EUI::GuardianEditor>> StandardEditorList;
 
 		std::map<GString, std::shared_ptr<EUI::GuardianPanel>> EditorPanelList;
@@ -37,6 +32,6 @@ namespace GE
 	};
 }
 
-GUARDIAN_ENGINE_PROFILE(GE::GuardianEditorEngine)
+GUARDIAN_ENGINE_PROFILE(GE::GuardianEditorCreator, GE::GuardianEditorEngine)
 
 #endif

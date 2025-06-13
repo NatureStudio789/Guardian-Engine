@@ -53,8 +53,8 @@ namespace GE
 	void GuardianScene::InitializeScene()
 	{
 		GuardianRenderer::CreateRenderingSceneGraph(this,
-			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetWidth(),
-			GuardianApplication::ApplicationInstance->GetApplicationWindow()->GetWindowProperties().GetHeight());
+			GuardianApplication::ApplicationInstance->GetMainWindow()->GetWindowProperties().GetWidth(),
+			GuardianApplication::ApplicationInstance->GetMainWindow()->GetWindowProperties().GetHeight());
 
 		GuardianRenderer::GetRenderingSceneGraph(this)->SetGraphClearColor({ 0.1f, 0.1f, 0.1f });
 	}

@@ -24,9 +24,14 @@ namespace GE
 		~GuardianApplication();
 
 		const bool IsApplicationRunning() const noexcept;
-		std::shared_ptr<GuardianWindow> GetApplicationWindow() noexcept;
-		GWindowHandle GetApplicationWindowHandle() noexcept;
-		std::shared_ptr<GuardianGraphics> GetApplicationGraphicsContext() noexcept;
+
+		std::shared_ptr<GuardianWindow> GetCreatorWindow() noexcept;
+		GWindowHandle GetCreatorWindowHandle() noexcept;
+		std::shared_ptr<GuardianWindow> GetMainWindow() noexcept;
+		GWindowHandle GetMainWindowHandle() noexcept;
+
+		std::shared_ptr<GuardianGraphics> GetCreatorGraphicsContext() noexcept;
+		std::shared_ptr<GuardianGraphics> GetMainGraphicsContext() noexcept;
 
 		static std::unique_ptr<GuardianApplication> ApplicationInstance;
 
@@ -38,16 +43,19 @@ namespace GE
 
 		void LaunchStartupWindow();
 
-		void DisplayWindow();
+		void DisplayCreatorWindow();
+		void DisplayMainWindow();
 		void UpdateApplication() noexcept;
 
 		void EndUpRendering(int syncInterval = 1);
 
 		static LRESULT CALLBACK StartupWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK CreatorWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK ApplicationMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		std::shared_ptr<GuardianWindow> StartupWindow;
-		std::shared_ptr<GuardianWindow> ApplicationWindow;
+		std::shared_ptr<GuardianWindow> CreatorWindow;
+		std::shared_ptr<GuardianWindow> MainWindow;
 		std::unique_ptr<GuardianEventProcesser> ApplicationEventProcesser;
 		
 		friend class GuardianEngine;

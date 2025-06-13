@@ -45,19 +45,18 @@ namespace GE
 		style.Colors[ImGuiCol_TabActive] = ImVec4(0.28f, 0.2805f, 0.281f, 1.0f);
 		style.Colors[ImGuiCol_TabUnfocused] = ImVec4(0.15f, 0.1505f, 0.151f, 1.0f);
 		style.Colors[ImGuiCol_TabUnfocusedActive] = ImVec4(0.2f, 0.205f, 0.21f, 1.0f);
-		
-		ImGui_ImplWin32_Init(GuardianApplication::ApplicationInstance->GetApplicationWindowHandle());
-		ImGui_ImplDX11_Init(
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsDevice().Get(),
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsDeviceContext().Get());
 
+		ImGui_ImplWin32_Init(GuardianApplication::ApplicationInstance->GetMainWindowHandle());
+		ImGui_ImplDX11_Init(
+			GuardianApplication::ApplicationInstance->GetMainGraphicsContext()->GetGraphicsDevice().Get(),
+			GuardianApplication::ApplicationInstance->GetMainGraphicsContext()->GetGraphicsDeviceContext().Get());
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
 
-		this->EditorScenePanel = std::make_shared<GuardianScenePanel>(GuardianEngine::EngineInstance->GetScene().get());
+		this->EditorScenePanel = std::make_shared<GuardianScenePanel>();
 		this->AddPanelToEditor(this->EditorScenePanel);
 
 		this->EditorSceneHierarchyPanel = 
-			std::make_shared<GuardianSceneHierarchyPanel>(GuardianEngine::EngineInstance->GetScene().get());
+			std::make_shared<GuardianSceneHierarchyPanel>();
 		this->AddPanelToEditor(this->EditorSceneHierarchyPanel);
 
 		this->AddPanelToEditor(std::make_shared<GuardianResourceBrowserPanel>());
@@ -139,13 +138,6 @@ namespace GE
 		this->StandardEditorList[editor->GetEditorName()] = editor;
 	}
 
-	void GuardianEditorEngine::AddCreatorEditorToEngine(std::shared_ptr<EUI::GuardianEditor> editor)
-	{
-		editor->Initialize();
-
-		this->CreatorEditorList[editor->GetEditorName()] = editor;
-	}
-
 	void GuardianEditorEngine::AddPanelToEditor(std::shared_ptr<EUI::GuardianPanel> panel)
 	{
 		this->EditorPanelList[panel->GetPanelName()] = panel;
@@ -153,34 +145,14 @@ namespace GE
 
 	void GuardianEditorEngine::Update()
 	{
-		if (!this->IsProgramExecuted)
+		for (auto& editor : this->StandardEditorList)
 		{
-			return;
-		}
-
-		if (this->ProgramMode == GE_CREATOR_MODE)
-		{
-			for (auto& editor : this->CreatorEditorList)
-			{
-				editor.second->Update();
-			}
-		}
-		else if (this->ProgramMode == GE_STANDARD_MODE)
-		{
-			for (auto& editor : this->StandardEditorList)
-			{
-				editor.second->Update();
-			}
+			editor.second->Update();
 		}
 	}
 
 	void GuardianEditorEngine::Render()
 	{
-		if (!this->IsProgramExecuted)
-		{
-			return;
-		}
-
 		ImGuiIO& io = ImGui::GetIO();
 		ImGui_ImplDX11_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -188,29 +160,21 @@ namespace GE
 		ImGuizmo::BeginFrame();
 
 		this->RenderDockspace();
-
-		if (this->ProgramMode == GE_CREATOR_MODE)
+		for (auto& editor : this->StandardEditorList)
 		{
-
+			editor.second->Render();
 		}
-		else if (this->ProgramMode == GE_STANDARD_MODE)
+
+		for (auto& panel : this->EditorPanelList)
 		{
-			for (auto& editor : this->StandardEditorList)
-			{
-				editor.second->Render();
-			}
-
-			for (auto& panel : this->EditorPanelList)
-			{
-				panel.second->Render();
-			}
-			this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
-			this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
+			panel.second->Render();
 		}
+		this->EditorScenePanel->SetSelectedEntityId(this->EditorSceneHierarchyPanel->GetSelectedEntityId());
+		this->EditorScenePanel->SetCurrentOperation(this->EditorSceneHierarchyPanel->GetCurrentOperation());
 
 		ImGui::Render();
-		GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext()->GetGraphicsMainFramebuffer()->ApplyFramebuffer(
-			GuardianApplication::ApplicationInstance->GetApplicationGraphicsContext(), { 0.0f, 0.0f, 0.0f });
+		GuardianApplication::ApplicationInstance->GetMainGraphicsContext()->GetGraphicsMainFramebuffer()->ApplyFramebuffer(
+			GuardianApplication::ApplicationInstance->GetMainGraphicsContext(), { 0.0f, 0.0f, 0.0f });
 		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{

@@ -1,29 +1,26 @@
-#ifndef _GE_GUARDIANPROGRAM_H_
-#define _GE_GUARDIANPROGRAM_H_
-#include "GuardianCreator.h"
+#ifndef _GE_GUARDIANCREATOR_H_
+#define _GE_GUARDIANCREATOR_H_
+#include "../../ECS/Entity/GuardianScriptableEntity.h"
 
 namespace GE
 {
-	class GUARDIAN_API GuardianProgram
+	class GUARDIAN_API GuardianCreator
 	{
 	public:
-		GuardianProgram()
+		GuardianCreator()
 		{
-			this->ProgramName = "Guardian Program";
+
 		}
-		virtual ~GuardianProgram()
+		virtual ~GuardianCreator()
 		{
-			this->Release();
+
 		}
 
 		virtual void Initialize() {}
 		virtual void Update() {}
 		virtual void Release() {}
 
-		const GString& GetProgramName() const noexcept;
-
 	protected:
-		GString ProgramName;
 
 	private:
 		virtual void Render() {}
@@ -31,7 +28,7 @@ namespace GE
 
 		friend class GuardianEngine;
 		friend class GuardianApplication;
-		friend class GuardianEditorEngine;
+		friend class GuardianEditorCreator;
 	};
 }
 

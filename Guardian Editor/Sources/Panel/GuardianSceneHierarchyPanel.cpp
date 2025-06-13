@@ -1,30 +1,20 @@
 #include "GuardianSceneHierarchyPanel.h"
 #include <ECS/Entity/GuardianEntity.h>
 #include <Application/GuardianApplication.h>
+#include <GuardianEngine.h>
 
 namespace GE
 {
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel()
 	{
 		this->PanelName = "Scene Hierarchy";
-		this->PanelScene = null;
 		this->SelectedEntityId = 0;
 		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
 		this->MeshFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
-	}
-
-	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(GuardianScene* scene)
-	{
-		this->PanelName = "Scene Hierarchy";
-		this->SelectedEntityId = 0;
-		this->CurrentOperation = (int)ImGuizmo::TRANSLATE;
-		this->MeshFileIcon = GuardianTexture(GuardianSurface("../Guardian Engine/Assets/Textures/MeshFileIcon.png"));
-		this->SetScene(scene);
 	}
 
 	GuardianSceneHierarchyPanel::GuardianSceneHierarchyPanel(const GuardianSceneHierarchyPanel& other)
 	{
-		this->PanelScene = other.PanelScene;
 		this->SelectedEntityId = other.SelectedEntityId;
 		this->PanelName = other.PanelName;
 		this->CurrentOperation = other.CurrentOperation;
@@ -33,13 +23,7 @@ namespace GE
 
 	GuardianSceneHierarchyPanel::~GuardianSceneHierarchyPanel()
 	{
-		this->PanelScene = null;
 		this->SelectedEntityId = 0;
-	}
-
-	void GuardianSceneHierarchyPanel::SetScene(GuardianScene* scene)
-	{
-		this->PanelScene = scene;
 	}
 
 	void GuardianSceneHierarchyPanel::Render()
@@ -51,11 +35,11 @@ namespace GE
 
 			std::vector<entt::entity> DeletedEntities;
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
-			bool nodeOpened = ImGui::TreeNodeEx(this->PanelScene->SceneName.c_str(), flags);
+			bool nodeOpened = ImGui::TreeNodeEx(GuardianEngine::EngineInstance->GetScene()->SceneName.c_str(), flags);
 
 			if (nodeOpened)
 			{
-				for (auto& entity : this->PanelScene->SceneEntityList)
+				for (auto& entity : GuardianEngine::EngineInstance->GetScene()->SceneEntityList)
 				{
 					if (!RenderEntityNode(entity.second.get()))
 					{
@@ -68,12 +52,12 @@ namespace GE
 
 			for (auto& handle : DeletedEntities)
 			{
-				this->PanelScene->RemoveEntity(handle);
+				GuardianEngine::EngineInstance->GetScene()->RemoveEntity(handle);
 			}
 
 			if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			{
-				if (auto selected = this->PanelScene->GetEntity(this->SelectedEntityId))
+				if (auto selected = GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId))
 				{
 					selected->UnselectEntity();
 				}
@@ -84,7 +68,7 @@ namespace GE
 			{
 				if (ImGui::MenuItem("Create Empty Entity"))
 				{
-					this->PanelScene->CreateEntity("Empty Entity");
+					GuardianEngine::EngineInstance->GetScene()->CreateEntity("Empty Entity");
 				}
 
 				ImGui::EndPopup();
@@ -112,8 +96,8 @@ namespace GE
 		if (!meshName.empty())
 		{
 			auto& meshData = GuardianAssetSystem::GetMeshAsset(meshName).GetMeshAssetData();
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
-			this->PanelScene->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(meshName, meshData);
+			GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
+			GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId)->GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh(meshName, meshData);
 		}
 	}
 
@@ -135,7 +119,7 @@ namespace GE
 			entity->GetComponent<GuardianTagComponent>().Tag.c_str());
 		if (ImGui::IsItemClicked())
 		{
-			if (auto selected = this->PanelScene->GetEntity(this->SelectedEntityId))
+			if (auto selected = GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId))
 			{
 				selected->UnselectEntity();
 			}
@@ -177,7 +161,7 @@ namespace GE
 	void GuardianSceneHierarchyPanel::RenderEntityComponents(bool& openMeshBrowser, 
 		bool& openTextureBrowser, int& textureIndex, bool& openMaterialBrowser)
 	{
-		if (auto SelectedEntity = this->PanelScene->GetEntity(this->SelectedEntityId))
+		if (auto SelectedEntity = GuardianEngine::EngineInstance->GetScene()->GetEntity(this->SelectedEntityId))
 		{
 			if (SelectedEntity->HasComponent<GuardianTagComponent>())
 			{
@@ -310,7 +294,7 @@ namespace GE
 
 					if (IsScriptExists)
 					{
-						if (this->PanelScene->GetSceneState() == GE_SCENE_RUNTIME)
+						if (GuardianEngine::EngineInstance->GetScene()->GetSceneState() == GE_SCENE_RUNTIME)
 						{
 							auto entityClass = GuardianScriptEngine::GetEntityClass(script.ClassName);
 							for (const auto& field : entityClass->GetClassFieldList())
@@ -333,7 +317,7 @@ namespace GE
 								}
 							}
 						}
-						else if (this->PanelScene->GetSceneState() == GE_SCENE_EDIT)
+						else if (GuardianEngine::EngineInstance->GetScene()->GetSceneState() == GE_SCENE_EDIT)
 						{
 							auto entityClass = GuardianScriptEngine::GetEntityClass(script.ClassName);
 							for (auto& field : entityClass->GetClassFieldList())
@@ -707,115 +691,115 @@ namespace GE
 
 			if (ImGui::BeginPopup("AddComponent"))
 			{
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianTransformComponent>())
 				{
 					if (ImGui::MenuItem("Transform Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianTransformComponent>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianCameraComponent>())
 				{
 					if (ImGui::MenuItem("Camera Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianCameraComponent>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianScriptComponent>())
 				{
 					if (ImGui::MenuItem("Script Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianScriptComponent>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianPointLightComponent>())
 				{
 					if (ImGui::MenuItem("Point Light Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianPointLightComponent>();
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianMeshComponent>())
 				{
 					if (ImGui::MenuItem("Mesh Component"))
 					{
 						auto& meshData = GuardianAssetSystem::GetMeshAssetList()["Box"]->GetMeshAssetData();
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianMeshComponent>().Mesh = std::make_shared<GuardianMesh>();
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							GetComponent<GuardianMeshComponent>().Mesh->InitializeMesh("Box", meshData);
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianSphereColliderComponent>())
 				{
 					if (ImGui::MenuItem("Sphere Collider Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianSphereColliderComponent>().SphereCollider->SetColliderMaterial(
 								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianBoxColliderComponent>())
 				{
 					if (ImGui::MenuItem("Box Collider Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianBoxColliderComponent>().BoxCollider->SetColliderMaterial(
 								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianCapsuleColliderComponent>())
 				{
 					if (ImGui::MenuItem("Capsule Collider Component"))
 					{
-						this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianCapsuleColliderComponent>().CapsuleCollider->SetColliderMaterial(
 								GuardianPhysicsMaterial(0.5f, 0.5f, 0.6f));
 						ImGui::CloseCurrentPopup();
 					}
 				}
 
-				if (!this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+				if (!GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 					HasComponent<GuardianRigidBodyComponent>())
 				{
 					if (ImGui::MenuItem("RigidBody Component"))
 					{
-						auto& type = this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+						auto& type = GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 							AddComponent<GuardianRigidBodyComponent>().RigidBodyType;
 						if (type == GE_RIGIDBODY_STATIC)
 						{
-							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 								GetComponent<GuardianRigidBodyComponent>().StaticRigidBody->SetRigidBodyTransform(
 									SelectedEntity->GetComponent<GuardianTransformComponent>());
 						}
 						else if (type == GE_RIGIDBODY_DYNAMIC)
 						{
-							this->PanelScene->SceneEntityList[SelectedEntity->GetEntityHandle()]->
+							GuardianEngine::EngineInstance->GetScene()->SceneEntityList[SelectedEntity->GetEntityHandle()]->
 								GetComponent<GuardianRigidBodyComponent>().DynamicRigidBody->SetRigidBodyTransform(
 									SelectedEntity->GetComponent<GuardianTransformComponent>());
 						}

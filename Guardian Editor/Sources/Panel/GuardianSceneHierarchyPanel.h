@@ -10,11 +10,8 @@ namespace GE
 	{
 	public:
 		GuardianSceneHierarchyPanel();
-		GuardianSceneHierarchyPanel(GuardianScene* scene);
 		GuardianSceneHierarchyPanel(const GuardianSceneHierarchyPanel& other);
 		~GuardianSceneHierarchyPanel();
-
-		void SetScene(GuardianScene* scene);
 
 		void Render() override;
 
@@ -27,7 +24,6 @@ namespace GE
 			bool& openTextureBrowser, int& textureIndex, bool& openMaterialBrowser);
 		void RenderMeshBrowser(GString& meshName, bool& open);
 
-		GuardianScene* PanelScene;
 		GuardianUUID SelectedEntityId;
 		int CurrentOperation;
 		GuardianTexture MeshFileIcon;

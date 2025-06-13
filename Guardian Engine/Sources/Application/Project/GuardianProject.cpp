@@ -134,7 +134,7 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION(std::format("No scene found in project called : '{}' !", sceneName));
 		}
 
-		this->ProjectSceneList[sceneName];
+		this->CurrentSceneName = sceneName;
 	}
 
 	void GuardianProject::UpdateProject()

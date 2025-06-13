@@ -107,9 +107,9 @@ namespace GE
 
 			if (ImGui::BeginDragDropSource())
 			{
-				GString path = directoryEntry.path().string();
+				GString sceneName = directoryEntry.path().filename().string().substr(0, directoryEntry.path().filename().string().find_last_of('.'));
 				ImGui::SetDragDropPayload("RESOURCES_BROWSER_ITEM", 
-					(const void*)path.c_str(), (path.size() + 1) * sizeof(char), ImGuiCond_Once);
+					(const void*)sceneName.c_str(), (sceneName.size() + 1) * sizeof(char), ImGuiCond_Once);
 
 				ImGui::EndDragDropSource();
 			}
