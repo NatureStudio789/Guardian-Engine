@@ -22,7 +22,11 @@ namespace GE
 		void Release() override;
 
 	private:
+		void AddEditorToCreator(std::shared_ptr<EUI::GuardianEditor> editor);
 		void RenderDockspace();
+		LRESULT CALLBACK EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam) override;
+
+		std::map<GString, std::shared_ptr<EUI::GuardianEditor>> CreatorEditorList;
 	};
 }
 

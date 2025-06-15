@@ -51,7 +51,7 @@ namespace GE
 
 		static LRESULT CALLBACK StartupWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 		static LRESULT CALLBACK CreatorWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-		static LRESULT CALLBACK ApplicationMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+		static LRESULT CALLBACK MainWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		std::shared_ptr<GuardianWindow> StartupWindow;
 		std::shared_ptr<GuardianWindow> CreatorWindow;

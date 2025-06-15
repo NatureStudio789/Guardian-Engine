@@ -1,5 +1,6 @@
 #include "GuardianEditorCreator.h"
 
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 namespace GE
 {
 	GuardianEditorCreator::GuardianEditorCreator()
@@ -49,11 +50,16 @@ namespace GE
 			GuardianApplication::ApplicationInstance->GetCreatorGraphicsContext()->GetGraphicsDevice().Get(),
 			GuardianApplication::ApplicationInstance->GetCreatorGraphicsContext()->GetGraphicsDeviceContext().Get());
 		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
+
+		this->AddEditorToCreator(std::make_shared<GuardianProjectEditor>());
 	}
 
 	void GuardianEditorCreator::Update()
 	{
-		
+		for (auto& editor : this->CreatorEditorList)
+		{
+			editor.second->Update();
+		}
 	}
 
 	void GuardianEditorCreator::Render()
@@ -65,6 +71,11 @@ namespace GE
 		ImGuizmo::BeginFrame();
 
 		this->RenderDockspace();
+
+		for (auto& editor : this->CreatorEditorList)
+		{
+			editor.second->Render();
+		}
 
 		ImGui::Render();
 		GuardianApplication::ApplicationInstance->GetCreatorGraphicsContext()->GetGraphicsMainFramebuffer()->ApplyFramebuffer(
@@ -82,6 +93,13 @@ namespace GE
 		ImGui_ImplDX11_Shutdown();
 		ImGui_ImplWin32_Shutdown();
 		ImGui::DestroyContext();
+	}
+
+	void GuardianEditorCreator::AddEditorToCreator(std::shared_ptr<EUI::GuardianEditor> editor)
+	{
+		editor->Initialize();
+
+		this->CreatorEditorList[editor->GetEditorName()] = editor;
 	}
 
 	void GuardianEditorCreator::RenderDockspace()
@@ -107,5 +125,10 @@ namespace GE
 		ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f));
 
 		ImGui::End();
+	}
+
+	LRESULT GuardianEditorCreator::EditorMessageProcess(GWindowHandle hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	{
+		return ImGui_ImplWin32_WndProcHandler(hWnd, msg, wParam, lParam);
 	}
 }

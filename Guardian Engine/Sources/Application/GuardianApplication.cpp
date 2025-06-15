@@ -36,7 +36,7 @@ namespace GE
 			CreatorWindowProperties, CreatorWindowMessageProcessFunction);
 
 		this->MainWindow = GuardianWindow::CreateNewWindow(
-			windowProperties, GuardianApplication::ApplicationMessageProcessFunction);
+			windowProperties, GuardianApplication::MainWindowMessageProcessFunction);
 		GUARDIAN_LOG(GuardianMessage::GE_LEVEL_SUCCESS, "Success to create engine window.");
 
 		GuardianInput::InitializeInput();
@@ -452,7 +452,7 @@ namespace GE
 		}
 	}
 
-	LRESULT GuardianApplication::ApplicationMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	LRESULT GuardianApplication::MainWindowMessageProcessFunction(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		if (GuardianEngine::EngineInstance->EngineProgram->EditorMessageProcess(hWnd, msg, wParam, lParam))
 		{
