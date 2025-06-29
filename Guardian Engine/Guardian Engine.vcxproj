@@ -81,7 +81,10 @@
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
-      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <MinimalRebuild>false</MinimalRebuild>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/wd4251 /wd4275 /wd4819 /wd4099 /MP /permissive %(AdditionalOptions)</AdditionalOptions>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -101,7 +104,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -122,7 +126,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <MinimalRebuild>false</MinimalRebuild>
       <StringPooling>true</StringPooling>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
@@ -137,9 +142,14 @@
     <ClInclude Include="Sources\GEngine.h" />
     <ClInclude Include="Sources\Profile\Core\GCore.h" />
     <ClInclude Include="Sources\Profile\EntryPoint\GEntryPoint.h" />
+    <ClInclude Include="Sources\Profile\Module\GModule.h" />
+    <ClInclude Include="Sources\Profile\Module\GModuleSystem.h" />
+    <ClInclude Include="Sources\Profile\Program\GProgram.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\GEngine.cpp" />
+    <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp" />
+    <ClCompile Include="Sources\Profile\Program\GProgram.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

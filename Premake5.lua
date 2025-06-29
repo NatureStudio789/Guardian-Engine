@@ -7,6 +7,11 @@ workspace "Guardian Engine"
 		"Release",
 		"Distribution"
 	}
+	
+    flags
+    {
+        "MultiProcessorCompile"
+    }
 
 outputdir = "%{cfg.buildcfg} - %{cfg.system}/%{cfg.architecture}"
 
@@ -43,6 +48,12 @@ project "Guardian Engine"
 			"GE_DEBUG"
 		}
 		symbols "On"
+
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4099", "/MP"}
+        buildoptions { "/permissive" }
 
 	filter "configurations:Release"
 		runtime "Release"
@@ -101,6 +112,12 @@ project "Guardian Editor"
 			"GE_DEBUG"
 		}
 		symbols "On"
+		
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4099", "/MP"}
+        buildoptions { "/permissive" }
 
 	filter "configurations:Release"
 		runtime "Release"

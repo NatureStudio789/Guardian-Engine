@@ -1,23 +1,47 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="Profile">
+      <UniqueIdentifier>{F60CF123-62EC-6FBF-6B04-FB95D762D620}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EntryPoint">
-      <UniqueIdentifier>{419769CF-2D4F-AB1C-9656-8478822D460D}</UniqueIdentifier>
+    <Filter Include="Profile\Core">
+      <UniqueIdentifier>{0EBBC681-FA1D-5626-A3A3-8EDC8FE521A9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profile\EntryPoint">
+      <UniqueIdentifier>{21464EB3-0D2A-0F09-768A-095C628DF98A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profile\Module">
+      <UniqueIdentifier>{EBF1AD25-D7BF-A12B-C053-1252ACC07D90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Profile\Program">
+      <UniqueIdentifier>{1DD919CA-8964-878E-9275-0A83FE7FE38E}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\GEngine.h" />
     <ClInclude Include="Sources\Profile\Core\GCore.h">
-      <Filter>Core</Filter>
+      <Filter>Profile\Core</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Profile\EntryPoint\GEntryPoint.h">
-      <Filter>EntryPoint</Filter>
+      <Filter>Profile\EntryPoint</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GEngine.h" />
+    <ClInclude Include="Sources\Profile\Module\GModule.h">
+      <Filter>Profile\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Profile\Module\GModuleSystem.h">
+      <Filter>Profile\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Profile\Program\GProgram.h">
+      <Filter>Profile\Program</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\GEngine.cpp" />
+    <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp">
+      <Filter>Profile\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Profile\Program\GProgram.cpp">
+      <Filter>Profile\Program</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

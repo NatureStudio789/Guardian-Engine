@@ -1,5 +1,9 @@
 #ifndef _GE_GCORE_H_
 #define _GE_GCORE_H_
+#include <Windows.h>
+#include <string>
+#include <memory>
+#include <map>
 
 #ifdef GE_PLATFORM_WINDOWS
 	
@@ -12,6 +16,8 @@
 	#else 
 		#error Guardian Engine Only Supports Windows Platform!
 #endif
+
+#define null nullptr
 
 namespace GE
 {
