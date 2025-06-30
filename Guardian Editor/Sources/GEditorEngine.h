@@ -4,9 +4,22 @@
 
 namespace GE
 {
-	class GEditorEngine
+	class GEditorEngine : public GProgram
 	{
+	public:
+		GEditorEngine();
+		~GEditorEngine() override;
+
+		void PreInitializeProgram() override;
+		void InitializeProgram() override;
+		void UpdateProgram() override;
+		void ReleaseProgram() override;
+
+	private:
+
 	};
 }
+
+GUARDIAN_SUBMIT_PROGRAM(GE::GEditorEngine)
 
 #endif

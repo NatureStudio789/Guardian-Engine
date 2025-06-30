@@ -34,14 +34,13 @@
     <ClInclude Include="Sources\Profile\Program\GProgram.h">
       <Filter>Profile\Program</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Aplication\Exception\GException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\GEngine.cpp" />
     <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp">
       <Filter>Profile\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Profile\Program\GProgram.cpp">
-      <Filter>Profile\Program</Filter>
-    </ClCompile>
+    <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
   </ItemGroup>
 </Project>

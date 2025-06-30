@@ -1,6 +1,6 @@
 #ifndef _GE_GMODULE_H_
 #define _GE_GMODULE_H_
-#include "../Core/GCore.h"
+#include "../../Aplication/Exception/GException.h"
 
 namespace GE
 {
@@ -25,7 +25,7 @@ namespace GE
 
 	protected:
 		std::string ModuleName;
-		bool IsModuleLoaded;
+		bool IsModuleLoaded = false;
 
 		friend class GModuleSystem;
 	};

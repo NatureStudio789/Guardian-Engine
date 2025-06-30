@@ -4,6 +4,8 @@
 #include <string>
 #include <memory>
 #include <map>
+#include <exception>
+#include <sstream>
 
 #ifdef GE_PLATFORM_WINDOWS
 	

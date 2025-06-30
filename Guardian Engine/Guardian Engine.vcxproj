@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Aplication\Exception\GException.h" />
     <ClInclude Include="Sources\GEngine.h" />
     <ClInclude Include="Sources\Profile\Core\GCore.h" />
     <ClInclude Include="Sources\Profile\EntryPoint\GEntryPoint.h" />
@@ -147,9 +148,9 @@
     <ClInclude Include="Sources\Profile\Program\GProgram.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\GEngine.cpp" />
     <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp" />
-    <ClCompile Include="Sources\Profile\Program\GProgram.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

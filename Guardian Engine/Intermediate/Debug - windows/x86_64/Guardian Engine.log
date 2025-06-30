@@ -1,5 +1,2 @@
-﻿  GEngine.cpp
-  GModuleSystem.cpp
-  GProgram.cpp
-    正在创建库 ..\Build\Debug - windows\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug - windows\x86_64\Guardian Engine.exp
+﻿  GModuleSystem.cpp
   Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll
