@@ -7,7 +7,7 @@ namespace GE
 	class GUARDIAN_API GModuleSystem
 	{
 	public:
-		static void RegisterModule(const std::string& moduleName, std::shared_ptr<GModule> module);
+		static void RegisterModule(const std::string& moduleName);
 
 		static void LoadModule(const std::string& moduleName);
 		static void ReleaseModule(const std::string& moduleName);
@@ -15,6 +15,8 @@ namespace GE
 		static std::shared_ptr<GModule> GetModule(const std::string& moduleName);
 		
 	private:
+		static void CheckModuleExists(const std::string& moduleName, bool wanted);
+
 		static std::map<std::string, std::shared_ptr<GModule>> ModuleList;
 	};
 }

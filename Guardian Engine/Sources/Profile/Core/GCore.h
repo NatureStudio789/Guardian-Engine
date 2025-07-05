@@ -6,6 +6,13 @@
 #include <map>
 #include <exception>
 #include <sstream>
+#include <vector>
+#include <format>
+#include <Uxtheme.h>
+#include <dxgi.h>
+#include <d3d12.h>
+#include <wrl/client.h>
+using namespace Microsoft;
 
 #ifdef GE_PLATFORM_WINDOWS
 	
@@ -20,6 +27,8 @@
 #endif
 
 #define null nullptr
+
+#define GUARDIAN_CLEAR_MEMORY(object) ZeroMemory(&object, sizeof(object))
 
 namespace GE
 {

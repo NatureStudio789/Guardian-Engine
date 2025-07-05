@@ -1,6 +1,6 @@
 #ifndef _GE_GPROGRAM_H_
 #define _GE_GPROGRAM_H_
-#include "../Core/GCore.h"
+#include "../../Aplication/GApplication.h"
 
 namespace GE
 {
@@ -11,6 +11,8 @@ namespace GE
 		{
 		public:
 			std::string ProgramName;
+			std::vector<std::string> ProgramRequiredModuleList;
+			GWindow::Attribute ProgramWindowAttribute;
 		};
 
 	public:
@@ -19,7 +21,12 @@ namespace GE
 
 		virtual void PreInitializeProgram()
 		{
-			ProgramAttribute.ProgramName = "GuardianProgram";
+			this->ProgramAttribute.ProgramName = "GuardianProgram";
+			this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Physics", "Audio"};
+
+			this->ProgramAttribute.ProgramWindowAttribute.WindowTitle = "Guardian Program Window";
+			this->ProgramAttribute.ProgramWindowAttribute.WindowStyle = GWindow::GE_STYLE_DEFAULTWINDOW;
+			this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
 		}
 		virtual void InitializeProgram() {}
 		virtual void UpdateProgram() {}
@@ -32,6 +39,10 @@ namespace GE
 		const std::string& GetProgramName() const noexcept
 		{
 			return this->ProgramAttribute.ProgramName;
+		}
+		const std::vector<std::string> GetProgramRequiredModuleList() const noexcept
+		{
+			return this->ProgramAttribute.ProgramRequiredModuleList;
 		}
 
 	protected:

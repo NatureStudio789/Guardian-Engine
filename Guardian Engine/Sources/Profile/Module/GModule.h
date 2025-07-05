@@ -1,6 +1,6 @@
 #ifndef _GE_GMODULE_H_
 #define _GE_GMODULE_H_
-#include "../../Aplication/Exception/GException.h"
+#include "../../Aplication/Window/GWindow.h"
 
 namespace GE
 {

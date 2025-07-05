@@ -30,6 +30,14 @@ project "Guardian Engine"
 		"%{prj.name}/Sources/**.cpp"
 	}
 
+	links
+	{
+		"Uxtheme",
+
+		"dxgi",
+		"d3d12"
+	}
+
 	filter "system:Windows"
 		cppdialect "C++20"
 		staticruntime "Off"
