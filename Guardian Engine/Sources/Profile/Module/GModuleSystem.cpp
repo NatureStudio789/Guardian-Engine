@@ -11,9 +11,20 @@ namespace GE
 
 		std::shared_ptr<GModule> m;
 
-		//TO DO : Get module class from module name.
+		if (moduleName == "Render")
+		{
+			m = std::make_shared<GRenderEngine>();
+		}
 
 		ModuleList[moduleName] = m;
+	}
+
+	void GModuleSystem::RegisterMultiModules(const std::vector<std::string>& moduleNameList)
+	{
+		for (auto& moduleName : moduleNameList)
+		{
+			RegisterModule(moduleName);
+		}
 	}
 
 	void GModuleSystem::LoadModule(const std::string& moduleName)
@@ -29,6 +40,34 @@ namespace GE
 		ModuleList[moduleName]->IsModuleLoaded = true;
 	}
 
+	void GModuleSystem::LoadAllModules()
+	{
+		for (auto& module : ModuleList)
+		{
+			LoadModule(module.first);
+		}
+	}
+
+	void GModuleSystem::UpdateModule(const std::string& moduleName)
+	{
+		CheckModuleExists(moduleName, true);
+
+		if (ModuleList[moduleName]->GetModuleLoaded())
+		{
+			return;
+		}
+
+		ModuleList[moduleName]->UpdateModule();
+	}
+
+	void GModuleSystem::UpdateAllModules()
+	{
+		for (auto& module : ModuleList)
+		{
+			UpdateModule(module.first);
+		}
+	}
+
 	void GModuleSystem::ReleaseModule(const std::string& moduleName)
 	{
 		CheckModuleExists(moduleName, true);
@@ -40,6 +79,14 @@ namespace GE
 
 		ModuleList[moduleName]->ReleaseModule();
 		ModuleList[moduleName]->IsModuleLoaded = false;
+	}
+
+	void GModuleSystem::ReleaseAllModules()
+	{
+		for (auto& module : ModuleList)
+		{
+			ReleaseModule(module.first);
+		}
 	}
 
 	std::shared_ptr<GModule> GModuleSystem::GetModule(const std::string& moduleName)

@@ -105,6 +105,8 @@ namespace GE
 
 #define GUARDIAN_GRAPHICS_EXCEPTION(hr) GResultException(__LINE__, __FILE__, hr)
 #define GUARDIAN_LAST_GRAPHICS_EXCEPTION() GResultException(__LINE__, __FILE__, GetLastError())
+#define GUARDIAN_SETUP_AUTO_THROW() HRESULT hr;
+#define GUARDIAN_AUTO_THROW(expression) hr = expression; if (GUARDIAN_FAILED(hr)) { throw GUARDIAN_GRAPHICS_EXCEPTION(hr); }
 
 #define GUARDIAN_WINDOW_EXCEPTION(hr) GResultException(__LINE__, __FILE__, hr)
 #define GUARDIAN_LAST_WINDOW_EXCEPTION() GResultException(__LINE__, __FILE__, GetLastError())

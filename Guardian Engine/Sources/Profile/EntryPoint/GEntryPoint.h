@@ -18,6 +18,8 @@ int main(int argc, char* argv[])
 
 		GE::GEngine::Instance->LaunchEngine();
 
+		GE::GEngine::Instance->ReleaseEngine();
+
 		return 0;
 	}
 	catch (const std::exception&)

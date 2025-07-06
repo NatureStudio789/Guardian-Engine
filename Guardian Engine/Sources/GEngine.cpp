@@ -12,7 +12,7 @@ namespace GE
 
 	GEngine::~GEngine()
 	{
-		this->ReleaseEngine();
+
 	}
 
 	void GEngine::InitializeEngine(std::shared_ptr<GProgram> program)
@@ -24,11 +24,8 @@ namespace GE
 
 		GApplication::Instance->InitializeApplication(this->EngineProgram->GetProgramAttribute().ProgramWindowAttribute);
 
-		for (const auto& moduleName : this->EngineProgram->GetProgramRequiredModuleList())
-		{
-			GModuleSystem::RegisterModule(moduleName);
-			GModuleSystem::LoadModule(moduleName);
-		}
+		GModuleSystem::RegisterMultiModules(this->EngineProgram->GetProgramRequiredModuleList());
+		GModuleSystem::LoadAllModules();
 	}
 
 	void GEngine::LaunchEngine()
@@ -38,11 +35,13 @@ namespace GE
 		while (GApplication::Instance->IsApplicationRunning())
 		{
 			GApplication::Instance->UpdateApplication();
+
+			GModuleSystem::UpdateAllModules();
 		}
 	}
 
 	void GEngine::ReleaseEngine()
 	{
-
+		GModuleSystem::ReleaseAllModules();
 	}
 }

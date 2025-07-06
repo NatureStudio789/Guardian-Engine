@@ -5,6 +5,7 @@ namespace GE
 	GWindow::GWindow()
 	{
 		this->WindowHandle = null;
+		GUARDIAN_CLEAR_MEMORY(this->WindowArea);
 		this->WindowAttribute = Attribute();
 		this->IsWindowRunning = false;
 		GUARDIAN_CLEAR_MEMORY(this->WindowMessage);
@@ -13,6 +14,7 @@ namespace GE
 	GWindow::GWindow(const GWindow& other)
 	{
 		this->WindowHandle = other.WindowHandle;
+		this->WindowArea = other.WindowArea;
 		this->WindowAttribute = other.WindowAttribute;
 		this->WindowMessage = other.WindowMessage;
 		this->IsWindowRunning = other.IsWindowRunning;
@@ -53,8 +55,7 @@ namespace GE
 			throw GUARDIAN_LAST_WINDOW_EXCEPTION();
 		}
 
-		RECT WindowRectangle;
-		GUARDIAN_CLEAR_MEMORY(WindowRectangle);
+		GUARDIAN_CLEAR_MEMORY(WindowArea);
 		DWORD Style = 0;
 		switch (this->WindowAttribute.WindowStyle)
 		{
@@ -67,12 +68,12 @@ namespace GE
 				int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 				int WindowHeight = (int)(ScreenHeight* 0.8f);
 
-				WindowRectangle.left = (int)((ScreenWidth - WindowWidth) / 2.0f);
-				WindowRectangle.right = (int)(ScreenWidth - ((ScreenWidth - WindowWidth) / 2.0f));
-				WindowRectangle.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
-				WindowRectangle.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
+				WindowArea.left = (int)((ScreenWidth - WindowWidth) / 2.0f);
+				WindowArea.right = (int)(ScreenWidth - ((ScreenWidth - WindowWidth) / 2.0f));
+				WindowArea.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
+				WindowArea.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
 
-				if (!AdjustWindowRect(&WindowRectangle, Style, false))
+				if (!AdjustWindowRect(&WindowArea, Style, false))
 				{
 					throw GUARDIAN_LAST_WINDOW_EXCEPTION();
 				}
@@ -89,10 +90,10 @@ namespace GE
 				int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
 				int WindowHeight = (int)(ScreenHeight * 0.8f);
 
-				WindowRectangle.left = (int)((ScreenWidth - WindowWidth) / 2.0f);
-				WindowRectangle.right = (int)(ScreenWidth - ((ScreenWidth - WindowWidth) / 2.0f));
-				WindowRectangle.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
-				WindowRectangle.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
+				WindowArea.left = (int)((ScreenWidth - WindowWidth) / 2.0f);
+				WindowArea.right = (int)(ScreenWidth - ((ScreenWidth - WindowWidth) / 2.0f));
+				WindowArea.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
+				WindowArea.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
 
 				break;
 			}
@@ -101,10 +102,10 @@ namespace GE
 			{
 				Style = WS_POPUPWINDOW | WS_VISIBLE;
 
-				WindowRectangle.left = 0;
-				WindowRectangle.right = GetSystemMetrics(SM_CXSCREEN);
-				WindowRectangle.top = 0;
-				WindowRectangle.bottom = GetSystemMetrics(SM_CYSCREEN);
+				WindowArea.left = 0;
+				WindowArea.right = GetSystemMetrics(SM_CXSCREEN);
+				WindowArea.top = 0;
+				WindowArea.bottom = GetSystemMetrics(SM_CYSCREEN);
 
 				break;
 			}
@@ -114,10 +115,10 @@ namespace GE
 											 WindowClassName.c_str(),
 											 GConverter::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
 											 Style,
-											 WindowRectangle.left,
-											 WindowRectangle.top,
-											 WindowRectangle.right - WindowRectangle.left,
-											 WindowRectangle.bottom - WindowRectangle.top,
+											 WindowArea.left,
+											 WindowArea.top,
+											 WindowArea.right - WindowArea.left,
+											 WindowArea.bottom - WindowArea.top,
 											 null,
 											 null,
 											 GetModuleHandle(null),
@@ -171,6 +172,11 @@ namespace GE
 	const GWindow::Handle& GWindow::GetWindowHandle() const noexcept
 	{
 		return this->WindowHandle;
+	}
+
+	const RECT& GWindow::GetWindowArea() const noexcept
+	{
+		return this->WindowArea;
 	}
 
 	const GWindow::Attribute& GWindow::GetWindowAttribute() const noexcept

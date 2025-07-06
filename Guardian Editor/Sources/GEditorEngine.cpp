@@ -19,6 +19,8 @@ namespace GE
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTitle = "Guardian Engine";
 		this->ProgramAttribute.ProgramWindowAttribute.WindowStyle = GWindow::GE_STYLE_DEFAULTWINDOW;
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
+
+        this->ProgramAttribute.ProgramRequiredModuleList = { "Render" };
     }
 
     void GEditorEngine::InitializeProgram()

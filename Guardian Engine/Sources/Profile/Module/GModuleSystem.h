@@ -1,6 +1,6 @@
 #ifndef _GE_GMODULESYSTEM_H_
 #define _GE_GMODULESYSTEM_H_
-#include "GModule.h"
+#include "../../Graphics/GRenderEngine.h"
 
 namespace GE
 {
@@ -8,9 +8,14 @@ namespace GE
 	{
 	public:
 		static void RegisterModule(const std::string& moduleName);
+		static void RegisterMultiModules(const std::vector<std::string>& moduleNameList);
 
 		static void LoadModule(const std::string& moduleName);
+		static void LoadAllModules();
+		static void UpdateModule(const std::string& moduleName);
+		static void UpdateAllModules();
 		static void ReleaseModule(const std::string& moduleName);
+		static void ReleaseAllModules();
 
 		static std::shared_ptr<GModule> GetModule(const std::string& moduleName);
 		

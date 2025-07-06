@@ -1,6 +1,6 @@
 #ifndef _GE_GWINDOW_H_
 #define _GE_GWINDOW_H_
-#include "../Exception/GException.h"
+#include "../../Graphics/GGraphicsContextRegistry.h"
 
 namespace GE
 {
@@ -60,6 +60,7 @@ namespace GE
 		const bool& GetWindowRunning() const noexcept;
 
 		const Handle& GetWindowHandle() const noexcept;
+		const RECT& GetWindowArea() const noexcept;
 		const Attribute& GetWindowAttribute() const noexcept;
 		const std::string& GetWindowTitle() const noexcept;
 		const Style& GetWindowStyle() const noexcept;
@@ -80,6 +81,7 @@ namespace GE
 		void DrawBlueCaption(bool isActive, Handle handle, UINT message, WPARAM wParam, LPARAM lParam);
 
 		Handle WindowHandle;
+		RECT WindowArea;
 		Attribute WindowAttribute;
 		MSG WindowMessage;
 

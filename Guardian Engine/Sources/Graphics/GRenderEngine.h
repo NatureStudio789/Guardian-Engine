@@ -1,0 +1,22 @@
+#ifndef _GE_GRENDERENGINE_H_
+#define _GE_GRENDERENGINE_H_
+#include "../Profile/Module/GModule.h"
+
+namespace GE
+{
+	class GUARDIAN_API GRenderEngine : public GModule
+	{
+	public:
+		GRenderEngine();
+		~GRenderEngine() override;
+
+		void InitializeModule() override;
+		void UpdateModule() override;
+		void ReleaseModule() override;
+
+	private:
+		std::shared_ptr<GGraphicsContext> MainGraphicsContext;
+	};
+}
+
+#endif

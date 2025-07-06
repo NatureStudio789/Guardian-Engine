@@ -11,7 +11,11 @@
 #include <Uxtheme.h>
 #include <dxgi.h>
 #include <d3d12.h>
+#include <DirectX 12/d3dx12.h>
+#include <dxgi1_6.h>
 #include <wrl/client.h>
+#include <random>
+#include <map>
 using namespace Microsoft;
 
 #ifdef GE_PLATFORM_WINDOWS
@@ -29,6 +33,8 @@ using namespace Microsoft;
 #define null nullptr
 
 #define GUARDIAN_CLEAR_MEMORY(object) ZeroMemory(&object, sizeof(object))
+#define GUARDIAN_FAILED(hr) FAILED(hr)
+#define GUARDIAN_SUCCEEDED(hr) SUCCEEDED(hr)
 
 namespace GE
 {

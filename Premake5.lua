@@ -14,6 +14,7 @@ workspace "Guardian Engine"
     }
 
 outputdir = "%{cfg.buildcfg} - %{cfg.system}/%{cfg.architecture}"
+dependenciesdir = "Dependencies/"
 
 project "Guardian Engine"
 	location "Guardian Engine"
@@ -30,12 +31,19 @@ project "Guardian Engine"
 		"%{prj.name}/Sources/**.cpp"
 	}
 
+	includedirs
+	{
+		dependenciesdir .. "Includes/",
+	}
+
 	links
 	{
 		"Uxtheme",
 
 		"dxgi",
-		"d3d12"
+		"d3d12",
+		"d3dcompiler",
+		"dxguid"
 	}
 
 	filter "system:Windows"
@@ -95,6 +103,7 @@ project "Guardian Editor"
 
 	includedirs
 	{
+		dependenciesdir .. "Includes/",
 		"Guardian Engine/Sources"
 	}
 
