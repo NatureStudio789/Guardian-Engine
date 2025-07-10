@@ -9,29 +9,42 @@ namespace GE
 	public:
 		GSwapChain();
 		GSwapChain(std::shared_ptr<GGraphicsFactory> factory,
-			std::shared_ptr<GCommandQueue> commandQueue, 
+			std::shared_ptr<GCommandQueue> commandQueue, UINT bufferCount, 
 			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen);
 		GSwapChain(const GSwapChain& other);
 		~GSwapChain();
 
 		void InitializeSwapChain(std::shared_ptr<GGraphicsFactory> factory,
-			std::shared_ptr<GCommandQueue> commandQueue,
+			std::shared_ptr<GCommandQueue> commandQueue, UINT bufferCount,
 			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen);
+		void CreateBuffers();
+		void ReleaseBuffers();
 
+		void ResizeBuffer(int newWidth, int newHeight);
 		void Present(UINT syncInternal);
 
-		WRL::ComPtr<ID3D12Resource> GetBackBuffer();
+		const int& GetBufferWidth() const noexcept;
+		const int& GetBufferHeight() const noexcept;
+		const UINT& GetBufferCount() const noexcept;
+		const UINT& GetCurrentBufferIndex() const noexcept;
+		WRL::ComPtr<ID3D12Resource> GetCurrentBuffer() const noexcept;
+		const std::vector<WRL::ComPtr<ID3D12Resource>> GetBufferList() const noexcept;
 		WRL::ComPtr<IDXGISwapChain> GetSwapChainObject();
 
 		static std::shared_ptr<GSwapChain> CreateNewSwapChain(
 			std::shared_ptr<GGraphicsFactory> factory,
-			std::shared_ptr<GCommandQueue> commandQueue, HWND windowHandle,
-			int bufferWidth, int bufferHeight, bool fullscreen)
+			std::shared_ptr<GCommandQueue> commandQueue, UINT bufferCount, 
+			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
 		{
-			return std::make_shared<GSwapChain>(factory, commandQueue, windowHandle, bufferWidth, bufferHeight, fullscreen);
+			return std::make_shared<GSwapChain>(factory, commandQueue, bufferCount, windowHandle, bufferWidth, bufferHeight, fullscreen);
 		}
 
 	private:
+		int BufferWidth, BufferHeight;
+		UINT BufferCount;
+		UINT CurrentBufferIndex;
+		std::vector<WRL::ComPtr<ID3D12Resource>> BufferList;
+
 		WRL::ComPtr<IDXGISwapChain> SwapChainObject;
 	};
 }

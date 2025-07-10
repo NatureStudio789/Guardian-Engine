@@ -22,9 +22,20 @@ int main(int argc, char* argv[])
 
 		return 0;
 	}
-	catch (const std::exception&)
+	catch (const GE::GException& e)
 	{
-
+		::MessageBoxA(null, e.what(), "Guardian Exception - ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return -1;
+	}
+	catch (const std::exception& e)
+	{
+		::MessageBoxA(null, e.what(), "Standard Exception - ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return -1;
+	}
+	catch (...)
+	{
+		::MessageBoxA(null, "For an unknown cause.", "Unknown Exception - ERROR", MB_OK | MB_ICONEXCLAMATION);
+		return -1;
 	}
 }
 

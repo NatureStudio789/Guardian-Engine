@@ -1,6 +1,6 @@
 #ifndef _GE_GGRAPHICSFACTORY_H_
 #define _GE_GGRAPHICSFACTORY_H_
-#include "../../Aplication/Exception/GException.h"
+#include "../Math/Vector/GVector.h"
 
 namespace GE
 {

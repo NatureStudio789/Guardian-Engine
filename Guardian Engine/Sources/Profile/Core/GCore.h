@@ -5,6 +5,7 @@
 #include <memory>
 #include <map>
 #include <exception>
+#include <fstream>
 #include <sstream>
 #include <vector>
 #include <format>
@@ -16,7 +17,11 @@
 #include <wrl/client.h>
 #include <random>
 #include <map>
+#include <functional>
+#include <DirectXMath.h>
+#include <d3dcompiler.h>
 using namespace Microsoft;
+using namespace DirectX;
 
 #ifdef GE_PLATFORM_WINDOWS
 	

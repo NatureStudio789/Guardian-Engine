@@ -7,6 +7,7 @@ namespace GE
 		this->WindowHandle = null;
 		GUARDIAN_CLEAR_MEMORY(this->WindowArea);
 		this->WindowAttribute = Attribute();
+
 		this->IsWindowRunning = false;
 		GUARDIAN_CLEAR_MEMORY(this->WindowMessage);
 	}
@@ -17,6 +18,7 @@ namespace GE
 		this->WindowArea = other.WindowArea;
 		this->WindowAttribute = other.WindowAttribute;
 		this->WindowMessage = other.WindowMessage;
+
 		this->IsWindowRunning = other.IsWindowRunning;
 	}
 
@@ -139,9 +141,6 @@ namespace GE
 		}
 		ShowWindow(this->WindowHandle, SW_SHOW);
 
-		SetForegroundWindow(this->WindowHandle);
-		SetFocus(this->WindowHandle);
-
 		this->IsWindowRunning = true;
 	}
 
@@ -225,12 +224,20 @@ namespace GE
 	LRESULT WINAPI GWindow::ProcessWindowMessage(Handle handle, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		static bool IsNCActive = false;
+		static bool IsBeingResized = false;
+		static bool IsMaximized = false;
+		static bool IsMinimized = false;
+		static int WindowWidth = 0;
+		static int WindowHeight = 0;
 
 		switch (message)
 		{
 			case WM_CLOSE:
 			{
 				PostQuitMessage(0);
+
+				GWindowCloseEvent event(handle);
+				GEventDispatcher::DispatcherInstance->DispatchEvent(event);
 
 				return 0;
 				break;
@@ -386,6 +393,14 @@ namespace GE
 				break;
 			}
 
+			case WM_ENTERSIZEMOVE:
+			{
+				IsBeingResized = true;
+
+				return 0;
+				break;
+			}
+
 			case WM_EXITSIZEMOVE:
 			{
 				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
@@ -412,6 +427,10 @@ namespace GE
 					}
 				}
 
+				IsBeingResized = false;
+				GWindowResizeEvent windowResizing(handle, WindowWidth, WindowHeight);
+				GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
+
 				return 0;
 				break;
 			}
@@ -436,6 +455,196 @@ namespace GE
 				}
 
 				return 0;
+				break;
+			}
+
+			case WM_MOVE:
+			{
+				GWindowMoveEvent windowMoving(handle, (int)LOWORD(lParam), (int)HIWORD(lParam));
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(windowMoving);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_ACTIVATE:
+			{
+				if (LOWORD(lParam) == WA_ACTIVE || LOWORD(lParam) == WA_CLICKACTIVE)
+				{
+					GWindowFocusEvent windowFocusing(handle);
+
+					GEventDispatcher::DispatcherInstance->DispatchEvent(windowFocusing);
+				}
+				else if (LOWORD(lParam) == WA_INACTIVE)
+				{
+					GWindowLostFocusEvent windowLostFocusing(handle);
+
+					GEventDispatcher::DispatcherInstance->DispatchEvent(windowLostFocusing);
+				}
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_SIZE:
+			{
+				WindowWidth = (int)LOWORD(lParam);
+				WindowHeight = (int)HIWORD(lParam);
+
+				if (wParam == SIZE_MINIMIZED)
+				{
+					IsMinimized = true;
+					IsMaximized = false;
+				}
+				else if (wParam == SIZE_MAXIMIZED)
+				{
+					IsMinimized = false;
+					IsMaximized = true;
+
+					GWindowResizeEvent windowResizing(handle, (int)LOWORD(lParam), (int)HIWORD(lParam));
+					GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
+				}
+				else if (wParam == SIZE_RESTORED)
+				{
+					if (IsMinimized)
+					{
+						IsMinimized = false;
+						GWindowResizeEvent windowResizing(handle, (int)LOWORD(lParam), (int)HIWORD(lParam));
+						GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
+					}
+					else if (IsMaximized)
+					{
+						IsMaximized = false;
+
+						GWindowResizeEvent windowResizing(handle, (int)LOWORD(lParam), (int)HIWORD(lParam));
+						GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
+					}
+					else if (IsBeingResized)
+					{
+						// Can't Resize!!!
+					}
+					else
+					{
+						GWindowResizeEvent windowResizing(handle, (int)LOWORD(lParam), (int)HIWORD(lParam));
+						GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
+					}
+				}
+
+				return 0;
+				break;
+			}
+
+			case WM_KEYDOWN:
+			{
+				GKeyPressEvent keyPressing((UINT)wParam);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(keyPressing);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_KEYUP:
+			{
+				GKeyReleaseEvent keyReleasing((UINT)wParam);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(keyReleasing);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_CHAR:
+			{
+				GCharEvent charEvent((UCHAR)wParam);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(charEvent);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_MOUSEMOVE:
+			{
+				GMouseMoveEvent mouseMoving((int)LOWORD(lParam), (int)HIWORD(lParam));
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseMoving);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_LBUTTONDOWN:
+			{
+				GMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_LEFT);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_MBUTTONDOWN:
+			{
+				GMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_MIDDLE);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_RBUTTONDOWN:
+			{
+				GMouseButtonClickEvent mouseButtonClicking(GE_MOUSEBUTTON_RIGHT);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonClicking);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_LBUTTONUP:
+			{
+				GMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_LEFT);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+			case WM_MBUTTONUP:
+			{
+				GMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_MIDDLE);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_RBUTTONUP:
+			{
+				GMouseButtonReleaseEvent mouseButtonReleasing(GE_MOUSEBUTTON_RIGHT);
+
+				GEventDispatcher::DispatcherInstance->DispatchEvent(mouseButtonReleasing);
+				return DefWindowProc(handle, message, wParam, lParam);
+				break;
+			}
+
+			case WM_INPUT:
+			{
+				UINT DataSize = 0;
+				GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, null, &DataSize, sizeof(RAWINPUTHEADER));
+
+				if (DataSize > 0)
+				{
+					std::unique_ptr<BYTE[]> RawData = std::make_unique<BYTE[]>(DataSize);
+					if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam),
+						RID_INPUT, RawData.get(), &DataSize, sizeof(RAWINPUTHEADER)) == DataSize)
+					{
+						RAWINPUT* Raw = reinterpret_cast<RAWINPUT*>(RawData.get());
+
+						if (Raw->header.dwType == RIM_TYPEMOUSE)
+						{
+							GMouseRawMoveEvent mouseRawMoving((float)Raw->data.mouse.lLastX, (float)Raw->data.mouse.lLastY);
+
+							GEventDispatcher::DispatcherInstance->DispatchEvent(mouseRawMoving);
+						}
+					}
+				}
+
+				return DefWindowProc(handle, message, wParam, lParam);
 				break;
 			}
 		}

@@ -1,6 +1,6 @@
 #ifndef _GE_GWINDOW_H_
 #define _GE_GWINDOW_H_
-#include "../../Graphics/GGraphicsContextRegistry.h"
+#include "../../Graphics/Applicable/GApplicable.h"
 
 namespace GE
 {

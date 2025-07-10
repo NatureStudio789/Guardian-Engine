@@ -1,6 +1,6 @@
 #ifndef _GE_GVIEWPORT_H_
 #define _GE_GVIEWPORT_H_
-#include "../RenderTarget/GRenderTarget.h"
+#include "../DepthStencil/GDepthStencil.h"
 
 namespace GE
 {

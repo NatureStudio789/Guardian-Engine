@@ -1,33 +1,31 @@
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gengine.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gwindow.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gexception.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gapplication.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gmodulesystem.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gconverter.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gdevice.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gcommandqueue.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\ggraphicsfactory.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gshader.obj
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gswapchain.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\grendertarget.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\ggraphicscontext.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gcommandlist.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gdescriptorheap.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\grenderengine.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gfence.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gcommandqueue.obj
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guuid.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gapplication.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\ggraphicsfactory.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gconverter.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gengine.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gvertexbuffer.obj
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\ggraphicscontextregistry.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gindexbuffer.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gdevice.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gdepthstencil.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\ggraphicscontext.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\grootsignature.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\grendertarget.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gframebuffer.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\grenderengine.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gbuffer.obj
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gviewport.obj
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\vc143.pdb
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\geventdispatcher.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gcommandlist.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gmodulesystem.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gexception.obj
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\gwindow.obj
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\vc143.idb
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian engine.dll
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian engine.pdb
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian engine.lib
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian engine.exp
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.ilk
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\vc143.pdb
+d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\cl.19972.write.1.tlog
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\cl.command.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\cl.items.tlog
 d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\cl.read.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\cl.write.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\link.command.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\link.read.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\link.secondary.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian engine\intermediate\debug - windows\x86_64\guardian engine.tlog\link.write.1.tlog

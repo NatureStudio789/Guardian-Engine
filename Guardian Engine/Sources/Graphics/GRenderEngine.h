@@ -8,6 +8,7 @@ namespace GE
 	{
 	public:
 		GRenderEngine();
+		GRenderEngine(const GRenderEngine& other);
 		~GRenderEngine() override;
 
 		void InitializeModule() override;

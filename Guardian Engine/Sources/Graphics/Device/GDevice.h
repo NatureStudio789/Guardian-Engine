@@ -14,6 +14,7 @@ namespace GE
 
 		void InitializeDevice(std::shared_ptr<GGraphicsFactory> factory);
 
+		const UINT GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE type) const;
 		WRL::ComPtr<ID3D12Device> GetDeviceObject();
 
 		static std::shared_ptr<GDevice> CreateNewDevice(std::shared_ptr<GGraphicsFactory> factory)

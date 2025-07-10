@@ -52,7 +52,7 @@ namespace GE
 	{
 		CheckModuleExists(moduleName, true);
 
-		if (ModuleList[moduleName]->GetModuleLoaded())
+		if (!ModuleList[moduleName]->GetModuleLoaded())
 		{
 			return;
 		}

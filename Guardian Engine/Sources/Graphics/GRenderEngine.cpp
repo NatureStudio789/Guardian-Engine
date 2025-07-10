@@ -10,6 +10,11 @@ namespace GE
 		this->ModuleName = "Render";
 	}
 
+	GRenderEngine::GRenderEngine(const GRenderEngine& other) : GModule(other)
+	{
+		this->MainGraphicsContext = other.MainGraphicsContext;
+	}
+
 	GRenderEngine::~GRenderEngine()
 	{
 		this->MainGraphicsContext.reset();
@@ -32,7 +37,7 @@ namespace GE
 	{
 		this->MainGraphicsContext->BeginRendering();
 
-
+		this->MainGraphicsContext->ApplyMainFramebuffer();
 
 		this->MainGraphicsContext->EndUpRendering(true);
 	}

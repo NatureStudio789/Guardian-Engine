@@ -97,13 +97,13 @@
     <ClInclude Include="Sources\Graphics\GRenderEngine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\RenderTarget\GRenderTarget.h">
+    <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h">
       <Filter>Graphics\RenderTarget</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\SwapChain\GSwapChain.h">
       <Filter>Graphics\SwapChain</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Viewport\GViewport.h">
+    <ClInclude Include="Sources\Graphics\Framebuffer\Viewport\GViewport.h">
       <Filter>Graphics\Viewport</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Profile\Core\GCore.h">
@@ -124,6 +124,23 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Fence\GFence.h" />
+    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h" />
+    <ClInclude Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.h" />
+    <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
+    <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
+    <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
+    <ClInclude Include="Sources\Aplication\Event\GEventProcesser.h" />
+    <ClInclude Include="Sources\Aplication\Event\GKeyboardEvent.h" />
+    <ClInclude Include="Sources\Aplication\Event\GMouseEvent.h" />
+    <ClInclude Include="Sources\Graphics\Math\Vector\GVector.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\GApplicable.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.h" />
+    <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -163,13 +180,13 @@
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\RenderTarget\GRenderTarget.cpp">
+    <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp">
       <Filter>Graphics\RenderTarget</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\SwapChain\GSwapChain.cpp">
       <Filter>Graphics\SwapChain</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Viewport\GViewport.cpp">
+    <ClCompile Include="Sources\Graphics\Framebuffer\Viewport\GViewport.cpp">
       <Filter>Graphics\Viewport</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp">
@@ -178,5 +195,14 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Fence\GFence.cpp" />
+    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.cpp" />
+    <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
   </ItemGroup>
 </Project>

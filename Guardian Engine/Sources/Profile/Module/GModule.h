@@ -8,6 +8,11 @@ namespace GE
 	{
 	public:
 		GModule() = default;
+		GModule(const GModule& other)
+		{
+			this->ModuleName = other.ModuleName;
+			this->IsModuleLoaded = other.IsModuleLoaded;
+		}
 		virtual ~GModule() = default;
 
 		virtual void InitializeModule() {}

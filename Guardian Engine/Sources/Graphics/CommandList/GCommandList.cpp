@@ -37,7 +37,7 @@ namespace GE
 
 	WRL::ComPtr<ID3D12CommandAllocator> GCommandList::GetCommandListAllocator()
 	{
-		return WRL::ComPtr<ID3D12CommandAllocator>();
+		return this->CommandListAllocator;
 	}
 
 	WRL::ComPtr<ID3D12GraphicsCommandList> GCommandList::GetCommandListObject()

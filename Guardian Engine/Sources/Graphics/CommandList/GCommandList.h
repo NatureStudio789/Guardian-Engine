@@ -1,6 +1,6 @@
 #ifndef _GE_GCOMMANDLIST_H_
 #define _GE_GCOMMANDLIST_H_
-#include "../CommandQueue/GCommandQueue.h"
+#include "../Fence/GFence.h"
 
 namespace GE
 {

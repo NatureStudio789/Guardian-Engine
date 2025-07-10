@@ -1,6 +1,6 @@
 #ifndef _GE_GGRAPHICSCONTEXTREGISTRY_H_
 #define _GE_GGRAPHICSCONTEXTREGISTRY_H_
-#include "GGraphicsContext.h"
+#include "Framebuffer/GFramebuffer.h"
 
 namespace GE
 {
