@@ -27,8 +27,8 @@ namespace GE
 	private:
 		WRL::ComPtr<ID3D12Resource> UploadBuffer;
 		std::shared_ptr<GDescriptorHeap> ConstantBufferDescriptorHeap;
-		std::shared_ptr<GRootSignature> BufferRootSignature;
 		UINT BufferIndex;
+		UINT BufferRootParameterIndex;
 		
 		T BufferData;
 		UINT DataSize;
@@ -39,9 +39,9 @@ namespace GE
 	inline GConstantBuffer<T>::GConstantBuffer()
 	{
 		this->ConstantBufferDescriptorHeap = null;
-		this->BufferRootSignature = null;
 
 		this->BufferIndex = 0;
+		this->BufferRootParameterIndex = 0;
 		this->BufferData = T();
 		this->DataSize = 0;
 		this->MappedData = null;
@@ -58,8 +58,8 @@ namespace GE
 	{
 		this->UploadBuffer = other.UploadBuffer;
 		this->ConstantBufferDescriptorHeap = other.ConstantBufferDescriptorHeap;
-		this->BufferRootSignature = other.BufferRootSignature;
 		this->BufferIndex = other.BufferIndex;
+		this->BufferRootParameterIndex = other.BufferRootParameterIndex;
 
 		this->BufferData = other.BufferData;
 		this->DataSize = other.DataSize;
@@ -74,9 +74,9 @@ namespace GE
 			this->UploadBuffer->Unmap(0, null);
 		}
 		this->ConstantBufferDescriptorHeap.reset();
-		this->BufferRootSignature.reset();
 
 		this->BufferIndex = 0;
+		this->BufferRootParameterIndex = 0;
 		this->BufferData = T();
 		this->DataSize = 0;
 		this->MappedData = null;
@@ -109,18 +109,11 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateConstantBufferView(&ConstantBufferDesc, this->ConstantBufferDescriptorHeap->GetFirstCPUDescriptorHandle());
 
-		CD3DX12_DESCRIPTOR_RANGE ConstantBufferTable;
-		ConstantBufferTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, this->BufferIndex);
-
-		std::vector<CD3DX12_ROOT_PARAMETER> ParameterList;
 		CD3DX12_ROOT_PARAMETER parameter;
-		parameter.InitAsDescriptorTable(1, &ConstantBufferTable);
-		ParameterList.push_back(parameter);
+		parameter.InitAsConstantBufferView(this->BufferIndex);
 
-		this->BufferRootSignature = GRootSignature::CreateNewRootSignature(
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(), ParameterList);
-
-		this->BufferRootSignature->AddDescriptorHeap(this->ConstantBufferDescriptorHeap);
+		this->BufferRootParameterIndex = 
+			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsRootSignature()->AddRootSignatureParameter(parameter);
 	}
 
 	template<typename T>
@@ -134,13 +127,9 @@ namespace GE
 	template<typename T>
 	inline void GConstantBuffer<T>::Apply()
 	{
-		CD3DX12_GPU_DESCRIPTOR_HANDLE ConstantBufferView(this->ConstantBufferDescriptorHeap->GetFirstGPUDescriptorHandle());
-		ConstantBufferView.Offset(this->BufferIndex,
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-
-		this->BufferRootSignature->ApplyRootSignature(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList(),
-			this->BufferIndex, ConstantBufferView);
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsRootSignature()->SetRootConstantBufferView(
+			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList(), this->BufferRootParameterIndex,
+			this->UploadBuffer->GetGPUVirtualAddress());
 	}
 
 	template<typename T>

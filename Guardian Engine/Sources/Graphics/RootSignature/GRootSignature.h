@@ -8,30 +8,32 @@ namespace GE
 	{
 	public:
 		GRootSignature();
-		GRootSignature(std::shared_ptr<GDevice> device, 
-			std::vector<CD3DX12_ROOT_PARAMETER> rootSignatureParameters);
 		GRootSignature(const GRootSignature& other);
 		~GRootSignature();
 
-		void InitializeRootSignature(std::shared_ptr<GDevice> device,
-			std::vector<CD3DX12_ROOT_PARAMETER> rootSignatureParameters);
+		UINT AddRootSignatureParameter(CD3DX12_ROOT_PARAMETER parameter);
+		void AddStaticSamplerDesc(CD3DX12_STATIC_SAMPLER_DESC description);
+		void InitializeRootSignature(std::shared_ptr<GDevice> device);
+
 		void AddDescriptorHeap(std::shared_ptr<GDescriptorHeap> descriptorHeap);
 
-		void ApplyRootSignature(std::shared_ptr<GCommandList> commandList,
-			UINT index, CD3DX12_GPU_DESCRIPTOR_HANDLE descriptorHandle);
+		void SetRootDescriptorTable(std::shared_ptr<GCommandList> commandList,
+			UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+		void SetRootConstantBufferView(std::shared_ptr<GCommandList> commandList, 
+			UINT rootParameterIndex, D3D12_GPU_VIRTUAL_ADDRESS gpuVirtualAddress);
+		
+		void ApplyRootSignature(std::shared_ptr<GCommandList> commandList);
 
 		WRL::ComPtr<ID3D12RootSignature> GetRootSignatureObject();
-
-		static std::shared_ptr<GRootSignature> CreateNewRootSignature(std::shared_ptr<GDevice> device,
-			std::vector<CD3DX12_ROOT_PARAMETER> rootSignatureParameters)
-		{
-			return std::make_shared<GRootSignature>(device, rootSignatureParameters);
-		}
+		const bool& GetInitialized() const noexcept;
 
 	private:
 		WRL::ComPtr<ID3D12RootSignature> RootSignatureObject;
-
+		bool IsInitialized;
 		std::vector<std::shared_ptr<GDescriptorHeap>> DescriptorHeapList;
+
+		std::vector<CD3DX12_ROOT_PARAMETER> RootSignatureParameterList;
+		std::vector<CD3DX12_STATIC_SAMPLER_DESC> StaticSamplerDescList;
 	};
 }
 

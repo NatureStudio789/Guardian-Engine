@@ -31,6 +31,8 @@ namespace GE
 	private:
 		Category ShaderCategory;
 		WRL::ComPtr<ID3DBlob> ShaderByteCode;
+
+		friend class GPipelineState;
 	};
 }
 

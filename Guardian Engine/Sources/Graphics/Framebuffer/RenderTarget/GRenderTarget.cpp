@@ -51,7 +51,7 @@ namespace GE
 
 	void GRenderTarget::ClearRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext)
 	{
-		static float color[] = { 0.1f, 0.1f, 0.51f, 1.0f };
+		static float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ClearRenderTargetView(
 			this->GetRenderTargetView(graphicsContext), color, 0, null);
 	}

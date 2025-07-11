@@ -141,6 +141,7 @@
     <ClInclude Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.h" />
     <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -204,5 +205,6 @@
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp" />
     <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp" />
   </ItemGroup>
 </Project>

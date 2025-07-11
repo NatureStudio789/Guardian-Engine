@@ -30,6 +30,7 @@ namespace GE
 		std::shared_ptr<GCommandList> GetGraphicsCommandList();
 
 		std::shared_ptr<GSwapChain> GetGraphicsSwapChain();
+		std::shared_ptr<GRootSignature> GetGraphicsRootSignature();
 
 		static std::shared_ptr<GGraphicsContext> CreateNewGraphicsContext(
 			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
@@ -50,6 +51,7 @@ namespace GE
 		std::shared_ptr<GCommandList> GraphicsCommandList;
 
 		std::shared_ptr<GSwapChain> GraphicsSwapChain;
+		std::shared_ptr<GRootSignature> GraphicsRootSignature;
 
 		std::shared_ptr<GFramebuffer> GraphicsMainFramebuffer;
 	};
