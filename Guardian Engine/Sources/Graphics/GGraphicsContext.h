@@ -6,11 +6,10 @@ namespace GE
 {
 	class GUARDIAN_API GFramebuffer;
 
-	class GUARDIAN_API GGraphicsContext
+	class GUARDIAN_API GGraphicsContext : public std::enable_shared_from_this<GGraphicsContext>
 	{
 	public:
 		GGraphicsContext();
-		GGraphicsContext(HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen);
 		GGraphicsContext(const GGraphicsContext& other);
 		~GGraphicsContext();
 
@@ -31,12 +30,6 @@ namespace GE
 
 		std::shared_ptr<GSwapChain> GetGraphicsSwapChain();
 		std::shared_ptr<GRootSignature> GetGraphicsRootSignature();
-
-		static std::shared_ptr<GGraphicsContext> CreateNewGraphicsContext(
-			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
-		{
-			return std::make_shared<GGraphicsContext>(windowHandle, bufferWidth, bufferHeight, fullscreen);
-		}
 
 	private:
 		GUUID ContextId = GUUID();

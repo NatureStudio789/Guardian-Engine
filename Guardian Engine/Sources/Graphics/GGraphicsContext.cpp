@@ -3,7 +3,7 @@
 
 namespace GE
 {
-	GGraphicsContext::GGraphicsContext()
+	GGraphicsContext::GGraphicsContext() : std::enable_shared_from_this<GGraphicsContext>()
 	{
 		this->ContextWindowHandle = null;
 		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
@@ -18,13 +18,7 @@ namespace GE
 		this->GraphicsMainFramebuffer = null;
 	}
 
-	GGraphicsContext::GGraphicsContext(
-		HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
-	{
-		this->InitializeGraphicsContext(windowHandle, bufferWidth, bufferHeight, fullscreen);
-	}
-
-	GGraphicsContext::GGraphicsContext(const GGraphicsContext& other)
+	GGraphicsContext::GGraphicsContext(const GGraphicsContext& other) : std::enable_shared_from_this<GGraphicsContext>(other)
 	{
 		this->ContextId = other.ContextId;
 		this->ContextWindowHandle = other.ContextWindowHandle;
@@ -80,7 +74,7 @@ namespace GE
 		this->ContextWindowHandle = windowHandle;
 
 		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
-		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([=](const GWindowResizeEvent& event)
+		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([this](const GWindowResizeEvent& event)
 		{
 			GUARDIAN_SETUP_AUTO_THROW();
 		
@@ -93,7 +87,7 @@ namespace GE
 				
 				this->GraphicsSwapChain->ResizeBuffer(event.ResizeWidth, event.ResizeHeight);
 				
-				this->GraphicsMainFramebuffer->ResizeFramebuffer(std::make_shared<GGraphicsContext>(*this), event.ResizeWidth, event.ResizeHeight);
+				this->GraphicsMainFramebuffer->ResizeFramebuffer(shared_from_this(), event.ResizeWidth, event.ResizeHeight);
 				
 				GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
 				ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
@@ -115,7 +109,7 @@ namespace GE
 			this->GraphicsCommandQueue, 2, windowHandle, bufferWidth, bufferHeight, fullscreen);
 		this->GraphicsRootSignature = std::make_shared<GRootSignature>();
 
-		this->GraphicsMainFramebuffer = GFramebuffer::CreateNewFramebuffer(std::make_shared<GGraphicsContext>(*this));
+		this->GraphicsMainFramebuffer = GFramebuffer::CreateNewFramebuffer(shared_from_this());
 	}
 
 	void GGraphicsContext::BeginRendering()
@@ -141,8 +135,8 @@ namespace GE
 	void GGraphicsContext::ApplyMainFramebuffer()
 	{
 		GUARDIAN_CHECK_POINTER(this->GraphicsMainFramebuffer);
-
-		this->GraphicsMainFramebuffer->ApplyFramebuffer(std::make_shared<GGraphicsContext>(*this));
+		
+		this->GraphicsMainFramebuffer->ApplyFramebuffer(shared_from_this());
 	}
 
 	void GGraphicsContext::EndUpRendering(UINT syncInternal)

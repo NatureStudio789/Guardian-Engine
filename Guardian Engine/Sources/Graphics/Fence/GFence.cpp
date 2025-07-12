@@ -42,6 +42,7 @@ namespace GE
 		if (this->FenceObject->GetCompletedValue() < this->FenceValue)
 		{
 			HANDLE EventHandle = CreateEventEx(null, null, 0, EVENT_ALL_ACCESS);
+			GUARDIAN_CHECK_VALUE(EventHandle != 0);
 
 			GUARDIAN_AUTO_THROW(this->FenceObject->SetEventOnCompletion(this->FenceValue, EventHandle));
 

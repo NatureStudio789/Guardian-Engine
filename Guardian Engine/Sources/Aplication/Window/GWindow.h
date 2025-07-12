@@ -85,6 +85,7 @@ namespace GE
 		Attribute WindowAttribute;
 		MSG WindowMessage;
 
+		std::shared_ptr<GEventProcesser> WindowEventProcesser;
 		bool IsWindowRunning;
 	};
 }

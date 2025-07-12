@@ -5,9 +5,9 @@ namespace GE
 	GSwapChain::GSwapChain()
 	{
 		this->BufferWidth = this->BufferHeight = 0;
+		this->BufferList.clear();
 		this->BufferCount = 2;
 		this->CurrentBufferIndex = 0;
-		this->BufferList.clear();
 	}
 
 	GSwapChain::GSwapChain(std::shared_ptr<GGraphicsFactory> factory,
@@ -22,8 +22,8 @@ namespace GE
 		this->BufferWidth = other.BufferWidth;
 		this->BufferHeight = other.BufferHeight;
 		this->BufferCount = other.BufferCount;
-		this->CurrentBufferIndex = other.CurrentBufferIndex;
 		this->BufferList = other.BufferList;
+		this->CurrentBufferIndex = other.CurrentBufferIndex;
 		this->SwapChainObject = other.SwapChainObject;
 	}
 
@@ -32,6 +32,7 @@ namespace GE
 		this->BufferWidth = this->BufferHeight = 0;
 		this->BufferCount = 0;
 		this->CurrentBufferIndex = 0;
+		this->BufferList.clear();
 
 		this->ReleaseBuffers();
 	}
@@ -147,7 +148,7 @@ namespace GE
 		return this->BufferList[this->CurrentBufferIndex];
 	}
 
-	const std::vector<WRL::ComPtr<ID3D12Resource>> GSwapChain::GetBufferList() const noexcept
+	std::vector<WRL::ComPtr<ID3D12Resource>> GSwapChain::GetBufferList()
 	{
 		return this->BufferList;
 	}

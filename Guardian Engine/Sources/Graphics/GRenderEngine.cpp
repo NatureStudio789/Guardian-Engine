@@ -25,7 +25,8 @@ namespace GE
 	{
 		RECT ApplicationRect = GApplication::Instance->GetMainWindow()->GetWindowArea();
 		const auto& ApplicationAttribute = GApplication::Instance->GetMainWindow()->GetWindowAttribute();
-		this->MainGraphicsContext = GGraphicsContext::CreateNewGraphicsContext(GApplication::Instance->GetMainWindowHandle(),
+		this->MainGraphicsContext = std::make_shared<GGraphicsContext>();
+		this->MainGraphicsContext->InitializeGraphicsContext(GApplication::Instance->GetMainWindowHandle(),
 			ApplicationRect.right - ApplicationRect.left, ApplicationRect.bottom - ApplicationRect.top,
 			ApplicationAttribute.WindowStyle == GWindow::GE_STYLE_FULLSCREEN);
 

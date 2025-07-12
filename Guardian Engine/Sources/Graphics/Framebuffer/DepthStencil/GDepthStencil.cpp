@@ -68,6 +68,8 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
+		this->DepthStencilBuffer.Reset();
+
 		D3D12_RESOURCE_DESC DepthStencilBufferDesc;
 		GUARDIAN_CLEAR_MEMORY(DepthStencilBufferDesc);
 

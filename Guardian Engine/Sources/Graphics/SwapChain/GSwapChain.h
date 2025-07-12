@@ -28,7 +28,7 @@ namespace GE
 		const UINT& GetBufferCount() const noexcept;
 		const UINT& GetCurrentBufferIndex() const noexcept;
 		WRL::ComPtr<ID3D12Resource> GetCurrentBuffer() const noexcept;
-		const std::vector<WRL::ComPtr<ID3D12Resource>> GetBufferList() const noexcept;
+		std::vector<WRL::ComPtr<ID3D12Resource>> GetBufferList();
 		WRL::ComPtr<IDXGISwapChain> GetSwapChainObject();
 
 		static std::shared_ptr<GSwapChain> CreateNewSwapChain(

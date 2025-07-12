@@ -8,6 +8,7 @@ namespace GE
 		GUARDIAN_CLEAR_MEMORY(this->WindowArea);
 		this->WindowAttribute = Attribute();
 
+		this->WindowEventProcesser = std::make_shared<GEventProcesser>();
 		this->IsWindowRunning = false;
 		GUARDIAN_CLEAR_MEMORY(this->WindowMessage);
 	}
@@ -19,6 +20,7 @@ namespace GE
 		this->WindowAttribute = other.WindowAttribute;
 		this->WindowMessage = other.WindowMessage;
 
+		this->WindowEventProcesser = other.WindowEventProcesser;
 		this->IsWindowRunning = other.IsWindowRunning;
 	}
 
@@ -131,6 +133,15 @@ namespace GE
 		}
 
 		GUARDIAN_CLEAR_MEMORY(this->WindowMessage);
+
+		this->WindowEventProcesser = std::make_shared<GEventProcesser>();
+		this->WindowEventProcesser->OnEvent<GWindowCloseEvent>([=](const GWindowCloseEvent& event)
+		{
+			if (event.WindowHandle == this->WindowHandle)
+			{
+				this->IsWindowRunning = false;
+			}
+		});
 	}
 
 	void GWindow::DisplayWindow()
@@ -152,8 +163,6 @@ namespace GE
 
 			DispatchMessage(&this->WindowMessage);
 		}
-
-		this->IsWindowRunning = this->WindowMessage.message != WM_QUIT;
 	}
 
 	void GWindow::DestroyWindow()
@@ -234,8 +243,6 @@ namespace GE
 		{
 			case WM_CLOSE:
 			{
-				PostQuitMessage(0);
-
 				GWindowCloseEvent event(handle);
 				GEventDispatcher::DispatcherInstance->DispatchEvent(event);
 
@@ -360,7 +367,8 @@ namespace GE
 
 				if (rect.left < pt.x && rect.right > pt.x && rect.top < pt.y && rect.bottom > pt.y)
 				{
-					PostQuitMessage(0);
+					SendMessage(handle, WM_CLOSE, 0, 0);
+
 					return 0;
 					break;
 				}

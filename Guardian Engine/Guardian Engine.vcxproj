@@ -145,6 +145,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
     <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
     <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp" />
