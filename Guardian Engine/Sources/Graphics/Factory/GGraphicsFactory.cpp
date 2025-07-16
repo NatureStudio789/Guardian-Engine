@@ -27,9 +27,7 @@ namespace GE
 		GUARDIAN_SETUP_AUTO_THROW();
 
 		GUARDIAN_AUTO_THROW(
-			CreateDXGIFactory2(DXGI_CREATE_FACTORY_DEBUG, __uuidof(IDXGIFactory5), (void**)this->FactoryObject.GetAddressOf()));
-		
-		GUARDIAN_AUTO_THROW(this->FactoryObject->MakeWindowAssociation(windowHandle, DXGI_MWA_NO_ALT_ENTER));
+			CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)this->FactoryObject.GetAddressOf()));
 
 		for (UINT AdapterIndex = 0; 
 			this->FactoryObject->EnumAdapters1(AdapterIndex, &this->FactoryAdapter) != DXGI_ERROR_NOT_FOUND; 
@@ -44,14 +42,14 @@ namespace GE
 			}
 
 			if (GUARDIAN_SUCCEEDED(D3D12CreateDevice(
-				this->FactoryAdapter.Get(), D3D_FEATURE_LEVEL_12_1, __uuidof(ID3D12Device), null)))
+				this->FactoryAdapter.Get(), D3D_FEATURE_LEVEL_11_0, __uuidof(ID3D12Device), null)))
 			{
 				break;
 			}
 		}
 	}
 
-	WRL::ComPtr<IDXGIFactory5> GGraphicsFactory::GetFactoryObject()
+	WRL::ComPtr<IDXGIFactory4> GGraphicsFactory::GetFactoryObject()
 	{
 		return this->FactoryObject;
 	}

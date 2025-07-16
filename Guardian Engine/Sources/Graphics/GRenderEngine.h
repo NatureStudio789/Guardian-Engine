@@ -17,6 +17,7 @@ namespace GE
 
 	private:
 		std::shared_ptr<GGraphicsContext> MainGraphicsContext;
+		std::shared_ptr<GMeshInstance> TestMesh;
 	};
 }
 

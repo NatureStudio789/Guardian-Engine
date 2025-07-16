@@ -1,0 +1,22 @@
+cbuffer Transform : register(b0)
+{
+    float4x4 TransformMatrix;
+};
+
+struct VSInput
+{
+    float3 Position : POSITION;
+};
+
+struct VSOutput
+{
+    float4 Position : SV_POSITION;
+};
+
+VSOutput main(VSInput InputData)
+{
+    VSOutput OutputData;
+    OutputData.Position = float4(InputData.Position, 1.0f);
+
+    return OutputData;
+}

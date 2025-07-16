@@ -38,6 +38,8 @@ using namespace DirectX;
 #define null nullptr
 
 #define GUARDIAN_CLEAR_MEMORY(object) ZeroMemory(&object, sizeof(object))
+#define GUARDIAN_ARRAYSIZE(array) ARRAYSIZE(array)
+
 #define GUARDIAN_FAILED(hr) FAILED(hr)
 #define GUARDIAN_SUCCEEDED(hr) SUCCEEDED(hr)
 

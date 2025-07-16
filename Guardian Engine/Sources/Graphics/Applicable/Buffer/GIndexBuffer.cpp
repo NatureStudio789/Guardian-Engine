@@ -24,8 +24,8 @@ namespace GE
 		GUARDIAN_CLEAR_MEMORY(IndexBufferView);
 
 		IndexBufferView.BufferLocation = this->GPUBuffer->GetGPUVirtualAddress();
-		IndexBufferView.Format = DXGI_FORMAT_R16_UINT;
-		IndexBufferView.SizeInBytes = 0;
+		IndexBufferView.Format = DXGI_FORMAT_R32_UINT;
+		IndexBufferView.SizeInBytes = this->DataSize * this->DataStride;
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			IASetIndexBuffer(&IndexBufferView);

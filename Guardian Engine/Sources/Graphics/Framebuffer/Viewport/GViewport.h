@@ -54,6 +54,7 @@ namespace GE
 
 	private:
 		D3D12_VIEWPORT ViewportObject;
+		D3D12_RECT ViewportScissorRect;
 		Attribute ViewportAttribute;
 	};
 }

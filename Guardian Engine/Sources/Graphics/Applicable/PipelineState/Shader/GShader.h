@@ -28,6 +28,12 @@ namespace GE
 		const Category& GetShaderCategory() const noexcept;
 		WRL::ComPtr<ID3DBlob> GetShaderByteCode();
 
+		static std::shared_ptr<GShader> CreateNewShader(
+			Category category, std::string shaderFilePath, bool isBinaryFile = false)
+		{
+			return std::make_shared<GShader>(category, shaderFilePath, isBinaryFile);
+		}
+
 	private:
 		Category ShaderCategory;
 		WRL::ComPtr<ID3DBlob> ShaderByteCode;

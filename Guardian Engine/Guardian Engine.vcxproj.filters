@@ -143,6 +143,11 @@
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\GRenderable.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h" />
+    <ClInclude Include="Sources\Graphics\Renderable\GRenderableBase.h" />
+    <ClInclude Include="Sources\Graphics\Math\Transform\GTransform.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -208,5 +213,9 @@
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\GRenderable.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp" />
+    <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.cpp" />
   </ItemGroup>
 </Project>

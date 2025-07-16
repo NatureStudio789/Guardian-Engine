@@ -10,7 +10,7 @@ namespace GE
 	GDescriptorHeap::GDescriptorHeap(std::shared_ptr<GDevice> device, UINT descriptorCount, 
 		Category category, Flag flag)
 	{
-		this->InitializeDescriptorHeap(device, descriptorCount, category);
+		this->InitializeDescriptorHeap(device, descriptorCount, category, flag);
 	}
 
 	GDescriptorHeap::GDescriptorHeap(const GDescriptorHeap& other)

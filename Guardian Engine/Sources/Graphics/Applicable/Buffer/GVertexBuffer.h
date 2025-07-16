@@ -13,6 +13,12 @@ namespace GE
 
 		void Apply() override;
 
+		static std::shared_ptr<GVertexBuffer> CreateNewVertexBuffer(
+			void* verticesData, UINT dataSize, UINT dataStride)
+		{
+			return std::make_shared<GVertexBuffer>(verticesData, dataSize, dataStride);
+		}
+
 	private:
 	};
 }

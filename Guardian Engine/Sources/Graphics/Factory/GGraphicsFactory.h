@@ -1,6 +1,6 @@
 #ifndef _GE_GGRAPHICSFACTORY_H_
 #define _GE_GGRAPHICSFACTORY_H_
-#include "../Math/Vector/GVector.h"
+#include "../Math/Transform/GTransform.h"
 
 namespace GE
 {
@@ -14,7 +14,7 @@ namespace GE
 
 		void InitializeGraphicsFactory(HWND windowHandle);
 
-		WRL::ComPtr<IDXGIFactory5> GetFactoryObject();
+		WRL::ComPtr<IDXGIFactory4> GetFactoryObject();
 		WRL::ComPtr<IDXGIAdapter1> GetFactoryAdapter();
 
 		static std::shared_ptr<GGraphicsFactory> CreateNewGraphicsFactory(HWND windowHandle)
@@ -23,7 +23,7 @@ namespace GE
 		}
 
 	private:
-		WRL::ComPtr<IDXGIFactory5> FactoryObject;
+		WRL::ComPtr<IDXGIFactory4> FactoryObject;
 		WRL::ComPtr<IDXGIAdapter1> FactoryAdapter;
 	};
 }

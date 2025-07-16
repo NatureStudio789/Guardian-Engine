@@ -65,7 +65,7 @@ namespace GE
 		{
 			case GE_STYLE_DEFAULTWINDOW:
 			{
-				Style = WS_OVERLAPPED | WS_SIZEBOX;
+				Style = WS_OVERLAPPEDWINDOW;
 
 				int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
 				int WindowWidth = (int)(ScreenWidth * 0.8f);
@@ -250,7 +250,7 @@ namespace GE
 				break;
 			}
 
-			case WM_NCCREATE:
+			/*case WM_NCCREATE:
 			{
 				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
 				{
@@ -321,7 +321,7 @@ namespace GE
 
 				return 0;
 				break;
-			}
+			}*/
 
 			case WM_GETMINMAXINFO:
 			{
@@ -332,12 +332,12 @@ namespace GE
 
 				MINMAXINFO* minmax = (MINMAXINFO*)lParam;
 
-				RECT WorkArea = {};
+				/*RECT WorkArea = {};
 				SystemParametersInfo(SPI_GETWORKAREA, 0, &WorkArea, 0);
 				minmax->ptMaxSize.x = (WorkArea.right - WorkArea.left);
 				minmax->ptMaxSize.y = (WorkArea.bottom - WorkArea.top);
 				minmax->ptMaxPosition.x = WorkArea.left;
-				minmax->ptMaxPosition.y = WorkArea.top;
+				minmax->ptMaxPosition.y = WorkArea.top;*/
 				minmax->ptMinTrackSize.x = 1000;
 				minmax->ptMinTrackSize.y = 600;
 
@@ -345,7 +345,7 @@ namespace GE
 				break;
 			}
 
-			case WM_NCLBUTTONDOWN:
+			/*case WM_NCLBUTTONDOWN:
 			{
 				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
 				{
@@ -399,7 +399,7 @@ namespace GE
 
 				return DefWindowProc(handle, message, wParam, lParam);
 				break;
-			}
+			}*/
 
 			case WM_ENTERSIZEMOVE:
 			{
@@ -416,7 +416,7 @@ namespace GE
 					break;
 				}
 
-				RECT rect;
+				/*RECT rect;
 				GetWindowRect(handle, &rect);
 				RECT WorkArea = {};
 				SystemParametersInfo(SPI_GETWORKAREA, 0, &WorkArea, 0);
@@ -433,7 +433,7 @@ namespace GE
 					{
 						ShowWindow(handle, SW_MAXIMIZE);
 					}
-				}
+				}*/
 
 				IsBeingResized = false;
 				GWindowResizeEvent windowResizing(handle, WindowWidth, WindowHeight);
@@ -443,7 +443,7 @@ namespace GE
 				break;
 			}
 
-			case WM_NCLBUTTONDBLCLK:
+			/*case WM_NCLBUTTONDBLCLK:
 			{
 				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
 				{
@@ -464,7 +464,7 @@ namespace GE
 
 				return 0;
 				break;
-			}
+			}*/
 
 			case WM_MOVE:
 			{

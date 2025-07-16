@@ -1,6 +1,6 @@
 #ifndef _GE_GWINDOW_H_
 #define _GE_GWINDOW_H_
-#include "../../Graphics/Applicable/GApplicable.h"
+#include "../../Graphics/Renderable/Mesh/GMeshInstance.h"
 
 namespace GE
 {

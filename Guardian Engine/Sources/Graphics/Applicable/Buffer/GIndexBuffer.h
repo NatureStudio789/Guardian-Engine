@@ -13,6 +13,12 @@ namespace GE
 
 		void Apply() override;
 
+		static std::shared_ptr<GIndexBuffer> CreateNewIndexBuffer(
+			UINT* indicesData, UINT dataSize)
+		{
+			return std::make_shared<GIndexBuffer>(indicesData, dataSize);
+		}
+
 	private:
 	};
 }

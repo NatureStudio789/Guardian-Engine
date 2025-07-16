@@ -6,10 +6,12 @@ namespace GE
 {
 	class GUARDIAN_API GFramebuffer;
 
-	class GUARDIAN_API GGraphicsContext : public std::enable_shared_from_this<GGraphicsContext>
+	class GUARDIAN_API GGraphicsContext
 	{
 	public:
 		GGraphicsContext();
+		GGraphicsContext(HWND windowHandle,
+			int bufferWidth, int bufferHeight, bool fullscreen);
 		GGraphicsContext(const GGraphicsContext& other);
 		~GGraphicsContext();
 
@@ -20,6 +22,12 @@ namespace GE
 		void ApplyMainFramebuffer();
 		void EndUpRendering(UINT syncInternal);
 
+		void BeginInitializing();
+		void EndUpInitializing();
+
+		void ResetCommandList();
+		void ExecuteCommandList();
+
 		const GUUID& GetContextId() const noexcept;
 		std::shared_ptr<GGraphicsFactory> GetGraphicsFactory();
 		std::shared_ptr<GDevice> GetGraphicsDevice();
@@ -29,7 +37,12 @@ namespace GE
 		std::shared_ptr<GCommandList> GetGraphicsCommandList();
 
 		std::shared_ptr<GSwapChain> GetGraphicsSwapChain();
-		std::shared_ptr<GRootSignature> GetGraphicsRootSignature();
+
+		static std::shared_ptr<GGraphicsContext> CreateNewGraphicsContext(
+			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
+		{
+			return std::make_shared<GGraphicsContext>(windowHandle, bufferWidth, bufferHeight, fullscreen);
+		}
 
 	private:
 		GUUID ContextId = GUUID();
@@ -44,7 +57,6 @@ namespace GE
 		std::shared_ptr<GCommandList> GraphicsCommandList;
 
 		std::shared_ptr<GSwapChain> GraphicsSwapChain;
-		std::shared_ptr<GRootSignature> GraphicsRootSignature;
 
 		std::shared_ptr<GFramebuffer> GraphicsMainFramebuffer;
 	};

@@ -3,7 +3,7 @@
 
 namespace GE
 {
-	GGraphicsContext::GGraphicsContext() : std::enable_shared_from_this<GGraphicsContext>()
+	GGraphicsContext::GGraphicsContext()
 	{
 		this->ContextWindowHandle = null;
 		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
@@ -14,11 +14,15 @@ namespace GE
 		this->GraphicsCommandQueue = null;
 		this->GraphicsCommandList = null;
 		this->GraphicsSwapChain = null;
-		this->GraphicsRootSignature = std::make_shared<GRootSignature>();
 		this->GraphicsMainFramebuffer = null;
 	}
 
-	GGraphicsContext::GGraphicsContext(const GGraphicsContext& other) : std::enable_shared_from_this<GGraphicsContext>(other)
+	GGraphicsContext::GGraphicsContext(HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
+	{
+		this->InitializeGraphicsContext(windowHandle, bufferWidth, bufferHeight, fullscreen);
+	}
+
+	GGraphicsContext::GGraphicsContext(const GGraphicsContext& other)
 	{
 		this->ContextId = other.ContextId;
 		this->ContextWindowHandle = other.ContextWindowHandle;
@@ -30,7 +34,6 @@ namespace GE
 		this->GraphicsCommandQueue = other.GraphicsCommandQueue;
 		this->GraphicsCommandList = other.GraphicsCommandList;
 		this->GraphicsSwapChain = other.GraphicsSwapChain;
-		this->GraphicsRootSignature = other.GraphicsRootSignature;
 
 		this->GraphicsFence = other.GraphicsFence;
 
@@ -61,8 +64,6 @@ namespace GE
 		
 		this->GraphicsSwapChain.reset();
 		this->GraphicsSwapChain = null;
-		this->GraphicsRootSignature.reset();
-		this->GraphicsRootSignature = null;
 
 		this->GraphicsMainFramebuffer.reset();
 		this->GraphicsMainFramebuffer = null;
@@ -71,6 +72,7 @@ namespace GE
 	void GGraphicsContext::InitializeGraphicsContext(
 		HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
 	{
+		GUARDIAN_SETUP_AUTO_THROW();
 		this->ContextWindowHandle = windowHandle;
 
 		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
@@ -87,7 +89,7 @@ namespace GE
 				
 				this->GraphicsSwapChain->ResizeBuffer(event.ResizeWidth, event.ResizeHeight);
 				
-				this->GraphicsMainFramebuffer->ResizeFramebuffer(shared_from_this(), event.ResizeWidth, event.ResizeHeight);
+				this->GraphicsMainFramebuffer->ResizeFramebuffer(std::make_shared<GGraphicsContext>(*this), event.ResizeWidth, event.ResizeHeight);
 				
 				GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
 				ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
@@ -97,8 +99,15 @@ namespace GE
 			}
 		});
 
+#ifdef GE_DEBUG
+		WRL::ComPtr<ID3D12Debug> DebugController;
+		GUARDIAN_AUTO_THROW(D3D12GetDebugInterface(__uuidof(ID3D12Debug), (void**)DebugController.GetAddressOf()))
+		DebugController->EnableDebugLayer();
+#endif
+
 		this->GraphicsFactory = GGraphicsFactory::CreateNewGraphicsFactory(windowHandle);
 		this->GraphicsDevice = GDevice::CreateNewDevice(this->GraphicsFactory);
+
 
 		this->GraphicsFence = GFence::CreateNewFence(this->GraphicsDevice);
 
@@ -107,25 +116,22 @@ namespace GE
 
 		this->GraphicsSwapChain = GSwapChain::CreateNewSwapChain(this->GraphicsFactory,
 			this->GraphicsCommandQueue, 2, windowHandle, bufferWidth, bufferHeight, fullscreen);
-		this->GraphicsRootSignature = std::make_shared<GRootSignature>();
 
-		this->GraphicsMainFramebuffer = GFramebuffer::CreateNewFramebuffer(shared_from_this());
+		this->BeginInitializing();
+
+		this->GraphicsMainFramebuffer = GFramebuffer::CreateNewFramebuffer(std::make_shared<GGraphicsContext>(*this));
+		
+		this->EndUpInitializing();
 	}
 
 	void GGraphicsContext::BeginRendering()
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
-		if (!this->GraphicsRootSignature->GetInitialized())
-		{
-			this->GraphicsRootSignature->InitializeRootSignature(this->GraphicsDevice);
-		}
 
 		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListAllocator()->Reset());
 
 		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Reset(
 			this->GraphicsCommandList->GetCommandListAllocator().Get(), null));
-
-		this->GraphicsRootSignature->ApplyRootSignature(this->GraphicsCommandList);
 
 		this->GraphicsCommandList->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
@@ -136,7 +142,7 @@ namespace GE
 	{
 		GUARDIAN_CHECK_POINTER(this->GraphicsMainFramebuffer);
 		
-		this->GraphicsMainFramebuffer->ApplyFramebuffer(shared_from_this());
+		this->GraphicsMainFramebuffer->ApplyFramebuffer(std::make_shared<GGraphicsContext>(*this));
 	}
 
 	void GGraphicsContext::EndUpRendering(UINT syncInternal)
@@ -155,6 +161,34 @@ namespace GE
 		this->GraphicsSwapChain->Present(syncInternal);
 
 		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
+	}
+
+	void GGraphicsContext::BeginInitializing()
+	{
+		this->ResetCommandList();
+	}
+
+	void GGraphicsContext::EndUpInitializing()
+	{
+		this->ExecuteCommandList();
+		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
+	}
+
+	void GGraphicsContext::ResetCommandList()
+	{
+		GUARDIAN_SETUP_AUTO_THROW();
+		
+		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Reset(
+			this->GraphicsCommandList->GetCommandListAllocator().Get(), null));
+	}
+
+	void GGraphicsContext::ExecuteCommandList()
+	{
+		GUARDIAN_SETUP_AUTO_THROW();
+
+		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
+		ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
+		this->GraphicsCommandQueue->ExecuteCommandLists(GUARDIAN_ARRAYSIZE(CommandLists), CommandLists);
 	}
 
 	const GUUID& GGraphicsContext::GetContextId() const noexcept
@@ -190,10 +224,5 @@ namespace GE
 	std::shared_ptr<GSwapChain> GGraphicsContext::GetGraphicsSwapChain()
 	{
 		return this->GraphicsSwapChain;
-	}
-
-	std::shared_ptr<GRootSignature> GGraphicsContext::GetGraphicsRootSignature()
-	{
-		return this->GraphicsRootSignature;
 	}
 }

@@ -88,10 +88,11 @@ namespace GE
 			CompileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
+			WRL::ComPtr<ID3DBlob> ShaderBlob;
 			WRL::ComPtr<ID3DBlob> ErrorBlob;
 			hr = D3DCompileFromFile(GConverter::StringToWideString(shaderFilePath).c_str(),
 				null, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", ShaderTarget.c_str(), CompileFlags, 0,
-				this->ShaderByteCode.GetAddressOf(), ErrorBlob.GetAddressOf());
+				ShaderBlob.GetAddressOf(), ErrorBlob.GetAddressOf());
 
 			if (ErrorBlob)
 			{
@@ -99,6 +100,8 @@ namespace GE
 			}
 
 			GUARDIAN_AUTO_THROW(hr);
+
+			this->ShaderByteCode = ShaderBlob;
 		}
 	}
 

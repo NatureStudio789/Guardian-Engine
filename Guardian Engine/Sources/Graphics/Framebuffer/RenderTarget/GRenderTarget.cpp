@@ -51,7 +51,7 @@ namespace GE
 
 	void GRenderTarget::ClearRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext)
 	{
-		static float color[] = { 0.001f, 0.001f, 0.001f, 1.0f };
+		static float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ClearRenderTargetView(
 			this->GetRenderTargetView(graphicsContext), color, 0, null);
 	}
@@ -60,7 +60,7 @@ namespace GE
 		D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView)
 	{
 		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->OMSetRenderTargets(1, 
-			&this->GetRenderTargetView(graphicsContext), true, null);
+			&this->GetRenderTargetView(graphicsContext), true, &depthStencilView);
 	}
 
 	std::shared_ptr<GDescriptorHeap> GRenderTarget::GetRenderTargetViewDescriptorHeap()

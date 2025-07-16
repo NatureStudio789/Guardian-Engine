@@ -26,7 +26,7 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		GUARDIAN_AUTO_THROW(D3D12CreateDevice(factory->GetFactoryAdapter().Get(), D3D_FEATURE_LEVEL_12_1,
+		GUARDIAN_AUTO_THROW(D3D12CreateDevice(factory->GetFactoryAdapter().Get(), D3D_FEATURE_LEVEL_11_0,
 			__uuidof(ID3D12Device), (void**)this->DeviceObject.GetAddressOf()));
 	}
 

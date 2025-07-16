@@ -4,31 +4,41 @@ namespace GE
 {
     GPipelineState::GPipelineState()
     {
-        GUARDIAN_CLEAR_MEMORY(this->PipelineStateDesc);
-        this->PipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        this->PipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        this->PipelineStateDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
-        this->PipelineStateDesc.SampleMask = UINT_MAX;
-        this->PipelineStateDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        this->PipelineStateDesc.NumRenderTargets = 1;
-        this->PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        this->PipelineStateDesc.SampleDesc.Count = 1;
-        this->PipelineStateDesc.SampleDesc.Quality = 0;
-        this->PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        this->PipelineRootSignature = std::make_shared<GRootSignature>();
+        this->PipelineInputLayout = null;
+        this->PipelineShaderList.clear();
+        this->PipelineTopology = null;
 
         this->IsInitialized = false;
     }
 
     GPipelineState::GPipelineState(const GPipelineState& other)
     {
-        this->PipelineStateDesc = other.PipelineStateDesc;
         this->PipelineStateObject = other.PipelineStateObject;
+        
+        this->PipelineRootSignature = other.PipelineRootSignature;
+        this->PipelineInputLayout = other.PipelineInputLayout;
+        this->PipelineShaderList = other.PipelineShaderList;
+        this->PipelineTopology = other.PipelineTopology;
+
         this->IsInitialized = other.IsInitialized;
     }
 
     GPipelineState::~GPipelineState()
     {
-        GUARDIAN_CLEAR_MEMORY(this->PipelineStateDesc);
+        this->PipelineRootSignature.reset();
+        this->PipelineRootSignature = null;
+
+        this->PipelineInputLayout.reset();
+        this->PipelineInputLayout = null;
+        for (auto& shader : this->PipelineShaderList)
+        {
+            shader.second.reset();
+            shader.second = null;
+        }
+        this->PipelineShaderList.clear();
+        this->PipelineTopology = null;
+
         this->IsInitialized = false;
     }
 
@@ -39,75 +49,82 @@ namespace GE
             throw GUARDIAN_ERROR_EXCEPTION("This pipeline state has been initialized!");
         }
 
-        switch (shader->ShaderCategory)
+        if (this->PipelineShaderList.count(shader->GetShaderCategory()))
         {
-            case GShader::GE_VERTEX_SHADER:
-            {
-                this->PipelineStateDesc.VS =
-                {
-                    .pShaderBytecode = shader->ShaderByteCode->GetBufferPointer(),
-                    .BytecodeLength = shader->ShaderByteCode->GetBufferSize()
-                };
-
-                break;
-            }
-
-            case GShader::GE_PIXEL_SHADER:
-            {
-                this->PipelineStateDesc.PS =
-                {
-                    .pShaderBytecode = shader->ShaderByteCode->GetBufferPointer(),
-                    .BytecodeLength = shader->ShaderByteCode->GetBufferSize()
-                };
-
-                break;
-            }
-
-            case GShader::GE_DOMAIN_SHADER:
-            {
-                this->PipelineStateDesc.DS =
-                {
-                    .pShaderBytecode = shader->ShaderByteCode->GetBufferPointer(),
-                    .BytecodeLength = shader->ShaderByteCode->GetBufferSize()
-                };
-
-                break;
-            }
-
-            case GShader::GE_HULL_SHADER:
-            {
-                this->PipelineStateDesc.HS =
-                {
-                    .pShaderBytecode = shader->ShaderByteCode->GetBufferPointer(),
-                    .BytecodeLength = shader->ShaderByteCode->GetBufferSize()
-                };
-
-                break;
-            }
-
-            case GShader::GE_GEOMETRY_SHADER:
-            {
-                this->PipelineStateDesc.GS =
-                {
-                    .pShaderBytecode = shader->ShaderByteCode->GetBufferPointer(),
-                    .BytecodeLength = shader->ShaderByteCode->GetBufferSize()
-                };
-
-                break;
-            }
-
-            default:
-            {
-                throw GUARDIAN_ERROR_EXCEPTION("Unsupported shader category for pipeline state!");
-                break;
-            }
+            throw GUARDIAN_ERROR_EXCEPTION("This type of shader has already been in pipeline!");
         }
+
+        this->PipelineShaderList[shader->GetShaderCategory()] = shader;
+    }
+
+    void GPipelineState::SetInputLayout(std::shared_ptr<GInputLayout> inputLayout)
+    {
+        if (this->IsInitialized)
+        {
+            throw GUARDIAN_ERROR_EXCEPTION("This pipeline state has been initialized!");
+        }
+
+        this->PipelineInputLayout = inputLayout;
+    }
+
+    void GPipelineState::SetTopology(std::shared_ptr<GTopology> topology)
+    {
+        this->PipelineTopology = topology;
     }
 
     void GPipelineState::InitializePipelineState()
     {
-        this->PipelineStateDesc.pRootSignature = GGraphicsContextRegistry::GetCurrentGraphicsContext()->
-            GetGraphicsRootSignature()->GetRootSignatureObject().Get();
+        GUARDIAN_SETUP_AUTO_THROW();
+
+        this->PipelineRootSignature->InitializeRootSignature(
+            GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice());
+
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateDesc;
+        GUARDIAN_CLEAR_MEMORY(PipelineStateDesc);
+
+        PipelineStateDesc.pRootSignature = this->PipelineRootSignature->GetRootSignatureObject().Get();
+        PipelineStateDesc.InputLayout = { this->PipelineInputLayout->GetInputElementList(), this->PipelineInputLayout->GetInputElementCount() };
+        PipelineStateDesc.VS =
+        {
+            this->PipelineShaderList[GShader::GE_VERTEX_SHADER]->GetShaderByteCode()->GetBufferPointer(),
+            this->PipelineShaderList[GShader::GE_VERTEX_SHADER]->GetShaderByteCode()->GetBufferSize()
+        };
+        PipelineStateDesc.PS =
+        {
+            this->PipelineShaderList[GShader::GE_PIXEL_SHADER]->GetShaderByteCode()->GetBufferPointer(),
+            this->PipelineShaderList[GShader::GE_PIXEL_SHADER]->GetShaderByteCode()->GetBufferSize()
+        };
+        PipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        PipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        PipelineStateDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
+        PipelineStateDesc.SampleMask = UINT_MAX;
+
+        D3D12_PRIMITIVE_TOPOLOGY_TYPE Type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_UNDEFINED;
+        if (this->PipelineTopology->GetTopologyType() == GTopology::GE_TOPOLOGY_TYPE_POINTLIST)
+        {
+            Type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_POINT;
+        }
+        else if (this->PipelineTopology->GetTopologyType() == GTopology::GE_TOPOLOGY_TYPE_LINELIST ||
+            this->PipelineTopology->GetTopologyType() == GTopology::GE_TOPOLOGY_TYPE_LINESTRIP)
+        {
+            Type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_LINE;
+        }
+        else if (this->PipelineTopology->GetTopologyType() == GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST ||
+            this->PipelineTopology->GetTopologyType() == GTopology::GE_TOPOLOGY_TYPE_TRIANGLESTRIP)
+        {
+            Type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        }
+        PipelineStateDesc.PrimitiveTopologyType = Type;
+        PipelineStateDesc.NumRenderTargets = 1;
+        PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        PipelineStateDesc.SampleDesc.Count = 1;
+        PipelineStateDesc.SampleDesc.Quality = 0;
+        PipelineStateDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+
+        GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
+            CreateGraphicsPipelineState(&PipelineStateDesc, __uuidof(ID3D12PipelineState), (void**)this->PipelineStateObject.GetAddressOf()));
+
+        this->IsInitialized = true;
     }
 
     void GPipelineState::Apply()
@@ -117,13 +134,22 @@ namespace GE
             throw GUARDIAN_ERROR_EXCEPTION("This pipeline state has NOT been initialized!");
         }
 
+        this->PipelineRootSignature->ApplyRootSignature(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList());
+
         GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
             SetPipelineState(this->PipelineStateObject.Get());
+
+        this->PipelineTopology->Apply();
     }
 
     WRL::ComPtr<ID3D12PipelineState> GPipelineState::GetPipelineStateObject()
     {
         return this->PipelineStateObject;
+    }
+
+    std::shared_ptr<GRootSignature> GPipelineState::GetPipelineRootSignature()
+    {
+        return this->PipelineRootSignature;
     }
 
     const bool& GPipelineState::GetInitialized() const noexcept
