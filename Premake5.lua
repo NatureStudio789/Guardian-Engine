@@ -43,7 +43,9 @@ project "Guardian Engine"
 		"dxgi",
 		"d3d12",
 		"d3dcompiler",
-		"dxguid"
+		"dxguid",
+
+		"xaudio2"
 	}
 
 	filter "system:Windows"

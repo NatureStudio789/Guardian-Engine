@@ -7,6 +7,9 @@
     <Filter Include="Aplication\Converter">
       <UniqueIdentifier>{F03648E6-DCC5-D1AF-85E4-E5AA7152E255}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Aplication\Event">
+      <UniqueIdentifier>{BA2786DC-A620-A52E-CF52-8AB3BBAA843A}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Aplication\Exception">
       <UniqueIdentifier>{A73EF1A7-93CD-7A71-3CEC-8E6C285A8B17}</UniqueIdentifier>
     </Filter>
@@ -15,6 +18,24 @@
     </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable">
+      <UniqueIdentifier>{D2D1E6DE-3E33-C4EC-C7A0-0A9F3301FBAB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\Buffer">
+      <UniqueIdentifier>{7BD356B1-67E3-0282-D09C-67A0BCCBF11A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState">
+      <UniqueIdentifier>{585A60FE-C4C8-B57D-0DB2-707D795FAB19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState\InputLayout">
+      <UniqueIdentifier>{D5AB5D8B-411C-6004-0A3B-DA8C766A9805}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState\Shader">
+      <UniqueIdentifier>{FE76F658-EAF3-E99B-1371-EAAFFF4C862F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState\Topology">
+      <UniqueIdentifier>{44F3519B-305B-1869-99C6-2C7F854D2F55}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\CommandList">
       <UniqueIdentifier>{E06E3D03-CCFD-C6CC-751C-DBC7618AD772}</UniqueIdentifier>
@@ -31,14 +52,41 @@
     <Filter Include="Graphics\Factory">
       <UniqueIdentifier>{5D1D2BD3-4916-4A25-7248-2FAA5EA02931}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\RenderTarget">
-      <UniqueIdentifier>{0CC157C0-782D-13BB-4121-AB18AD4C3523}</UniqueIdentifier>
+    <Filter Include="Graphics\Fence">
+      <UniqueIdentifier>{C6375088-B205-448E-9B99-B4B4870620F3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Framebuffer">
+      <UniqueIdentifier>{4AD5CA42-3664-540C-DF82-6807CBF064B2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Framebuffer\DepthStencil">
+      <UniqueIdentifier>{20A6134F-8C14-69CE-D5FD-23CE41AB5E6A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Framebuffer\RenderTarget">
+      <UniqueIdentifier>{C03723EF-2CA6-786E-758F-336EE13C6E0A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Framebuffer\Viewport">
+      <UniqueIdentifier>{B953B343-256C-9A6D-EE18-2A075AF02E07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Math">
+      <UniqueIdentifier>{AF158A97-1BD6-05CE-E410-4F4B50904AAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Math\Transform">
+      <UniqueIdentifier>{3A142231-A64B-6AC8-AF55-CEEB1B0C91C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Math\Vector">
+      <UniqueIdentifier>{F1B8A951-DD47-331B-8666-471672D443C1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderable">
+      <UniqueIdentifier>{39D7A6D9-A538-84E7-2EA6-CA999A06BBA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderable\Mesh">
+      <UniqueIdentifier>{95B8F9DE-81DD-485F-AA28-2EEF96AC477D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\RootSignature">
+      <UniqueIdentifier>{BB3880CF-A732-A921-909F-3F327C380F8E}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\SwapChain">
       <UniqueIdentifier>{E3CAF6DB-CFAE-B731-380F-B2842412A2B3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Viewport">
-      <UniqueIdentifier>{05175F69-712D-5DFF-BAA4-E82026FA2D87}</UniqueIdentifier>
     </Filter>
     <Filter Include="Profile">
       <UniqueIdentifier>{F60CF123-62EC-6FBF-6B04-FB95D762D620}</UniqueIdentifier>
@@ -63,6 +111,24 @@
     <ClInclude Include="Sources\Aplication\Converter\GConverter.h">
       <Filter>Aplication\Converter</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GEvent.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GEventProcesser.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GKeyboardEvent.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Event\GMouseEvent.h">
+      <Filter>Aplication\Event</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Aplication\Exception\GException.h">
       <Filter>Aplication\Exception</Filter>
     </ClInclude>
@@ -73,6 +139,33 @@
       <Filter>Aplication\Window</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GEngine.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.h">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.h">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.h">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\GApplicable.h">
+      <Filter>Graphics\Applicable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h">
+      <Filter>Graphics\Applicable\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h">
+      <Filter>Graphics\Applicable\PipelineState\InputLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h">
+      <Filter>Graphics\Applicable\PipelineState\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.h">
+      <Filter>Graphics\Applicable\PipelineState\Topology</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\CommandList\GCommandList.h">
       <Filter>Graphics\CommandList</Filter>
     </ClInclude>
@@ -88,6 +181,21 @@
     <ClInclude Include="Sources\Graphics\Factory\GGraphicsFactory.h">
       <Filter>Graphics\Factory</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Fence\GFence.h">
+      <Filter>Graphics\Fence</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.h">
+      <Filter>Graphics\Framebuffer\DepthStencil</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h">
+      <Filter>Graphics\Framebuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h">
+      <Filter>Graphics\Framebuffer\RenderTarget</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Framebuffer\Viewport\GViewport.h">
+      <Filter>Graphics\Framebuffer\Viewport</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\GGraphicsContext.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -97,14 +205,26 @@
     <ClInclude Include="Sources\Graphics\GRenderEngine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h">
-      <Filter>Graphics\RenderTarget</Filter>
+    <ClInclude Include="Sources\Graphics\Math\Transform\GTransform.h">
+      <Filter>Graphics\Math\Transform</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Math\Vector\GVector.h">
+      <Filter>Graphics\Math\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderable\GRenderable.h">
+      <Filter>Graphics\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderable\GRenderableBase.h">
+      <Filter>Graphics\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h">
+      <Filter>Graphics\Renderable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h">
+      <Filter>Graphics\RootSignature</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\SwapChain\GSwapChain.h">
       <Filter>Graphics\SwapChain</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Graphics\Framebuffer\Viewport\GViewport.h">
-      <Filter>Graphics\Viewport</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Profile\Core\GCore.h">
       <Filter>Profile\Core</Filter>
@@ -124,34 +244,14 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Fence\GFence.h" />
-    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h" />
-    <ClInclude Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.h" />
-    <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
-    <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
-    <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
-    <ClInclude Include="Sources\Aplication\Event\GEventProcesser.h" />
-    <ClInclude Include="Sources\Aplication\Event\GKeyboardEvent.h" />
-    <ClInclude Include="Sources\Aplication\Event\GMouseEvent.h" />
-    <ClInclude Include="Sources\Graphics\Math\Vector\GVector.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\GApplicable.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.h" />
-    <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h" />
-    <ClInclude Include="Sources\Graphics\Renderable\GRenderable.h" />
-    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h" />
-    <ClInclude Include="Sources\Graphics\Renderable\GRenderableBase.h" />
-    <ClInclude Include="Sources\Graphics\Math\Transform\GTransform.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.h" />
+    <ClInclude Include="Sources\Audio\GAudioEngine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
       <Filter>Aplication\Converter</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
+      <Filter>Aplication\Event</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp">
       <Filter>Aplication\Exception</Filter>
@@ -163,6 +263,27 @@
       <Filter>Aplication\Window</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GEngine.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.cpp">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp">
+      <Filter>Graphics\Applicable\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp">
+      <Filter>Graphics\Applicable\PipelineState\InputLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp">
+      <Filter>Graphics\Applicable\PipelineState\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.cpp">
+      <Filter>Graphics\Applicable\PipelineState\Topology</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\CommandList\GCommandList.cpp">
       <Filter>Graphics\CommandList</Filter>
     </ClCompile>
@@ -178,6 +299,21 @@
     <ClCompile Include="Sources\Graphics\Factory\GGraphicsFactory.cpp">
       <Filter>Graphics\Factory</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Fence\GFence.cpp">
+      <Filter>Graphics\Fence</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.cpp">
+      <Filter>Graphics\Framebuffer\DepthStencil</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp">
+      <Filter>Graphics\Framebuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp">
+      <Filter>Graphics\Framebuffer\RenderTarget</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Framebuffer\Viewport\GViewport.cpp">
+      <Filter>Graphics\Framebuffer\Viewport</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\GGraphicsContext.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -187,14 +323,20 @@
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp">
-      <Filter>Graphics\RenderTarget</Filter>
+    <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp">
+      <Filter>Graphics\Math\Transform</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderable\GRenderable.cpp">
+      <Filter>Graphics\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp">
+      <Filter>Graphics\Renderable\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp">
+      <Filter>Graphics\RootSignature</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\SwapChain\GSwapChain.cpp">
       <Filter>Graphics\SwapChain</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Graphics\Framebuffer\Viewport\GViewport.cpp">
-      <Filter>Graphics\Viewport</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp">
       <Filter>Profile\Module</Filter>
@@ -202,20 +344,6 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Fence\GFence.cpp" />
-    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp" />
-    <ClCompile Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.cpp" />
-    <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp" />
-    <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderable\GRenderable.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp" />
-    <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
   </ItemGroup>
 </Project>

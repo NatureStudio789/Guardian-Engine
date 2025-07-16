@@ -20,6 +20,7 @@
 #include <functional>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
+#include <xaudio2.h>
 using namespace Microsoft;
 using namespace DirectX;
 

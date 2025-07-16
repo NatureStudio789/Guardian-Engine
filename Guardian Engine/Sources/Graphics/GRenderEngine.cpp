@@ -17,8 +17,7 @@ namespace GE
 
 	GRenderEngine::~GRenderEngine()
 	{
-		this->MainGraphicsContext.reset();
-		this->MainGraphicsContext = null;
+		
 	}
 
 	void GRenderEngine::InitializeModule()
@@ -62,6 +61,7 @@ namespace GE
 
 	void GRenderEngine::ReleaseModule()
 	{
-
+		this->MainGraphicsContext.reset();
+		this->MainGraphicsContext = null;
 	}
 }
