@@ -245,6 +245,9 @@
       <Filter>Profile\UUID</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Audio\GAudioEngine.h" />
+    <ClInclude Include="Sources\Audio\GAudioContext.h" />
+    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h" />
+    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -345,5 +348,8 @@
       <Filter>Profile\UUID</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioContext.cpp" />
+    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp" />
   </ItemGroup>
 </Project>

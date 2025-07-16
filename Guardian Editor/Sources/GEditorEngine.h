@@ -16,7 +16,6 @@ namespace GE
 		void ReleaseProgram() override;
 
 	private:
-
 	};
 }
 

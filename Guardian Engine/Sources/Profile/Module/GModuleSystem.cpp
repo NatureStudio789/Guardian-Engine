@@ -15,6 +15,10 @@ namespace GE
 		{
 			m = std::make_shared<GRenderEngine>();
 		}
+		else if (moduleName == "Audio")
+		{
+			m = std::make_shared<GAudioEngine>();
+		}
 
 		ModuleList[moduleName] = m;
 	}

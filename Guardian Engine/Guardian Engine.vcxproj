@@ -145,6 +145,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h" />
+    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h" />
+    <ClInclude Include="Sources\Audio\GAudioContext.h" />
     <ClInclude Include="Sources\Audio\GAudioEngine.h" />
     <ClInclude Include="Sources\Aplication\Converter\GConverter.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
@@ -194,6 +197,9 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp" />
+    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioContext.cpp" />
     <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
