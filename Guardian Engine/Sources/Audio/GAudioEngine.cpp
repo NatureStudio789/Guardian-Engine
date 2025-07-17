@@ -25,13 +25,11 @@ namespace GE
 
 		GAudioContextRegistry::RegisterAudioContext("Main", this->MainAudioContext);
 		GAudioContextRegistry::SetCurrentAudioContext("Main");
-
-		this->TestVoice = GSourceVoice::CreateNewSourceVoice("C:\\Users\\Administrator\\Downloads\\At The Edge - วงÛเ.wav");
 	}
 
 	void GAudioEngine::UpdateModule()
 	{
-		this->TestVoice->PlaySourceVoice();
+
 	}
 
 	void GAudioEngine::ReleaseModule()

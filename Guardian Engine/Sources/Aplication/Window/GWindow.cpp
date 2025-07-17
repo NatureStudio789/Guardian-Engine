@@ -1,4 +1,5 @@
 #include "GWindow.h"
+#include "../../GEngine.h"
 
 namespace GE
 {
@@ -232,6 +233,11 @@ namespace GE
 
 	LRESULT WINAPI GWindow::ProcessWindowMessage(Handle handle, UINT message, WPARAM wParam, LPARAM lParam)
 	{
+		if (GEngine::Instance->EngineProgram->ProcessWindowMessage(handle, message, wParam, lParam))
+		{
+			return 0;
+		}
+
 		static bool IsNCActive = false;
 		static bool IsBeingResized = false;
 		static bool IsMaximized = false;

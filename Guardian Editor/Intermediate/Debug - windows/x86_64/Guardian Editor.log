@@ -1,2 +1,4 @@
-﻿  GEditorEngine.cpp
-  Guardian Editor.vcxproj -> E:\Projects\Nature-Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Editor.exe
+﻿  GEditorContext.cpp
+  GEditorEngine.cpp
+LINK : warning LNK4098: 默认库“LIBCMTD”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+  Guardian Editor.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Editor.exe

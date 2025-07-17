@@ -1,2 +1,41 @@
-﻿  GSourceVoice.cpp
-  Guardian Engine.vcxproj -> E:\Projects\Nature-Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll
+﻿  GConverter.cpp
+  GEventDispatcher.cpp
+  GException.cpp
+  GApplication.cpp
+  GWindow.cpp
+  GAudioContext.cpp
+  GAudioContextRegistry.cpp
+  GAudioEngine.cpp
+  GSourceVoice.cpp
+  GEngine.cpp
+  GBuffer.cpp
+  GIndexBuffer.cpp
+  GVertexBuffer.cpp
+  GPipelineState.cpp
+  GInputLayout.cpp
+  GShader.cpp
+  GTopology.cpp
+  GCommandList.cpp
+  GCommandQueue.cpp
+  GDescriptorHeap.cpp
+  GDevice.cpp
+  GGraphicsFactory.cpp
+  GFence.cpp
+  GDepthStencil.cpp
+  GFramebuffer.cpp
+  GFramebufferRegistry.cpp
+  GRenderTarget.cpp
+  GViewport.cpp
+  GGraphicsContext.cpp
+  GGraphicsContextRegistry.cpp
+  GRenderEngine.cpp
+  GTransform.cpp
+  GRenderable.cpp
+  GMeshInstance.cpp
+  GRenderer.cpp
+  GRootSignature.cpp
+  GSwapChain.cpp
+  GModuleSystem.cpp
+  GUUID.cpp
+    正在创建库 ..\Build\Debug - windows\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug - windows\x86_64\Guardian Engine.exp
+  Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll

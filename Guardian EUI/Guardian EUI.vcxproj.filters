@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{8C1A20B0-78BC-4A86-6177-5EDA4DB8D1D6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget">
+      <UniqueIdentifier>{E97974DA-D51B-9FB0-BED6-B204AA172601}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Button">
+      <UniqueIdentifier>{D485E9F9-4046-6530-0981-AEAD7500AA0C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\ColumnLayout">
+      <UniqueIdentifier>{248B460A-90EC-2318-195A-6ACA85BA5AD7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Dockspace">
+      <UniqueIdentifier>{2538C894-1131-E7E6-3A63-CC6B26BBC6F2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Image">
+      <UniqueIdentifier>{9B66F5AA-87C9-844F-304F-BD051C9150D2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\MenuBar">
+      <UniqueIdentifier>{428B1B60-2E59-0F66-17ED-7F8C035AEBCA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\MenuBar\Menu">
+      <UniqueIdentifier>{A6597D83-12BB-5A91-9B28-A14307899150}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\MenuBar\MenuItem">
+      <UniqueIdentifier>{35BF6750-A1F6-AFE7-AA00-140B16B7D6E0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Panel">
+      <UniqueIdentifier>{A8B46DAB-9417-FD4F-3D9D-350629DFC8D2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widget\Text">
+      <UniqueIdentifier>{9D602CE6-0916-A5DB-920A-9FB2FEBE9BDF}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\Editor\GuardianEditor.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Button\GuardianButton.h">
+      <Filter>Widget\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Button\GuardianImageButton.h">
+      <Filter>Widget\Button</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\ColumnLayout\GuardianColumnLayout.h">
+      <Filter>Widget\ColumnLayout</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Dockspace\GuardianDockspace.h">
+      <Filter>Widget\Dockspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\GuardianWidget.h">
+      <Filter>Widget</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Image\GuardianImage.h">
+      <Filter>Widget\Image</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\MenuBar\GuardianMenuBar.h">
+      <Filter>Widget\MenuBar</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\MenuBar\Menu\GuardianMenu.h">
+      <Filter>Widget\MenuBar\Menu</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\MenuBar\MenuItem\GuardianMenuItem.h">
+      <Filter>Widget\MenuBar\MenuItem</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Panel\GuardianPanel.h">
+      <Filter>Widget\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Text\GuardianText.h">
+      <Filter>Widget\Text</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\Editor\GuardianEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Button\GuardianButton.cpp">
+      <Filter>Widget\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Button\GuardianImageButton.cpp">
+      <Filter>Widget\Button</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\ColumnLayout\GuardianColumnLayout.cpp">
+      <Filter>Widget\ColumnLayout</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Dockspace\GuardianDockspace.cpp">
+      <Filter>Widget\Dockspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\GuardianWidget.cpp">
+      <Filter>Widget</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Image\GuardianImage.cpp">
+      <Filter>Widget\Image</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\MenuBar\GuardianMenuBar.cpp">
+      <Filter>Widget\MenuBar</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\MenuBar\Menu\GuardianMenu.cpp">
+      <Filter>Widget\MenuBar\Menu</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\MenuBar\MenuItem\GuardianMenuItem.cpp">
+      <Filter>Widget\MenuBar\MenuItem</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Panel\GuardianPanel.cpp">
+      <Filter>Widget\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Text\GuardianText.cpp">
+      <Filter>Widget\Text</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

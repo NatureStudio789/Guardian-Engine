@@ -17,7 +17,6 @@ namespace GE
 
 	private:
 		std::shared_ptr<GAudioContext> MainAudioContext;
-		std::shared_ptr<GSourceVoice> TestVoice;
 	};
 }
 

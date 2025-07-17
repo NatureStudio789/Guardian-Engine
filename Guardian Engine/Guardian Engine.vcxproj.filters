@@ -16,6 +16,12 @@
     <Filter Include="Aplication\Window">
       <UniqueIdentifier>{70806196-DC96-5F2C-250E-EB4D916330B4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{9718D90C-032D-01BE-CCAE-A41D3882FDEE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio\SourceVoice">
+      <UniqueIdentifier>{4D667FF7-B97C-7D8D-02F4-08AF6E494E15}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
     </Filter>
@@ -82,6 +88,9 @@
     <Filter Include="Graphics\Renderable\Mesh">
       <UniqueIdentifier>{95B8F9DE-81DD-485F-AA28-2EEF96AC477D}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Renderer">
+      <UniqueIdentifier>{7C6F0F98-E885-0D2E-31FD-984F9D52DEB5}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\RootSignature">
       <UniqueIdentifier>{BB3880CF-A732-A921-909F-3F327C380F8E}</UniqueIdentifier>
     </Filter>
@@ -138,6 +147,18 @@
     <ClInclude Include="Sources\Aplication\Window\GWindow.h">
       <Filter>Aplication\Window</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Audio\GAudioContext.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Audio\GAudioEngine.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h">
+      <Filter>Audio\SourceVoice</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\GEngine.h" />
     <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h">
       <Filter>Graphics\Applicable\Buffer</Filter>
@@ -190,6 +211,9 @@
     <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h">
       <Filter>Graphics\Framebuffer</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.h">
+      <Filter>Graphics\Framebuffer</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h">
       <Filter>Graphics\Framebuffer\RenderTarget</Filter>
     </ClInclude>
@@ -220,6 +244,9 @@
     <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h">
       <Filter>Graphics\Renderable\Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\GRenderer.h">
+      <Filter>Graphics\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h">
       <Filter>Graphics\RootSignature</Filter>
     </ClInclude>
@@ -244,10 +271,6 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Audio\GAudioEngine.h" />
-    <ClInclude Include="Sources\Audio\GAudioContext.h" />
-    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h" />
-    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -264,6 +287,18 @@
     </ClCompile>
     <ClCompile Include="Sources\Aplication\Window\GWindow.cpp">
       <Filter>Aplication\Window</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Audio\GAudioContext.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Audio\GAudioEngine.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp">
+      <Filter>Audio\SourceVoice</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GEngine.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp">
@@ -311,6 +346,9 @@
     <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp">
       <Filter>Graphics\Framebuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.cpp">
+      <Filter>Graphics\Framebuffer</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp">
       <Filter>Graphics\Framebuffer\RenderTarget</Filter>
     </ClCompile>
@@ -335,6 +373,9 @@
     <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp">
       <Filter>Graphics\Renderable\Mesh</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\GRenderer.cpp">
+      <Filter>Graphics\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp">
       <Filter>Graphics\RootSignature</Filter>
     </ClCompile>
@@ -347,9 +388,5 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
-    <ClCompile Include="Sources\Audio\GAudioContext.cpp" />
-    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
-    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp" />
   </ItemGroup>
 </Project>

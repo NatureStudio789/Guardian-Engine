@@ -170,14 +170,14 @@ namespace GE
 	{
 		GTransformCBData()
 		{
-			this->TransformMatrix = XMMatrixIdentity();
+			this->Offset = 0.5f;
 		}
 		GTransformCBData(XMMATRIX transformMatrix)
 		{
-			this->TransformMatrix = transformMatrix;
+			this->Offset = 0.5f;
 		}
 
-		XMMATRIX TransformMatrix;
+		float Offset;
 	};
 	class GUARDIAN_API GTransformCBuffer : public GConstantBuffer<GTransformCBData>
 	{

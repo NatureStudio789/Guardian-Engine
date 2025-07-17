@@ -19,7 +19,7 @@ namespace GE
 
 		static std::shared_ptr<GAudioContext> CreateNewContext()
 		{
-			auto& context = std::make_shared<GAudioContext>();
+			auto context = std::make_shared<GAudioContext>();
 			context->InitializeAudioContext();
 			return context;
 		}

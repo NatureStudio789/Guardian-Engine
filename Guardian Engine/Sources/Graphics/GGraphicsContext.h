@@ -19,8 +19,8 @@ namespace GE
 			int bufferWidth, int bufferHeight, bool fullscreen);
 
 		void BeginRendering();
-		void ApplyMainFramebuffer();
-		void EndUpRendering(UINT syncInternal);
+		void EndUpRendering();
+		void PresentRenderingResult(UINT syncInternal);
 
 		void BeginInitializing();
 		void EndUpInitializing();
@@ -29,6 +29,7 @@ namespace GE
 		void ExecuteCommandList();
 
 		const GUUID& GetContextId() const noexcept;
+		HWND GetContextWindowHandle() noexcept;
 		std::shared_ptr<GGraphicsFactory> GetGraphicsFactory();
 		std::shared_ptr<GDevice> GetGraphicsDevice();
 		std::shared_ptr<GFence> GetGraphicsFence();
@@ -47,7 +48,6 @@ namespace GE
 	private:
 		GUUID ContextId = GUUID();
 		HWND ContextWindowHandle;
-		std::shared_ptr<GEventProcesser> ContextEventProcesser;
 
 		std::shared_ptr<GGraphicsFactory> GraphicsFactory;
 		std::shared_ptr<GDevice> GraphicsDevice;
@@ -57,8 +57,6 @@ namespace GE
 		std::shared_ptr<GCommandList> GraphicsCommandList;
 
 		std::shared_ptr<GSwapChain> GraphicsSwapChain;
-
-		std::shared_ptr<GFramebuffer> GraphicsMainFramebuffer;
 	};
 }
 

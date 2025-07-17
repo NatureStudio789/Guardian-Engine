@@ -6,7 +6,6 @@ namespace GE
 	GGraphicsContext::GGraphicsContext()
 	{
 		this->ContextWindowHandle = null;
-		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
 
 		this->GraphicsFactory = null;
 		this->GraphicsDevice = null;
@@ -14,7 +13,6 @@ namespace GE
 		this->GraphicsCommandQueue = null;
 		this->GraphicsCommandList = null;
 		this->GraphicsSwapChain = null;
-		this->GraphicsMainFramebuffer = null;
 	}
 
 	GGraphicsContext::GGraphicsContext(HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
@@ -26,7 +24,6 @@ namespace GE
 	{
 		this->ContextId = other.ContextId;
 		this->ContextWindowHandle = other.ContextWindowHandle;
-		this->ContextEventProcesser = other.ContextEventProcesser;
 
 		this->GraphicsFactory = other.GraphicsFactory;
 		this->GraphicsDevice = other.GraphicsDevice;
@@ -36,16 +33,12 @@ namespace GE
 		this->GraphicsSwapChain = other.GraphicsSwapChain;
 
 		this->GraphicsFence = other.GraphicsFence;
-
-		this->GraphicsMainFramebuffer = other.GraphicsMainFramebuffer;
 	}
 
 	GGraphicsContext::~GGraphicsContext()
 	{
 		this->ContextId = 0;
 		this->ContextWindowHandle = null;
-		this->ContextEventProcesser.reset();
-		this->ContextEventProcesser = null;
 
 		this->GraphicsFactory.reset();
 		this->GraphicsFactory = null;
@@ -64,9 +57,6 @@ namespace GE
 		
 		this->GraphicsSwapChain.reset();
 		this->GraphicsSwapChain = null;
-
-		this->GraphicsMainFramebuffer.reset();
-		this->GraphicsMainFramebuffer = null;
 	}
 
 	void GGraphicsContext::InitializeGraphicsContext(
@@ -74,30 +64,6 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 		this->ContextWindowHandle = windowHandle;
-
-		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
-		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([this](const GWindowResizeEvent& event)
-		{
-			GUARDIAN_SETUP_AUTO_THROW();
-		
-			if (event.WindowHandle == this->ContextWindowHandle)
-			{
-				this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
-				
-				GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Reset(
-					this->GraphicsCommandList->GetCommandListAllocator().Get(), null));
-				
-				this->GraphicsSwapChain->ResizeBuffer(event.ResizeWidth, event.ResizeHeight);
-				
-				this->GraphicsMainFramebuffer->ResizeFramebuffer(std::make_shared<GGraphicsContext>(*this), event.ResizeWidth, event.ResizeHeight);
-				
-				GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
-				ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
-				this->GraphicsCommandQueue->ExecuteCommandLists(_countof(CommandLists), CommandLists);
-				
-				this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
-			}
-		});
 
 #ifdef GE_DEBUG
 		WRL::ComPtr<ID3D12Debug> DebugController;
@@ -113,15 +79,10 @@ namespace GE
 
 		this->GraphicsCommandQueue = GCommandQueue::CreateNewCommandQueue(this->GraphicsDevice);
 		this->GraphicsCommandList = GCommandList::CreateNewCommandList(this->GraphicsDevice);
+			
 
 		this->GraphicsSwapChain = GSwapChain::CreateNewSwapChain(this->GraphicsFactory,
 			this->GraphicsCommandQueue, 2, windowHandle, bufferWidth, bufferHeight, fullscreen);
-
-		this->BeginInitializing();
-
-		this->GraphicsMainFramebuffer = GFramebuffer::CreateNewFramebuffer(std::make_shared<GGraphicsContext>(*this));
-		
-		this->EndUpInitializing();
 	}
 
 	void GGraphicsContext::BeginRendering()
@@ -138,14 +99,7 @@ namespace GE
 				D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 	}
 
-	void GGraphicsContext::ApplyMainFramebuffer()
-	{
-		GUARDIAN_CHECK_POINTER(this->GraphicsMainFramebuffer);
-		
-		this->GraphicsMainFramebuffer->ApplyFramebuffer(std::make_shared<GGraphicsContext>(*this));
-	}
-
-	void GGraphicsContext::EndUpRendering(UINT syncInternal)
+	void GGraphicsContext::EndUpRendering()
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
@@ -157,7 +111,10 @@ namespace GE
 
 		ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
 		this->GraphicsCommandQueue->ExecuteCommandLists(_countof(CommandLists), CommandLists);
+	}
 
+	void GGraphicsContext::PresentRenderingResult(UINT syncInternal)
+	{
 		this->GraphicsSwapChain->Present(syncInternal);
 
 		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
@@ -194,6 +151,11 @@ namespace GE
 	const GUUID& GGraphicsContext::GetContextId() const noexcept
 	{
 		return this->ContextId;
+	}
+
+	HWND GGraphicsContext::GetContextWindowHandle() noexcept
+	{
+		return this->ContextWindowHandle;
 	}
 
 	std::shared_ptr<GGraphicsFactory> GGraphicsContext::GetGraphicsFactory()

@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -99,7 +99,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -139,14 +139,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\EditorContext\GEditorContext.h" />
     <ClInclude Include="Sources\GEditorEngine.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\EditorContext\GEditorContext.cpp" />
     <ClCompile Include="Sources\GEditorEngine.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\Guardian Engine\Guardian Engine.vcxproj">
       <Project>{C621EA85-32AD-574A-3BBE-DA3EA7C8B34A}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Guardian EUI\Guardian EUI.vcxproj">
+      <Project>{738D630D-5FF0-F2B1-0876-2B68F4B7BE34}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

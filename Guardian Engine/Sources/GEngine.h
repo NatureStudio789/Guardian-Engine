@@ -18,6 +18,8 @@ namespace GE
 
 	private:
 		std::shared_ptr<GProgram> EngineProgram;
+
+		friend class GWindow;
 	};
 }
 

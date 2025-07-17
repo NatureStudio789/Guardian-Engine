@@ -34,10 +34,15 @@ project "Guardian Engine"
 	includedirs
 	{
 		dependenciesdir .. "Includes/",
+		"Third Party/ImGui/Sources/",
+		"Guardian EUI/Sources/",
 	}
 
 	links
 	{
+		"ImGui",
+		"Guardian EUI",
+	
 		"Uxtheme",
 
 		"dxgi",
@@ -106,12 +111,17 @@ project "Guardian Editor"
 	includedirs
 	{
 		dependenciesdir .. "Includes/",
-		"Guardian Engine/Sources"
+		"Guardian Engine/Sources",
+		"Third Party/ImGui/Sources/",
+		"Guardian EUI/Sources/",
 	}
 
 	links
 	{
-		"Guardian Engine"
+		"ImGui",
+
+		"Guardian Engine",
+		"Guardian EUI"
 	}
 
 	filter "system:Windows"
@@ -151,4 +161,98 @@ project "Guardian Editor"
 		{
 			"GE_DISTRIBUTION"
 		}
+		optimize "On"
+
+project "Guardian EUI"
+    location "Guardian EUI"
+    kind "StaticLib"
+    language "C++"
+
+    targetdir ("Build/" .. outputdir)
+    objdir ("%{prj.name}/Intermediate/" .. outputdir)
+
+    files
+    {
+        "%{prj.name}/Sources/**.h",
+        "%{prj.name}/Sources/**.cpp",
+    }
+
+    includedirs
+    {
+        "Guardian Engine/Sources/",
+		"Third Party/ImGui/Sources/",
+        dependenciesdir .. "Includes/",
+    }
+
+    links
+    {
+        "ImGui",
+    }
+
+    filter "system:windows"
+        cppdialect "C++20"
+        staticruntime "Off"
+        systemversion "latest"
+
+        defines
+        {
+            "GE_PLATFORM_WINDOWS",
+        }
+
+    filter "configurations:Debug"
+        runtime "Debug"
+        defines
+        {
+            "GE_DEBUG"
+        }
+
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+
+    filter "configurations:Release"
+        runtime "Release"
+        defines
+        {
+            "GE_RELEASE"
+        }
+
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+
+project "ImGui"
+    location "Third Party/ImGui"
+    kind "StaticLib"
+    language "C++"
+
+    targetdir ("Build/" .. outputdir)
+    objdir ("Third Party/%{prj.name}/Intermediate/" .. outputdir)
+
+    files
+    {
+        "Third Party/%{prj.name}/Sources/**.h",
+        "Third Party/%{prj.name}/Sources/**.cpp",
+    }
+
+	links
+	{
+		"dxgi",
+		"d3d12",
+		"d3dcompiler",
+		"dxguid",
+	}
+
+    filter "system:windows"
+        cppdialect "C++20"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        runtime "Debug"
+
+    filter "configurations:Release"
+        runtime "Release"
+
+	filter "configurations:Distribution"
 		optimize "On"

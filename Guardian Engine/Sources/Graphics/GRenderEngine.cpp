@@ -37,13 +37,15 @@ namespace GE
 
 		std::vector<GMeshInstance::Vertex> v =
 		{
-			{{0.0f, 0.5f, 0.0f}},
+			{{0.5f, 0.5f, 0.0f}},
 			{{0.5f, -0.5f, 0.0f}},
-			{{-0.5f, -0.5f, 0.0f}},
+			{{-0.5f,-0.5f, 0.0f}},
+			{{-0.5f,0.5f, 0.0f}},
 		};
 		std::vector<UINT> i =
 		{
-			0, 1, 2
+			0, 1, 2,
+			2, 3, 0
 		};
 		this->TestMesh = GMeshInstance::CreateNewMeshInstance({ "Test", v, i });
 
@@ -52,13 +54,7 @@ namespace GE
 
 	void GRenderEngine::UpdateModule()
 	{
-		this->MainGraphicsContext->BeginRendering();
-
-		this->MainGraphicsContext->ApplyMainFramebuffer();
-
-		this->TestMesh->Render();
-
-		this->MainGraphicsContext->EndUpRendering(true);
+		
 	}
 
 	void GRenderEngine::ReleaseModule()

@@ -23,9 +23,12 @@ namespace GE
 		this->EngineProgram->PreInitializeProgram();
 
 		GApplication::Instance->InitializeApplication(this->EngineProgram->GetProgramAttribute().ProgramWindowAttribute);
+		GFramebufferRegistry::InitializeFramebufferRegistry();
 
 		GModuleSystem::RegisterMultiModules(this->EngineProgram->GetProgramRequiredModuleList());
 		GModuleSystem::LoadAllModules();
+
+		this->EngineProgram->InitializeProgram();
 	}
 
 	void GEngine::LaunchEngine()
@@ -36,12 +39,21 @@ namespace GE
 		{
 			GApplication::Instance->UpdateApplication();
 
-			GModuleSystem::UpdateAllModules();
+			{
+				GModuleSystem::UpdateAllModules();
+				this->EngineProgram->UpdateProgram();
+
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
+			}
 		}
 	}
 
 	void GEngine::ReleaseEngine()
 	{
 		GModuleSystem::ReleaseAllModules();
+
+		this->EngineProgram->ReleaseProgram();
+		this->EngineProgram.reset();
+		this->EngineProgram = null;
 	}
 }

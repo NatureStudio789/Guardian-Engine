@@ -79,7 +79,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -101,7 +101,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -125,7 +125,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -145,10 +145,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h" />
-    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h" />
-    <ClInclude Include="Sources\Audio\GAudioContext.h" />
-    <ClInclude Include="Sources\Audio\GAudioEngine.h" />
     <ClInclude Include="Sources\Aplication\Converter\GConverter.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
@@ -159,6 +155,10 @@
     <ClInclude Include="Sources\Aplication\Exception\GException.h" />
     <ClInclude Include="Sources\Aplication\GApplication.h" />
     <ClInclude Include="Sources\Aplication\Window\GWindow.h" />
+    <ClInclude Include="Sources\Audio\GAudioContext.h" />
+    <ClInclude Include="Sources\Audio\GAudioContextRegistry.h" />
+    <ClInclude Include="Sources\Audio\GAudioEngine.h" />
+    <ClInclude Include="Sources\Audio\SourceVoice\GSourceVoice.h" />
     <ClInclude Include="Sources\GEngine.h" />
     <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h" />
     <ClInclude Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.h" />
@@ -177,6 +177,7 @@
     <ClInclude Include="Sources\Graphics\Fence\GFence.h" />
     <ClInclude Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.h" />
     <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h" />
+    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.h" />
     <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h" />
     <ClInclude Include="Sources\Graphics\Framebuffer\Viewport\GViewport.h" />
     <ClInclude Include="Sources\Graphics\GGraphicsContext.h" />
@@ -187,6 +188,7 @@
     <ClInclude Include="Sources\Graphics\Renderable\GRenderable.h" />
     <ClInclude Include="Sources\Graphics\Renderable\GRenderableBase.h" />
     <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\GRenderer.h" />
     <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h" />
     <ClInclude Include="Sources\Graphics\SwapChain\GSwapChain.h" />
     <ClInclude Include="Sources\Profile\Core\GCore.h" />
@@ -197,15 +199,15 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp" />
-    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
-    <ClCompile Include="Sources\Audio\GAudioContext.cpp" />
-    <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\Aplication\GApplication.cpp" />
     <ClCompile Include="Sources\Aplication\Window\GWindow.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioContext.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioContextRegistry.cpp" />
+    <ClCompile Include="Sources\Audio\GAudioEngine.cpp" />
+    <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
     <ClCompile Include="Sources\GEngine.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp" />
@@ -222,6 +224,7 @@
     <ClCompile Include="Sources\Graphics\Fence\GFence.cpp" />
     <ClCompile Include="Sources\Graphics\Framebuffer\DepthStencil\GDepthStencil.cpp" />
     <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.cpp" />
     <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp" />
     <ClCompile Include="Sources\Graphics\Framebuffer\Viewport\GViewport.cpp" />
     <ClCompile Include="Sources\Graphics\GGraphicsContext.cpp" />
@@ -230,10 +233,19 @@
     <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp" />
     <ClCompile Include="Sources\Graphics\Renderable\GRenderable.cpp" />
     <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\GRenderer.cpp" />
     <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp" />
     <ClCompile Include="Sources\Graphics\SwapChain\GSwapChain.cpp" />
     <ClCompile Include="Sources\Profile\Module\GModuleSystem.cpp" />
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">
+      <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Guardian EUI\Guardian EUI.vcxproj">
+      <Project>{738D630D-5FF0-F2B1-0876-2B68F4B7BE34}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

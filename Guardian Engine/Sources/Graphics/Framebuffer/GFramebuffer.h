@@ -17,6 +17,7 @@ namespace GE
 		void ApplyFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void ResizeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight);
 
+		const GUUID& GetFramebufferId() const noexcept;
 		std::shared_ptr<GRenderTarget> GetFramebufferRenderTarget();
 		std::shared_ptr<GDepthStencil> GetFramebufferDepthStencil();
 		std::shared_ptr<GViewport> GetFramebufferViewport();
@@ -27,6 +28,8 @@ namespace GE
 		}
 
 	private:
+		GUUID FramebufferId = GUUID();
+
 		int FramebufferWidth;
 		int FramebufferHeight;
 

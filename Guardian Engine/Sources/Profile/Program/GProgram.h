@@ -32,6 +32,9 @@ namespace GE
 		virtual void UpdateProgram() {}
 		virtual void ReleaseProgram() {}
 
+		virtual LRESULT CALLBACK ProcessWindowMessage(
+			GWindow::Handle handle, UINT message, WPARAM wParam, LPARAM lParam) { return 0; }
+
 		const Attribute& GetProgramAttribute() const noexcept
 		{
 			return this->ProgramAttribute;

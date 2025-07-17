@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="EditorContext">
+      <UniqueIdentifier>{51AA3160-BD6A-AD96-86A5-F613F224F272}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Sources\EditorContext\GEditorContext.h">
+      <Filter>EditorContext</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\GEditorEngine.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Sources\EditorContext\GEditorContext.cpp">
+      <Filter>EditorContext</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\GEditorEngine.cpp" />
+  </ItemGroup>
+</Project>

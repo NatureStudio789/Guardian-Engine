@@ -1,10 +1,12 @@
 #include "GEditorEngine.h"
 
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace GE
 {
     GEditorEngine::GEditorEngine()
     {
-        
+        this->EditorContext = null;
     }
 
     GEditorEngine::~GEditorEngine()
@@ -25,16 +27,31 @@ namespace GE
 
     void GEditorEngine::InitializeProgram()
     {
-
+        this->EditorContext = GEditorContext::CreateNewEditorContext();
     }
 
     void GEditorEngine::UpdateProgram()
     {
+        this->EditorContext->BeginRendering();
 
+        ImGui::ShowDemoWindow();
+
+        ImGui::Begin("Viewport");
+        ImGui::End();
+
+        ImGui::ShowDebugLogWindow();
+
+        this->EditorContext->EndUpRendering();
     }
 
     void GEditorEngine::ReleaseProgram()
     {
+        this->EditorContext.reset();
+        this->EditorContext = null;
+    }
 
+    LRESULT GEditorEngine::ProcessWindowMessage(GWindow::Handle handle, UINT message, WPARAM wParam, LPARAM lParam)
+    {
+        return ImGui_ImplWin32_WndProcHandler(handle, message, wParam, lParam);
     }
 }

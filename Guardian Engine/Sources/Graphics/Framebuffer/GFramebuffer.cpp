@@ -4,6 +4,7 @@ namespace GE
 {
 	GFramebuffer::GFramebuffer()
 	{
+		this->FramebufferId = GUUID();
 		this->FramebufferWidth = this->FramebufferHeight = 0;
 
 		this->FramebufferRenderTarget = null;
@@ -18,6 +19,8 @@ namespace GE
 
 	GFramebuffer::GFramebuffer(const GFramebuffer& other)
 	{
+		this->FramebufferId = other.FramebufferId;
+
 		this->FramebufferWidth = other.FramebufferWidth;
 		this->FramebufferHeight = other.FramebufferHeight;
 
@@ -28,6 +31,7 @@ namespace GE
 
 	GFramebuffer::~GFramebuffer()
 	{
+		this->FramebufferId = 0;
 		this->FramebufferWidth = this->FramebufferHeight = 0;
 
 		this->FramebufferRenderTarget.reset();
@@ -85,6 +89,11 @@ namespace GE
 		ViewportAttribute.MinDepth = 0.0f;
 		ViewportAttribute.MaxDepth = 1.0f;
 		this->FramebufferViewport->SetViewportAttribute(ViewportAttribute);
+	}
+
+	const GUUID& GFramebuffer::GetFramebufferId() const noexcept
+	{
+		return this->FramebufferId;
 	}
 
 	std::shared_ptr<GRenderTarget> GFramebuffer::GetFramebufferRenderTarget()
