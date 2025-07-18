@@ -271,6 +271,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -388,5 +389,6 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
   </ItemGroup>
 </Project>

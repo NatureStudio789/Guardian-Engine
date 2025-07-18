@@ -1,4 +1,5 @@
-﻿  GConverter.cpp
+﻿  GMatrix.cpp
+  GConverter.cpp
   GEventDispatcher.cpp
   GException.cpp
   GApplication.cpp

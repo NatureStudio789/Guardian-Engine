@@ -8,6 +8,8 @@ namespace GE
 	{
 	public:
 		static std::wstring StringToWideString(std::string text);
+
+		static float DegreeToAngle(float degree);
 	};
 }
 

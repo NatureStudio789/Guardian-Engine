@@ -83,10 +83,10 @@ namespace GE
 		this->Scale += { sx, sy, sz };
 	}
 
-	const XMMATRIX GTransform::GetTransformMatrix() const noexcept
+	const GMatrix GTransform::GetTransformMatrix() const noexcept
 	{
-		return XMMatrixScaling(this->Scale.x, this->Scale.y, this->Scale.z) *
-			this->GetRotationMatrix() * XMMatrixTranslation(this->Position.x, this->Position.y, this->Position.z);
+		return GMatrix::ScalingMatrix(this->Scale) *
+			this->GetRotationMatrix() * GMatrix::TranslationMatrix(this->Position);
 	}
 
 	const GVector3 GTransform::GetForwardVector() const noexcept
@@ -143,10 +143,10 @@ namespace GE
 		return { Down.x, Down.y, Down.z };
 	}
 	
-	const XMMATRIX GTransform::GetRotationMatrix() const noexcept
+	const GMatrix GTransform::GetRotationMatrix() const noexcept
 	{
-		return XMMatrixRotationX((this->Rotation.x / 360.0f) * XM_2PI) *
-			XMMatrixRotationY((this->Rotation.y / 360.0f) * XM_2PI) *
-			XMMatrixRotationZ((this->Rotation.x / 360.0f) * XM_2PI);
+		return GMatrix::RotationXMatrix(this->Rotation.x) *
+			GMatrix::RotationYMatrix(this->Rotation.y) *
+			GMatrix::RotationZMatrix(this->Rotation.z);
 	}
 }

@@ -1,6 +1,6 @@
 #ifndef _GE_GTRANSFORM_H_
 #define _GE_GTRANSFORM_H_
-#include "../Vector/GVector.h"
+#include "../Matrix/GMatrix.h"
 
 namespace GE
 {
@@ -27,7 +27,7 @@ namespace GE
 		void Scaling(const GVector3& scale);
 		void Scaling(float sx, float sy, float sz);
 
-		const XMMATRIX GetTransformMatrix() const noexcept;
+		const GMatrix GetTransformMatrix() const noexcept;
 		const GVector3 GetForwardVector() const noexcept;
 		const GVector3 GetBackwardVector() const noexcept;
 		const GVector3 GetRightVector() const noexcept;
@@ -40,7 +40,7 @@ namespace GE
 		GVector3 Scale;
 
 	private:
-		const XMMATRIX GetRotationMatrix() const noexcept;
+		const GMatrix GetRotationMatrix() const noexcept;
 	};
 }
 
