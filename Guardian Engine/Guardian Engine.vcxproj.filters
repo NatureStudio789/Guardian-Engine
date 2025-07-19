@@ -272,6 +272,8 @@
       <Filter>Profile\UUID</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
@@ -390,5 +392,7 @@
       <Filter>Profile\UUID</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp" />
   </ItemGroup>
 </Project>
