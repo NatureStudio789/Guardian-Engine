@@ -32,24 +32,6 @@ namespace GE
 
 		GGraphicsContextRegistry::RegisterGraphicsContext("Main", this->MainGraphicsContext);
 		GGraphicsContextRegistry::SetCurrentGraphicsContext("Main");
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
-
-		std::vector<GMeshInstance::Vertex> v =
-		{
-			{{0.5f, 0.5f, 0.0f}},
-			{{0.5f, -0.5f, 0.0f}},
-			{{-0.5f,-0.5f, 0.0f}},
-			{{-0.5f,0.5f, 0.0f}},
-		};
-		std::vector<UINT> i =
-		{
-			0, 1, 2,
-			2, 3, 0
-		};
-		this->TestMesh = GMeshInstance::CreateNewMeshInstance({ "Test", v, i });
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GRenderEngine::UpdateModule()

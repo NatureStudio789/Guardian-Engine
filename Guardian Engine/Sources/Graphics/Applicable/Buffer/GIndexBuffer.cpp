@@ -30,4 +30,9 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			IASetIndexBuffer(&IndexBufferView);
 	}
+
+	const UINT& GIndexBuffer::GetIndicesCount() const noexcept
+	{
+		return this->GetDataSize();
+	}
 }

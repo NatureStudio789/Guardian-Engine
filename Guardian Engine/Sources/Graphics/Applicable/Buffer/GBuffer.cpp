@@ -91,12 +91,12 @@ namespace GE
 		return this->BufferData;
 	}
 
-	const UINT& GBuffer::GetBufferSize() const noexcept
+	const UINT& GBuffer::GetDataSize() const noexcept
 	{
 		return this->DataSize;
 	}
 
-	const UINT& GBuffer::GetBufferStride() const noexcept
+	const UINT& GBuffer::GetDataStride() const noexcept
 	{
 		return this->DataStride;
 	}

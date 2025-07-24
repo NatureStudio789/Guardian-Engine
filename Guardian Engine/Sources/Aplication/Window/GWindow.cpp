@@ -50,7 +50,7 @@ namespace GE
 		WindowClass.hCursor = LoadCursor(null, IDC_ARROW);
 		WindowClass.hInstance = GetModuleHandle(null);
 		WindowClass.lpfnWndProc = InitializeWindowMessageProcess;
-		std::wstring WindowClassName = GConverter::StringToWideString(this->WindowAttribute.WindowTitle) + L" Class";
+		std::wstring WindowClassName = GUtil::StringToWideString(this->WindowAttribute.WindowTitle) + L" Class";
 		WindowClass.lpszClassName = WindowClassName.c_str();
 		WindowClass.lpszMenuName = null;
 		WindowClass.style = CS_CLASSDC;
@@ -118,7 +118,7 @@ namespace GE
 
 		this->WindowHandle = CreateWindowEx(0,
 											 WindowClassName.c_str(),
-											 GConverter::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
+											 GUtil::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
 											 Style,
 											 WindowArea.left,
 											 WindowArea.top,
@@ -169,7 +169,7 @@ namespace GE
 	void GWindow::DestroyWindow()
 	{
 		::DestroyWindow(this->WindowHandle);
-		UnregisterClass(GConverter::StringToWideString(this->WindowAttribute.WindowTitle + " Class").c_str(), GetModuleHandle(null));
+		UnregisterClass(GUtil::StringToWideString(this->WindowAttribute.WindowTitle + " Class").c_str(), GetModuleHandle(null));
 		GUARDIAN_CLEAR_MEMORY(this->WindowMessage);
 	}
 
@@ -692,8 +692,8 @@ namespace GE
 		RECT TextRect = RECT{ 0, 0, size.cx, 30 };
 		SetBkMode(hdc, TRANSPARENT);
 		SetTextColor(hdc, isActive ? RGB(255, 255, 255) : RGB(100, 100, 100));
-		DrawText(hdc, GConverter::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
-			(int)GConverter::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+		DrawText(hdc, GUtil::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
+			(int)GUtil::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 		POINT pt;
 		GetCursorPos(&pt);
@@ -776,8 +776,8 @@ namespace GE
 		RECT TextRect = RECT{ 0, 0, size.cx, 30 };
 		SetBkMode(hdc, TRANSPARENT);
 		SetTextColor(hdc, isActive ? RGB(0, 0, 0) : RGB(100, 100, 100));
-		DrawText(hdc, GConverter::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
-			(int)GConverter::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+		DrawText(hdc, GUtil::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
+			(int)GUtil::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 		POINT pt;
 		GetCursorPos(&pt);
@@ -860,8 +860,8 @@ namespace GE
 		RECT TextRect = RECT{ 0, 0, size.cx, 30 };
 		SetBkMode(hdc, TRANSPARENT);
 		SetTextColor(hdc, isActive ? RGB(0, 0, 0) : RGB(100, 100, 100));
-		DrawText(hdc, GConverter::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
-			(int)GConverter::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+		DrawText(hdc, GUtil::StringToWideString(this->WindowAttribute.WindowTitle).c_str(),
+			(int)GUtil::StringToWideString(this->WindowAttribute.WindowTitle).size(), &TextRect, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 		POINT pt;
 		GetCursorPos(&pt);

@@ -13,6 +13,8 @@ namespace GE
 
 		void Apply() override;
 
+		const UINT& GetIndicesCount() const noexcept;
+
 		static std::shared_ptr<GIndexBuffer> CreateNewIndexBuffer(
 			UINT* indicesData, UINT dataSize)
 		{

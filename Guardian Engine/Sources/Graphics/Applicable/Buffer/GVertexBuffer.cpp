@@ -32,4 +32,9 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			IASetVertexBuffers(0, 1, &VertexBufferView);
 	}
+
+	const UINT& GVertexBuffer::GetVerticesCount() const noexcept
+	{
+		return this->GetDataSize();
+	}
 }

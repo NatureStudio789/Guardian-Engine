@@ -11,7 +11,8 @@ namespace GE
 		this->GraphicsDevice = null;
 		this->GraphicsFence = null;
 		this->GraphicsCommandQueue = null;
-		this->GraphicsCommandList = null;
+		this->CurrentCommandListName = "";
+		GraphicsCommandListBatch.clear();
 		this->GraphicsSwapChain = null;
 	}
 
@@ -29,7 +30,7 @@ namespace GE
 		this->GraphicsDevice = other.GraphicsDevice;
 		this->GraphicsFence = other.GraphicsFence;
 		this->GraphicsCommandQueue = other.GraphicsCommandQueue;
-		this->GraphicsCommandList = other.GraphicsCommandList;
+		GraphicsCommandListBatch = other.GraphicsCommandListBatch;
 		this->GraphicsSwapChain = other.GraphicsSwapChain;
 
 		this->GraphicsFence = other.GraphicsFence;
@@ -52,8 +53,12 @@ namespace GE
 		this->GraphicsCommandQueue.reset();
 		this->GraphicsCommandQueue = null;
 
-		this->GraphicsCommandList.reset();
-		this->GraphicsCommandList = null;
+		for (auto& commandList : GraphicsCommandListBatch)
+		{
+			commandList.second.reset();
+			commandList.second = null;
+		}
+		GraphicsCommandListBatch.clear();
 		
 		this->GraphicsSwapChain.reset();
 		this->GraphicsSwapChain = null;
@@ -78,23 +83,41 @@ namespace GE
 		this->GraphicsFence = GFence::CreateNewFence(this->GraphicsDevice);
 
 		this->GraphicsCommandQueue = GCommandQueue::CreateNewCommandQueue(this->GraphicsDevice);
-		this->GraphicsCommandList = GCommandList::CreateNewCommandList(this->GraphicsDevice);
 			
-
 		this->GraphicsSwapChain = GSwapChain::CreateNewSwapChain(this->GraphicsFactory,
 			this->GraphicsCommandQueue, 2, windowHandle, bufferWidth, bufferHeight, fullscreen);
+	}
+
+	void GGraphicsContext::RegisterGraphicsCommandList(const std::string& name)
+	{
+		if (this->GraphicsCommandListBatch.count(name))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The command list named '{}' already exists in graphics context.");
+		}
+
+		this->GraphicsCommandListBatch[name] = GCommandList::CreateNewCommandList(this->GraphicsDevice);
+	}
+
+	void GGraphicsContext::SetCurrentCommandList(const std::string& name)
+	{
+		if (!this->GraphicsCommandListBatch.count(name))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The command list named '{}' DOESN'T already exist in graphics context.");
+		}
+
+		this->CurrentCommandListName = name;
 	}
 
 	void GGraphicsContext::BeginRendering()
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListAllocator()->Reset());
+		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListAllocator()->Reset());
 
-		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Reset(
-			this->GraphicsCommandList->GetCommandListAllocator().Get(), null));
+		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Reset(
+			this->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
 
-		this->GraphicsCommandList->GetCommandListObject()->ResourceBarrier(1,
+		this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
 				D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
 	}
@@ -103,14 +126,11 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		this->GraphicsCommandList->GetCommandListObject()->ResourceBarrier(1,
+		this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
 				D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
 
-		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
-
-		ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
-		this->GraphicsCommandQueue->ExecuteCommandLists(_countof(CommandLists), CommandLists);
+		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Close());
 	}
 
 	void GGraphicsContext::PresentRenderingResult(UINT syncInternal)
@@ -135,17 +155,28 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 		
-		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Reset(
-			this->GraphicsCommandList->GetCommandListAllocator().Get(), null));
+		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Reset(
+			this->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
 	}
 
 	void GGraphicsContext::ExecuteCommandList()
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		GUARDIAN_AUTO_THROW(this->GraphicsCommandList->GetCommandListObject()->Close());
-		ID3D12CommandList* CommandLists[] = { this->GraphicsCommandList->GetCommandListObject().Get() };
+		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Close());
+		ID3D12CommandList* CommandLists[] = { this->GetGraphicsCommandList()->GetCommandListObject().Get() };
 		this->GraphicsCommandQueue->ExecuteCommandLists(GUARDIAN_ARRAYSIZE(CommandLists), CommandLists);
+	}
+
+	void GGraphicsContext::ExecuteCommandListBatch()
+	{
+		std::vector<ID3D12CommandList*> CommandLists;
+
+		for (auto& commandList : this->GraphicsCommandListBatch)
+		{
+			CommandLists.push_back(commandList.second->GetCommandListObject().Get());
+		}
+		this->GraphicsCommandQueue->ExecuteCommandLists((UINT)CommandLists.size(), CommandLists.data());
 	}
 
 	const GUUID& GGraphicsContext::GetContextId() const noexcept
@@ -180,7 +211,12 @@ namespace GE
 
 	std::shared_ptr<GCommandList> GGraphicsContext::GetGraphicsCommandList()
 	{
-		return this->GraphicsCommandList;
+		return this->GraphicsCommandListBatch[this->CurrentCommandListName];
+	}
+
+	std::map<std::string, std::shared_ptr<GCommandList>> GGraphicsContext::GetGraphicsCommandListBatch()
+	{
+		return this->GraphicsCommandListBatch;
 	}
 
 	std::shared_ptr<GSwapChain> GGraphicsContext::GetGraphicsSwapChain()

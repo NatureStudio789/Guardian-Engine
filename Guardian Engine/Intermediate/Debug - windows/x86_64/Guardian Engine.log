@@ -1,7 +1,16 @@
-﻿  GPass.cpp
+﻿  GSink.cpp
+  GSource.cpp
+  GPipelineStateRegistry.cpp
+  GApplyPass.cpp
+  GRenderQueuePass.cpp
+  GTechnique.cpp
+  GStep.cpp
+  GRenderable.cpp
+  GTask.cpp
+  GPass.cpp
   GRenderGraph.cpp
   GMatrix.cpp
-  GConverter.cpp
+  GUtil.cpp
   GEventDispatcher.cpp
   GException.cpp
   GApplication.cpp
@@ -26,15 +35,12 @@
   GFence.cpp
   GDepthStencil.cpp
   GFramebuffer.cpp
-  GFramebufferRegistry.cpp
   GRenderTarget.cpp
   GViewport.cpp
   GGraphicsContext.cpp
   GGraphicsContextRegistry.cpp
   GRenderEngine.cpp
   GTransform.cpp
-  GRenderable.cpp
-  GMeshInstance.cpp
   GRenderer.cpp
   GRootSignature.cpp
   GSwapChain.cpp

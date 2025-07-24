@@ -90,7 +90,7 @@ namespace GE
 
 			WRL::ComPtr<ID3DBlob> ShaderBlob;
 			WRL::ComPtr<ID3DBlob> ErrorBlob;
-			hr = D3DCompileFromFile(GConverter::StringToWideString(shaderFilePath).c_str(),
+			hr = D3DCompileFromFile(GUtil::StringToWideString(shaderFilePath).c_str(),
 				null, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", ShaderTarget.c_str(), CompileFlags, 0,
 				ShaderBlob.GetAddressOf(), ErrorBlob.GetAddressOf());
 

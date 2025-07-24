@@ -4,6 +4,7 @@ namespace GE
 {
     GPipelineState::GPipelineState()
     {
+        this->PipelineStateName = "";
         this->PipelineRootSignature = std::make_shared<GRootSignature>();
         this->PipelineInputLayout = null;
         this->PipelineShaderList.clear();
@@ -12,8 +13,14 @@ namespace GE
         this->IsInitialized = false;
     }
 
+    GPipelineState::GPipelineState(const std::string& name)
+    {
+        this->PipelineStateName = name;
+    }
+
     GPipelineState::GPipelineState(const GPipelineState& other)
     {
+        this->PipelineStateName = other.PipelineStateName;
         this->PipelineStateObject = other.PipelineStateObject;
         
         this->PipelineRootSignature = other.PipelineRootSignature;
@@ -26,6 +33,7 @@ namespace GE
 
     GPipelineState::~GPipelineState()
     {
+        this->PipelineStateName = "";
         this->PipelineRootSignature.reset();
         this->PipelineRootSignature = null;
 
@@ -138,8 +146,11 @@ namespace GE
 
         GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
             SetPipelineState(this->PipelineStateObject.Get());
+    }
 
-        this->PipelineTopology->Apply();
+    const std::string& GPipelineState::GetPipelineStateName() const noexcept
+    {
+        return this->PipelineStateName;
     }
 
     WRL::ComPtr<ID3D12PipelineState> GPipelineState::GetPipelineStateObject()

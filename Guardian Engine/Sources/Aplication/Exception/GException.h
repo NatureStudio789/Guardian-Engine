@@ -1,6 +1,6 @@
 #ifndef _GE_GEXCEPTION_H_
 #define _GE_GEXCEPTION_H_
-#include "../Converter/GConverter.h"
+#include "../Util/GUtil.h"
 
 namespace GE
 {

@@ -124,23 +124,23 @@ namespace GE
 
 	GMatrix GMatrix::RotationXMatrix(float x)
 	{
-		return XMMatrixRotationX(GConverter::DegreeToAngle(x));
+		return XMMatrixRotationX(GUtil::DegreeToAngle(x));
 	}
 
 	GMatrix GMatrix::RotationYMatrix(float y)
 	{
-		return XMMatrixRotationY(GConverter::DegreeToAngle(y));
+		return XMMatrixRotationY(GUtil::DegreeToAngle(y));
 	}
 
 	GMatrix GMatrix::RotationZMatrix(float z)
 	{
-		return XMMatrixRotationZ(GConverter::DegreeToAngle(z));
+		return XMMatrixRotationZ(GUtil::DegreeToAngle(z));
 	}
 
 	GMatrix GMatrix::RotationPitchYawRollMatrix(const GVector3& rotation)
 	{
 		return XMMatrixRotationRollPitchYaw(
-			GConverter::DegreeToAngle(rotation.x), GConverter::DegreeToAngle(rotation.y), GConverter::DegreeToAngle(rotation.z));
+			GUtil::DegreeToAngle(rotation.x), GUtil::DegreeToAngle(rotation.y), GUtil::DegreeToAngle(rotation.z));
 	}
 
 	GMatrix GMatrix::RotationPitchYawRollMatrix(float x, float y, float z)

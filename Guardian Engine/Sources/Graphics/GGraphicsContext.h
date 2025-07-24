@@ -18,6 +18,9 @@ namespace GE
 		void InitializeGraphicsContext(HWND windowHandle,
 			int bufferWidth, int bufferHeight, bool fullscreen);
 
+		void RegisterGraphicsCommandList(const std::string& name);
+		void SetCurrentCommandList(const std::string& name);
+
 		void BeginRendering();
 		void EndUpRendering();
 		void PresentRenderingResult(UINT syncInternal);
@@ -28,6 +31,8 @@ namespace GE
 		void ResetCommandList();
 		void ExecuteCommandList();
 
+		void ExecuteCommandListBatch();
+
 		const GUUID& GetContextId() const noexcept;
 		HWND GetContextWindowHandle() noexcept;
 		std::shared_ptr<GGraphicsFactory> GetGraphicsFactory();
@@ -36,6 +41,7 @@ namespace GE
 
 		std::shared_ptr<GCommandQueue> GetGraphicsCommandQueue();
 		std::shared_ptr<GCommandList> GetGraphicsCommandList();
+		std::map<std::string, std::shared_ptr<GCommandList>> GetGraphicsCommandListBatch();
 
 		std::shared_ptr<GSwapChain> GetGraphicsSwapChain();
 
@@ -54,7 +60,8 @@ namespace GE
 		std::shared_ptr<GFence> GraphicsFence;
 
 		std::shared_ptr<GCommandQueue> GraphicsCommandQueue;
-		std::shared_ptr<GCommandList> GraphicsCommandList;
+		std::string CurrentCommandListName;
+		std::map<std::string, std::shared_ptr<GCommandList>> GraphicsCommandListBatch;
 
 		std::shared_ptr<GSwapChain> GraphicsSwapChain;
 	};

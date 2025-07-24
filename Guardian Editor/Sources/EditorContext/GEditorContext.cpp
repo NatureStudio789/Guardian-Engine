@@ -45,12 +45,6 @@ namespace GE
 			(int)GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->GetBufferCount(),
 			DXGI_FORMAT_R8G8B8A8_UNORM, this->EditorDescriptorHeap->GetDescriptorHeapObject().Get(),
 			this->EditorDescriptorHeap->GetFirstCPUDescriptorHandle(), this->EditorDescriptorHeap->GetFirstGPUDescriptorHandle());
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
-
-		GFramebufferRegistry::RegisterFramebuffer("Editor");
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GEditorContext::BeginRendering()
@@ -66,7 +60,7 @@ namespace GE
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
 		
-		GFramebufferRegistry::GetFramebuffer("Editor")->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		//GFramebufferRegistry::GetFramebuffer("Editor")->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			SetDescriptorHeaps(1, this->EditorDescriptorHeap->GetDescriptorHeapObject().GetAddressOf());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),

@@ -8,6 +8,7 @@ namespace GE
 	{
 	public:
 		GPipelineState();
+		GPipelineState(const std::string& name);
 		GPipelineState(const GPipelineState& other);
 		~GPipelineState() override;
 
@@ -18,11 +19,13 @@ namespace GE
 
 		void Apply() override;
 
+		const std::string& GetPipelineStateName() const noexcept;
 		WRL::ComPtr<ID3D12PipelineState> GetPipelineStateObject();
 		std::shared_ptr<GRootSignature> GetPipelineRootSignature();
 		const bool& GetInitialized() const noexcept;
 
 	private:
+		std::string PipelineStateName;
 		WRL::ComPtr<ID3D12PipelineState> PipelineStateObject;
 		
 		std::shared_ptr<GRootSignature> PipelineRootSignature;

@@ -23,7 +23,6 @@ namespace GE
 		this->EngineProgram->PreInitializeProgram();
 
 		GApplication::Instance->InitializeApplication(this->EngineProgram->GetProgramAttribute().ProgramWindowAttribute);
-		GFramebufferRegistry::InitializeFramebufferRegistry();
 
 		GModuleSystem::RegisterMultiModules(this->EngineProgram->GetProgramRequiredModuleList());
 		GModuleSystem::LoadAllModules();

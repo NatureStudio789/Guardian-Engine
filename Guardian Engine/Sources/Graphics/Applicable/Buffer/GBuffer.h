@@ -18,8 +18,8 @@ namespace GE
 		WRL::ComPtr<ID3D12Resource> GetGPUBuffer();
 		WRL::ComPtr<ID3D12Resource> GetUploadBuffer();
 		const void* GetBufferData() const noexcept;
-		const UINT& GetBufferSize() const noexcept;
-		const UINT& GetBufferStride() const noexcept;
+		const UINT& GetDataSize() const noexcept;
+		const UINT& GetDataStride() const noexcept;
 
 	protected:
 		WRL::ComPtr<ID3DBlob> CPUBuffer;

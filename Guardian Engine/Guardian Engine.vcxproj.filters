@@ -117,7 +117,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Aplication\Converter\GConverter.h">
+    <ClInclude Include="Sources\Aplication\Util\GUtil.h">
       <Filter>Aplication\Converter</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h">
@@ -211,9 +211,6 @@
     <ClInclude Include="Sources\Graphics\Framebuffer\GFramebuffer.h">
       <Filter>Graphics\Framebuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.h">
-      <Filter>Graphics\Framebuffer</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.h">
       <Filter>Graphics\Framebuffer\RenderTarget</Filter>
     </ClInclude>
@@ -234,15 +231,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Math\Vector\GVector.h">
       <Filter>Graphics\Math\Vector</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Graphics\Renderable\GRenderable.h">
-      <Filter>Graphics\Renderable</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Graphics\Renderable\GRenderableBase.h">
-      <Filter>Graphics\Renderable</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.h">
-      <Filter>Graphics\Renderable\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\GRenderer.h">
       <Filter>Graphics\Renderer</Filter>
@@ -274,9 +262,18 @@
     <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
     <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Pass\GPass.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Task\GTask.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Step\GStep.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Technique\GTechnique.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GApplyPass.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Source\GSource.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Aplication\Converter\GConverter.cpp">
+    <ClCompile Include="Sources\Aplication\Util\GUtil.cpp">
       <Filter>Aplication\Converter</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -349,9 +346,6 @@
     <ClCompile Include="Sources\Graphics\Framebuffer\GFramebuffer.cpp">
       <Filter>Graphics\Framebuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Framebuffer\GFramebufferRegistry.cpp">
-      <Filter>Graphics\Framebuffer</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Graphics\Framebuffer\RenderTarget\GRenderTarget.cpp">
       <Filter>Graphics\Framebuffer\RenderTarget</Filter>
     </ClCompile>
@@ -369,12 +363,6 @@
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp">
       <Filter>Graphics\Math\Transform</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Graphics\Renderable\GRenderable.cpp">
-      <Filter>Graphics\Renderable</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Graphics\Renderable\Mesh\GMeshInstance.cpp">
-      <Filter>Graphics\Renderable\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\GRenderer.cpp">
       <Filter>Graphics\Renderer</Filter>
@@ -394,5 +382,14 @@
     <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Task\GTask.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Step\GStep.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Technique\GTechnique.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GApplyPass.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Source\GSource.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp" />
   </ItemGroup>
 </Project>

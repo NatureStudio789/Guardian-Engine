@@ -13,6 +13,8 @@ namespace GE
 
 		void Apply() override;
 
+		const UINT& GetVerticesCount() const noexcept;
+
 		static std::shared_ptr<GVertexBuffer> CreateNewVertexBuffer(
 			void* verticesData, UINT dataSize, UINT dataStride)
 		{
