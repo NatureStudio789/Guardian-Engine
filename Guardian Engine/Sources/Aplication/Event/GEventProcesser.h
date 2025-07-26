@@ -5,6 +5,8 @@
 
 namespace GE
 {
+	class GWindowResizeEvent;
+
 	class GUARDIAN_API GEventProcesser
 	{
 	public:
@@ -21,6 +23,8 @@ namespace GE
 	{
 		GEventDispatcher::DispatcherInstance->RegisterEventProcesser(this, function);
 	}
+
+	template GUARDIAN_API void GEventProcesser::OnEvent<GWindowResizeEvent>(const std::function<void(const GWindowResizeEvent&)>& function);
 }
 
 #endif

@@ -271,6 +271,8 @@
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Source\GSource.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GLightingPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Util\GUtil.cpp">
@@ -391,5 +393,6 @@
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Source\GSource.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.cpp" />
   </ItemGroup>
 </Project>

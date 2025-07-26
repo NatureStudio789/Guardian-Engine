@@ -1,4 +1,5 @@
-﻿  GSink.cpp
+﻿  GLitRenderGraph.cpp
+  GSink.cpp
   GSource.cpp
   GPipelineStateRegistry.cpp
   GApplyPass.cpp

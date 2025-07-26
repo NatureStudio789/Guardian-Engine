@@ -7,14 +7,16 @@ namespace GE
 		this->RootParameterList.clear();
 		this->SamplerDescList.clear();
 		this->IsInitialized = false;
-		this->DescriptorHeapList.clear();
+		this->ConstantBufferDescriptorHeap = null;
+		this->ShaderResourceDescriptorHeap = null;
 	}
 
 	GRootSignature::GRootSignature(const GRootSignature& other)
 	{
 		this->RootSignatureObject = other.RootSignatureObject;
 		this->IsInitialized = other.IsInitialized;
-		this->DescriptorHeapList = other.DescriptorHeapList;
+		this->ConstantBufferDescriptorHeap = other.ConstantBufferDescriptorHeap;
+		this->ShaderResourceDescriptorHeap = other.ShaderResourceDescriptorHeap;
 		
 		this->RootParameterList = other.RootParameterList;
 		this->SamplerDescList = other.SamplerDescList;
@@ -24,7 +26,12 @@ namespace GE
 	{
 		this->SamplerDescList.clear();
 		this->IsInitialized = false;
-		this->DescriptorHeapList.clear();
+
+		this->ConstantBufferDescriptorHeap.reset();
+		this->ConstantBufferDescriptorHeap = null;
+
+		this->ShaderResourceDescriptorHeap.reset();
+		this->ShaderResourceDescriptorHeap = null;
 	}
 
 	UINT GRootSignature::AddRootParameter(const RootParameter& parameter)
@@ -50,9 +57,22 @@ namespace GE
 		this->SamplerDescList.push_back(description);
 	}
 
-	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device)
+	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device, 
+		UINT cbvDescriptorCount, UINT srvDescriptorCount)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
+
+		if (cbvDescriptorCount)
+		{
+			this->ConstantBufferDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, cbvDescriptorCount,
+				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+		}
+
+		if (srvDescriptorCount)
+		{
+			this->ShaderResourceDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, srvDescriptorCount,
+				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+		}
 
 		std::vector<CD3DX12_ROOT_PARAMETER> ParameterList;
 		for (auto& parameter : this->RootParameterList)
@@ -120,11 +140,6 @@ namespace GE
 		this->IsInitialized = true;
 	}
 
-	void GRootSignature::AddDescriptorHeap(std::shared_ptr<GDescriptorHeap> descriptorHeap)
-	{
-		this->DescriptorHeapList.push_back(descriptorHeap);
-	}
-
 	void GRootSignature::SetRootDescriptorTable(std::shared_ptr<GCommandList> commandList, 
 		UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle)
 	{
@@ -140,9 +155,13 @@ namespace GE
 	void GRootSignature::SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList)
 	{
 		std::vector<ID3D12DescriptorHeap*> DescriptorHeapObjectList;
-		for (auto& descriptorHeap : this->DescriptorHeapList)
+		if (this->ConstantBufferDescriptorHeap)
 		{
-			DescriptorHeapObjectList.push_back(descriptorHeap->GetDescriptorHeapObject().Get());
+			DescriptorHeapObjectList.push_back(this->ConstantBufferDescriptorHeap->GetDescriptorHeapObject().Get());
+		}
+		if (this->ShaderResourceDescriptorHeap)
+		{
+			DescriptorHeapObjectList.push_back(this->ShaderResourceDescriptorHeap->GetDescriptorHeapObject().Get());
 		}
 
 		commandList->GetCommandListObject()->SetDescriptorHeaps((UINT)DescriptorHeapObjectList.size(),
@@ -157,11 +176,23 @@ namespace GE
 		}
 
 		commandList->GetCommandListObject()->SetGraphicsRootSignature(this->RootSignatureObject.Get());
+
+		this->SetDescriptorHeapList(commandList);
 	}
 
 	WRL::ComPtr<ID3D12RootSignature> GRootSignature::GetRootSignatureObject()
 	{
 		return this->RootSignatureObject;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GRootSignature::GetConstantBufferDescriptorHeap()
+	{
+		return std::shared_ptr<GDescriptorHeap>();
+	}
+
+	std::shared_ptr<GDescriptorHeap> GRootSignature::GetShaderResourceDescriptorHeap()
+	{
+		return std::shared_ptr<GDescriptorHeap>();
 	}
 
 	const bool& GRootSignature::GetInitialized() const noexcept

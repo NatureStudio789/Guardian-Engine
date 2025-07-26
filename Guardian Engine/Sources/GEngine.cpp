@@ -38,12 +38,9 @@ namespace GE
 		{
 			GApplication::Instance->UpdateApplication();
 
-			{
-				GModuleSystem::UpdateAllModules();
-				this->EngineProgram->UpdateProgram();
+			GModuleSystem::UpdateAllModules();
 
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
-			}
+			this->EngineProgram->UpdateProgram();
 		}
 	}
 

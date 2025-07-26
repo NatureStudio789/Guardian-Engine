@@ -1,6 +1,6 @@
 #ifndef _GE_GRENDERGRAPH_H_
 #define _GE_GRENDERGRAPH_H_
-#include "../Pass/GRenderQueuePass.h"
+#include "../Pass/GLightingPass.h"
 
 namespace GE
 {
@@ -39,18 +39,19 @@ namespace GE
 
 		std::shared_ptr<GFramebuffer> RenderGraphFramebuffer;
 
+		std::string RenderGraphName;
+		GUUID RenderGraphId;
+
+
+		std::map<std::string, std::shared_ptr<GPass>> PassList;
+	
 	private:
 		void LinkSinks(std::shared_ptr<GPass> pass);
 		void LinkGlobalSinks();
 
-		std::string RenderGraphName;
-		GUUID RenderGraphId;
-
 		bool IsFinalized = false;
 		std::vector<std::shared_ptr<GSource>> GlobalSourceList;
 		std::vector<std::shared_ptr<GSink>> GlobalSinkList;
-
-		std::map<std::string, std::shared_ptr<GPass>> PassList;
 	};
 }
 

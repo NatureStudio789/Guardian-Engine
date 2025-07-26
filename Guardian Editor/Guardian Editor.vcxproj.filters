@@ -10,11 +10,13 @@
       <Filter>EditorContext</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GEditorEngine.h" />
+    <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp">
       <Filter>EditorContext</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GEditorEngine.cpp" />
+    <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
   </ItemGroup>
 </Project>

@@ -71,25 +71,28 @@ namespace GE
 
 		UINT AddRootParameter(const RootParameter& parameter);
 		void AddSamplerDescription(const SamplerDescription& description);
-		void InitializeRootSignature(std::shared_ptr<GDevice> device);
-
-		void AddDescriptorHeap(std::shared_ptr<GDescriptorHeap> descriptorHeap);
+		void InitializeRootSignature(std::shared_ptr<GDevice> device, 
+			UINT cbvDescriptorCount, UINT srvDescriptorCount);
 
 		void SetRootDescriptorTable(std::shared_ptr<GCommandList> commandList,
 			UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
 		void SetRootConstantBufferView(std::shared_ptr<GCommandList> commandList, 
 			UINT rootParameterIndex, D3D12_GPU_VIRTUAL_ADDRESS gpuVirtualAddress);
 		
-		void SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList);
 		void ApplyRootSignature(std::shared_ptr<GCommandList> commandList);
 
 		WRL::ComPtr<ID3D12RootSignature> GetRootSignatureObject();
+		std::shared_ptr<GDescriptorHeap> GetConstantBufferDescriptorHeap();
+		std::shared_ptr<GDescriptorHeap> GetShaderResourceDescriptorHeap();
 		const bool& GetInitialized() const noexcept;
 
 	private:
+		void SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList);
+
 		WRL::ComPtr<ID3D12RootSignature> RootSignatureObject;
 		bool IsInitialized;
-		std::vector<std::shared_ptr<GDescriptorHeap>> DescriptorHeapList;
+		std::shared_ptr<GDescriptorHeap> ConstantBufferDescriptorHeap;
+		std::shared_ptr<GDescriptorHeap> ShaderResourceDescriptorHeap;
 
 		std::vector<RootParameter> RootParameterList;
 		std::vector<SamplerDescription> SamplerDescList;

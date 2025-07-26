@@ -2,7 +2,7 @@
 
 namespace GE
 {
-	const std::string GPipelineStateRegistry::MESH_PSO = "Mesh PSO";
+	const std::string GPipelineStateRegistry::LIGHTING_PSO = "Lighting PSO";
 
 	std::map<std::string, std::shared_ptr<GPipelineState>> GPipelineStateRegistry::PipelineStateList;
 
@@ -10,11 +10,27 @@ namespace GE
 	void GPipelineStateRegistry::InitializePipelineStateRegistry()
 	{
 		{
-			auto RootSignature = std::make_shared<GRootSignature>();
+			auto MeshPipelineState = std::make_shared<GPipelineState>(LIGHTING_PSO);
+			MeshPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Default.gvs"));
+			MeshPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Default.gps"));
 
-			RootSignature;
+			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, }
+			};
 
-			auto MeshPipelineState = std::make_shared<GPipelineState>(MESH_PSO);
+			MeshPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
+
+			MeshPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
+
+			GRootSignature::RootParameter Parameter;
+			Parameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			Parameter.ShaderRegisterIndex = 0;
+
+			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(Parameter);
+
+			MeshPipelineState->InitializePipelineState(1, 0);
+			PipelineStateList[LIGHTING_PSO] = MeshPipelineState;
 		}
 	}
 

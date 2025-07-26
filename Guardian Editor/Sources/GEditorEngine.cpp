@@ -27,21 +27,12 @@ namespace GE
 
     void GEditorEngine::InitializeProgram()
     {
-        this->EditorContext = GEditorContext::CreateNewEditorContext();
+        GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
     }
 
     void GEditorEngine::UpdateProgram()
     {
-        this->EditorContext->BeginRendering();
 
-        ImGui::ShowDemoWindow();
-
-        ImGui::Begin("Viewport");
-        ImGui::End();
-
-        ImGui::ShowDebugLogWindow();
-
-        this->EditorContext->EndUpRendering();
     }
 
     void GEditorEngine::ReleaseProgram()

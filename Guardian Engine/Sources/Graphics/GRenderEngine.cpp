@@ -32,11 +32,13 @@ namespace GE
 
 		GGraphicsContextRegistry::RegisterGraphicsContext("Main", this->MainGraphicsContext);
 		GGraphicsContextRegistry::SetCurrentGraphicsContext("Main");
+
+		GPipelineStateRegistry::InitializePipelineStateRegistry();
 	}
 
 	void GRenderEngine::UpdateModule()
 	{
-		
+		GRenderer::Render();
 	}
 
 	void GRenderEngine::ReleaseModule()

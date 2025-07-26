@@ -4,24 +4,58 @@ namespace GE
 {
 	GEditorContext::GEditorContext()
 	{
+		this->ContextFramebuffer = null;
 		this->EditorDescriptorHeap = null;
+		this->ContextEventProcesser = null;
+	}
+
+	GEditorContext::GEditorContext(std::shared_ptr<GFramebuffer> contextFramebuffer)
+	{
+		this->InitializeEditorContext(contextFramebuffer);
 	}
 
 	GEditorContext::GEditorContext(const GEditorContext& other)
 	{
+		this->ContextFramebuffer = other.ContextFramebuffer;
 		this->EditorDescriptorHeap = other.EditorDescriptorHeap;
+		this->ContextEventProcesser = other.ContextEventProcesser;
 	}
 
 	GEditorContext::~GEditorContext()
 	{
 		this->EditorDescriptorHeap.reset();
 		this->EditorDescriptorHeap = null;
+
+		this->ContextFramebuffer = null;
 	}
 
-	void GEditorContext::InitializeEditorContext()
+	void GEditorContext::InitializeEditorContext(std::shared_ptr<GFramebuffer> contextFramebuffer)
 	{
 		this->EditorDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(),
 			1, GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+
+		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
+		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([=](const GWindowResizeEvent& event)
+		{
+			if (this->ContextFramebuffer && event.WindowHandle == GApplication::Instance->GetMainWindowHandle())
+			{
+				GUARDIAN_SETUP_AUTO_THROW();
+
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Editor");
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
+
+				GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
+					Reset(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
+
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->ResizeBuffer(event.ResizeWidth, event.ResizeHeight);
+
+				this->ContextFramebuffer->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(), event.ResizeWidth, event.ResizeHeight);
+
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteCommandList();
+
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
+			}
+		});
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
@@ -45,6 +79,8 @@ namespace GE
 			(int)GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->GetBufferCount(),
 			DXGI_FORMAT_R8G8B8A8_UNORM, this->EditorDescriptorHeap->GetDescriptorHeapObject().Get(),
 			this->EditorDescriptorHeap->GetFirstCPUDescriptorHandle(), this->EditorDescriptorHeap->GetFirstGPUDescriptorHandle());
+
+		this->ContextFramebuffer = contextFramebuffer;
 	}
 
 	void GEditorContext::BeginRendering()
@@ -60,7 +96,7 @@ namespace GE
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
 		
-		//GFramebufferRegistry::GetFramebuffer("Editor")->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		this->ContextFramebuffer->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			SetDescriptorHeaps(1, this->EditorDescriptorHeap->GetDescriptorHeapObject().GetAddressOf());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),

@@ -1,0 +1,17 @@
+#ifndef _GE_GLITRENDERGRAPH_H_
+#define _GE_GLITRENDERGRAPH_H_
+#include "GRenderGraph.h"
+
+namespace GE
+{
+	class GUARDIAN_API GLitRenderGraph : public GRenderGraph
+	{
+	public:
+		GLitRenderGraph(const std::string& name);
+
+	private:
+
+	};
+}
+
+#endif

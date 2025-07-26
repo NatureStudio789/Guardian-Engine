@@ -13,7 +13,7 @@ namespace GE
         this->IsInitialized = false;
     }
 
-    GPipelineState::GPipelineState(const std::string& name)
+    GPipelineState::GPipelineState(const std::string& name) : GPipelineState()
     {
         this->PipelineStateName = name;
     }
@@ -80,12 +80,12 @@ namespace GE
         this->PipelineTopology = topology;
     }
 
-    void GPipelineState::InitializePipelineState()
+    void GPipelineState::InitializePipelineState(UINT cbvDescriptorCount, UINT srvDescriptorCount)
     {
         GUARDIAN_SETUP_AUTO_THROW();
 
         this->PipelineRootSignature->InitializeRootSignature(
-            GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice());
+            GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(), cbvDescriptorCount, srvDescriptorCount);
 
         D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateDesc;
         GUARDIAN_CLEAR_MEMORY(PipelineStateDesc);

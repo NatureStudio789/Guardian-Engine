@@ -137,7 +137,7 @@ namespace GE
 	{
 		this->GraphicsSwapChain->Present(syncInternal);
 
-		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
+		this->FlushCommandQueue();
 	}
 
 	void GGraphicsContext::BeginInitializing()
@@ -148,7 +148,7 @@ namespace GE
 	void GGraphicsContext::EndUpInitializing()
 	{
 		this->ExecuteCommandList();
-		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
+		this->FlushCommandQueue();
 	}
 
 	void GGraphicsContext::ResetCommandList()
@@ -177,6 +177,11 @@ namespace GE
 			CommandLists.push_back(commandList.second->GetCommandListObject().Get());
 		}
 		this->GraphicsCommandQueue->ExecuteCommandLists((UINT)CommandLists.size(), CommandLists.data());
+	}
+
+	void GGraphicsContext::FlushCommandQueue()
+	{
+		this->GraphicsFence->FlushFence(this->GraphicsCommandQueue);
 	}
 
 	const GUUID& GGraphicsContext::GetContextId() const noexcept

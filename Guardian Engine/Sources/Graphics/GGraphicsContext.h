@@ -33,6 +33,8 @@ namespace GE
 
 		void ExecuteCommandListBatch();
 
+		void FlushCommandQueue();
+
 		const GUUID& GetContextId() const noexcept;
 		HWND GetContextWindowHandle() noexcept;
 		std::shared_ptr<GGraphicsFactory> GetGraphicsFactory();

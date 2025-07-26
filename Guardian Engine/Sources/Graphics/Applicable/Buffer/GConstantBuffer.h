@@ -25,9 +25,11 @@ namespace GE
 		const T& GetBufferData() const noexcept;
 
 	protected:
+		CD3DX12_CPU_DESCRIPTOR_HANDLE GetConstantBufferCPUView();
+		CD3DX12_GPU_DESCRIPTOR_HANDLE GetConstantBufferGPUView();
+
 		WRL::ComPtr<ID3D12Resource> UploadBuffer;
 		std::shared_ptr<GRootSignature> BufferRootSignature;
-		std::shared_ptr<GDescriptorHeap> BufferDescriptorHeap;
 		UINT BufferIndex;
 		UINT BufferRootParameterIndex;
 		
@@ -39,7 +41,6 @@ namespace GE
 	template<typename T>
 	inline GConstantBuffer<T>::GConstantBuffer()
 	{
-		this->BufferDescriptorHeap = null;
 		this->BufferRootSignature = null;
 
 		this->BufferIndex = 0;
@@ -59,7 +60,6 @@ namespace GE
 	inline GConstantBuffer<T>::GConstantBuffer(const GConstantBuffer& other)
 	{
 		this->UploadBuffer = other.UploadBuffer;
-		this->BufferDescriptorHeap = other.BufferDescriptorHeap;
 		this->BufferRootSignature = other.BufferRootSignature;
 		this->BufferIndex = other.BufferIndex;
 		this->BufferRootParameterIndex = other.BufferRootParameterIndex;
@@ -76,7 +76,6 @@ namespace GE
 		{
 			this->UploadBuffer->Unmap(0, null);
 		}
-		this->BufferDescriptorHeap.reset();
 
 		this->BufferRootSignature = null;
 
@@ -93,12 +92,9 @@ namespace GE
 		GUARDIAN_SETUP_AUTO_THROW();
 
 		this->BufferIndex = index;
+		this->BufferRootParameterIndex = this->BufferIndex;
 		this->DataSize = (sizeof(T) + 255) & ~255;
 		this->BufferRootSignature = rootSignature;
-
-		this->BufferDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(), 1,
-			GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 
 		GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE,
@@ -113,14 +109,7 @@ namespace GE
 		ConstantBufferDesc.SizeInBytes = this->DataSize;
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			CreateConstantBufferView(&ConstantBufferDesc, this->BufferDescriptorHeap->GetFirstCPUDescriptorHandle());
-
-		GRootSignature::RootParameter Parameter;
-		Parameter.Type = GRootSignature::GE_PARAMETER_CBV;
-		Parameter.ShaderRegisterIndex = this->BufferIndex;
-
-		this->BufferRootParameterIndex = this->BufferRootSignature->AddRootParameter(Parameter);
-		this->BufferRootSignature->AddDescriptorHeap(this->BufferDescriptorHeap);
+			CreateConstantBufferView(&ConstantBufferDesc, this->GetConstantBufferCPUView());
 	}
 
 	template<typename T>
@@ -134,12 +123,9 @@ namespace GE
 	template<typename T>
 	inline void GConstantBuffer<T>::Apply()
 	{
-		this->BufferRootSignature->SetDescriptorHeapList(
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList());
-
 		this->BufferRootSignature->SetRootDescriptorTable(
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList(), this->BufferRootParameterIndex,
-			this->BufferDescriptorHeap->GetFirstGPUDescriptorHandle());
+			this->GetConstantBufferGPUView());
 	}
 
 	template<typename T>
@@ -164,6 +150,22 @@ namespace GE
 	inline const T& GConstantBuffer<T>::GetBufferData() const noexcept
 	{
 		return this->BufferData;
+	}
+
+	template<typename T>
+	inline CD3DX12_CPU_DESCRIPTOR_HANDLE GConstantBuffer<T>::GetConstantBufferCPUView()
+	{
+		return CD3DX12_CPU_DESCRIPTOR_HANDLE(this->BufferRootSignature->GetConstantBufferDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(
+			this->BufferIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(
+				D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+	}
+
+	template<typename T>
+	inline CD3DX12_GPU_DESCRIPTOR_HANDLE GConstantBuffer<T>::GetConstantBufferGPUView()
+	{
+		return CD3DX12_GPU_DESCRIPTOR_HANDLE(this->BufferRootSignature->GetConstantBufferDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(
+			this->BufferIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(
+				D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
 	}
 
 	struct GTransformCBData

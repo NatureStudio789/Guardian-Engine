@@ -27,32 +27,15 @@ namespace GE
 	class GUARDIAN_API GDirectFramebufferSource : public GSource
 	{
 	public:
-		GDirectFramebufferSource() : GSource()
+		GDirectFramebufferSource(const std::string& name, std::shared_ptr<GFramebuffer>& framebuffer) : 
+			GSource(name), Framebuffer(framebuffer)
 		{
-			this->IsLinked = false;
-			this->Framebuffer = null;
+
 		}
-		GDirectFramebufferSource(const std::string& name, std::shared_ptr<GFramebuffer> framebuffer) : GSource(name)
-		{
-			this->Framebuffer = framebuffer;
-		}
-		GDirectFramebufferSource(const GDirectFramebufferSource& other) : GSource(other)
+		GDirectFramebufferSource(const GDirectFramebufferSource& other) : 
+			GSource(other), Framebuffer(other.Framebuffer)
 		{
 			this->IsLinked = other.IsLinked;
-			this->Framebuffer = other.Framebuffer;
-		}
-		~GDirectFramebufferSource() override
-		{
-			this->IsLinked = false;
-			this->Framebuffer = null;
-		}
-
-		void InitializeDirectFramebufferSource(
-			const std::string& name, std::shared_ptr<GFramebuffer> framebuffer)
-		{
-			this->InitializeSource(name);
-
-			this->Framebuffer = framebuffer;
 		}
 
 		void CheckLinkValidate() const override
@@ -71,13 +54,13 @@ namespace GE
 		}
 
 		static std::shared_ptr<GDirectFramebufferSource> CreateNewDirectFramebufferSource(
-			const std::string& name, std::shared_ptr<GFramebuffer> framebuffer)
+			const std::string& name, std::shared_ptr<GFramebuffer>& framebuffer)
 		{
 			return std::make_shared<GDirectFramebufferSource>(name, framebuffer);
 		}
 
 	private:
-		std::shared_ptr<GFramebuffer> Framebuffer;
+		std::shared_ptr<GFramebuffer>& Framebuffer;
 		bool IsLinked = false;
 	};
 	
@@ -85,28 +68,13 @@ namespace GE
 	class GDirectApplicableSource : public GSource
 	{
 	public:
-		GDirectApplicableSource() : GSource()
-		{
-			this->Applicable = null;
-		}
-		GDirectApplicableSource(const std::string& name, std::shared_ptr<T> applicable)
-		{
-			this->InitializeDirectApplicableSource(name, applicable);
-		}
-		GDirectApplicableSource(const GDirectApplicableSource& other) : GSource(other)
-		{
-			this->Applicable = other.Applicable;
-		}
-		~GDirectApplicableSource() override
-		{
-			this->Applicable = null;
-		}
-
-		void InitializeDirectApplicableSource(const std::string& name, std::shared_ptr<T> applicable)
+		GDirectApplicableSource(const std::string& name, std::shared_ptr<T>& applicable) : Applicable(applicable)
 		{
 			this->InitializeSource(name);
-
-			this->Applicable = applicable;
+		}
+		GDirectApplicableSource(const GDirectApplicableSource& other) : 
+			GSource(other), Applicable(other.Applicable)
+		{
 		}
 
 		void CheckLinkValidate() const override
@@ -119,13 +87,13 @@ namespace GE
 		}
 
 		static std::shared_ptr<GDirectApplicableSource> CreateNewDirectApplicableSource(
-			const std::string& name, std::shared_ptr<GApplicable> applicable)
+			const std::string& name, std::shared_ptr<GApplicable>& applicable)
 		{
 			return std::make_shared<GDirectApplicableSource>(name, applicable);
 		}
 
 	private:
-		std::shared_ptr<T> Applicable;
+		std::shared_ptr<T>& Applicable;
 	};
 }
 

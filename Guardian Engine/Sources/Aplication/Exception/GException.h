@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	class GException : public std::exception
+	class GUARDIAN_API GException : public std::exception
 	{
 	public:
 		GException() noexcept;

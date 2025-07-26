@@ -1,6 +1,6 @@
 #ifndef _GE_GRENDERER_H_
 #define _GE_GRENDERER_H_
-#include "RenderGraph/GRenderGraph.h"
+#include "RenderGraph/GLitRenderGraph.h"
 
 namespace GE
 {
