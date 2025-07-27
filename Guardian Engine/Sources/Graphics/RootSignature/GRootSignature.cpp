@@ -8,6 +8,7 @@ namespace GE
 		this->SamplerDescList.clear();
 		this->IsInitialized = false;
 		this->ConstantBufferDescriptorHeap = null;
+		this->TextureSamplerDescriptorHeap = null;
 		this->ShaderResourceDescriptorHeap = null;
 	}
 
@@ -16,6 +17,7 @@ namespace GE
 		this->RootSignatureObject = other.RootSignatureObject;
 		this->IsInitialized = other.IsInitialized;
 		this->ConstantBufferDescriptorHeap = other.ConstantBufferDescriptorHeap;
+		this->TextureSamplerDescriptorHeap = other.TextureSamplerDescriptorHeap;
 		this->ShaderResourceDescriptorHeap = other.ShaderResourceDescriptorHeap;
 		
 		this->RootParameterList = other.RootParameterList;
@@ -29,6 +31,9 @@ namespace GE
 
 		this->ConstantBufferDescriptorHeap.reset();
 		this->ConstantBufferDescriptorHeap = null;
+
+		this->TextureSamplerDescriptorHeap.reset();
+		this->TextureSamplerDescriptorHeap = null;
 
 		this->ShaderResourceDescriptorHeap.reset();
 		this->ShaderResourceDescriptorHeap = null;
@@ -58,7 +63,7 @@ namespace GE
 	}
 
 	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device, 
-		UINT cbvDescriptorCount, UINT srvDescriptorCount)
+		UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
@@ -66,6 +71,12 @@ namespace GE
 		{
 			this->ConstantBufferDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, cbvDescriptorCount,
 				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+		}
+
+		if (samplerDescriptorCount)
+		{
+			this->TextureSamplerDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, samplerDescriptorCount,
+				GDescriptorHeap::GE_DESCRIPTOR_HEAP_SAMPLER, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 		}
 
 		if (srvDescriptorCount)
@@ -90,6 +101,15 @@ namespace GE
 
 					break;
 				}
+
+				case GE_PARAMETER_SRV:
+				{
+					CD3DX12_DESCRIPTOR_RANGE ShaderResourceViewTable;
+					ShaderResourceViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, parameter.ShaderRegisterIndex);
+
+					Parameter.InitAsDescriptorTable(1, &ShaderResourceViewTable, D3D12_SHADER_VISIBILITY_PIXEL);
+					break;
+				}
 			}
 
 			ParameterList.push_back(Parameter);
@@ -100,19 +120,8 @@ namespace GE
 		{
 			CD3DX12_STATIC_SAMPLER_DESC Description;
 
-			Description.Filter = description.Filter;
-			Description.AddressU = description.AddressU;
-			Description.AddressV = description.AddressV;
-			Description.AddressW = description.AddressW;
-			Description.MipLODBias = description.MipLODBias;
-			Description.MaxAnisotropy = description.MaxAnisotropy;
-			Description.ComparisonFunc = description.ComparisonFunc;
-			Description.BorderColor = description.BorderColor;
-			Description.MinLOD = description.MinLOD;
-			Description.MaxLOD = description.MaxLOD;
-			Description.ShaderRegister = description.ShaderRegister;
-			Description.RegisterSpace = description.RegisterSpace;
-			Description.ShaderVisibility = description.ShaderVisibility;
+			Description = CD3DX12_STATIC_SAMPLER_DESC(description.ShaderRegister, description.Filter,
+				description.AddressU, description.AddressV, description.AddressW);
 
 			DescriptionList.push_back(Description);
 		}
@@ -187,12 +196,17 @@ namespace GE
 
 	std::shared_ptr<GDescriptorHeap> GRootSignature::GetConstantBufferDescriptorHeap()
 	{
-		return std::shared_ptr<GDescriptorHeap>();
+		return this->ConstantBufferDescriptorHeap;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GRootSignature::GetTextureSamplerDescriptorHeap()
+	{
+		return this->TextureSamplerDescriptorHeap;
 	}
 
 	std::shared_ptr<GDescriptorHeap> GRootSignature::GetShaderResourceDescriptorHeap()
 	{
-		return std::shared_ptr<GDescriptorHeap>();
+		return this->ShaderResourceDescriptorHeap;
 	}
 
 	const bool& GRootSignature::GetInitialized() const noexcept

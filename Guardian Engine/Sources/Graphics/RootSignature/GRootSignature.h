@@ -9,7 +9,8 @@ namespace GE
 	public:
 		enum ParameterType
 		{
-			GE_PARAMETER_CBV
+			GE_PARAMETER_CBV,
+			GE_PARAMETER_SRV
 		};
 
 		struct RootParameter
@@ -34,34 +35,18 @@ namespace GE
 			SamplerDescription() = default;
 			SamplerDescription(const SamplerDescription& other)
 			{
+				this->ShaderRegister = other.ShaderRegister;
 				this->Filter = other.Filter;
 				this->AddressU = other.AddressU;
 				this->AddressV = other.AddressV;
 				this->AddressW = other.AddressW;
-				this->MipLODBias = other.MipLODBias;
-				this->MaxAnisotropy = other.MaxAnisotropy;
-				this->ComparisonFunc = other.ComparisonFunc;
-				this->BorderColor = other.BorderColor;
-				this->MinLOD = other.MinLOD;
-				this->MaxLOD = other.MaxLOD;
-				this->ShaderRegister = other.ShaderRegister;
-				this->RegisterSpace = other.RegisterSpace;
-				this->ShaderVisibility = other.ShaderVisibility;
 			}
 
+			UINT ShaderRegister;
 			D3D12_FILTER Filter;
 			D3D12_TEXTURE_ADDRESS_MODE AddressU;
 			D3D12_TEXTURE_ADDRESS_MODE AddressV;
 			D3D12_TEXTURE_ADDRESS_MODE AddressW;
-			FLOAT MipLODBias;
-			UINT MaxAnisotropy;
-			D3D12_COMPARISON_FUNC ComparisonFunc;
-			D3D12_STATIC_BORDER_COLOR BorderColor;
-			FLOAT MinLOD;
-			FLOAT MaxLOD;
-			UINT ShaderRegister;
-			UINT RegisterSpace;
-			D3D12_SHADER_VISIBILITY ShaderVisibility;
 		};
 
 	public:
@@ -72,7 +57,7 @@ namespace GE
 		UINT AddRootParameter(const RootParameter& parameter);
 		void AddSamplerDescription(const SamplerDescription& description);
 		void InitializeRootSignature(std::shared_ptr<GDevice> device, 
-			UINT cbvDescriptorCount, UINT srvDescriptorCount);
+			UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount);
 
 		void SetRootDescriptorTable(std::shared_ptr<GCommandList> commandList,
 			UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
@@ -83,6 +68,7 @@ namespace GE
 
 		WRL::ComPtr<ID3D12RootSignature> GetRootSignatureObject();
 		std::shared_ptr<GDescriptorHeap> GetConstantBufferDescriptorHeap();
+		std::shared_ptr<GDescriptorHeap> GetTextureSamplerDescriptorHeap();
 		std::shared_ptr<GDescriptorHeap> GetShaderResourceDescriptorHeap();
 		const bool& GetInitialized() const noexcept;
 
@@ -92,6 +78,7 @@ namespace GE
 		WRL::ComPtr<ID3D12RootSignature> RootSignatureObject;
 		bool IsInitialized;
 		std::shared_ptr<GDescriptorHeap> ConstantBufferDescriptorHeap;
+		std::shared_ptr<GDescriptorHeap> TextureSamplerDescriptorHeap;
 		std::shared_ptr<GDescriptorHeap> ShaderResourceDescriptorHeap;
 
 		std::vector<RootParameter> RootParameterList;

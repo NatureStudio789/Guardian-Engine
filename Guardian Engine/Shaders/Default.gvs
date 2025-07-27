@@ -1,6 +1,6 @@
 cbuffer Transform : register(b0)
 {
-    float Offset;
+    matrix TransformMatrix;
 };
 
 struct VSInput
@@ -16,8 +16,7 @@ struct VSOutput
 VSOutput main(VSInput InputData)
 {
     VSOutput OutputData;
-    InputData.Position = InputData.Position + float3(Offset, Offset, Offset);
-    OutputData.Position = float4(InputData.Position, 1.0f);
+    OutputData.Position = mul(float4(InputData.Position, 1.0f), TransformMatrix);
 
     return OutputData;
 }

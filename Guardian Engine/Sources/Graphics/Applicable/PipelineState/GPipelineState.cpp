@@ -80,12 +80,12 @@ namespace GE
         this->PipelineTopology = topology;
     }
 
-    void GPipelineState::InitializePipelineState(UINT cbvDescriptorCount, UINT srvDescriptorCount)
+    void GPipelineState::InitializePipelineState(UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount)
     {
         GUARDIAN_SETUP_AUTO_THROW();
 
         this->PipelineRootSignature->InitializeRootSignature(
-            GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(), cbvDescriptorCount, srvDescriptorCount);
+            GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(), cbvDescriptorCount, samplerDescriptorCount, srvDescriptorCount);
 
         D3D12_GRAPHICS_PIPELINE_STATE_DESC PipelineStateDesc;
         GUARDIAN_CLEAR_MEMORY(PipelineStateDesc);

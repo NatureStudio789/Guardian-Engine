@@ -17,9 +17,16 @@ namespace GE
 
 		void InitializeTechnique(const std::string& name,
 			const std::string& channel, bool isActive = true);
+		void AddStep(std::shared_ptr<GStep> step);
+
+		void SetParent(const GRenderable& renderable);
+
+		void SetActiveState(bool active);
 
 		void Submit(std::shared_ptr<GRenderable> renderable, std::string channel);
 		void Link(std::string renderGraphName);
+
+		const bool& GetActive() const noexcept;
 
 		static std::shared_ptr<GTechnique> CreateNewTechnique(const std::string& name,
 			const std::string& channel, bool isActive = true)

@@ -21,9 +21,32 @@ namespace GE
 		this->InitializeGraphGraphics();
 		this->EditorContext->BeginRendering();
 
-		ImGui::Begin("Viewport");
+		static bool open = true;
+		if (open)
+		{
+			ImGui::ShowDemoWindow(&open);
+		}
 
-		ImGui::End();
+		{
+			static float f = 0.0f;
+			static int counter = 0;
+
+			ImGui::Begin("Hello, world!");
+
+			ImGui::Text("This is some useful text.");
+			ImGui::Checkbox("Demo Window", &open);
+
+			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);
+
+			if (ImGui::Button("Button"))
+				counter++;
+			ImGui::SameLine();
+			ImGui::Text("counter = %d", counter);
+
+			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / this->EditorContext->GetEditorIO().Framerate,
+				this->EditorContext->GetEditorIO().Framerate);
+			ImGui::End();
+		}
 
 		this->EditorContext->EndUpRendering();
 	}

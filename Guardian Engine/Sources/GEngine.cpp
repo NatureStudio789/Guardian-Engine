@@ -18,7 +18,7 @@ namespace GE
 	void GEngine::InitializeEngine(std::shared_ptr<GProgram> program)
 	{
 		this->EngineProgram = program;
-		GUARDIAN_CHECK_POINTER(program)
+		GUARDIAN_CHECK_POINTER(program);
 
 		this->EngineProgram->PreInitializeProgram();
 

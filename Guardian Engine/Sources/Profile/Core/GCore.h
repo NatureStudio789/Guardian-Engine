@@ -1,6 +1,7 @@
 #ifndef _GE_GCORE_H_
 #define _GE_GCORE_H_
 #include <Windows.h>
+#include <filesystem>
 #include <string>
 #include <memory>
 #include <map>
@@ -25,6 +26,7 @@
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #include <imgui_internal.h>
+#include <DirectXTex/DirectXTex.h>
 using namespace Microsoft;
 using namespace DirectX;
 

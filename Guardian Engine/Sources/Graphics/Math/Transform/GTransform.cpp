@@ -6,7 +6,7 @@ namespace GE
 	{
 		this->Position = {};
 		this->Rotation = {};
-		this->Scale = {};
+		this->Scale = { 1.0f, 1.0f, 1.0f };
 	}
 
 	GTransform::GTransform(const GVector3& position, const GVector3& rotation, const GVector3& scale)

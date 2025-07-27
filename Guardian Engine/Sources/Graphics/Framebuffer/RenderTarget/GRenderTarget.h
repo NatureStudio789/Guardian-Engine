@@ -1,6 +1,6 @@
 #ifndef _GE_GRENDERTARET_H_
 #define _GE_GRENDERTARET_H_
-#include "../../GGraphicsContext.h"
+#include "../../Surface/GSurface.h"
 
 namespace GE
 {

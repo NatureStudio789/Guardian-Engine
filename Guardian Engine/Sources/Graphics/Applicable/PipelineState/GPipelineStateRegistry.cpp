@@ -23,13 +23,12 @@ namespace GE
 
 			MeshPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
 
-			GRootSignature::RootParameter Parameter;
-			Parameter.Type = GRootSignature::GE_PARAMETER_CBV;
-			Parameter.ShaderRegisterIndex = 0;
+			GRootSignature::RootParameter CBParameter;
+			CBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			CBParameter.ShaderRegisterIndex = 0;
+			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(CBParameter);
 
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(Parameter);
-
-			MeshPipelineState->InitializePipelineState(1, 0);
+			MeshPipelineState->InitializePipelineState(1, 0, 0);
 			PipelineStateList[LIGHTING_PSO] = MeshPipelineState;
 		}
 	}

@@ -47,6 +47,14 @@ namespace GE
 		this->ApplicableList.push_back(applicable);
 	}
 
+	void GStep::SetParent(const GRenderable& renderable)
+	{
+		for (auto& applicable : this->ApplicableList)
+		{
+			applicable->SetParent(renderable);
+		}
+	}
+
 	void GStep::Apply()
 	{
 		for (auto& applicable : this->ApplicableList)

@@ -32,7 +32,7 @@ namespace GE
 	void GEditorContext::InitializeEditorContext(std::shared_ptr<GFramebuffer> contextFramebuffer)
 	{
 		this->EditorDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(),
-			1, GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+			2, GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 
 		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
 		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([=](const GWindowResizeEvent& event)
@@ -64,6 +64,7 @@ namespace GE
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
+		io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\segoeui.ttf", 18.0f);
 
 		ImGui::StyleColorsDark();
 

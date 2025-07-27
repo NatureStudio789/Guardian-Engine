@@ -27,7 +27,7 @@ namespace GE
 
     void GEditorEngine::InitializeProgram()
     {
-        GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
+        //GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
     }
 
     void GEditorEngine::UpdateProgram()

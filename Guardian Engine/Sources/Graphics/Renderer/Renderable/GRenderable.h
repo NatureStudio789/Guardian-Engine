@@ -10,14 +10,20 @@ namespace GE
 	{
 	public:
 		GRenderable();
+		GRenderable(const std::string& name, std::shared_ptr<GVertexBuffer> vertexBuffer, 
+			std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology);
 		GRenderable(const GRenderable& other);
-		~GRenderable();
+		virtual ~GRenderable();
 
-		void AddTechnology(std::shared_ptr<GTechnique> technology);
-		void SetTechnologyList(std::vector<std::shared_ptr<GTechnique>> technologyList);
+		void InitializeRenderable(const std::string& name, std::shared_ptr<GVertexBuffer> vertexBuffer,
+			std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology);
+
+		void AddTechnique(std::shared_ptr<GTechnique> technique);
+		void SetTechniqueList(std::vector<std::shared_ptr<GTechnique>> techniqueList);
 
 		void Apply();
 		void Submit(const std::string& channel);
+		void SetTransform(const GTransform& transform);
 
 		void LinkTechnique(std::string renderGraphName);
 
@@ -27,6 +33,7 @@ namespace GE
 		const UINT& GetIndicesCount() const;
 		const UINT& GetDataSize() const;
 		const bool HasIndexBuffer() const noexcept;
+		const GTransform& GetTransform() const noexcept;
 
 	private:
 		GUUID RenderableId = GUUID();
@@ -34,6 +41,8 @@ namespace GE
 		std::shared_ptr<GVertexBuffer> VertexBuffer;
 		std::shared_ptr<GIndexBuffer> IndexBuffer;
 		std::shared_ptr<GTopology> Topology;
+
+		GTransform Transform;
 
 		std::vector<std::shared_ptr<GTechnique>> RenderTechniqueList;
 	};

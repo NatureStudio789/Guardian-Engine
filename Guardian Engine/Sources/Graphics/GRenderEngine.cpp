@@ -34,10 +34,45 @@ namespace GE
 		GGraphicsContextRegistry::SetCurrentGraphicsContext("Main");
 
 		GPipelineStateRegistry::InitializePipelineStateRegistry();
+
+		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("Lit"));
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Lit");
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
+		std::vector<GMeshInstance::Vertex> v =
+		{
+			{{0.5f, 0.5f, 0.0f}},
+			{{0.5f, -0.5f, 0.0f}},
+			{{-0.5f, -0.5f, 0.0f}},
+			{{-0.5f, 0.5f, 0.0f}},
+		};
+
+		std::vector<UINT> i =
+		{
+			0, 1, 2,
+			0, 2, 3
+		};
+
+		this->TestM = GMeshInstance::CreateNewMeshInstance("Test", { v, i });
+
+		std::shared_ptr<GTechnique> tech = GTechnique::CreateNewTechnique("Phong", "main");
+		std::shared_ptr<GStep> step = GStep::CreateNewStep("Lighting");
+
+		step->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+
+		tech->AddStep(step);
+
+		this->TestM->AddTechnique(tech);
+
+		this->TestM->LinkTechnique("Lit");
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GRenderEngine::UpdateModule()
 	{
+		TestM->Submit("main");
+
 		GRenderer::Render();
 	}
 

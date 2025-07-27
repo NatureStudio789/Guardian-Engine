@@ -16,7 +16,7 @@ namespace GE
 		void InitializeConstantBuffer(std::shared_ptr<GRootSignature> rootSignature, UINT index = 0);
 
 		void UpdateBufferData(T data);
-		void Apply();
+		virtual void Apply() override;
 
 		WRL::ComPtr<ID3D12Resource> GetUploadBuffer();
 		const UINT& GetBufferIndex() const noexcept;
@@ -172,14 +172,14 @@ namespace GE
 	{
 		GTransformCBData()
 		{
-			this->Offset = 0.5f;
+			this->TransformMatrix = GMatrix::IdentityMatrix();
 		}
-		GTransformCBData(XMMATRIX transformMatrix)
+		GTransformCBData(GMatrix transformMatrix)
 		{
-			this->Offset = 0.5f;
+			this->TransformMatrix = transformMatrix;
 		}
 
-		float Offset;
+		GMatrix TransformMatrix;
 	};
 	class GUARDIAN_API GTransformCBuffer : public GConstantBuffer<GTransformCBData>
 	{
@@ -187,22 +187,30 @@ namespace GE
 		GTransformCBuffer() : GConstantBuffer<GTransformCBData>()
 		{
 			this->BufferData = {};
+			this->Parent = null;
 		}
 		GTransformCBuffer(std::shared_ptr<GRootSignature> rootSignature, UINT index = 0) : 
 			GConstantBuffer<GTransformCBData>(rootSignature, index)
 		{
-
+			this->Parent = null;
 		}
 		GTransformCBuffer(const GTransformCBuffer& other) : GConstantBuffer<GTransformCBData>(other)
 		{
-
+			this->Parent = other.Parent;
 		}
+
+		void SetParent(const GRenderable& renderable) override;
+
+		void Apply() override;
 
 		static std::shared_ptr<GTransformCBuffer> CreateNewTransformCBuffer(
 			std::shared_ptr<GRootSignature> rootSignature, UINT index = 0)
 		{
 			return std::make_shared<GTransformCBuffer>(rootSignature, index);
 		}
+
+	private:
+		const GRenderable* Parent;
 	};
 }
 

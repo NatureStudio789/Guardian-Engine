@@ -4,14 +4,17 @@
 
 namespace GE
 {
+	class GUARDIAN_API GRenderable;
+
 	class GUARDIAN_API GApplicable
 	{
 	public:
 		GApplicable() = default;
 		GApplicable(const GApplicable&) = default;
 		virtual ~GApplicable() = default;
-
-		virtual void Apply() = 0;
+		
+		virtual void SetParent(const GRenderable&) {}
+		virtual void Apply() {}
 	};
 }
 

@@ -4,19 +4,26 @@
     <Filter Include="EditorContext">
       <UniqueIdentifier>{51AA3160-BD6A-AD96-86A5-F613F224F272}</UniqueIdentifier>
     </Filter>
+    <Filter Include="EditorRenderGraph">
+      <UniqueIdentifier>{7EFCAAED-EA12-A983-338A-34A59FDF790B}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\EditorContext\GEditorContext.h">
       <Filter>EditorContext</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h">
+      <Filter>EditorRenderGraph</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\GEditorEngine.h" />
-    <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp">
       <Filter>EditorContext</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp">
+      <Filter>EditorRenderGraph</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\GEditorEngine.cpp" />
-    <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
   </ItemGroup>
 </Project>

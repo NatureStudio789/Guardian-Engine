@@ -139,13 +139,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
     <ClInclude Include="Sources\EditorContext\GEditorContext.h" />
+    <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
     <ClInclude Include="Sources\GEditorEngine.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp" />
+    <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
     <ClCompile Include="Sources\GEditorEngine.cpp" />
   </ItemGroup>
   <ItemGroup>

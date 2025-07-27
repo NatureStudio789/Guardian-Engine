@@ -9,6 +9,11 @@ namespace GE
 	public:
 		GLitRenderGraph(const std::string& name);
 
+		static std::shared_ptr<GLitRenderGraph> CreateNewLitRenderGraph(const std::string& name)
+		{
+			return std::make_shared<GLitRenderGraph>(name);
+		}
+
 	private:
 
 	};

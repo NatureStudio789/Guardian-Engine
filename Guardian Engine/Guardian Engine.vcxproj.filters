@@ -4,14 +4,14 @@
     <Filter Include="Aplication">
       <UniqueIdentifier>{A94B425F-9503-84AC-FE0A-5D08EAE11E9D}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Aplication\Converter">
-      <UniqueIdentifier>{F03648E6-DCC5-D1AF-85E4-E5AA7152E255}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Aplication\Event">
       <UniqueIdentifier>{BA2786DC-A620-A52E-CF52-8AB3BBAA843A}</UniqueIdentifier>
     </Filter>
     <Filter Include="Aplication\Exception">
       <UniqueIdentifier>{A73EF1A7-93CD-7A71-3CEC-8E6C285A8B17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Aplication\Util">
+      <UniqueIdentifier>{961424B9-02A0-917D-0BB1-147277BBED7D}</UniqueIdentifier>
     </Filter>
     <Filter Include="Aplication\Window">
       <UniqueIdentifier>{70806196-DC96-5F2C-250E-EB4D916330B4}</UniqueIdentifier>
@@ -76,23 +76,47 @@
     <Filter Include="Graphics\Math">
       <UniqueIdentifier>{AF158A97-1BD6-05CE-E410-4F4B50904AAA}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Math\Matrix">
+      <UniqueIdentifier>{73326C3C-5FC1-F505-08E0-0901F44D06AC}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\Math\Transform">
       <UniqueIdentifier>{3A142231-A64B-6AC8-AF55-CEEB1B0C91C1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Math\Vector">
       <UniqueIdentifier>{F1B8A951-DD47-331B-8666-471672D443C1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Renderable">
-      <UniqueIdentifier>{39D7A6D9-A538-84E7-2EA6-CA999A06BBA6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Renderable\Mesh">
-      <UniqueIdentifier>{95B8F9DE-81DD-485F-AA28-2EEF96AC477D}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Renderer">
       <UniqueIdentifier>{7C6F0F98-E885-0D2E-31FD-984F9D52DEB5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Renderer\Pass">
+      <UniqueIdentifier>{E286CC0A-CE80-F55C-B7ED-8B6DA3865BC9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\RenderGraph">
+      <UniqueIdentifier>{BDBF5CDF-29D8-4309-F284-D3A25E5CD8A2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Renderable">
+      <UniqueIdentifier>{DFA77592-CB62-653E-741A-DE8860B4AFCE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Sink">
+      <UniqueIdentifier>{604DCE0A-4C47-F75C-35B4-8D6D214D5DC9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Source">
+      <UniqueIdentifier>{FCB907F8-E8DE-5678-112A-3C08FDAD5596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Step">
+      <UniqueIdentifier>{077BCE0A-F374-F75C-DCE1-8D6DC87A5DC9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Task">
+      <UniqueIdentifier>{5EB8CE0A-4AB2-F75C-331F-8E6D1FB85DC9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Technique">
+      <UniqueIdentifier>{11BC6CEE-7DC9-9AD4-06B0-96BF72BC668B}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\RootSignature">
       <UniqueIdentifier>{BB3880CF-A732-A921-909F-3F327C380F8E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Surface">
+      <UniqueIdentifier>{6EE48EEB-5ADD-AD3D-830F-93C26F678D49}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\SwapChain">
       <UniqueIdentifier>{E3CAF6DB-CFAE-B731-380F-B2842412A2B3}</UniqueIdentifier>
@@ -117,9 +141,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Aplication\Util\GUtil.h">
-      <Filter>Aplication\Converter</Filter>
-    </ClInclude>
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h">
       <Filter>Aplication\Event</Filter>
     </ClInclude>
@@ -143,6 +164,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Aplication\GApplication.h">
       <Filter>Aplication</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Aplication\Util\GUtil.h">
+      <Filter>Aplication\Util</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Aplication\Window\GWindow.h">
       <Filter>Aplication\Window</Filter>
@@ -176,6 +200,9 @@
       <Filter>Graphics\Applicable</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h">
+      <Filter>Graphics\Applicable\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.h">
       <Filter>Graphics\Applicable\PipelineState</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h">
@@ -226,6 +253,9 @@
     <ClInclude Include="Sources\Graphics\GRenderEngine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h">
+      <Filter>Graphics\Math\Matrix</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Math\Transform\GTransform.h">
       <Filter>Graphics\Math\Transform</Filter>
     </ClInclude>
@@ -235,8 +265,47 @@
     <ClInclude Include="Sources\Graphics\Renderer\GRenderer.h">
       <Filter>Graphics\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GApplyPass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GLightingPass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GPass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.h">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h">
+      <Filter>Graphics\Renderer\Renderable</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h">
+      <Filter>Graphics\Renderer\Sink</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Source\GSource.h">
+      <Filter>Graphics\Renderer\Source</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Step\GStep.h">
+      <Filter>Graphics\Renderer\Step</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Task\GTask.h">
+      <Filter>Graphics\Renderer\Task</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Technique\GTechnique.h">
+      <Filter>Graphics\Renderer\Technique</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\RootSignature\GRootSignature.h">
       <Filter>Graphics\RootSignature</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Surface\GSurface.h">
+      <Filter>Graphics\Surface</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\SwapChain\GSwapChain.h">
       <Filter>Graphics\SwapChain</Filter>
@@ -259,25 +328,11 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GPass.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Task\GTask.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Step\GStep.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Technique\GTechnique.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GApplyPass.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Source\GSource.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GLightingPass.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Texture\GTexture.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GSampler.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Aplication\Util\GUtil.cpp">
-      <Filter>Aplication\Converter</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
       <Filter>Aplication\Event</Filter>
     </ClCompile>
@@ -286,6 +341,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Aplication\GApplication.cpp">
       <Filter>Aplication</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Aplication\Util\GUtil.cpp">
+      <Filter>Aplication\Util</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Aplication\Window\GWindow.cpp">
       <Filter>Aplication\Window</Filter>
@@ -313,6 +371,9 @@
       <Filter>Graphics\Applicable\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp">
+      <Filter>Graphics\Applicable\PipelineState</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.cpp">
       <Filter>Graphics\Applicable\PipelineState</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp">
@@ -363,14 +424,53 @@
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp">
+      <Filter>Graphics\Math\Matrix</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp">
       <Filter>Graphics\Math\Transform</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\GRenderer.cpp">
       <Filter>Graphics\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GApplyPass.cpp">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.cpp">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.cpp">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp">
+      <Filter>Graphics\Renderer\Renderable</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp">
+      <Filter>Graphics\Renderer\Sink</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Source\GSource.cpp">
+      <Filter>Graphics\Renderer\Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Step\GStep.cpp">
+      <Filter>Graphics\Renderer\Step</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Task\GTask.cpp">
+      <Filter>Graphics\Renderer\Task</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Technique\GTechnique.cpp">
+      <Filter>Graphics\Renderer\Technique</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\RootSignature\GRootSignature.cpp">
       <Filter>Graphics\RootSignature</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Surface\GSurface.cpp">
+      <Filter>Graphics\Surface</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\SwapChain\GSwapChain.cpp">
       <Filter>Graphics\SwapChain</Filter>
@@ -381,18 +481,9 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Task\GTask.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Step\GStep.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Technique\GTechnique.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Pass\GApplyPass.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Source\GSource.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Texture\GTexture.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GSampler.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.cpp" />
   </ItemGroup>
 </Project>

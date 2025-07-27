@@ -10,7 +10,15 @@ namespace GE
 		this->IndexBuffer = null;
 		this->Topology = null;
 
+		this->Transform = {};
+
 		this->RenderTechniqueList.clear();
+	}
+
+	GRenderable::GRenderable(const std::string& name, 
+		std::shared_ptr<GVertexBuffer> vertexBuffer, std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
+	{
+		this->InitializeRenderable(name, vertexBuffer, indexBuffer, topology);
 	}
 
 	GRenderable::GRenderable(const GRenderable& other)
@@ -21,6 +29,8 @@ namespace GE
 		this->VertexBuffer = other.VertexBuffer;
 		this->IndexBuffer = other.IndexBuffer;
 		this->Topology = other.Topology;
+
+		this->Transform = other.Transform;
 
 		this->RenderTechniqueList = other.RenderTechniqueList;
 	}
@@ -39,6 +49,8 @@ namespace GE
 		this->Topology.reset();
 		this->Topology = null;
 
+		this->Transform = {};
+
 		for (auto& technology : this->RenderTechniqueList)
 		{
 			technology.reset();
@@ -47,14 +59,35 @@ namespace GE
 		this->RenderTechniqueList.clear();
 	}
 
-	void GRenderable::AddTechnology(std::shared_ptr<GTechnique> technology)
+	void GRenderable::InitializeRenderable(const std::string& name, 
+		std::shared_ptr<GVertexBuffer> vertexBuffer, std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
 	{
-		this->RenderTechniqueList.push_back(technology);
+		GUARDIAN_CHECK_POINTER(vertexBuffer);
+		GUARDIAN_CHECK_POINTER(topology);
+
+		this->RenderableName = name;
+
+		this->VertexBuffer = vertexBuffer;
+		this->IndexBuffer = indexBuffer;
+		this->Topology = topology;
+
+		this->Transform = {};
 	}
 
-	void GRenderable::SetTechnologyList(std::vector<std::shared_ptr<GTechnique>> technologyList)
+	void GRenderable::AddTechnique(std::shared_ptr<GTechnique> technique)
 	{
-		this->RenderTechniqueList = technologyList;
+		technique->SetParent(*this);
+		this->RenderTechniqueList.push_back(technique);
+	}
+
+	void GRenderable::SetTechniqueList(std::vector<std::shared_ptr<GTechnique>> techniqueList)
+	{
+		for (auto& technique : techniqueList)
+		{
+			technique->SetParent(*this);
+		}
+
+		this->RenderTechniqueList = techniqueList;
 	}
 
 	void GRenderable::Apply()
@@ -75,6 +108,11 @@ namespace GE
 		{
 			technique->Submit(std::make_shared<GRenderable>(*this), channel);
 		}
+	}
+
+	void GRenderable::SetTransform(const GTransform& transform)
+	{
+		this->Transform = transform;
 	}
 
 	void GRenderable::LinkTechnique(std::string renderGraphName)
@@ -126,5 +164,10 @@ namespace GE
 	const bool GRenderable::HasIndexBuffer() const noexcept
 	{
 		return this->IndexBuffer != null;
+	}
+
+	const GTransform& GRenderable::GetTransform() const noexcept
+	{
+		return this->Transform;
 	}
 }

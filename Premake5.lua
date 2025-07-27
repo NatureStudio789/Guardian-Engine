@@ -38,6 +38,11 @@ project "Guardian Engine"
 		"Guardian EUI/Sources/",
 	}
 
+	libdirs
+	{
+		dependenciesdir .. "Libraries/DirectXTex/%{cfg.buildcfg}/",
+	}
+
 	links
 	{
 		"ImGui",
@@ -49,6 +54,7 @@ project "Guardian Engine"
 		"d3d12",
 		"d3dcompiler",
 		"dxguid",
+		"DirectXTex",
 
 		"xaudio2"
 	}
