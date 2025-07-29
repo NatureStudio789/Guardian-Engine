@@ -18,11 +18,7 @@ namespace GE
 
 	void GApplication::InitializeApplication(const GWindow::Attribute& windowAttribute)
 	{
-		GUARDIAN_SETUP_AUTO_THROW();
-
 		this->MainWindow = GWindow::CreateNewWindow(windowAttribute);
-
-		GUARDIAN_AUTO_THROW(CoInitializeEx(null, 0));
 	}
 
 	void GApplication::DisplayMainWindow()

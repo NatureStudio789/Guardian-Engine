@@ -16,7 +16,8 @@ namespace GE
 
 			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
 			{
-				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, }
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, },
+				{"TEXTURECOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, },
 			};
 
 			MeshPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
@@ -27,8 +28,22 @@ namespace GE
 			CBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
 			CBParameter.ShaderRegisterIndex = 0;
 			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(CBParameter);
+			
+			GRootSignature::RootParameter TexParameter;
+			TexParameter.Type = GRootSignature::GE_PARAMETER_SRV;
+			TexParameter.ShaderRegisterIndex = 0;
+			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(TexParameter);
+			
+			GRootSignature::StaticSamplerDescription Sampler;
+			GUARDIAN_CLEAR_MEMORY(Sampler);
+			Sampler.ShaderRegister = 0;
+			Sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+			Sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			Sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			Sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			MeshPipelineState->GetPipelineRootSignature()->AddSamplerDescription(Sampler);
 
-			MeshPipelineState->InitializePipelineState(1, 0, 0);
+			MeshPipelineState->InitializePipelineState(1, 1, 1);
 			PipelineStateList[LIGHTING_PSO] = MeshPipelineState;
 		}
 	}

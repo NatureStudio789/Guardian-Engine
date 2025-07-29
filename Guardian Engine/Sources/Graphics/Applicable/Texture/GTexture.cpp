@@ -4,41 +4,46 @@ namespace GE
 {
 	GTexture::GTexture()
 	{
-		this->TextureDescriptorHeap = null;
+		this->TextureRootSignature = null;
 		this->TextureIndex = 0;
+		this->TextureRootParameterIndex = 0;
 	}
 
-	GTexture::GTexture(std::shared_ptr<GDescriptorHeap> srvDescriptor, const GSurface& surface, int index)
+	GTexture::GTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index)
 	{
-		this->InitializeTexture(srvDescriptor, surface, index);
+		this->InitializeTexture(rootSignature, surface, index);
 	}
 
 	GTexture::GTexture(const GTexture& other)
 	{
-		this->TextureDescriptorHeap = other.TextureDescriptorHeap;
+		this->TextureRootSignature = other.TextureRootSignature;
 		this->TextureResource = other.TextureResource;
 		this->TextureUploadHeap = other.TextureUploadHeap;
 		this->TextureIndex = other.TextureIndex;
+		this->TextureRootParameterIndex = other.TextureRootParameterIndex;
 	}
 
 	GTexture::~GTexture()
 	{
-		this->TextureDescriptorHeap = null;
+		this->TextureRootSignature = null;
 		this->TextureIndex = 0;
+		this->TextureRootParameterIndex = 0;
 	}
 
-	void GTexture::InitializeTexture(std::shared_ptr<GDescriptorHeap> srvDescriptor, const GSurface& surface, int index)
+	void GTexture::InitializeTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		GUARDIAN_CHECK_POINTER(srvDescriptor);
+		GUARDIAN_CHECK_POINTER(rootSignature);
 
-		this->TextureDescriptorHeap = srvDescriptor;
+		this->TextureRootSignature = rootSignature;
 		this->TextureIndex = index;
+		this->TextureRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
+			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, this->TextureIndex));
 
 		GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
-				&CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, surface.GetSurfaceWidth(), surface.GetSurfaceHeight()),
+				&CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R8G8B8A8_UNORM, surface.GetSurfaceWidth(), surface.GetSurfaceHeight(), 1, 1),
 				D3D12_RESOURCE_STATE_COPY_DEST, null, __uuidof(ID3D12Resource), (void**)this->TextureResource.GetAddressOf()));
 
 		const auto UploadBufferSize = GetRequiredIntermediateSize(this->TextureResource.Get(), 0, 1);
@@ -50,7 +55,8 @@ namespace GE
 		D3D12_SUBRESOURCE_DATA TextureSubresourceData;
 		GUARDIAN_CLEAR_MEMORY(TextureSubresourceData);
 		TextureSubresourceData.pData = (const void*)surface.GetBufferData();
-		TextureSubresourceData.RowPitch = (long long)(surface.GetSurfaceWidth() * sizeof(GColor));
+		TextureSubresourceData.RowPitch = (long long)(((surface.GetSurfaceWidth() * sizeof(GColor)) + 3) & ~3);
+		TextureSubresourceData.SlicePitch = (long long)TextureSubresourceData.RowPitch * surface.GetSurfaceHeight();
 		UpdateSubresources(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get(),
 			this->TextureResource.Get(), this->TextureUploadHeap.Get(), 0, 0, 1, &TextureSubresourceData);
 
@@ -65,7 +71,7 @@ namespace GE
 	void GTexture::Apply()
 	{
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-			SetGraphicsRootDescriptorTable(this->TextureIndex, this->GetShaderResourceGPUView());
+			SetGraphicsRootDescriptorTable(this->TextureRootParameterIndex, this->GetShaderResourceGPUView());
 	}
 
 	WRL::ComPtr<ID3D12Resource> GTexture::GetTextureResource()
@@ -86,7 +92,7 @@ namespace GE
 	CD3DX12_CPU_DESCRIPTOR_HANDLE GTexture::GetShaderResourceCPUView()
 	{
 		return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			this->TextureDescriptorHeap->GetFirstCPUDescriptorHandle()).Offset(
+			this->TextureRootSignature->GetShaderResourceDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(
 			this->TextureIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->
 			GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
 	}
@@ -94,7 +100,7 @@ namespace GE
 	CD3DX12_GPU_DESCRIPTOR_HANDLE GTexture::GetShaderResourceGPUView()
 	{
 		return CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			this->TextureDescriptorHeap->GetFirstGPUDescriptorHandle()).Offset(
+			this->TextureRootSignature->GetShaderResourceDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(
 			this->TextureIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->
 				GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
 	}

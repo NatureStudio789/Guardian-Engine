@@ -41,10 +41,10 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 		std::vector<GMeshInstance::Vertex> v =
 		{
-			{{0.5f, 0.5f, 0.0f}},
-			{{0.5f, -0.5f, 0.0f}},
-			{{-0.5f, -0.5f, 0.0f}},
-			{{-0.5f, 0.5f, 0.0f}},
+			{GVector3{ 0.5f,  0.5f, 0.0f}, GVector2{1.0f, 0.0f}},
+			{GVector3{ 0.5f, -0.5f, 0.0f}, GVector2{1.0f, 1.0f}},
+			{GVector3{-0.5f, -0.5f, 0.0f}, GVector2{0.0f, 1.0f}},
+			{GVector3{-0.5f,  0.5f, 0.0f}, GVector2{0.0f, 0.0f}},
 		};
 
 		std::vector<UINT> i =
@@ -55,11 +55,20 @@ namespace GE
 
 		this->TestM = GMeshInstance::CreateNewMeshInstance("Test", { v, i });
 
-		std::shared_ptr<GTechnique> tech = GTechnique::CreateNewTechnique("Phong", "main");
+		std::shared_ptr<GTechnique> tech = GTechnique::CreateNewTechnique("PBR", "main");
 		std::shared_ptr<GStep> step = GStep::CreateNewStep("Lighting");
 
+		auto& surface = GSurface("Assets/Textures/Header.jpg");
+		static bool saved = false;
+		if (!saved)
+		{
+			surface.SaveSurface("Saved.jpg");
+		}
 		step->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+		step->AddApplicable(GTexture::CreateNewTexture(
+			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+			surface));
 
 		tech->AddStep(step);
 
@@ -72,6 +81,46 @@ namespace GE
 	void GRenderEngine::UpdateModule()
 	{
 		TestM->Submit("main");
+		static float s = 1.0f;
+		static float x = 0.0f;
+		static float y = 0.0f;
+		static float sdelta = 0.01f;
+		static float xdelta = 0.01f;
+		static float ydelta = 0.01f;
+		if (GetAsyncKeyState(VK_CONTROL))
+		{
+			if (GetAsyncKeyState(VK_ADD))
+			{
+				s += sdelta;
+			}
+			if (GetAsyncKeyState(VK_SUBTRACT))
+			{
+				s -= sdelta;
+			}
+		}
+
+		if (GetAsyncKeyState(VK_LEFT))
+		{
+			x -= xdelta;
+		}
+		if (GetAsyncKeyState(VK_RIGHT))
+		{
+			x += xdelta;
+		}
+		if (GetAsyncKeyState(VK_UP))
+		{
+			y += ydelta;
+		}
+		if (GetAsyncKeyState(VK_DOWN))
+		{
+			y -= ydelta;
+		}
+
+		if (s <= 0.0f)
+		{
+			s = 0.0f;
+		}
+		TestM->SetTransform({ {x, y, 0.0f}, {}, {s, s, s} });
 
 		GRenderer::Render();
 	}

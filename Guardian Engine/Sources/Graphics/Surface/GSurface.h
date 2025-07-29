@@ -102,6 +102,7 @@ namespace GE
 		const int GetSurfaceWidth() const noexcept;
 		const int GetSurfaceHeight() const noexcept;
 		const int GetBytePitch() const noexcept;
+		const int GetSlicePitch() const noexcept;
 		GColor* GetBufferData() const noexcept;
 
 		static std::shared_ptr<GSurface> CreateNewSurface(unsigned int width, unsigned height)

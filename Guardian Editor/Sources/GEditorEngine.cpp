@@ -22,7 +22,7 @@ namespace GE
 		this->ProgramAttribute.ProgramWindowAttribute.WindowStyle = GWindow::GE_STYLE_DEFAULTWINDOW;
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
 
-        this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Audio" };
+        this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Audio"};
     }
 
     void GEditorEngine::InitializeProgram()

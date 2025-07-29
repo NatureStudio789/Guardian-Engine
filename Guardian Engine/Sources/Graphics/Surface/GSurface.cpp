@@ -28,6 +28,8 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
+		GUARDIAN_AUTO_THROW(CoInitializeEx(null, COINIT_MULTITHREADED));
+
 		GUARDIAN_AUTO_THROW(LoadFromWICFile(GUtil::StringToWideString(filePath).c_str(), 
 			WIC_FLAGS_IGNORE_SRGB, null, this->SurfaceImage));
 
@@ -106,6 +108,11 @@ namespace GE
 	const int GSurface::GetBytePitch() const noexcept
 	{
 		return (int)this->SurfaceImage.GetImage(0, 0, 0)->rowPitch;
+	}
+
+	const int GSurface::GetSlicePitch() const noexcept
+	{
+		return (int)this->SurfaceImage.GetImage(0, 0, 0)->slicePitch;
 	}
 
 	GColor* GSurface::GetBufferData() const noexcept

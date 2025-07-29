@@ -5,38 +5,33 @@ namespace GE
 	GRootSignature::GRootSignature()
 	{
 		this->RootParameterList.clear();
-		this->SamplerDescList.clear();
+		this->StaticSamplerDescList.clear();
 		this->IsInitialized = false;
-		this->ConstantBufferDescriptorHeap = null;
+		this->CBVSRVDescriptorHeap = null;
 		this->TextureSamplerDescriptorHeap = null;
-		this->ShaderResourceDescriptorHeap = null;
 	}
 
 	GRootSignature::GRootSignature(const GRootSignature& other)
 	{
 		this->RootSignatureObject = other.RootSignatureObject;
 		this->IsInitialized = other.IsInitialized;
-		this->ConstantBufferDescriptorHeap = other.ConstantBufferDescriptorHeap;
+		this->CBVSRVDescriptorHeap = other.CBVSRVDescriptorHeap;
 		this->TextureSamplerDescriptorHeap = other.TextureSamplerDescriptorHeap;
-		this->ShaderResourceDescriptorHeap = other.ShaderResourceDescriptorHeap;
 		
 		this->RootParameterList = other.RootParameterList;
-		this->SamplerDescList = other.SamplerDescList;
+		this->StaticSamplerDescList = other.StaticSamplerDescList;
 	}
 
 	GRootSignature::~GRootSignature()
 	{
-		this->SamplerDescList.clear();
+		this->StaticSamplerDescList.clear();
 		this->IsInitialized = false;
 
-		this->ConstantBufferDescriptorHeap.reset();
-		this->ConstantBufferDescriptorHeap = null;
+		this->CBVSRVDescriptorHeap.reset();
+		this->CBVSRVDescriptorHeap = null;
 
 		this->TextureSamplerDescriptorHeap.reset();
 		this->TextureSamplerDescriptorHeap = null;
-
-		this->ShaderResourceDescriptorHeap.reset();
-		this->ShaderResourceDescriptorHeap = null;
 	}
 
 	UINT GRootSignature::AddRootParameter(const RootParameter& parameter)
@@ -52,14 +47,14 @@ namespace GE
 		return ParameterIndex;
 	}
 
-	void GRootSignature::AddSamplerDescription(const SamplerDescription& description)
+	void GRootSignature::AddSamplerDescription(const StaticSamplerDescription& description)
 	{
 		if (this->IsInitialized)
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("This root signature has been initialized!");
 		}
 
-		this->SamplerDescList.push_back(description);
+		this->StaticSamplerDescList.push_back(description);
 	}
 
 	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device, 
@@ -67,9 +62,9 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		if (cbvDescriptorCount)
+		if (cbvDescriptorCount || srvDescriptorCount)
 		{
-			this->ConstantBufferDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, cbvDescriptorCount,
+			this->CBVSRVDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, cbvDescriptorCount + srvDescriptorCount,
 				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 		}
 
@@ -77,12 +72,6 @@ namespace GE
 		{
 			this->TextureSamplerDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, samplerDescriptorCount,
 				GDescriptorHeap::GE_DESCRIPTOR_HEAP_SAMPLER, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
-		}
-
-		if (srvDescriptorCount)
-		{
-			this->ShaderResourceDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, srvDescriptorCount,
-				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 		}
 
 		std::vector<CD3DX12_ROOT_PARAMETER> ParameterList;
@@ -94,10 +83,7 @@ namespace GE
 			{
 				case GE_PARAMETER_CBV:
 				{
-					CD3DX12_DESCRIPTOR_RANGE ConstantBufferViewTable;
-					ConstantBufferViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, parameter.ShaderRegisterIndex);
-
-					Parameter.InitAsDescriptorTable(1, &ConstantBufferViewTable);
+					Parameter.InitAsConstantBufferView(parameter.ShaderRegisterIndex);
 
 					break;
 				}
@@ -116,7 +102,7 @@ namespace GE
 		}
 
 		std::vector<CD3DX12_STATIC_SAMPLER_DESC> DescriptionList;
-		for (auto& description : this->SamplerDescList)
+		for (auto& description : this->StaticSamplerDescList)
 		{
 			CD3DX12_STATIC_SAMPLER_DESC Description;
 
@@ -164,13 +150,13 @@ namespace GE
 	void GRootSignature::SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList)
 	{
 		std::vector<ID3D12DescriptorHeap*> DescriptorHeapObjectList;
-		if (this->ConstantBufferDescriptorHeap)
+		if (this->CBVSRVDescriptorHeap)
 		{
-			DescriptorHeapObjectList.push_back(this->ConstantBufferDescriptorHeap->GetDescriptorHeapObject().Get());
+			DescriptorHeapObjectList.push_back(this->CBVSRVDescriptorHeap->GetDescriptorHeapObject().Get());
 		}
-		if (this->ShaderResourceDescriptorHeap)
+		if (this->TextureSamplerDescriptorHeap)
 		{
-			DescriptorHeapObjectList.push_back(this->ShaderResourceDescriptorHeap->GetDescriptorHeapObject().Get());
+			DescriptorHeapObjectList.push_back(this->TextureSamplerDescriptorHeap->GetDescriptorHeapObject().Get());
 		}
 
 		commandList->GetCommandListObject()->SetDescriptorHeaps((UINT)DescriptorHeapObjectList.size(),
@@ -189,6 +175,34 @@ namespace GE
 		this->SetDescriptorHeapList(commandList);
 	}
 
+	const UINT GRootSignature::GetRootParameterIndex(const RootParameter& parameter) const
+	{
+		for (UINT i = 0; i < (UINT)this->RootParameterList.size(); i++)
+		{
+			if (parameter == this->RootParameterList[i])
+			{
+				return i;
+				break;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION("No suitable root parameter found!");
+	}
+
+	const UINT GRootSignature::GetStaticSamplerIndex(const StaticSamplerDescription& description) const
+	{
+		for (UINT i = 0; i < (UINT)this->StaticSamplerDescList.size(); i++)
+		{
+			if (description == this->StaticSamplerDescList[i])
+			{
+				return i;
+				break;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION("No suitable static sampler description found!");
+	}
+
 	WRL::ComPtr<ID3D12RootSignature> GRootSignature::GetRootSignatureObject()
 	{
 		return this->RootSignatureObject;
@@ -196,7 +210,7 @@ namespace GE
 
 	std::shared_ptr<GDescriptorHeap> GRootSignature::GetConstantBufferDescriptorHeap()
 	{
-		return this->ConstantBufferDescriptorHeap;
+		return this->CBVSRVDescriptorHeap;
 	}
 
 	std::shared_ptr<GDescriptorHeap> GRootSignature::GetTextureSamplerDescriptorHeap()
@@ -206,7 +220,7 @@ namespace GE
 
 	std::shared_ptr<GDescriptorHeap> GRootSignature::GetShaderResourceDescriptorHeap()
 	{
-		return this->ShaderResourceDescriptorHeap;
+		return this->CBVSRVDescriptorHeap;
 	}
 
 	const bool& GRootSignature::GetInitialized() const noexcept

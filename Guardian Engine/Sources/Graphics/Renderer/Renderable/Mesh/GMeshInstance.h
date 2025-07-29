@@ -10,6 +10,7 @@ namespace GE
 		struct Vertex
 		{
 			GVector3 Position;
+			GVector2 TextureCoord;
 		};
 
 		struct Data

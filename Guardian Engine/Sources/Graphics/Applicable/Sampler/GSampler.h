@@ -74,6 +74,7 @@ namespace GE
 
 		std::shared_ptr<GRootSignature> SamplerRootSignature;
 		UINT SamplerIndex;
+        UINT SamplerDescriptionIndex;
 	};
 }
 

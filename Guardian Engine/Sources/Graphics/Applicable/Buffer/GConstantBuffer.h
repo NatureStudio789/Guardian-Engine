@@ -25,8 +25,7 @@ namespace GE
 		const T& GetBufferData() const noexcept;
 
 	protected:
-		CD3DX12_CPU_DESCRIPTOR_HANDLE GetConstantBufferCPUView();
-		CD3DX12_GPU_DESCRIPTOR_HANDLE GetConstantBufferGPUView();
+		D3D12_GPU_VIRTUAL_ADDRESS GetConstantBufferGPUVirtualAddress();
 
 		WRL::ComPtr<ID3D12Resource> UploadBuffer;
 		std::shared_ptr<GRootSignature> BufferRootSignature;
@@ -92,9 +91,10 @@ namespace GE
 		GUARDIAN_SETUP_AUTO_THROW();
 
 		this->BufferIndex = index;
-		this->BufferRootParameterIndex = this->BufferIndex;
 		this->DataSize = (sizeof(T) + 255) & ~255;
 		this->BufferRootSignature = rootSignature;
+		this->BufferRootParameterIndex = this->BufferRootSignature->GetRootParameterIndex(
+			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_CBV, this->BufferIndex));
 
 		GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE,
@@ -102,14 +102,6 @@ namespace GE
 				__uuidof(ID3D12Resource), (void**)this->UploadBuffer.GetAddressOf()));
 
 		GUARDIAN_AUTO_THROW(this->UploadBuffer->Map(0, null, (void**)&this->MappedData));
-
-		D3D12_CONSTANT_BUFFER_VIEW_DESC ConstantBufferDesc;
-		GUARDIAN_CLEAR_MEMORY(ConstantBufferDesc);
-		ConstantBufferDesc.BufferLocation = this->UploadBuffer->GetGPUVirtualAddress();
-		ConstantBufferDesc.SizeInBytes = this->DataSize;
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			CreateConstantBufferView(&ConstantBufferDesc, this->GetConstantBufferCPUView());
 	}
 
 	template<typename T>
@@ -123,9 +115,8 @@ namespace GE
 	template<typename T>
 	inline void GConstantBuffer<T>::Apply()
 	{
-		this->BufferRootSignature->SetRootDescriptorTable(
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList(), this->BufferRootParameterIndex,
-			this->GetConstantBufferGPUView());
+		this->BufferRootSignature->SetRootConstantBufferView(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList(),
+			this->BufferRootParameterIndex, this->GetConstantBufferGPUVirtualAddress());
 	}
 
 	template<typename T>
@@ -153,19 +144,9 @@ namespace GE
 	}
 
 	template<typename T>
-	inline CD3DX12_CPU_DESCRIPTOR_HANDLE GConstantBuffer<T>::GetConstantBufferCPUView()
+	inline D3D12_GPU_VIRTUAL_ADDRESS GConstantBuffer<T>::GetConstantBufferGPUVirtualAddress()
 	{
-		return CD3DX12_CPU_DESCRIPTOR_HANDLE(this->BufferRootSignature->GetConstantBufferDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(
-			this->BufferIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(
-				D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-	}
-
-	template<typename T>
-	inline CD3DX12_GPU_DESCRIPTOR_HANDLE GConstantBuffer<T>::GetConstantBufferGPUView()
-	{
-		return CD3DX12_GPU_DESCRIPTOR_HANDLE(this->BufferRootSignature->GetConstantBufferDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(
-			this->BufferIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(
-				D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+		return this->UploadBuffer->GetGPUVirtualAddress();
 	}
 
 	struct GTransformCBData

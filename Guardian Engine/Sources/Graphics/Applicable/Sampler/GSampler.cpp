@@ -6,6 +6,7 @@ namespace GE
     {
         this->SamplerRootSignature = null;
         this->SamplerIndex = 0;
+        this->SamplerDescriptionIndex = 0;
     }
 
     GSampler::GSampler(std::shared_ptr<GRootSignature> rootSignature, 
@@ -18,12 +19,14 @@ namespace GE
     {
         this->SamplerRootSignature = other.SamplerRootSignature;
         this->SamplerIndex = other.SamplerIndex;
+        this->SamplerDescriptionIndex = other.SamplerDescriptionIndex;
     }
 
     GSampler::~GSampler()
     {
         this->SamplerRootSignature = null;
         this->SamplerIndex = 0;
+        this->SamplerDescriptionIndex = 0;
     }
 
     void GSampler::InitializeSampler(std::shared_ptr<GRootSignature> rootSignature, 
@@ -59,14 +62,14 @@ namespace GE
     CD3DX12_CPU_DESCRIPTOR_HANDLE GSampler::GetSamplerCPUView()
     {
         return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-            this->SamplerRootSignature->GetTextureSamplerDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(this->SamplerIndex,
+            this->SamplerRootSignature->GetTextureSamplerDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(this->SamplerDescriptionIndex,
             GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
     }
 
     CD3DX12_GPU_DESCRIPTOR_HANDLE GSampler::GetSamplerGPUView()
     {
         return CD3DX12_GPU_DESCRIPTOR_HANDLE(
-            this->SamplerRootSignature->GetTextureSamplerDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(this->SamplerIndex, 
+            this->SamplerRootSignature->GetTextureSamplerDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(this->SamplerDescriptionIndex,
                 GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER));
     }
 }
