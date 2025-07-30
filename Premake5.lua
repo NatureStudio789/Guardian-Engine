@@ -41,6 +41,7 @@ project "Guardian Engine"
 	libdirs
 	{
 		dependenciesdir .. "Libraries/DirectXTex/%{cfg.buildcfg}/",
+		dependenciesdir .. "Libraries/Assimp/%{cfg.buildcfg}/",
 	}
 
 	links
@@ -56,7 +57,9 @@ project "Guardian Engine"
 		"dxguid",
 		"DirectXTex",
 
-		"xaudio2"
+		"xaudio2",
+
+		"assimp"
 	}
 
 	filter "system:Windows"

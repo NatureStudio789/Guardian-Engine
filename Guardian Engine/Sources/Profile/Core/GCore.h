@@ -27,6 +27,9 @@
 #include <imgui_impl_win32.h>
 #include <imgui_internal.h>
 #include <DirectXTex/DirectXTex.h>
+#include <Assimp/Importer.hpp>
+#include <Assimp/scene.h>
+#include <Assimp/postprocess.h>
 using namespace Microsoft;
 using namespace DirectX;
 

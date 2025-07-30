@@ -92,8 +92,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Debug;..\Dependencies\Libraries\Assimp\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Build\Debug - windows\x86_64\Guardian Engine.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -117,8 +117,8 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Release;..\Dependencies\Libraries\Assimp\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Build\Release - windows\x86_64\Guardian Engine.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
@@ -142,15 +142,12 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Distribution;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Uxtheme.lib;dxgi.lib;d3d12.lib;d3dcompiler.lib;dxguid.lib;DirectXTex.lib;xaudio2.lib;assimp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\Dependencies\Libraries\DirectXTex\Distribution;..\Dependencies\Libraries\Assimp\Distribution;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>..\Build\Distribution - windows\x86_64\Guardian Engine.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GSampler.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Texture\GTexture.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
@@ -176,6 +173,8 @@
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.h" />
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GSampler.h" />
+    <ClInclude Include="Sources\Graphics\Applicable\Texture\GTexture.h" />
     <ClInclude Include="Sources\Graphics\CommandList\GCommandList.h" />
     <ClInclude Include="Sources\Graphics\CommandQueue\GCommandQueue.h" />
     <ClInclude Include="Sources\Graphics\DescriptorHeap\GDescriptorHeap.h" />
@@ -200,6 +199,8 @@
     <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.h" />
     <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Mesh\GMesh.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Model\GModel.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Source\GSource.h" />
     <ClInclude Include="Sources\Graphics\Renderer\Step\GStep.h" />
@@ -216,10 +217,6 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GSampler.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Texture\GTexture.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\Aplication\GApplication.cpp" />
@@ -231,6 +228,7 @@
     <ClCompile Include="Sources\Audio\SourceVoice\GSourceVoice.cpp" />
     <ClCompile Include="Sources\GEngine.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp" />
@@ -238,6 +236,8 @@
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Shader\GShader.cpp" />
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GSampler.cpp" />
+    <ClCompile Include="Sources\Graphics\Applicable\Texture\GTexture.cpp" />
     <ClCompile Include="Sources\Graphics\CommandList\GCommandList.cpp" />
     <ClCompile Include="Sources\Graphics\CommandQueue\GCommandQueue.cpp" />
     <ClCompile Include="Sources\Graphics\DescriptorHeap\GDescriptorHeap.cpp" />
@@ -260,6 +260,8 @@
     <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Mesh\GMesh.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Model\GModel.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Source\GSource.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Step\GStep.cpp" />

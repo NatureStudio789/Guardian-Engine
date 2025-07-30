@@ -39,40 +39,8 @@ namespace GE
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Lit");
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
-		std::vector<GMeshInstance::Vertex> v =
-		{
-			{GVector3{ 0.5f,  0.5f, 0.0f}, GVector2{1.0f, 0.0f}},
-			{GVector3{ 0.5f, -0.5f, 0.0f}, GVector2{1.0f, 1.0f}},
-			{GVector3{-0.5f, -0.5f, 0.0f}, GVector2{0.0f, 1.0f}},
-			{GVector3{-0.5f,  0.5f, 0.0f}, GVector2{0.0f, 0.0f}},
-		};
 
-		std::vector<UINT> i =
-		{
-			0, 1, 2,
-			0, 2, 3
-		};
-
-		this->TestM = GMeshInstance::CreateNewMeshInstance("Test", { v, i });
-
-		std::shared_ptr<GTechnique> tech = GTechnique::CreateNewTechnique("PBR", "main");
-		std::shared_ptr<GStep> step = GStep::CreateNewStep("Lighting");
-
-		auto& surface = GSurface("Assets/Textures/Header.jpg");
-		static bool saved = false;
-		if (!saved)
-		{
-			surface.SaveSurface("Saved.jpg");
-		}
-		step->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-		step->AddApplicable(GTexture::CreateNewTexture(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
-			surface));
-
-		tech->AddStep(step);
-
-		this->TestM->AddTechnique(tech);
+		this->TestM = GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.fbx");
 
 		this->TestM->LinkTechnique("Lit");
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();

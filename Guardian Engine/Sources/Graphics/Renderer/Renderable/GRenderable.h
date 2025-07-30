@@ -24,6 +24,8 @@ namespace GE
 		void Apply();
 		void Submit(const std::string& channel);
 		void SetTransform(const GTransform& transform);
+		void SetExtraMatrix(const GMatrix& matrix);
+		void SetAccumulatedMatrix(GMatrix matrix);
 
 		void LinkTechnique(std::string renderGraphName);
 
@@ -34,6 +36,8 @@ namespace GE
 		const UINT& GetDataSize() const;
 		const bool HasIndexBuffer() const noexcept;
 		const GTransform& GetTransform() const noexcept;
+		const GMatrix& GetExtraMatrix() const noexcept;
+		const GMatrix& GetAccumulatedMatrix() const noexcept;
 
 	private:
 		GUUID RenderableId = GUUID();
@@ -43,6 +47,8 @@ namespace GE
 		std::shared_ptr<GTopology> Topology;
 
 		GTransform Transform;
+		GMatrix ExtraMatrix = GMatrix::IdentityMatrix();
+		GMatrix AccumulatedMatrix = GMatrix::IdentityMatrix();
 
 		std::vector<std::shared_ptr<GTechnique>> RenderTechniqueList;
 	};

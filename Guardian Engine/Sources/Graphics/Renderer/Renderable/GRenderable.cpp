@@ -11,6 +11,8 @@ namespace GE
 		this->Topology = null;
 
 		this->Transform = {};
+		this->ExtraMatrix = GMatrix::IdentityMatrix();
+		this->AccumulatedMatrix = GMatrix::IdentityMatrix();
 
 		this->RenderTechniqueList.clear();
 	}
@@ -31,6 +33,8 @@ namespace GE
 		this->Topology = other.Topology;
 
 		this->Transform = other.Transform;
+		this->ExtraMatrix = other.ExtraMatrix;
+		this->AccumulatedMatrix = other.AccumulatedMatrix;
 
 		this->RenderTechniqueList = other.RenderTechniqueList;
 	}
@@ -50,6 +54,8 @@ namespace GE
 		this->Topology = null;
 
 		this->Transform = {};
+		this->ExtraMatrix = GMatrix::IdentityMatrix();
+		this->AccumulatedMatrix = GMatrix::IdentityMatrix();
 
 		for (auto& technology : this->RenderTechniqueList)
 		{
@@ -115,6 +121,16 @@ namespace GE
 		this->Transform = transform;
 	}
 
+	void GRenderable::SetExtraMatrix(const GMatrix& matrix)
+	{
+		this->ExtraMatrix = matrix;
+	}
+
+	void GRenderable::SetAccumulatedMatrix(GMatrix matrix)
+	{
+		this->AccumulatedMatrix = matrix;
+	}
+
 	void GRenderable::LinkTechnique(std::string renderGraphName)
 	{
 		for (auto& technique : this->RenderTechniqueList)
@@ -169,5 +185,15 @@ namespace GE
 	const GTransform& GRenderable::GetTransform() const noexcept
 	{
 		return this->Transform;
+	}
+
+	const GMatrix& GRenderable::GetExtraMatrix() const noexcept
+	{
+		return this->ExtraMatrix;
+	}
+
+	const GMatrix& GRenderable::GetAccumulatedMatrix() const noexcept
+	{
+		return this->AccumulatedMatrix;
 	}
 }

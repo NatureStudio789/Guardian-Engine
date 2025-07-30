@@ -1,6 +1,6 @@
 #ifndef _GE_GTASK_H_
 #define _GE_GTASK_H_
-#include "../Renderable/Mesh/GMeshInstance.h"
+#include "../Renderable/Model/GModel.h"
 
 namespace GE
 {

@@ -43,6 +43,12 @@
     <Filter Include="Graphics\Applicable\PipelineState\Topology">
       <UniqueIdentifier>{44F3519B-305B-1869-99C6-2C7F854D2F55}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Applicable\Sampler">
+      <UniqueIdentifier>{F562ACCA-6170-DAB0-EA56-D69B5663A667}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\Texture">
+      <UniqueIdentifier>{32A9C421-9EB6-F207-279D-EEF293A9BEBE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\CommandList">
       <UniqueIdentifier>{E06E3D03-CCFD-C6CC-751C-DBC7618AD772}</UniqueIdentifier>
     </Filter>
@@ -96,6 +102,12 @@
     </Filter>
     <Filter Include="Graphics\Renderer\Renderable">
       <UniqueIdentifier>{DFA77592-CB62-653E-741A-DE8860B4AFCE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Renderable\Mesh">
+      <UniqueIdentifier>{FBE0C2FC-674F-187C-B038-D37B1CE60D18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Renderer\Renderable\Model">
+      <UniqueIdentifier>{5F3C2495-4B78-27FF-B48A-3FF6A0E5CF19}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Renderer\Sink">
       <UniqueIdentifier>{604DCE0A-4C47-F75C-35B4-8D6D214D5DC9}</UniqueIdentifier>
@@ -214,6 +226,12 @@
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.h">
       <Filter>Graphics\Applicable\PipelineState\Topology</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GSampler.h">
+      <Filter>Graphics\Applicable\Sampler</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Texture\GTexture.h">
+      <Filter>Graphics\Applicable\Texture</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\CommandList\GCommandList.h">
       <Filter>Graphics\CommandList</Filter>
     </ClInclude>
@@ -286,6 +304,12 @@
     <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h">
       <Filter>Graphics\Renderer\Renderable</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Mesh\GMesh.h">
+      <Filter>Graphics\Renderer\Renderable\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Model\GModel.h">
+      <Filter>Graphics\Renderer\Renderable\Model</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\Sink\GSink.h">
       <Filter>Graphics\Renderer\Sink</Filter>
     </ClInclude>
@@ -328,9 +352,6 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Applicable\Texture\GTexture.h" />
-    <ClInclude Include="Sources\Graphics\Applicable\Sampler\GSampler.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -364,6 +385,9 @@
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp">
       <Filter>Graphics\Applicable\Buffer</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.cpp">
+      <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GIndexBuffer.cpp">
       <Filter>Graphics\Applicable\Buffer</Filter>
     </ClCompile>
@@ -384,6 +408,12 @@
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\Topology\GTopology.cpp">
       <Filter>Graphics\Applicable\PipelineState\Topology</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GSampler.cpp">
+      <Filter>Graphics\Applicable\Sampler</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Texture\GTexture.cpp">
+      <Filter>Graphics\Applicable\Texture</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\CommandList\GCommandList.cpp">
       <Filter>Graphics\CommandList</Filter>
@@ -451,6 +481,12 @@
     <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp">
       <Filter>Graphics\Renderer\Renderable</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Mesh\GMesh.cpp">
+      <Filter>Graphics\Renderer\Renderable\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Model\GModel.cpp">
+      <Filter>Graphics\Renderer\Renderable\Model</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\Sink\GSink.cpp">
       <Filter>Graphics\Renderer\Sink</Filter>
     </ClCompile>
@@ -481,9 +517,5 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Applicable\Texture\GTexture.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Sampler\GSampler.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Renderable\Mesh\GMeshInstance.cpp" />
-    <ClCompile Include="Sources\Graphics\Applicable\Buffer\GConstantBuffer.cpp" />
   </ItemGroup>
 </Project>
