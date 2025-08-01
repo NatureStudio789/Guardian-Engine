@@ -15,6 +15,9 @@ namespace GE
 
 	GRenderGraph::GRenderGraph(const GRenderGraph& other)
 	{
+		this->RenderGraphFramebuffer = other.RenderGraphFramebuffer;
+		this->RenderGraphCamera = other.RenderGraphCamera;
+
 		this->RenderGraphName = other.RenderGraphName;
 		this->RenderGraphId = other.RenderGraphId;
 
@@ -62,10 +65,22 @@ namespace GE
 		this->InitializeGraphGraphics();
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+
+		this->RenderGraphCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 
 		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("Framebuffer", this->RenderGraphFramebuffer));
 		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("Framebuffer", this->RenderGraphFramebuffer));
+
+		this->AddGlobalSource(GDirectCameraSource::CreateNewDirectCameraSource("Camera", this->RenderGraphCamera));
+		this->AddGlobalSink(GDirectCameraSink::CreateNewDirectCameraSink("Camera", this->RenderGraphCamera));
+	}
+
+	void GRenderGraph::SetCamera(std::shared_ptr<GCamera> camera)
+	{
+		GUARDIAN_CHECK_POINTER(camera);
+
+		this->RenderGraphCamera = camera;
 	}
 
 	void GRenderGraph::Execute()
@@ -110,6 +125,11 @@ namespace GE
 	const std::string& GRenderGraph::GetRenderGraphName() const noexcept
 	{
 		return this->RenderGraphName;
+	}
+
+	std::shared_ptr<GCamera> GRenderGraph::GetRenderGraphCamera()
+	{
+		return this->RenderGraphCamera;
 	}
 
 	std::shared_ptr<GPass> GRenderGraph::GetPass(const std::string& passName)

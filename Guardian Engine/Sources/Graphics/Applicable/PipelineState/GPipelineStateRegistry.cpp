@@ -24,11 +24,15 @@ namespace GE
 			MeshPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
 
 			MeshPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
-
-			GRootSignature::RootParameter CBParameter;
-			CBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
-			CBParameter.ShaderRegisterIndex = 0;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(CBParameter);
+			
+			GRootSignature::RootParameter TransformCBParameter;
+			TransformCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			TransformCBParameter.ShaderRegisterIndex = 0;
+			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(TransformCBParameter);
+			GRootSignature::RootParameter CameraCBParameter;
+			CameraCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			CameraCBParameter.ShaderRegisterIndex = 1;
+			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(CameraCBParameter);
 			
 			GRootSignature::RootParameter TexParameter;
 			TexParameter.Type = GRootSignature::GE_PARAMETER_SRV;
@@ -44,7 +48,7 @@ namespace GE
 			Sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 			MeshPipelineState->GetPipelineRootSignature()->AddSamplerDescription(Sampler);
 
-			MeshPipelineState->InitializePipelineState(1, 1, 1);
+			MeshPipelineState->InitializePipelineState(2, 1, 1);
 			PipelineStateList[LIGHTING_PSO] = MeshPipelineState;
 		}
 	}

@@ -153,16 +153,13 @@ namespace GE
 	{
 		GTransformCBData()
 		{
-			this->TransformMatrix = GMatrix::IdentityMatrix();
 			this->WorldMatrix = GMatrix::IdentityMatrix();
 		}
-		GTransformCBData(GMatrix transformMatrix, GMatrix worldMatrix)
+		GTransformCBData(GMatrix worldMatrix)
 		{
-			this->TransformMatrix = transformMatrix;
 			this->WorldMatrix = worldMatrix;
 		}
 
-		GMatrix TransformMatrix;
 		GMatrix WorldMatrix;
 	};
 	class GUARDIAN_API GTransformCBuffer : public GConstantBuffer<GTransformCBData>
@@ -195,6 +192,43 @@ namespace GE
 
 	private:
 		const GRenderable* Parent;
+	};
+
+	struct GCameraCBData
+	{
+		GCameraCBData()
+		{
+			this->CameraMatrix = GMatrix::IdentityMatrix();
+		}
+		GCameraCBData(GMatrix cameraMatrix)
+		{
+			this->CameraMatrix = cameraMatrix;
+		}
+
+		GMatrix CameraMatrix;
+	};
+	class GUARDIAN_API GCameraCBuffer : public GConstantBuffer<GCameraCBData>
+	{
+	public:
+		GCameraCBuffer() : GConstantBuffer<GCameraCBData>()
+		{
+			this->BufferData = {};
+		}
+		GCameraCBuffer(std::shared_ptr<GRootSignature> rootSignature, UINT index = 1) :
+			GConstantBuffer<GCameraCBData>(rootSignature, index)
+		{
+		}
+		GCameraCBuffer(const GCameraCBuffer& other) : GConstantBuffer<GCameraCBData>(other)
+		{
+		}
+
+		static std::shared_ptr<GCameraCBuffer> CreateNewCameraCBuffer(
+			std::shared_ptr<GRootSignature> rootSignature, UINT index = 1)
+		{
+			return std::make_shared<GCameraCBuffer>(rootSignature, index);
+		}
+
+	private:
 	};
 }
 

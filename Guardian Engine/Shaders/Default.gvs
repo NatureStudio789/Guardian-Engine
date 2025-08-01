@@ -1,7 +1,11 @@
 cbuffer Transform : register(b0)
 {
-    matrix TransformMatrix;
-    matrix WorldMatrix;
+    float4x4 WorldMatrix;
+};
+
+cbuffer Camera : register(b1)
+{
+    float4x4 CameraMatrix;
 };
 
 struct VSInput
@@ -21,7 +25,10 @@ struct VSOutput
 VSOutput main(VSInput InputData)
 {
     VSOutput OutputData;
-    OutputData.Position = mul(float4(InputData.Position, 1.0f), TransformMatrix);
+
+    float4 WorldPosition = mul(float4(InputData.Position, 1.0f), WorldMatrix);
+
+    OutputData.Position = mul(WorldPosition, CameraMatrix);
     OutputData.TextureCoord = InputData.TextureCoord;
     OutputData.Normal = mul(float4(InputData.Normal, 0.0f), WorldMatrix).xyz;
 

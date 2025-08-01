@@ -48,7 +48,7 @@ namespace GE
 
 	void GRenderEngine::UpdateModule()
 	{
-		TestModel->Submit("main");
+		this->TestModel->Submit("main");
 		static float s = 1.0f;
 		static float x = 0.0f;
 		static float y = 0.0f;
@@ -99,7 +99,7 @@ namespace GE
 		{
 			s = 0.0f;
 		}
-		TestModel->SetTransform({ {x, y, 0.0f}, {0.0f, r, 0.0f}, {s, s, s} });
+		this->TestModel->SetTransform({ {x, y, 0.0f}, {0.0f, r, 0.0f}, {s, s, s} });
 
 		GRenderer::Render();
 	}

@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Graphics\Math\Camera\GCamera.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="Sources\Graphics\GGraphicsContext.h" />
     <ClInclude Include="Sources\Graphics\GGraphicsContextRegistry.h" />
     <ClInclude Include="Sources\Graphics\GRenderEngine.h" />
+    <ClInclude Include="Sources\Graphics\Math\Camera\Projection\GProjection.h" />
     <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
     <ClInclude Include="Sources\Graphics\Math\Transform\GTransform.h" />
     <ClInclude Include="Sources\Graphics\Math\Vector\GVector.h" />
@@ -217,6 +219,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\Aplication\GApplication.cpp" />

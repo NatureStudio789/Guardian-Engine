@@ -4,6 +4,8 @@
 
 namespace GE
 {
+	class GUARDIAN_API GPerspectiveProjection;
+
 	class GUARDIAN_API GMatrix
 	{
 	public:
@@ -28,9 +30,15 @@ namespace GE
 		GMatrix operator-(const GMatrix& matrix) const noexcept;
 		GMatrix operator*(const GMatrix& matrix) const noexcept;
 
+		static const GVector3 Multiply(const GMatrix& matrix, const GVector3& vector);
+		static const GVector3 MultiplyCoord(const GMatrix& matrix, const GVector3& vector);
+		static const GVector3 MultiplyNormal(const GMatrix& matrix, const GVector3& vector);
+
 		static GMatrix IdentityMatrix();
 		static GMatrix TranslationMatrix(const GVector3& translation);
 		static GMatrix TranslationMatrix(float x, float y, float z);
+		static GMatrix RotationMatrix(const GVector3& rotation);
+		static GMatrix RotationMatrix(float x, float y, float z);
 		static GMatrix RotationXMatrix(float x);
 		static GMatrix RotationYMatrix(float y);
 		static GMatrix RotationZMatrix(float z);
@@ -38,6 +46,9 @@ namespace GE
 		static GMatrix RotationPitchYawRollMatrix(float x, float y, float z);
 		static GMatrix ScalingMatrix(const GVector3& scale);
 		static GMatrix ScalingMatrix(float x, float y, float z);
+		static GMatrix PerspectiveMatrix(const GPerspectiveProjection& projection);
+		static GMatrix PerspectiveMatrix(float fovAngle, float aspect, float nearZ, float farZ);
+		static GMatrix LookAtMatrix(const GVector3& eyePosition, const GVector3& target, const GVector3& upDirection);
 
 	private:
 		XMMATRIX Matrix;

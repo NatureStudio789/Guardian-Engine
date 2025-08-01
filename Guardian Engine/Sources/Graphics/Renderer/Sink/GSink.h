@@ -63,6 +63,42 @@ namespace GE
 		bool IsLinked = false;
 	};
 
+	class GDirectCameraSink : public GSink
+	{
+	public:
+		GDirectCameraSink(const std::string& name, std::shared_ptr<GCamera>& camera) : Camera(camera)
+		{
+			this->InitializeSink(name);
+		}
+		GDirectCameraSink(const GDirectCameraSink& other) : GSink(other), Camera(other.Camera)
+		{
+			this->IsLinked = other.IsLinked;
+		}
+
+		void Apply(std::shared_ptr<GSource> source) override
+		{
+			this->Camera = source->YieldCamera();
+			this->IsLinked = true;
+		}
+		void CheckLinkValidate() const override
+		{
+			if (!this->IsLinked)
+			{
+				throw GUARDIAN_ERROR_EXCEPTION(std::format("Unlinked sink : '{}'", this->GetSinkName()));
+			}
+		}
+
+		static std::shared_ptr<GDirectCameraSink> CreateNewDirectCameraSink(
+			const std::string& name, std::shared_ptr<GCamera>& camera)
+		{
+			return std::make_shared<GDirectCameraSink>(name, camera);
+		}
+
+	private:
+		std::shared_ptr<GCamera>& Camera;
+		bool IsLinked = false;
+	};
+
 	template<typename T>
 	class GDirectApplicableSink : public GSink
 	{

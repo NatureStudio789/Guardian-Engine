@@ -1,6 +1,6 @@
 #ifndef _GE_GGRAPHICSFACTORY_H_
 #define _GE_GGRAPHICSFACTORY_H_
-#include "../Math/Transform/GTransform.h"
+#include "../Math/Camera/GCamera.h"
 
 namespace GE
 {

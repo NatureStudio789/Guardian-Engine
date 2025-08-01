@@ -9,10 +9,10 @@ namespace GE
 	public:
 		using GApplyPass::GApplyPass;
 
-		void Accept(std::shared_ptr<GTask> task);
+		virtual void Accept(std::shared_ptr<GTask> task);
 
-		void Execute() override;
-		void Reset() override;
+		virtual void Execute() override;
+		virtual void Reset() override;
 
 	private:
 		std::vector<std::shared_ptr<GTask>> TaskList;

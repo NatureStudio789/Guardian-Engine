@@ -14,11 +14,14 @@ namespace GE
 
 		void InitializeRenderGraph(const std::string& name);
 
+		void SetCamera(std::shared_ptr<GCamera> camera);
+
 		virtual void Execute();
 		virtual void Reset();
 
 		const GUUID& GetRenderGraphId() const noexcept;
 		const std::string& GetRenderGraphName() const noexcept;
+		std::shared_ptr<GCamera> GetRenderGraphCamera();
 
 		std::shared_ptr<GPass> GetPass(const std::string& passName);
 
@@ -38,10 +41,10 @@ namespace GE
 		void AppendPass(std::shared_ptr<GPass> pass);
 
 		std::shared_ptr<GFramebuffer> RenderGraphFramebuffer;
+		std::shared_ptr<GCamera> RenderGraphCamera;
 
 		std::string RenderGraphName;
 		GUUID RenderGraphId;
-
 
 		std::map<std::string, std::shared_ptr<GPass>> PassList;
 	

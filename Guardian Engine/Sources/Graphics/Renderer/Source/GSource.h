@@ -19,6 +19,7 @@ namespace GE
 		const std::string& GetSourceName() const noexcept;
 		virtual std::shared_ptr<GApplicable> YieldApplicable();
 		virtual std::shared_ptr<GFramebuffer> YieldFramebuffer();
+		virtual std::shared_ptr<GCamera> YieldCamera();
 
 	private:
 		std::string SourceName;
@@ -61,6 +62,46 @@ namespace GE
 
 	private:
 		std::shared_ptr<GFramebuffer>& Framebuffer;
+		bool IsLinked = false;
+	};
+
+	class GUARDIAN_API GDirectCameraSource : public GSource
+	{
+	public:
+		GDirectCameraSource(const std::string& name, std::shared_ptr<GCamera>& camera) :
+			GSource(name), Camera(camera)
+		{
+
+		}
+		GDirectCameraSource(const GDirectCameraSource& other) :
+			GSource(other), Camera(other.Camera)
+		{
+			this->IsLinked = other.IsLinked;
+		}
+
+		void CheckLinkValidate() const override
+		{
+
+		}
+		std::shared_ptr<GCamera> YieldCamera() override
+		{
+			if (this->IsLinked)
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("This camera source has been linked!");
+			}
+
+			this->IsLinked = true;
+			return this->Camera;
+		}
+
+		static std::shared_ptr<GDirectCameraSource> CreateNewDirectCameraSource(
+			const std::string& name, std::shared_ptr<GCamera>& camera)
+		{
+			return std::make_shared<GDirectCameraSource>(name, camera);
+		}
+
+	private:
+		std::shared_ptr<GCamera>& Camera;
 		bool IsLinked = false;
 	};
 	

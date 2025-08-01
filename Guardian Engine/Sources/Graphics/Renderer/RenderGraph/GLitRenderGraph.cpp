@@ -10,6 +10,7 @@ namespace GE
 		{
 			auto pass = std::make_shared<GLightingPass>("Lighting");
 			pass->SetSinkLinkage("Framebuffer", "$.Framebuffer");
+			pass->SetSinkLinkage("Camera", "$.Camera");
 			
 			this->AppendPass(pass);
 		}

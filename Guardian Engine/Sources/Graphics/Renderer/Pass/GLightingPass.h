@@ -14,8 +14,30 @@ namespace GE
 			this->RegisterSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource(
 				"Framebuffer", this->Framebuffer));
 
+			this->RegisterSink(GDirectCameraSink::CreateNewDirectCameraSink(
+				"Camera", this->Camera));
+			this->RegisterSource(GDirectCameraSource::CreateNewDirectCameraSource(
+				"Camera", this->Camera));
+
 			this->AddApplicable(GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO));
+
+			this->CameraCBuffer = GCameraCBuffer::CreateNewCameraCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
+			this->AddApplicable(this->CameraCBuffer);
 		}
+
+		void Execute() override
+		{
+			GMatrix CameraMatrix = this->Camera->GetViewMatrix() * this->Camera->Projection.GetProjectionMatrix();
+			CameraMatrix.Transpose();
+			this->CameraCBuffer->UpdateBufferData({ CameraMatrix });
+
+			GRenderQueuePass::Execute();
+		}
+
+	private:
+		std::shared_ptr<GCameraCBuffer> CameraCBuffer;
+		std::shared_ptr<GCamera> Camera;
 	};
 }
 

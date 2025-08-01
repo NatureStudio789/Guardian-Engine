@@ -1,4 +1,5 @@
 #include "GMatrix.h"
+#include "../Camera/Projection/GProjection.h"
 
 namespace GE
 {
@@ -104,6 +105,36 @@ namespace GE
 		return GMatrix(this->Matrix * matrix.Matrix);
 	}
 
+	const GVector3 GMatrix::Multiply(const GMatrix& matrix, const GVector3& vector)
+	{
+		XMVECTOR Output = XMVector3Transform(XMVectorSet(vector.x, vector.y, vector.z, 0.0f), matrix);
+
+		XMFLOAT3 FOutput;
+		XMStoreFloat3(&FOutput, Output);
+
+		return { FOutput.x, FOutput.y, FOutput.z };
+	}
+
+	const GVector3 GMatrix::MultiplyCoord(const GMatrix& matrix, const GVector3& vector)
+	{
+		XMVECTOR Output = XMVector3TransformCoord(XMVectorSet(vector.x, vector.y, vector.z, 0.0f), matrix);
+
+		XMFLOAT3 FOutput;
+		XMStoreFloat3(&FOutput, Output);
+
+		return { FOutput.x, FOutput.y, FOutput.z };
+	}
+
+	const GVector3 GMatrix::MultiplyNormal(const GMatrix& matrix, const GVector3& vector)
+	{
+		XMVECTOR Output = XMVector3TransformNormal(XMVectorSet(vector.x, vector.y, vector.z, 0.0f), matrix);
+
+		XMFLOAT3 FOutput;
+		XMStoreFloat3(&FOutput, Output);
+
+		return { FOutput.x, FOutput.y, FOutput.z };
+	}
+
 	GMatrix GMatrix::IdentityMatrix()
 	{
 		GMatrix m;
@@ -120,6 +151,16 @@ namespace GE
 	GMatrix GMatrix::TranslationMatrix(float x, float y, float z)
 	{
 		return TranslationMatrix({ x, y, z });
+	}
+
+	GMatrix GMatrix::RotationMatrix(const GVector3& rotation)
+	{
+		return RotationXMatrix(rotation.x) * RotationYMatrix(rotation.y) * RotationZMatrix(rotation.z);
+	}
+
+	GMatrix GMatrix::RotationMatrix(float x, float y, float z)
+	{
+		return RotationXMatrix(x) * RotationYMatrix(y) * RotationZMatrix(z);
 	}
 
 	GMatrix GMatrix::RotationXMatrix(float x)
@@ -156,5 +197,24 @@ namespace GE
 	GMatrix GMatrix::ScalingMatrix(float x, float y, float z)
 	{
 		return ScalingMatrix({ x, y, z });
+	}
+
+	GMatrix GMatrix::PerspectiveMatrix(const GPerspectiveProjection& projection)
+	{
+		return XMMatrixPerspectiveFovLH((projection.FOV / 360.0f) * XM_2PI, projection.Aspect, projection.NearZ, projection.FarZ);
+	}
+
+	GMatrix GMatrix::PerspectiveMatrix(float fovAngle, float aspect, float nearZ, float farZ)
+	{
+		return XMMatrixPerspectiveFovLH(fovAngle, aspect, nearZ, farZ);
+	}
+
+	GMatrix GMatrix::LookAtMatrix(const GVector3& eyePosition, const GVector3& target, const GVector3& upDirection)
+	{
+		XMFLOAT3 EyePosition = { eyePosition.x, eyePosition.y, eyePosition.z };
+		XMFLOAT3 Target = { target.x, target.y, target.z };
+		XMFLOAT3 UpDirection = { upDirection.x, upDirection.y, upDirection.z };
+
+		return XMMatrixLookAtLH(XMLoadFloat3(&EyePosition), XMLoadFloat3(&Target), XMLoadFloat3(&UpDirection));
 	}
 }
