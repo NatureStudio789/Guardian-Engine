@@ -11,6 +11,7 @@ namespace GE
 		{
 			GVector3 Position;
 			GVector2 TextureCoord;
+			GVector3 Normal;
 		};
 
 		struct Data

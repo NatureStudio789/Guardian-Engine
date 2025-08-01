@@ -40,21 +40,23 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Lit");
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 
-		this->TestM = GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.fbx");
+		this->TestModel = GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.obj");
 
-		this->TestM->LinkTechnique("Lit");
+		this->TestModel->LinkTechnique("Lit");
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GRenderEngine::UpdateModule()
 	{
-		TestM->Submit("main");
+		TestModel->Submit("main");
 		static float s = 1.0f;
 		static float x = 0.0f;
 		static float y = 0.0f;
+		static float r = 0.0f;
 		static float sdelta = 0.01f;
-		static float xdelta = 0.01f;
-		static float ydelta = 0.01f;
+		static float xdelta = 0.1f;
+		static float ydelta = 0.1f;
+		static float rdelta = 1.0f;
 		if (GetAsyncKeyState(VK_CONTROL))
 		{
 			if (GetAsyncKeyState(VK_ADD))
@@ -84,11 +86,20 @@ namespace GE
 			y -= ydelta;
 		}
 
+		if (GetAsyncKeyState('Q'))
+		{
+			r += rdelta;
+		}
+		if (GetAsyncKeyState('E'))
+		{
+			r -= rdelta;
+		}
+
 		if (s <= 0.0f)
 		{
 			s = 0.0f;
 		}
-		TestM->SetTransform({ {x, y, 0.0f}, {}, {s, s, s} });
+		TestModel->SetTransform({ {x, y, 0.0f}, {0.0f, r, 0.0f}, {s, s, s} });
 
 		GRenderer::Render();
 	}

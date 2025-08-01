@@ -17,7 +17,7 @@ namespace GE
 
 	private:
 		std::shared_ptr<GGraphicsContext> MainGraphicsContext;
-		std::shared_ptr<GModel> TestM;
+		std::shared_ptr<GModel> TestModel;
 	};
 }
 

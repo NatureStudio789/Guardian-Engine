@@ -108,6 +108,7 @@ namespace GE
 
 	void GMeshNode::Submit(const std::string& channel, GMatrix accumulatedMatrix)
 	{
+		const auto World = this->Transform.GetTransformMatrix();
 		const auto Built = this->Transform.GetTransformMatrix() * this->ExtraMatrix * accumulatedMatrix;
 
 		for (auto& mesh : this->MeshList)

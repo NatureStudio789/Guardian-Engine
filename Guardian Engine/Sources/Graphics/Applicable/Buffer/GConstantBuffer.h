@@ -154,13 +154,16 @@ namespace GE
 		GTransformCBData()
 		{
 			this->TransformMatrix = GMatrix::IdentityMatrix();
+			this->WorldMatrix = GMatrix::IdentityMatrix();
 		}
-		GTransformCBData(GMatrix transformMatrix)
+		GTransformCBData(GMatrix transformMatrix, GMatrix worldMatrix)
 		{
 			this->TransformMatrix = transformMatrix;
+			this->WorldMatrix = worldMatrix;
 		}
 
 		GMatrix TransformMatrix;
+		GMatrix WorldMatrix;
 	};
 	class GUARDIAN_API GTransformCBuffer : public GConstantBuffer<GTransformCBData>
 	{

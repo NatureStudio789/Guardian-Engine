@@ -2,6 +2,7 @@ struct PSInput
 {
     float4 Position : SV_POSITION;
     float2 TextureCoord : TEXTURECOORD;
+    float3 Normal : Normal;
 };
 
 SamplerState DefaultSampler : register(s0);
@@ -10,7 +11,7 @@ SamplerState DefaultSampler : register(s0);
 float4 main(PSInput InputData) : SV_TARGET
 {
     //float4 PixelColor = AlbedoTexture.Sample(DefaultSampler, InputData.TextureCoord);
-    float4 PixelColor = float4(0.01f, 0.01f, 0.01f, 1.0f);
+    float4 PixelColor = float4(InputData.Normal, 1.0f);
 
     return PixelColor;
 }

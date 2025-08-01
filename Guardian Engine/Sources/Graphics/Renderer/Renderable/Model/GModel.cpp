@@ -73,6 +73,7 @@ namespace GE
 			GMesh::Vertex Vertex = {};
 
 			Vertex.Position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
+			Vertex.Normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };
 
 			if (mesh->mTextureCoords[0])
 			{
@@ -106,7 +107,7 @@ namespace GE
 		}
 
 		auto Node = std::make_shared<GMeshNode>(node->mName.C_Str(), NodeMeshList);
-		Node->SetExtraMatrix(XMLoadFloat4x4((XMFLOAT4X4*)&node->mTransformation));
+		Node->SetExtraMatrix(XMMatrixTranspose(XMLoadFloat4x4((XMFLOAT4X4*)&node->mTransformation)));
 		for (UINT i = 0; i < node->mNumChildren; i++)
 		{
 			Node->AddChild(this->ParseNode(scene, node->mChildren[i]));
