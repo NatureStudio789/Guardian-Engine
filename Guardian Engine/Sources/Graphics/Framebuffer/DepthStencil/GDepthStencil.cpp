@@ -4,7 +4,7 @@ namespace GE
 {
 	GDepthStencil::GDepthStencil()
 	{
-		this->DepthStencilDescriptorHeap = null;
+		this->DSVDescriptorHandle = null;
 	}
 
 	GDepthStencil::GDepthStencil(std::shared_ptr<GGraphicsContext> graphicsContext)
@@ -14,22 +14,21 @@ namespace GE
 
 	GDepthStencil::GDepthStencil(const GDepthStencil& other)
 	{
+		this->DSVDescriptorHandle = other.DSVDescriptorHandle;
 		this->DepthStencilBuffer = other.DepthStencilBuffer;
-		this->DepthStencilDescriptorHeap = other.DepthStencilDescriptorHeap;
 	}
 
 	GDepthStencil::~GDepthStencil()
 	{
-		this->DepthStencilDescriptorHeap.reset();
-		this->DepthStencilDescriptorHeap = null;
+		this->DSVDescriptorHandle.reset();
+		this->DSVDescriptorHandle = null;
 	}
 
 	void GDepthStencil::InitializeDepthStencil(std::shared_ptr<GGraphicsContext> graphicsContext)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		this->DepthStencilDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(graphicsContext->GetGraphicsDevice(),
-			1, GDescriptorHeap::GE_DESCRIPTOR_HEAP_DSV);
+		this->DSVDescriptorHandle = graphicsContext->GetDSVDescriptorHeap()->Allocate(1);
 
 		D3D12_RESOURCE_DESC DepthStencilBufferDesc;
 		GUARDIAN_CLEAR_MEMORY(DepthStencilBufferDesc);
@@ -57,7 +56,7 @@ namespace GE
 			&OptimizedClear, __uuidof(ID3D12Resource), (void**)this->DepthStencilBuffer.GetAddressOf()));
 
 		graphicsContext->GetGraphicsDevice()->GetDeviceObject()->CreateDepthStencilView(this->DepthStencilBuffer.Get(),
-			null, this->GetDepthStencilView());
+			null, this->DSVDescriptorHandle->CPUHandle);
 
 		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->DepthStencilBuffer.Get(),
@@ -96,7 +95,7 @@ namespace GE
 			&OptimizedClear, __uuidof(ID3D12Resource), (void**)this->DepthStencilBuffer.GetAddressOf()));
 
 		graphicsContext->GetGraphicsDevice()->GetDeviceObject()->CreateDepthStencilView(this->DepthStencilBuffer.Get(),
-			null, this->GetDepthStencilView());
+			null, this->DSVDescriptorHandle->CPUHandle);
 
 		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->DepthStencilBuffer.Get(),
@@ -105,22 +104,17 @@ namespace GE
 
 	void GDepthStencil::ClearDepthStencil(std::shared_ptr<GGraphicsContext> graphicsContext)
 	{
-		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ClearDepthStencilView(this->GetDepthStencilView(),
+		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ClearDepthStencilView(this->DSVDescriptorHandle->CPUHandle,
 			D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL, 1.0f, 0, 0, null);
-	}
-
-	D3D12_CPU_DESCRIPTOR_HANDLE GDepthStencil::GetDepthStencilView()
-	{
-		return this->DepthStencilDescriptorHeap->GetFirstCPUDescriptorHandle();
-	}
-
-	std::shared_ptr<GDescriptorHeap> GDepthStencil::GetDepthStencilDescriptorHeap()
-	{
-		return this->DepthStencilDescriptorHeap;
 	}
 
 	WRL::ComPtr<ID3D12Resource> GDepthStencil::GetDepthStencilBuffer()
 	{
 		return this->DepthStencilBuffer;
+	}
+
+	std::shared_ptr<GDescriptorHandle> GDepthStencil::GetDSVDescriptorHandle()
+	{
+		return this->DSVDescriptorHandle;
 	}
 }

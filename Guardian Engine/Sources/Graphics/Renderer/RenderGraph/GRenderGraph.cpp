@@ -80,7 +80,10 @@ namespace GE
 	{
 		GUARDIAN_CHECK_POINTER(camera);
 
-		this->RenderGraphCamera = camera;
+		this->RenderGraphCamera->Position = camera->Position;
+		this->RenderGraphCamera->Rotation = camera->Rotation;
+		this->RenderGraphCamera->Projection = camera->Projection;
+		this->RenderGraphCamera->IsFreeLook = camera->IsFreeLook;
 	}
 
 	void GRenderGraph::Execute()

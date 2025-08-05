@@ -15,7 +15,7 @@ namespace GE
 		void SetShader(std::shared_ptr<GShader> shader);
 		void SetInputLayout(std::shared_ptr<GInputLayout> inputLayout);
 		void SetTopology(std::shared_ptr<GTopology> topology);
-		void InitializePipelineState(UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount);
+		void InitializePipelineState();
 
 		void Apply() override;
 

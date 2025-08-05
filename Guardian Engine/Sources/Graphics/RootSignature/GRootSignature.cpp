@@ -7,16 +7,12 @@ namespace GE
 		this->RootParameterList.clear();
 		this->StaticSamplerDescList.clear();
 		this->IsInitialized = false;
-		this->CBVSRVDescriptorHeap = null;
-		this->TextureSamplerDescriptorHeap = null;
 	}
 
 	GRootSignature::GRootSignature(const GRootSignature& other)
 	{
 		this->RootSignatureObject = other.RootSignatureObject;
 		this->IsInitialized = other.IsInitialized;
-		this->CBVSRVDescriptorHeap = other.CBVSRVDescriptorHeap;
-		this->TextureSamplerDescriptorHeap = other.TextureSamplerDescriptorHeap;
 		
 		this->RootParameterList = other.RootParameterList;
 		this->StaticSamplerDescList = other.StaticSamplerDescList;
@@ -26,12 +22,6 @@ namespace GE
 	{
 		this->StaticSamplerDescList.clear();
 		this->IsInitialized = false;
-
-		this->CBVSRVDescriptorHeap.reset();
-		this->CBVSRVDescriptorHeap = null;
-
-		this->TextureSamplerDescriptorHeap.reset();
-		this->TextureSamplerDescriptorHeap = null;
 	}
 
 	UINT GRootSignature::AddRootParameter(const RootParameter& parameter)
@@ -57,21 +47,20 @@ namespace GE
 		this->StaticSamplerDescList.push_back(description);
 	}
 
-	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device, 
-		UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount)
+	void GRootSignature::InitializeRootSignature(std::shared_ptr<GDevice> device)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		if (cbvDescriptorCount || srvDescriptorCount)
+		std::vector<CD3DX12_DESCRIPTOR_RANGE> ShaderResourceViewTableList;
+		for (auto& parameter : this->RootParameterList)
 		{
-			this->CBVSRVDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, cbvDescriptorCount + srvDescriptorCount,
-				GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
-		}
+			CD3DX12_DESCRIPTOR_RANGE ShaderResourceViewTable;
 
-		if (samplerDescriptorCount)
-		{
-			this->TextureSamplerDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(device, samplerDescriptorCount,
-				GDescriptorHeap::GE_DESCRIPTOR_HEAP_SAMPLER, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+			if (parameter.Type == GE_PARAMETER_SRV)
+			{
+				ShaderResourceViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, parameter.ShaderRegisterIndex);
+				ShaderResourceViewTableList.push_back(ShaderResourceViewTable);
+			}
 		}
 
 		std::vector<CD3DX12_ROOT_PARAMETER> ParameterList;
@@ -90,10 +79,7 @@ namespace GE
 
 				case GE_PARAMETER_SRV:
 				{
-					CD3DX12_DESCRIPTOR_RANGE ShaderResourceViewTable;
-					ShaderResourceViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, parameter.ShaderRegisterIndex);
-
-					Parameter.InitAsDescriptorTable(1, &ShaderResourceViewTable, D3D12_SHADER_VISIBILITY_PIXEL);
+					Parameter.InitAsDescriptorTable(1, &ShaderResourceViewTableList[parameter.ShaderRegisterIndex], D3D12_SHADER_VISIBILITY_PIXEL);
 					break;
 				}
 			}
@@ -147,22 +133,6 @@ namespace GE
 		commandList->GetCommandListObject()->SetGraphicsRootConstantBufferView(rootParameterIndex, gpuVirtualAddress);
 	}
 
-	void GRootSignature::SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList)
-	{
-		std::vector<ID3D12DescriptorHeap*> DescriptorHeapObjectList;
-		if (this->CBVSRVDescriptorHeap)
-		{
-			DescriptorHeapObjectList.push_back(this->CBVSRVDescriptorHeap->GetDescriptorHeapObject().Get());
-		}
-		if (this->TextureSamplerDescriptorHeap)
-		{
-			DescriptorHeapObjectList.push_back(this->TextureSamplerDescriptorHeap->GetDescriptorHeapObject().Get());
-		}
-
-		commandList->GetCommandListObject()->SetDescriptorHeaps((UINT)DescriptorHeapObjectList.size(),
-			DescriptorHeapObjectList.data());
-	}
-
 	void GRootSignature::ApplyRootSignature(std::shared_ptr<GCommandList> commandList)
 	{
 		if (!this->IsInitialized)
@@ -171,8 +141,6 @@ namespace GE
 		}
 
 		commandList->GetCommandListObject()->SetGraphicsRootSignature(this->RootSignatureObject.Get());
-
-		this->SetDescriptorHeapList(commandList);
 	}
 
 	const UINT GRootSignature::GetRootParameterIndex(const RootParameter& parameter) const
@@ -206,21 +174,6 @@ namespace GE
 	WRL::ComPtr<ID3D12RootSignature> GRootSignature::GetRootSignatureObject()
 	{
 		return this->RootSignatureObject;
-	}
-
-	std::shared_ptr<GDescriptorHeap> GRootSignature::GetConstantBufferDescriptorHeap()
-	{
-		return this->CBVSRVDescriptorHeap;
-	}
-
-	std::shared_ptr<GDescriptorHeap> GRootSignature::GetTextureSamplerDescriptorHeap()
-	{
-		return this->TextureSamplerDescriptorHeap;
-	}
-
-	std::shared_ptr<GDescriptorHeap> GRootSignature::GetShaderResourceDescriptorHeap()
-	{
-		return this->CBVSRVDescriptorHeap;
 	}
 
 	const bool& GRootSignature::GetInitialized() const noexcept

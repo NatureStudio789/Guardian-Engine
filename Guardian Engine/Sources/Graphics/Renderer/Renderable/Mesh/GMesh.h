@@ -22,19 +22,20 @@ namespace GE
 
 	public:
 		GMesh();
-		GMesh(const std::string& name, const Data& data);
+		GMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material);
 		GMesh(const GMesh& other);
 		~GMesh() override;
 
-		void InitializeMesh(const std::string& name, const Data& data);
+		void InitializeMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material);
 
-		static std::shared_ptr<GMesh> CreateNewMesh(const std::string& name, const Data& data)
+		static std::shared_ptr<GMesh> CreateNewMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
 		{
-			return std::make_shared<GMesh>(name, data);
+			return std::make_shared<GMesh>(name, data, material);
 		}
 
 	private:
 		Data MeshData;
+		std::shared_ptr<GMaterial> MeshMaterial;
 	};
 
 	class GUARDIAN_API GMeshNode
@@ -55,6 +56,7 @@ namespace GE
 		const GUUID& GetNodeId() const noexcept;
 		const std::string& GetNodeName() const noexcept;
 		const bool HasChildren() const noexcept;
+		std::shared_ptr<GMeshNode> GetChild(const std::string& childName);
 
 	private:
 		void AddChild(std::shared_ptr<GMeshNode> node);

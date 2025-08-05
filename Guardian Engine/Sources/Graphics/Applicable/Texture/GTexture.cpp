@@ -4,8 +4,8 @@ namespace GE
 {
 	GTexture::GTexture()
 	{
+		this->TextureDescriptorHandle = null;
 		this->TextureRootSignature = null;
-		this->TextureIndex = 0;
 		this->TextureRootParameterIndex = 0;
 	}
 
@@ -16,17 +16,18 @@ namespace GE
 
 	GTexture::GTexture(const GTexture& other)
 	{
+		this->TextureDescriptorHandle = other.TextureDescriptorHandle;
 		this->TextureRootSignature = other.TextureRootSignature;
 		this->TextureResource = other.TextureResource;
 		this->TextureUploadHeap = other.TextureUploadHeap;
-		this->TextureIndex = other.TextureIndex;
 		this->TextureRootParameterIndex = other.TextureRootParameterIndex;
 	}
 
 	GTexture::~GTexture()
 	{
+		this->TextureDescriptorHandle.reset();
+		this->TextureDescriptorHandle = null;
 		this->TextureRootSignature = null;
-		this->TextureIndex = 0;
 		this->TextureRootParameterIndex = 0;
 	}
 
@@ -37,9 +38,10 @@ namespace GE
 		GUARDIAN_CHECK_POINTER(rootSignature);
 
 		this->TextureRootSignature = rootSignature;
-		this->TextureIndex = index;
 		this->TextureRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
-			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, this->TextureIndex));
+			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, index));
+
+		this->TextureDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(1);
 
 		GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
@@ -65,13 +67,18 @@ namespace GE
 				D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			CreateShaderResourceView(this->TextureResource.Get(), null, this->GetShaderResourceCPUView());
+			CreateShaderResourceView(this->TextureResource.Get(), null, this->TextureDescriptorHandle->CPUHandle);
 	}
 
 	void GTexture::Apply()
 	{
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-			SetGraphicsRootDescriptorTable(this->TextureRootParameterIndex, this->GetShaderResourceGPUView());
+			SetGraphicsRootDescriptorTable(this->TextureRootParameterIndex, this->TextureDescriptorHandle->GPUHandle);
+	}
+
+	std::shared_ptr<GDescriptorHandle> GTexture::GetTextureDescriptorHandle()
+	{
+		return this->TextureDescriptorHandle;
 	}
 
 	WRL::ComPtr<ID3D12Resource> GTexture::GetTextureResource()
@@ -82,26 +89,5 @@ namespace GE
 	WRL::ComPtr<ID3D12Resource> GTexture::GetTextureUploadHeap()
 	{
 		return this->TextureUploadHeap;
-	}
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GTexture::GetShaderResourceView()
-	{
-		return this->GetShaderResourceGPUView();
-	}
-
-	CD3DX12_CPU_DESCRIPTOR_HANDLE GTexture::GetShaderResourceCPUView()
-	{
-		return CD3DX12_CPU_DESCRIPTOR_HANDLE(
-			this->TextureRootSignature->GetShaderResourceDescriptorHeap()->GetFirstCPUDescriptorHandle()).Offset(
-			this->TextureIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->
-			GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-	}
-
-	CD3DX12_GPU_DESCRIPTOR_HANDLE GTexture::GetShaderResourceGPUView()
-	{
-		return CD3DX12_GPU_DESCRIPTOR_HANDLE(
-			this->TextureRootSignature->GetShaderResourceDescriptorHeap()->GetFirstGPUDescriptorHandle()).Offset(
-			this->TextureIndex, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->
-				GetDescriptorSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
 	}
 }

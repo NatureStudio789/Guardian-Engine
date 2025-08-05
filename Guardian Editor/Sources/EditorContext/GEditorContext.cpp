@@ -74,12 +74,14 @@ namespace GE
 			style.WindowRounding = 0.0F;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0;
 		}
+		
+		auto& FontDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(1);
 
 		ImGui_ImplWin32_Init((void*)GApplication::Instance->GetMainWindowHandle());
 		ImGui_ImplDX12_Init(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject().Get(),
 			(int)GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->GetBufferCount(),
-			DXGI_FORMAT_R8G8B8A8_UNORM, this->EditorDescriptorHeap->GetDescriptorHeapObject().Get(),
-			this->EditorDescriptorHeap->GetFirstCPUDescriptorHandle(), this->EditorDescriptorHeap->GetFirstGPUDescriptorHandle());
+			DXGI_FORMAT_R8G8B8A8_UNORM, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorHeapObject().Get(),
+			FontDescriptorHandle->CPUHandle, FontDescriptorHandle->GPUHandle);
 
 		this->ContextFramebuffer = contextFramebuffer;
 	}
@@ -98,8 +100,6 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
 		
 		this->ContextFramebuffer->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-			SetDescriptorHeaps(1, this->EditorDescriptorHeap->GetDescriptorHeapObject().GetAddressOf());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get());
 

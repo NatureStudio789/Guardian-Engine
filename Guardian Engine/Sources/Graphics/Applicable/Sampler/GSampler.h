@@ -69,9 +69,7 @@ namespace GE
 		void Apply() override;
 
 	private:
-		CD3DX12_CPU_DESCRIPTOR_HANDLE GetSamplerCPUView();
-		CD3DX12_GPU_DESCRIPTOR_HANDLE GetSamplerGPUView();
-
+        std::shared_ptr<GDescriptorHandle> SamplerDescriptorHandle;
 		std::shared_ptr<GRootSignature> SamplerRootSignature;
 		UINT SamplerIndex;
         UINT SamplerDescriptionIndex;

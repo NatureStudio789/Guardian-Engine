@@ -83,8 +83,7 @@ namespace GE
 
 		UINT AddRootParameter(const RootParameter& parameter);
 		void AddSamplerDescription(const StaticSamplerDescription& description);
-		void InitializeRootSignature(std::shared_ptr<GDevice> device, 
-			UINT cbvDescriptorCount, UINT samplerDescriptorCount, UINT srvDescriptorCount);
+		void InitializeRootSignature(std::shared_ptr<GDevice> device);
 
 		void SetRootDescriptorTable(std::shared_ptr<GCommandList> commandList,
 			UINT rootParameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
@@ -96,18 +95,11 @@ namespace GE
 		const UINT GetRootParameterIndex(const RootParameter& parameter) const;
 		const UINT GetStaticSamplerIndex(const StaticSamplerDescription& description) const;
 		WRL::ComPtr<ID3D12RootSignature> GetRootSignatureObject();
-		std::shared_ptr<GDescriptorHeap> GetConstantBufferDescriptorHeap();
-		std::shared_ptr<GDescriptorHeap> GetTextureSamplerDescriptorHeap();
-		std::shared_ptr<GDescriptorHeap> GetShaderResourceDescriptorHeap();
 		const bool& GetInitialized() const noexcept;
 
 	private:
-		void SetDescriptorHeapList(std::shared_ptr<GCommandList> commandList);
-
 		WRL::ComPtr<ID3D12RootSignature> RootSignatureObject;
 		bool IsInitialized;
-		std::shared_ptr<GDescriptorHeap> CBVSRVDescriptorHeap;
-		std::shared_ptr<GDescriptorHeap> TextureSamplerDescriptorHeap;
 
 		std::vector<RootParameter> RootParameterList;
 		std::vector<StaticSamplerDescription> StaticSamplerDescList;

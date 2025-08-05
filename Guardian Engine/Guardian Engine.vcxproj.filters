@@ -31,6 +31,9 @@
     <Filter Include="Graphics\Applicable\Buffer">
       <UniqueIdentifier>{7BD356B1-67E3-0282-D09C-67A0BCCBF11A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Applicable\Material">
+      <UniqueIdentifier>{B02C3EA6-9CE7-2D52-459F-A69C313978E2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\Applicable\PipelineState">
       <UniqueIdentifier>{585A60FE-C4C8-B57D-0DB2-707D795FAB19}</UniqueIdentifier>
     </Filter>
@@ -81,6 +84,12 @@
     </Filter>
     <Filter Include="Graphics\Math">
       <UniqueIdentifier>{AF158A97-1BD6-05CE-E410-4F4B50904AAA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Math\Camera">
+      <UniqueIdentifier>{478F1425-331E-9EEE-DC3C-B2E9C8AAAE94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Math\Camera\Projection">
+      <UniqueIdentifier>{D368FBB6-3F4C-0AF7-484F-3833B4B1D047}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Math\Matrix">
       <UniqueIdentifier>{73326C3C-5FC1-F505-08E0-0901F44D06AC}</UniqueIdentifier>
@@ -211,6 +220,9 @@
     <ClInclude Include="Sources\Graphics\Applicable\GApplicable.h">
       <Filter>Graphics\Applicable</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\Material\GMaterial.h">
+      <Filter>Graphics\Applicable\Material</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h">
       <Filter>Graphics\Applicable\PipelineState</Filter>
     </ClInclude>
@@ -270,6 +282,12 @@
     </ClInclude>
     <ClInclude Include="Sources\Graphics\GRenderEngine.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Math\Camera\GCamera.h">
+      <Filter>Graphics\Math\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Math\Camera\Projection\GProjection.h">
+      <Filter>Graphics\Math\Camera\Projection</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h">
       <Filter>Graphics\Math\Matrix</Filter>
@@ -352,8 +370,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Math\Camera\GCamera.h" />
-    <ClInclude Include="Sources\Graphics\Math\Camera\Projection\GProjection.h" />
+    <ClInclude Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -395,6 +412,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GVertexBuffer.cpp">
       <Filter>Graphics\Applicable\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\Material\GMaterial.cpp">
+      <Filter>Graphics\Applicable\Material</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.cpp">
       <Filter>Graphics\Applicable\PipelineState</Filter>
@@ -455,6 +475,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp">
+      <Filter>Graphics\Math\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp">
       <Filter>Graphics\Math\Matrix</Filter>
@@ -519,6 +542,6 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp" />
+    <ClCompile Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.cpp" />
   </ItemGroup>
 </Project>

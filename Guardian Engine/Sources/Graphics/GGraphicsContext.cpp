@@ -14,6 +14,11 @@ namespace GE
 		this->CurrentCommandListName = "";
 		GraphicsCommandListBatch.clear();
 		this->GraphicsSwapChain = null;
+
+		this->RTVDescriptorHeap = null;
+		this->DSVDescriptorHeap = null;
+		this->SRVDescriptorHeap = null;
+		this->SamplerDescriptorHeap = null;
 	}
 
 	GGraphicsContext::GGraphicsContext(HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
@@ -34,6 +39,11 @@ namespace GE
 		this->GraphicsSwapChain = other.GraphicsSwapChain;
 
 		this->GraphicsFence = other.GraphicsFence;
+
+		this->RTVDescriptorHeap = other.RTVDescriptorHeap;
+		this->DSVDescriptorHeap = other.DSVDescriptorHeap;
+		this->SRVDescriptorHeap = other.SRVDescriptorHeap;
+		this->SamplerDescriptorHeap = other.SamplerDescriptorHeap;
 	}
 
 	GGraphicsContext::~GGraphicsContext()
@@ -62,6 +72,18 @@ namespace GE
 		
 		this->GraphicsSwapChain.reset();
 		this->GraphicsSwapChain = null;
+
+		this->RTVDescriptorHeap.reset();
+		this->RTVDescriptorHeap = null;
+
+		this->DSVDescriptorHeap.reset();
+		this->DSVDescriptorHeap = null;
+
+		this->SRVDescriptorHeap.reset();
+		this->SRVDescriptorHeap = null;
+
+		this->SamplerDescriptorHeap.reset();
+		this->SamplerDescriptorHeap = null;
 	}
 
 	void GGraphicsContext::InitializeGraphicsContext(
@@ -79,13 +101,19 @@ namespace GE
 		this->GraphicsFactory = GGraphicsFactory::CreateNewGraphicsFactory(windowHandle);
 		this->GraphicsDevice = GDevice::CreateNewDevice(this->GraphicsFactory);
 
-
 		this->GraphicsFence = GFence::CreateNewFence(this->GraphicsDevice);
 
 		this->GraphicsCommandQueue = GCommandQueue::CreateNewCommandQueue(this->GraphicsDevice);
 			
 		this->GraphicsSwapChain = GSwapChain::CreateNewSwapChain(this->GraphicsFactory,
 			this->GraphicsCommandQueue, 2, windowHandle, bufferWidth, bufferHeight, fullscreen);
+
+		this->RTVDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(this->GraphicsDevice, 297, GDescriptorHeap::GE_DESCRIPTOR_HEAP_RTV);
+		this->DSVDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(this->GraphicsDevice, 99, GDescriptorHeap::GE_DESCRIPTOR_HEAP_DSV);
+		this->SRVDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(this->GraphicsDevice, 4096,
+			GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+		this->SamplerDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(this->GraphicsDevice, 6,
+			GDescriptorHeap::GE_DESCRIPTOR_HEAP_SAMPLER, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 	}
 
 	void GGraphicsContext::RegisterGraphicsCommandList(const std::string& name)
@@ -120,6 +148,17 @@ namespace GE
 		this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
 				D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+
+		std::vector<ID3D12DescriptorHeap*> DescriptorList;
+		if (this->SRVDescriptorHeap)
+		{
+			DescriptorList.push_back(this->SRVDescriptorHeap->GetDescriptorHeapObject().Get());
+		}
+		if (this->SamplerDescriptorHeap)
+		{
+			DescriptorList.push_back(this->SamplerDescriptorHeap->GetDescriptorHeapObject().Get());
+		}
+		this->GetGraphicsCommandList()->GetCommandListObject()->SetDescriptorHeaps((UINT)DescriptorList.size(), DescriptorList.data());
 	}
 
 	void GGraphicsContext::EndUpRendering()
@@ -227,5 +266,25 @@ namespace GE
 	std::shared_ptr<GSwapChain> GGraphicsContext::GetGraphicsSwapChain()
 	{
 		return this->GraphicsSwapChain;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GGraphicsContext::GetRTVDescriptorHeap()
+	{
+		return this->RTVDescriptorHeap;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GGraphicsContext::GetDSVDescriptorHeap()
+	{
+		return this->DSVDescriptorHeap;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GGraphicsContext::GetSRVDescriptorHeap()
+	{
+		return this->SRVDescriptorHeap;
+	}
+
+	std::shared_ptr<GDescriptorHeap> GGraphicsContext::GetSamplerDescriptorHeap()
+	{
+		return this->SamplerDescriptorHeap;
 	}
 }

@@ -19,17 +19,23 @@ namespace GE
 
 		void LinkTechnique(std::string renderGraphName);
 
+		std::shared_ptr<GMeshNode> GetRootMeshNode();
+
 		static std::shared_ptr<GModel> CreateNewModel(const std::string& filePath)
 		{
 			return std::make_shared<GModel>(filePath);
 		}
 
 	private:
-		static std::shared_ptr<GMesh> ParseMesh(const aiScene* scene, aiMesh* mesh);
+		std::shared_ptr<GMesh> ParseMesh(const aiScene* scene, aiMesh* mesh);
 		std::shared_ptr<GMeshNode> ParseNode(const aiScene* scene, aiNode* node);
+		std::shared_ptr<GTexture> LoadTexture(aiMaterial* material, aiTextureType type, int index);
 
 		std::shared_ptr<GMeshNode> RootMeshNode;
 		std::vector<std::shared_ptr<GMesh>> ModelMeshList;
+
+		std::string ModelFilePath;
+		std::string ModelFileDirectory;
 	};
 }
 

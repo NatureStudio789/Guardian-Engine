@@ -1,6 +1,6 @@
 #ifndef _GE_GSHADER_H_
 #define _GE_GSHADER_H_
-#include "../../Texture/GTexture.h"
+#include "../../Material/GMaterial.h"
 
 namespace GE
 {

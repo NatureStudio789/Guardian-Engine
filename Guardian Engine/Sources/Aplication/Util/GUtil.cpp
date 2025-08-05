@@ -1,4 +1,5 @@
 #include "GUtil.h"
+#include "../Exception/GException.h"
 
 namespace GE
 {
@@ -34,4 +35,40 @@ namespace GE
 
 		return strings;
     }
+
+	std::string GUtil::GetFilePathDirectory(const std::string& filePath)
+	{
+		if (std::filesystem::directory_entry(filePath).is_directory())
+		{
+			return filePath;
+		}
+
+		std::string Directory;
+		Directory = filePath.substr(0, filePath.find_last_of('/'));
+		if (Directory == filePath)
+		{
+			Directory = filePath.substr(0, filePath.find_last_of('\\'));
+		}
+
+		return Directory;
+	}
+
+	std::string GUtil::ExtendDirectory(const std::string& directory, const std::string& childPath)
+	{
+		std::string Result;
+		if (directory[directory.size() - 1] == '/' || directory[directory.size() - 1] == '\\')
+		{
+			Result = directory + childPath;
+		}
+		else
+		{
+			Result = directory + '/' + childPath;
+			if (!std::filesystem::exists(Result))
+			{
+				Result = directory + '\\' + childPath;
+			}
+		}
+
+		return Result;
+	}
 }

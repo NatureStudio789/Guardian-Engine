@@ -1,5 +1,6 @@
 #include "GWindow.h"
 #include "../../GEngine.h"
+#include "../../../Guardian Editor/Sources/Resource/Resource.h"
 
 namespace GE
 {
@@ -49,6 +50,8 @@ namespace GE
 		WindowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 		WindowClass.hCursor = LoadCursor(null, IDC_ARROW);
 		WindowClass.hInstance = GetModuleHandle(null);
+		WindowClass.hIcon = (HICON)LoadImage(GetModuleHandle(null), MAKEINTRESOURCE(IDI_ICON1), IMAGE_ICON, 32, 32, 0);
+		WindowClass.hIconSm = (HICON)LoadImage(GetModuleHandle(null), MAKEINTRESOURCE(IDI_ICON2), IMAGE_ICON, 32, 32, 0);
 		WindowClass.lpfnWndProc = InitializeWindowMessageProcess;
 		std::wstring WindowClassName = GUtil::StringToWideString(this->WindowAttribute.WindowTitle) + L" Class";
 		WindowClass.lpszClassName = WindowClassName.c_str();

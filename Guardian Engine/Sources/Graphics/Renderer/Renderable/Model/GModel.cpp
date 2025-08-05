@@ -29,6 +29,9 @@ namespace GE
 
 	void GModel::InitializeModel(const std::string& filePath)
 	{
+		this->ModelFilePath = filePath;
+		this->ModelFileDirectory = GUtil::GetFilePathDirectory(this->ModelFilePath);
+
 		Assimp::Importer Importer;
 		const aiScene* Scene = Importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 		if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
@@ -60,6 +63,11 @@ namespace GE
 		{
 			mesh->LinkTechnique(renderGraphName);
 		}
+	}
+
+	std::shared_ptr<GMeshNode> GModel::GetRootMeshNode()
+	{
+		return this->RootMeshNode;
 	}
 
 	std::shared_ptr<GMesh> GModel::ParseMesh(const aiScene* scene, aiMesh* mesh)
@@ -95,7 +103,19 @@ namespace GE
 		MeshData.Vertices = Vertices;
 		MeshData.Indices = Indices;
 
-		return GMesh::CreateNewMesh(mesh->mName.C_Str(), MeshData);
+		aiMaterial* Material = scene->mMaterials[mesh->mMaterialIndex];
+		std::shared_ptr<GMaterial> MeshMaterial = GMaterial::CreateNewMaterial(Material->GetName().C_Str());
+		auto& albedo = this->LoadTexture(Material, aiTextureType_DIFFUSE, 0);
+		if (albedo)
+		{
+			MeshMaterial->SetAlbedoTexture(albedo);
+		}
+		else
+		{
+			MeshMaterial->SetAlbedoValue(GVector3(0.8f, 0.8f, 0.8f));
+		}
+
+		return GMesh::CreateNewMesh(mesh->mName.C_Str(), MeshData, MeshMaterial);
 	}
 
 	std::shared_ptr<GMeshNode> GModel::ParseNode(const aiScene* scene, aiNode* node)
@@ -114,5 +134,32 @@ namespace GE
 		}
 
 		return Node;
+	}
+
+	std::shared_ptr<GTexture> GModel::LoadTexture(aiMaterial* material, aiTextureType type, int index)
+	{
+		std::shared_ptr<GTexture> Texture = null;
+
+		if (material->GetTextureCount(type))
+		{
+			aiString Path;
+			material->GetTexture(type, 0, &Path);
+
+			std::string TextureFilePath;
+			if (std::filesystem::exists(Path.C_Str()))
+			{
+				TextureFilePath = Path.C_Str();
+			}
+			else
+			{
+				TextureFilePath = GUtil::ExtendDirectory(this->ModelFileDirectory, Path.C_Str());
+			}
+
+			Texture = GTexture::CreateNewTexture(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+				GSurface(TextureFilePath), index);
+		}
+
+		return Texture;
 	}
 }

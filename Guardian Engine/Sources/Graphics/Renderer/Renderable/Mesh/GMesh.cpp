@@ -5,11 +5,12 @@ namespace GE
 	GMesh::GMesh() : GRenderable()
 	{
 		this->MeshData = {};
+		this->MeshMaterial = null;
 	}
 
-	GMesh::GMesh(const std::string& name, const Data& data)
+	GMesh::GMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
 	{
-		this->InitializeMesh(name, data);
+		this->InitializeMesh(name, data, material);
 	}
 
 	GMesh::GMesh(const GMesh& other) : GRenderable(other)
@@ -21,24 +22,29 @@ namespace GE
 	{
 		this->MeshData.Vertices.clear();
 		this->MeshData.Indices.clear();
+
+		this->MeshMaterial = null;
 	}
 
-	void GMesh::InitializeMesh(const std::string& name, const Data& data)
+	void GMesh::InitializeMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
 	{
 		this->MeshData = data;
+		this->MeshMaterial = material;
 
 		this->InitializeRenderable(name,
 			GVertexBuffer::CreateNewVertexBuffer((void*)this->MeshData.Vertices.data(), (UINT)this->MeshData.Vertices.size(), (UINT)sizeof(Vertex)),
 			GIndexBuffer::CreateNewIndexBuffer(this->MeshData.Indices.data(), (UINT)this->MeshData.Indices.size()),
 			GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
 
-		auto& tech = GTechnique::CreateNewTechnique("PBR", "main");
-		auto& step = GStep::CreateNewStep("Lighting");
-		step->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+		auto& PBRTechnique = GTechnique::CreateNewTechnique("PBR", "main");
+		auto& LightingStep = GStep::CreateNewStep("Lighting");
 
-		tech->AddStep(step);
-		this->AddTechnique(tech);
+		LightingStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+		LightingStep->AddApplicable(this->MeshMaterial);
+
+		PBRTechnique->AddStep(LightingStep);
+		this->AddTechnique(PBRTechnique);
 	}
 
 	GMeshNode::GMeshNode()
@@ -139,6 +145,19 @@ namespace GE
 	const bool GMeshNode::HasChildren() const noexcept
 	{
 		return this->ChildrenList.empty() != true;
+	}
+
+	std::shared_ptr<GMeshNode> GMeshNode::GetChild(const std::string& childName)
+	{
+		for (auto& child : this->ChildrenList)
+		{
+			if (child->GetNodeName() == childName)
+			{
+				return child;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION(std::format("No child mesh node named '{}' found in node named '{}'", childName, this->NodeName));
 	}
 
 	void GMeshNode::AddChild(std::shared_ptr<GMeshNode> node)

@@ -20,7 +20,6 @@ namespace GE
 			D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView);
 
 		D3D12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView(std::shared_ptr<GGraphicsContext> graphicsContext);
-		std::shared_ptr<GDescriptorHeap> GetRenderTargetViewDescriptorHeap();
 
 		static std::shared_ptr<GRenderTarget> CreateNewRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext)
 		{
@@ -28,7 +27,7 @@ namespace GE
 		}
 
 	private:
-		std::shared_ptr<GDescriptorHeap> RenderTargetViewDescriptorHeap;
+		std::shared_ptr<GDescriptorHandle> RTVDescriptorHandle;
 	};
 }
 

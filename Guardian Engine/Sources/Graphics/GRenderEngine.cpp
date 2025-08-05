@@ -86,6 +86,37 @@ namespace GE
 			y -= ydelta;
 		}
 
+		if (GetAsyncKeyState('W'))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetForwardVector() * 0.05f);
+		}
+		if (GetAsyncKeyState('S'))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetBackwardVector() * 0.05f);
+		}
+		if (GetAsyncKeyState('A'))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetLeftVector() * 0.05f);
+		}
+		if (GetAsyncKeyState('D'))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetRightVector() * 0.05f);
+		}
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetUpVector() * 0.05f);
+		}
+		if (GetAsyncKeyState(VK_SHIFT))
+		{
+			GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->
+				Translate(GRenderer::GetRenderGraph("Lit")->GetRenderGraphCamera()->GetDownVector() * 0.05f);
+		}
+
 		if (GetAsyncKeyState('Q'))
 		{
 			r += rdelta;

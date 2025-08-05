@@ -230,6 +230,58 @@ namespace GE
 
 	private:
 	};
+
+	struct GMaterialCBData
+	{
+	public:
+		GMaterialCBData()
+		{
+			this->AlbedoValue = {};
+			this->RoughnessValue = 0.8f;
+			this->MetallicValue = 0.0f;
+			this->AoValue = 0.8f;
+
+			this->EnableAlbedoMap = false;
+			this->EnableRoughnessMap = false;
+			this->EnableMetallicMap = false;
+			this->EnableAoMap = false;
+			this->EnableNormalMap = false;
+		}
+
+		GVector3 AlbedoValue;
+		float RoughnessValue;
+		float MetallicValue;
+		float AoValue;
+
+		int EnableAlbedoMap;
+		int EnableRoughnessMap;
+		int EnableMetallicMap;
+		int EnableAoMap;
+		int EnableNormalMap;
+	};
+	class GUARDIAN_API GMaterialCBuffer : public GConstantBuffer<GMaterialCBData>
+	{
+	public:
+		GMaterialCBuffer() : GConstantBuffer<GMaterialCBData>()
+		{
+			this->BufferData = {};
+		}
+		GMaterialCBuffer(std::shared_ptr<GRootSignature> rootSignature, UINT index = 2) :
+			GConstantBuffer<GMaterialCBData>(rootSignature, index)
+		{
+		}
+		GMaterialCBuffer(const GMaterialCBuffer& other) : GConstantBuffer<GMaterialCBData>(other)
+		{
+		}
+
+		static std::shared_ptr<GMaterialCBuffer> CreateNewMaterialCBuffer(
+			std::shared_ptr<GRootSignature> rootSignature, UINT index = 2)
+		{
+			return std::make_shared<GMaterialCBuffer>(rootSignature, index);
+		}
+
+	private:
+	};
 }
 
 #endif

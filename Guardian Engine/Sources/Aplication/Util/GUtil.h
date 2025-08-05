@@ -11,6 +11,9 @@ namespace GE
 		static float DegreeToAngle(float degree);
 
 		static std::vector<std::string> SplitString(const std::string& text, const std::string& delim);
+
+		static std::string GetFilePathDirectory(const std::string& filePath);
+		static std::string ExtendDirectory(const std::string& directory, const std::string& childPath);
 	};
 }
 

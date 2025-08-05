@@ -1,9 +1,38 @@
 #ifndef _GE_GDESCRIPTORHEAP_H_
 #define _GE_GDESCRIPTORHEAP_H_
-#include "../SwapChain/GSwapChain.h"
+#include "GBitmapAllocator.h"
 
 namespace GE
 {
+	class GUARDIAN_API GDescriptorHandle
+	{
+	public:
+		GDescriptorHandle()
+		{
+			this->CPUHandle = CD3DX12_CPU_DESCRIPTOR_HANDLE();
+			this->GPUHandle = CD3DX12_GPU_DESCRIPTOR_HANDLE();
+		}
+		GDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle, D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+		{
+			this->CPUHandle = cpuHandle;
+			this->GPUHandle = gpuHandle;
+		}
+		GDescriptorHandle(const GDescriptorHandle& other)
+		{
+			this->CPUHandle = other.CPUHandle;
+			this->GPUHandle = other.GPUHandle;
+		}
+
+		static std::shared_ptr<GDescriptorHandle> CreateNewDescriptorHandle(D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle,
+			D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+		{
+			return std::make_shared<GDescriptorHandle>(cpuHandle, gpuHandle);
+		}
+
+		CD3DX12_CPU_DESCRIPTOR_HANDLE CPUHandle;
+		CD3DX12_GPU_DESCRIPTOR_HANDLE GPUHandle;
+	};
+
 	class GUARDIAN_API GDescriptorHeap
 	{
 	public:
@@ -31,8 +60,8 @@ namespace GE
 		void InitializeDescriptorHeap(std::shared_ptr<GDevice> device, UINT descriptorCount, 
 			Category category, Flag flag = GE_DESCRIPTOR_HEAP_FLAG_NONE);
 
-		D3D12_CPU_DESCRIPTOR_HANDLE GetFirstCPUDescriptorHandle();
-		D3D12_GPU_DESCRIPTOR_HANDLE GetFirstGPUDescriptorHandle();
+		std::shared_ptr<GDescriptorHandle> Allocate(UINT descriptorCount);
+
 		WRL::ComPtr<ID3D12DescriptorHeap> GetDescriptorHeapObject();
 
 		static std::shared_ptr<GDescriptorHeap> CreateNewDescriptorHeap(std::shared_ptr<GDevice> device, 
@@ -43,6 +72,9 @@ namespace GE
 
 	private:
 		WRL::ComPtr<ID3D12DescriptorHeap> DescriptorHeapObject;
+		std::shared_ptr<GBitmapAllocator> DescriptorHeapAllocator;
+
+		UINT DescriptorIncrementSize;
 	};
 }
 

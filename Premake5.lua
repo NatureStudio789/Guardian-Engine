@@ -114,7 +114,8 @@ project "Guardian Editor"
 	{
 		"%{prj.name}/Sources/**.h",
 		"%{prj.name}/Sources/**.hpp",
-		"%{prj.name}/Sources/**.cpp"
+		"%{prj.name}/Sources/**.cpp",
+		"%{prj.name}/**.rc",
 	}
 
 	includedirs

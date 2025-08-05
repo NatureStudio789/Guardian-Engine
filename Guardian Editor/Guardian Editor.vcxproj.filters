@@ -1,29 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="EditorContext">
-      <UniqueIdentifier>{51AA3160-BD6A-AD96-86A5-F613F224F272}</UniqueIdentifier>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{89565304-F535-D29F-FE4D-5D766AAC3801}</UniqueIdentifier>
     </Filter>
-    <Filter Include="EditorRenderGraph">
-      <UniqueIdentifier>{7EFCAAED-EA12-A983-338A-34A59FDF790B}</UniqueIdentifier>
+    <Filter Include="Sources\EditorContext">
+      <UniqueIdentifier>{047CACCD-70E8-67C8-39DC-FF25A5078A30}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\EditorRenderGraph">
+      <UniqueIdentifier>{B16FCD5A-1D32-01E5-66E2-8F71D2E3D9C2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Resource">
+      <UniqueIdentifier>{C0A220CB-AC9B-3F1D-D5CD-24A2C1251F29}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\EditorContext\GEditorContext.h">
-      <Filter>EditorContext</Filter>
+      <Filter>Sources\EditorContext</Filter>
     </ClInclude>
     <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h">
-      <Filter>EditorRenderGraph</Filter>
+      <Filter>Sources\EditorRenderGraph</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\GEditorEngine.h" />
+    <ClInclude Include="Sources\GEditorEngine.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Resource\Resource.h">
+      <Filter>Sources\Resource</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp">
-      <Filter>EditorContext</Filter>
+      <Filter>Sources\EditorContext</Filter>
     </ClCompile>
     <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp">
-      <Filter>EditorRenderGraph</Filter>
+      <Filter>Sources\EditorRenderGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\GEditorEngine.cpp" />
+    <ClCompile Include="Sources\GEditorEngine.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Guardian Editor.rc" />
   </ItemGroup>
 </Project>

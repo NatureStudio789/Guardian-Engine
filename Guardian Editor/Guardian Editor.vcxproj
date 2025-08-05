@@ -89,6 +89,10 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -110,6 +114,10 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -132,6 +140,10 @@
       <LanguageStandard>stdcpp20</LanguageStandard>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
     </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -142,11 +154,15 @@
     <ClInclude Include="Sources\EditorContext\GEditorContext.h" />
     <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
     <ClInclude Include="Sources\GEditorEngine.h" />
+    <ClInclude Include="Sources\Resource\Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp" />
     <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
     <ClCompile Include="Sources\GEditorEngine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Guardian Editor.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">

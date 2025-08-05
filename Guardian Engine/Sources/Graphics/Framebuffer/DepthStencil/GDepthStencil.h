@@ -17,9 +17,8 @@ namespace GE
 		void ResizeDepthStencilView(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void ClearDepthStencil(std::shared_ptr<GGraphicsContext> graphicsContext);
 		
-		D3D12_CPU_DESCRIPTOR_HANDLE GetDepthStencilView();
-		std::shared_ptr<GDescriptorHeap> GetDepthStencilDescriptorHeap();
 		WRL::ComPtr<ID3D12Resource> GetDepthStencilBuffer();
+		std::shared_ptr<GDescriptorHandle> GetDSVDescriptorHandle();
 
 		static std::shared_ptr<GDepthStencil> CreateNewDepthStencil(
 			std::shared_ptr<GGraphicsContext> graphicsContext)
@@ -28,7 +27,7 @@ namespace GE
 		}
 
 	private:
-		std::shared_ptr<GDescriptorHeap> DepthStencilDescriptorHeap;
+		std::shared_ptr<GDescriptorHandle> DSVDescriptorHandle;
 		WRL::ComPtr<ID3D12Resource> DepthStencilBuffer;
 	};
 }

@@ -69,7 +69,7 @@ namespace GE
 		this->FramebufferDepthStencil->ClearDepthStencil(graphicsContext);
 
 		this->FramebufferRenderTarget->ApplyRenderTarget(graphicsContext, 
-			this->FramebufferDepthStencil->GetDepthStencilView());
+			this->FramebufferDepthStencil->GetDSVDescriptorHandle()->CPUHandle);
 	}
 
 	void GFramebuffer::ResizeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight)

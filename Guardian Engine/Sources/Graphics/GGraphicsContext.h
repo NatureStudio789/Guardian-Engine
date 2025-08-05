@@ -47,6 +47,11 @@ namespace GE
 
 		std::shared_ptr<GSwapChain> GetGraphicsSwapChain();
 
+		std::shared_ptr<GDescriptorHeap> GetRTVDescriptorHeap();
+		std::shared_ptr<GDescriptorHeap> GetDSVDescriptorHeap();
+		std::shared_ptr<GDescriptorHeap> GetSRVDescriptorHeap();
+		std::shared_ptr<GDescriptorHeap> GetSamplerDescriptorHeap();
+
 		static std::shared_ptr<GGraphicsContext> CreateNewGraphicsContext(
 			HWND windowHandle, int bufferWidth, int bufferHeight, bool fullscreen)
 		{
@@ -66,6 +71,11 @@ namespace GE
 		std::map<std::string, std::shared_ptr<GCommandList>> GraphicsCommandListBatch;
 
 		std::shared_ptr<GSwapChain> GraphicsSwapChain;
+
+		std::shared_ptr<GDescriptorHeap> RTVDescriptorHeap;
+		std::shared_ptr<GDescriptorHeap> DSVDescriptorHeap;
+		std::shared_ptr<GDescriptorHeap> SRVDescriptorHeap;
+		std::shared_ptr<GDescriptorHeap> SamplerDescriptorHeap;
 	};
 }
 
