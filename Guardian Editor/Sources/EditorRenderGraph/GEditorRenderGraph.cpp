@@ -8,18 +8,17 @@ namespace GE
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->RegisterGraphicsCommandList(this->RenderGraphName);
 
-		this->InitializeGraphGraphics();
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 
 		this->EditorContext = GEditorContext::CreateNewEditorContext(this->RenderGraphFramebuffer);
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GEditorRenderGraph::Execute()
 	{
 		this->InitializeGraphGraphics();
 		this->EditorContext->BeginRendering();
+
+		GApplication::Instance->GetMainWindow()->Render();
 
 		static bool open = true;
 		if (open)

@@ -58,9 +58,11 @@ namespace GE
 		graphicsContext->GetGraphicsDevice()->GetDeviceObject()->CreateDepthStencilView(this->DepthStencilBuffer.Get(),
 			null, this->DSVDescriptorHandle->CPUHandle);
 
-		graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+		graphicsContext->GetInitializationCommandList()->GetCommandListObject()->ResourceBarrier(1,
 			&CD3DX12_RESOURCE_BARRIER::Transition(this->DepthStencilBuffer.Get(),
 				D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_DEPTH_WRITE));
+
+		graphicsContext->ExecuteInitialization();
 	}
 
 	void GDepthStencil::ResizeDepthStencilView(std::shared_ptr<GGraphicsContext> graphicsContext)

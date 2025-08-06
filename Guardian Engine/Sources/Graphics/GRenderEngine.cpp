@@ -38,12 +38,10 @@ namespace GE
 		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("Lit"));
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Lit");
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 
 		this->TestModel = GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.obj");
 
 		this->TestModel->LinkTechnique("Lit");
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 	}
 
 	void GRenderEngine::UpdateModule()

@@ -59,15 +59,17 @@ namespace GE
 		TextureSubresourceData.pData = (const void*)surface.GetBufferData();
 		TextureSubresourceData.RowPitch = (long long)(((surface.GetSurfaceWidth() * sizeof(GColor)) + 3) & ~3);
 		TextureSubresourceData.SlicePitch = (long long)TextureSubresourceData.RowPitch * surface.GetSurfaceHeight();
-		UpdateSubresources(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get(),
+		UpdateSubresources(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetInitializationCommandList()->GetCommandListObject().Get(),
 			this->TextureResource.Get(), this->TextureUploadHeap.Get(), 0, 0, 1, &TextureSubresourceData);
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetInitializationCommandList()->GetCommandListObject()->
 			ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->TextureResource.Get(),
 				D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateShaderResourceView(this->TextureResource.Get(), null, this->TextureDescriptorHandle->CPUHandle);
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteInitialization();
 	}
 
 	void GTexture::Apply()

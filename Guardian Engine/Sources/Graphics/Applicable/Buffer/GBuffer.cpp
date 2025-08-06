@@ -61,14 +61,16 @@ namespace GE
 		BufferSubresourceData.RowPitch = LONG_PTR(this->DataSize * this->DataStride);
 		BufferSubresourceData.SlicePitch = BufferSubresourceData.RowPitch;
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetInitializationCommandList()->GetCommandListObject()->
 			ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->GPUBuffer.Get(),
 				D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_COPY_DEST));
-		UpdateSubresources<1>(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get(),
+		UpdateSubresources<1>(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetInitializationCommandList()->GetCommandListObject().Get(),
 			this->GPUBuffer.Get(), this->UploadBuffer.Get(), 0, 0, 1, &BufferSubresourceData);
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetInitializationCommandList()->GetCommandListObject()->
 			ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(this->GPUBuffer.Get(),
 				D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_GENERIC_READ));
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteInitialization();
 	}
 
 	WRL::ComPtr<ID3DBlob> GBuffer::GetCPUBuffer()

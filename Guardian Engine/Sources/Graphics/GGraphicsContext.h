@@ -25,14 +25,11 @@ namespace GE
 		void EndUpRendering();
 		void PresentRenderingResult(UINT syncInternal);
 
-		void BeginInitializing();
-		void EndUpInitializing();
+		void ExecuteInitialization();
 
-		void ResetCommandList();
 		void ExecuteCommandList();
-
 		void ExecuteCommandListBatch();
-
+		
 		void FlushCommandQueue();
 
 		const GUUID& GetContextId() const noexcept;
@@ -42,6 +39,7 @@ namespace GE
 		std::shared_ptr<GFence> GetGraphicsFence();
 
 		std::shared_ptr<GCommandQueue> GetGraphicsCommandQueue();
+		std::shared_ptr<GCommandList> GetInitializationCommandList();
 		std::shared_ptr<GCommandList> GetGraphicsCommandList();
 		std::map<std::string, std::shared_ptr<GCommandList>> GetGraphicsCommandListBatch();
 

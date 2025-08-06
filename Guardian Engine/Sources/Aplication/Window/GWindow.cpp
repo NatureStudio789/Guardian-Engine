@@ -21,6 +21,7 @@ namespace GE
 		this->WindowArea = other.WindowArea;
 		this->WindowAttribute = other.WindowAttribute;
 		this->WindowMessage = other.WindowMessage;
+		this->IsTitleBarHovered = other.IsTitleBarHovered;
 
 		this->WindowEventProcesser = other.WindowEventProcesser;
 		this->IsWindowRunning = other.IsWindowRunning;
@@ -35,6 +36,8 @@ namespace GE
 	{
 		this->DestroyWindow();
 		this->WindowHandle = null;
+
+		this->IsTitleBarHovered = false;
 	}
 
 	void GWindow::InitializeWindow(const Attribute& attribute)
@@ -81,28 +84,14 @@ namespace GE
 				WindowArea.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
 				WindowArea.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
 
-				if (!AdjustWindowRect(&WindowArea, Style, false))
+				if (this->WindowAttribute.EnableWindowTitleBar)
 				{
-					throw GUARDIAN_LAST_WINDOW_EXCEPTION();
+					if (!AdjustWindowRect(&WindowArea, Style, false))
+					{
+						throw GUARDIAN_LAST_WINDOW_EXCEPTION();
+					}
 				}
 			
-				break;
-			}
-
-			case GE_STYLE_BORDERLESSWINDOW:
-			{
-				Style = WS_POPUPWINDOW;
-
-				int ScreenWidth = GetSystemMetrics(SM_CXSCREEN);
-				int WindowWidth = (int)(ScreenWidth * 0.8f);
-				int ScreenHeight = GetSystemMetrics(SM_CYSCREEN);
-				int WindowHeight = (int)(ScreenHeight * 0.8f);
-
-				WindowArea.left = (int)((ScreenWidth - WindowWidth) / 2.0f);
-				WindowArea.right = (int)(ScreenWidth - ((ScreenWidth - WindowWidth) / 2.0f));
-				WindowArea.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
-				WindowArea.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
-
 				break;
 			}
 
@@ -167,6 +156,11 @@ namespace GE
 
 			DispatchMessage(&this->WindowMessage);
 		}
+	}
+
+	void GWindow::Render()
+	{
+
 	}
 
 	void GWindow::DestroyWindow()
@@ -259,79 +253,6 @@ namespace GE
 				break;
 			}
 
-			/*case WM_NCCREATE:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				SetTimer(handle, 1, 100, null);
-				SetWindowTheme(handle, L"", L"");
-
-				DWORD Style = GetWindowLong(handle, GCL_STYLE);
-				SetClassLong(handle, GCL_STYLE, Style | CS_DROPSHADOW);
-
-				return 1;
-				break;
-			}
-
-			case WM_TIMER:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				SetWindowPos(handle, 0, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_DRAWFRAME | SWP_FRAMECHANGED);
-				SendMessage(handle, WM_PAINT, 0, 0);
-
-				return DefWindowProc(handle, message, wParam, lParam);
-				break;
-			}
-
-			case WM_NCACTIVATE:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				IsNCActive = LOWORD(wParam) != WA_INACTIVE;
-
-				return 1;
-			}
-
-			case WM_NCPAINT:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				switch (this->WindowAttribute.WindowTheme)
-				{
-				case GWindow::GE_THEME_DARK:
-				{
-					this->DrawDarkCaption(IsNCActive, handle, message, wParam, lParam);
-					break;
-				}
-				case GWindow::GE_THEME_LIGHT:
-				{
-					this->DrawLightCaption(IsNCActive, handle, message, wParam, lParam);
-					break;
-				}
-				case GWindow::GE_THEME_BLUE:
-				{
-					this->DrawBlueCaption(IsNCActive, handle, message, wParam, lParam);
-					break;
-				}
-				}
-
-				return 0;
-				break;
-			}*/
-
 			case WM_GETMINMAXINFO:
 			{
 				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
@@ -341,74 +262,12 @@ namespace GE
 
 				MINMAXINFO* minmax = (MINMAXINFO*)lParam;
 
-				/*RECT WorkArea = {};
-				SystemParametersInfo(SPI_GETWORKAREA, 0, &WorkArea, 0);
-				minmax->ptMaxSize.x = (WorkArea.right - WorkArea.left);
-				minmax->ptMaxSize.y = (WorkArea.bottom - WorkArea.top);
-				minmax->ptMaxPosition.x = WorkArea.left;
-				minmax->ptMaxPosition.y = WorkArea.top;*/
 				minmax->ptMinTrackSize.x = 1000;
 				minmax->ptMinTrackSize.y = 600;
 
 				return DefWindowProc(handle, message, wParam, lParam);
 				break;
 			}
-
-			/*case WM_NCLBUTTONDOWN:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				POINT pt;
-				GetCursorPos(&pt);
-
-				RECT rect;
-				GetWindowRect(handle, &rect);
-
-				pt.x -= rect.left;
-				pt.y -= rect.top;
-
-				SIZE size{ rect.right - rect.left, rect.bottom - rect.top };
-
-				rect = RECT{ size.cx - 50, 0, size.cx - 50 + 50, 30 };
-
-				if (rect.left < pt.x && rect.right > pt.x && rect.top < pt.y && rect.bottom > pt.y)
-				{
-					SendMessage(handle, WM_CLOSE, 0, 0);
-
-					return 0;
-					break;
-				}
-
-				rect = RECT{ size.cx - 100, 0, size.cx - 100 + 50, 30 };
-
-				if (rect.left < pt.x && rect.right > pt.x && rect.top < pt.y && rect.bottom > pt.y)
-				{
-					WINDOWPLACEMENT WindowPosition = {};
-					GetWindowPlacement(handle, &WindowPosition);
-
-					if (WindowPosition.showCmd == SW_MAXIMIZE)
-					{
-						ShowWindow(handle, SW_NORMAL);
-					}
-					else
-					{
-						ShowWindow(handle, SW_MAXIMIZE);
-					}
-				}
-
-				rect = RECT{ size.cx - 150, 0, size.cx - 150 + 50, 30 };
-
-				if (rect.left < pt.x && rect.right > pt.x && rect.top < pt.y && rect.bottom > pt.y)
-				{
-					ShowWindow(handle, SW_MINIMIZE);
-				}
-
-				return DefWindowProc(handle, message, wParam, lParam);
-				break;
-			}*/
 
 			case WM_ENTERSIZEMOVE:
 			{
@@ -425,25 +284,6 @@ namespace GE
 					break;
 				}
 
-				/*RECT rect;
-				GetWindowRect(handle, &rect);
-				RECT WorkArea = {};
-				SystemParametersInfo(SPI_GETWORKAREA, 0, &WorkArea, 0);
-				if (rect.top < WorkArea.top + 10)
-				{
-					WINDOWPLACEMENT WindowPosition = {};
-					GetWindowPlacement(handle, &WindowPosition);
-
-					if (WindowPosition.showCmd == SW_MAXIMIZE)
-					{
-						ShowWindow(handle, SW_NORMAL);
-					}
-					else
-					{
-						ShowWindow(handle, SW_MAXIMIZE);
-					}
-				}*/
-
 				IsBeingResized = false;
 				GWindowResizeEvent windowResizing(handle, WindowWidth, WindowHeight);
 				GEventDispatcher::DispatcherInstance->DispatchEvent(windowResizing);
@@ -451,29 +291,6 @@ namespace GE
 				return 0;
 				break;
 			}
-
-			/*case WM_NCLBUTTONDBLCLK:
-			{
-				if (this->WindowAttribute.WindowStyle != GE_STYLE_DEFAULTWINDOW)
-				{
-					break;
-				}
-
-				WINDOWPLACEMENT WindowPosition = {};
-				GetWindowPlacement(handle, &WindowPosition);
-
-				if (WindowPosition.showCmd == SW_MAXIMIZE)
-				{
-					ShowWindow(handle, SW_NORMAL);
-				}
-				else
-				{
-					ShowWindow(handle, SW_MAXIMIZE);
-				}
-
-				return 0;
-				break;
-			}*/
 
 			case WM_MOVE:
 			{
@@ -500,6 +317,77 @@ namespace GE
 				}
 				return DefWindowProc(handle, message, wParam, lParam);
 				break;
+			}
+
+			case WM_NCCALCSIZE:
+			{
+				if (this->WindowAttribute.EnableWindowTitleBar)
+				{
+					return DefWindowProc(handle, message, wParam, lParam);
+					break;
+				}
+
+				const int resizeBorderX = GetSystemMetrics(SM_CXFRAME);
+				const int resizeBorderY = GetSystemMetrics(SM_CYFRAME);
+
+				NCCALCSIZE_PARAMS* parameters = (NCCALCSIZE_PARAMS*)lParam;
+				RECT* requestedClientRect = parameters->rgrc;
+
+				requestedClientRect->right -= resizeBorderX;
+				requestedClientRect->left += resizeBorderX;
+				requestedClientRect->bottom -= resizeBorderY;
+				requestedClientRect->top += 0;
+
+				return WVR_ALIGNTOP | WVR_ALIGNLEFT;
+				break;
+			}
+
+			case WM_NCHITTEST:
+			{
+				if (this->WindowAttribute.EnableWindowTitleBar)
+				{
+					return DefWindowProc(handle, message, wParam, lParam);
+					break;
+				}
+
+				POINT pt = { LOWORD(lParam), HIWORD(lParam) };
+				ScreenToClient(handle, &pt);
+
+				if (!IsZoomed(handle))
+				{
+					RECT rc;
+					GetClientRect(handle, &rc);
+
+					const int verticalBorderSize = GetSystemMetrics(SM_CYFRAME);
+					RECT borderThickness = { 4, 4, 4, 4 };
+
+					enum { left = 1, top = 2, right = 4, bottom = 8 };
+					int hit = 0;
+					if (pt.x <= borderThickness.left)
+						hit |= left;
+					if (pt.x >= rc.right - borderThickness.right)
+						hit |= right;
+					if (pt.y <= borderThickness.top || pt.y < verticalBorderSize)
+						hit |= top;
+					if (pt.y >= rc.bottom - borderThickness.bottom)
+						hit |= bottom;
+
+					if (hit & top && hit & left)        return HTTOPLEFT;
+					if (hit & top && hit & right)       return HTTOPRIGHT;
+					if (hit & bottom && hit & left)     return HTBOTTOMLEFT;
+					if (hit & bottom && hit & right)    return HTBOTTOMRIGHT;
+					if (hit & left)                     return HTLEFT;
+					if (hit & top)                      return HTTOP;
+					if (hit & right)                    return HTRIGHT;
+					if (hit & bottom)                   return HTBOTTOM;
+				}
+
+				if (this->IsTitleBarHovered)
+				{
+					return HTCAPTION;
+				}
+
+				return HTCLIENT;
 			}
 
 			case WM_SIZE:

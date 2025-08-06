@@ -114,13 +114,16 @@ namespace GE
 			GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
 		this->SamplerDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(this->GraphicsDevice, 6,
 			GDescriptorHeap::GE_DESCRIPTOR_HEAP_SAMPLER, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
+
+		this->RegisterGraphicsCommandList("Initialization");
+		this->GetInitializationCommandList()->GetCommandListObject()->Reset(this->GetInitializationCommandList()->GetCommandListAllocator().Get(), null);
 	}
 
 	void GGraphicsContext::RegisterGraphicsCommandList(const std::string& name)
 	{
 		if (this->GraphicsCommandListBatch.count(name))
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The command list named '{}' already exists in graphics context.");
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("The command list named '{}' already exists in graphics context.", name));
 		}
 
 		this->GraphicsCommandListBatch[name] = GCommandList::CreateNewCommandList(this->GraphicsDevice);
@@ -130,7 +133,7 @@ namespace GE
 	{
 		if (!this->GraphicsCommandListBatch.count(name))
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The command list named '{}' DOESN'T already exist in graphics context.");
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("The command list named '{}' DOESN'T already exist in graphics context.", name));
 		}
 
 		this->CurrentCommandListName = name;
@@ -179,23 +182,18 @@ namespace GE
 		this->FlushCommandQueue();
 	}
 
-	void GGraphicsContext::BeginInitializing()
-	{
-		this->ResetCommandList();
-	}
-
-	void GGraphicsContext::EndUpInitializing()
-	{
-		this->ExecuteCommandList();
-		this->FlushCommandQueue();
-	}
-
-	void GGraphicsContext::ResetCommandList()
+	void GGraphicsContext::ExecuteInitialization()
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
-		
-		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Reset(
-			this->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
+
+		GUARDIAN_AUTO_THROW(this->GetInitializationCommandList()->GetCommandListObject()->Close());
+		ID3D12CommandList* CommandLists[] = { this->GetInitializationCommandList()->GetCommandListObject().Get() };
+		this->GraphicsCommandQueue->ExecuteCommandLists(GUARDIAN_ARRAYSIZE(CommandLists), CommandLists);
+
+		this->FlushCommandQueue();
+
+		GUARDIAN_AUTO_THROW(this->GetInitializationCommandList()->GetCommandListObject()->Reset(
+			this->GetInitializationCommandList()->GetCommandListAllocator().Get(), null));
 	}
 
 	void GGraphicsContext::ExecuteCommandList()
@@ -213,6 +211,10 @@ namespace GE
 
 		for (auto& commandList : this->GraphicsCommandListBatch)
 		{
+			if (commandList.first == "Initialization")
+			{
+				continue;
+			}
 			CommandLists.push_back(commandList.second->GetCommandListObject().Get());
 		}
 		this->GraphicsCommandQueue->ExecuteCommandLists((UINT)CommandLists.size(), CommandLists.data());
@@ -251,6 +253,11 @@ namespace GE
 	std::shared_ptr<GCommandQueue> GGraphicsContext::GetGraphicsCommandQueue()
 	{
 		return this->GraphicsCommandQueue;
+	}
+
+	std::shared_ptr<GCommandList> GGraphicsContext::GetInitializationCommandList()
+	{
+		return this->GraphicsCommandListBatch["Initialization"];
 	}
 
 	std::shared_ptr<GCommandList> GGraphicsContext::GetGraphicsCommandList()

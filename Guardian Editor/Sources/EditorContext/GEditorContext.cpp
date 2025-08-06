@@ -68,7 +68,38 @@ namespace GE
 
 		ImGui::StyleColorsDark();
 
+		auto& ThemeColors = ImGui::GetStyle().Colors;
+		ThemeColors[ImGuiCol_TitleBg] = ImColor(11, 11, 11);
+		ThemeColors[ImGuiCol_TitleBgActive] = ImColor(16, 16, 16);
+		ThemeColors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
+
+		ThemeColors[ImGuiCol_Button] = ImColor(56, 56, 56, 200);
+		ThemeColors[ImGuiCol_ButtonHovered] = ImColor(70, 70, 70, 255);
+		ThemeColors[ImGuiCol_ButtonActive] = ImColor(56, 56, 56, 150);
+
+		ThemeColors[ImGuiCol_ResizeGrip] = ImVec4(0.91f, 0.91f, 0.91f, 0.25f);
+		ThemeColors[ImGuiCol_ResizeGripHovered] = ImVec4(0.81f, 0.81f, 0.81f, 0.67f);
+		ThemeColors[ImGuiCol_ResizeGripActive] = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);
+
+		ThemeColors[ImGuiCol_CheckMark] = ImColor(200, 200, 200, 255);
+
+		ThemeColors[ImGuiCol_SliderGrab] = ImVec4(0.51f, 0.51f, 0.51f, 0.7f);
+		ThemeColors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
+
+		ThemeColors[ImGuiCol_WindowBg] = ImColor(18, 18, 18);
+
+		ThemeColors[ImGuiCol_FrameBg] = ImColor(15, 15, 15);
+		ThemeColors[ImGuiCol_FrameBgHovered] = ImColor(15, 15, 15);
+		ThemeColors[ImGuiCol_FrameBgActive] = ImColor(15, 15, 15);
+
 		ImGuiStyle& style = ImGui::GetStyle();
+		style.WindowPadding = ImVec2(10.0f, 10.0f);
+		style.FramePadding = ImVec2(8.0f, 6.0f);
+		style.ItemSpacing = ImVec2(6.0f, 6.0f);
+		style.ChildRounding = 6.0f;
+		style.PopupRounding = 6.0f;
+		style.FrameRounding = 6.0f;
+		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0F;

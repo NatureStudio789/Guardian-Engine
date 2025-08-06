@@ -62,12 +62,9 @@ namespace GE
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->RegisterGraphicsCommandList(this->RenderGraphName);
 
-		this->InitializeGraphGraphics();
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginInitializing();
 		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 
 		this->RenderGraphCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpInitializing();
 
 		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("Framebuffer", this->RenderGraphFramebuffer));
 		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("Framebuffer", this->RenderGraphFramebuffer));

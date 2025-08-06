@@ -10,7 +10,6 @@ namespace GE
 		enum Style
 		{
 			GE_STYLE_DEFAULTWINDOW,
-			GE_STYLE_BORDERLESSWINDOW,
 			GE_STYLE_FULLSCREEN
 		};
 
@@ -23,12 +22,28 @@ namespace GE
 
 		struct Attribute
 		{
+		public:
 			Attribute() = default;
 			Attribute(const std::string& title, const Style& style, const Theme& theme)
 			{
 				this->WindowTitle = title;
 				this->WindowStyle = style;
 				this->WindowTheme = theme;
+
+				switch (this->WindowStyle)
+				{
+					case GE_STYLE_DEFAULTWINDOW:
+					{
+						this->EnableWindowTitleBar = true;
+						break;
+					}
+
+					case GE_STYLE_FULLSCREEN:
+					{
+						this->EnableWindowTitleBar = false;
+						break;
+					}
+				}
 			}
 			Attribute(const Attribute& other)
 			{
@@ -37,9 +52,24 @@ namespace GE
 				this->WindowTheme = other.WindowTheme;
 			}
 
+			void SetTitleBarEnable(bool enable)
+			{
+				if (this->WindowStyle == GE_STYLE_FULLSCREEN)
+				{
+					return;
+				}
+
+				this->EnableWindowTitleBar = enable;
+			}
+
 			std::string WindowTitle = "GuardianWindow";
 			Style WindowStyle = GE_STYLE_DEFAULTWINDOW;
 			Theme WindowTheme = GE_THEME_DARK;
+
+		private:
+			bool EnableWindowTitleBar;
+
+			friend class GWindow;
 		};
 
 		using Handle = HWND;
@@ -54,6 +84,7 @@ namespace GE
 
 		void DisplayWindow();
 		void UpdateWindow();
+		void Render();
 
 		void DestroyWindow();
 
@@ -84,6 +115,7 @@ namespace GE
 		RECT WindowArea;
 		Attribute WindowAttribute;
 		MSG WindowMessage;
+		bool IsTitleBarHovered = false;
 
 		std::shared_ptr<GEventProcesser> WindowEventProcesser;
 		bool IsWindowRunning;
