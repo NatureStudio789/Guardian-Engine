@@ -84,7 +84,7 @@ namespace GE
 				WindowArea.top = (int)((ScreenHeight - WindowHeight) / 2.0f);
 				WindowArea.bottom = (int)(ScreenHeight - ((ScreenHeight - WindowHeight) / 2.0f));
 
-				if (this->WindowAttribute.EnableWindowTitleBar)
+				if (!this->WindowAttribute.EnableCustomizedTitleBar)
 				{
 					if (!AdjustWindowRect(&WindowArea, Style, false))
 					{
@@ -156,11 +156,6 @@ namespace GE
 
 			DispatchMessage(&this->WindowMessage);
 		}
-	}
-
-	void GWindow::Render()
-	{
-
 	}
 
 	void GWindow::DestroyWindow()
@@ -321,7 +316,7 @@ namespace GE
 
 			case WM_NCCALCSIZE:
 			{
-				if (this->WindowAttribute.EnableWindowTitleBar)
+				if (!this->WindowAttribute.EnableCustomizedTitleBar)
 				{
 					return DefWindowProc(handle, message, wParam, lParam);
 					break;
@@ -344,7 +339,7 @@ namespace GE
 
 			case WM_NCHITTEST:
 			{
-				if (this->WindowAttribute.EnableWindowTitleBar)
+				if (!this->WindowAttribute.EnableCustomizedTitleBar)
 				{
 					return DefWindowProc(handle, message, wParam, lParam);
 					break;

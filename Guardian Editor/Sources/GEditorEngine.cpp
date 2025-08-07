@@ -21,14 +21,14 @@ namespace GE
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTitle = "Guardian Engine";
 		this->ProgramAttribute.ProgramWindowAttribute.WindowStyle = GWindow::GE_STYLE_DEFAULTWINDOW;
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
-		this->ProgramAttribute.ProgramWindowAttribute.SetTitleBarEnable(false);
+		this->ProgramAttribute.ProgramWindowAttribute.SetCustomizedTitleBarEnable(true);
 
         this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Audio"};
     }
 
     void GEditorEngine::InitializeProgram()
     {
-        //GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
+        GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
     }
 
     void GEditorEngine::UpdateProgram()

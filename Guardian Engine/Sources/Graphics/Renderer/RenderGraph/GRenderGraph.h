@@ -8,20 +8,22 @@ namespace GE
 	{
 	public:
 		GRenderGraph();
-		GRenderGraph(const std::string& name);
+		GRenderGraph(const std::string& name, bool enableRTT = false);
 		GRenderGraph(const GRenderGraph& other);
 		~GRenderGraph();
 
-		void InitializeRenderGraph(const std::string& name);
+		void InitializeRenderGraph(const std::string& name, bool enableRTT = false);
 
 		void SetCamera(std::shared_ptr<GCamera> camera);
 
 		virtual void Execute();
 		virtual void Reset();
+		virtual void Resize(int newWidth, int newHeight);
 
 		const GUUID& GetRenderGraphId() const noexcept;
 		const std::string& GetRenderGraphName() const noexcept;
 		std::shared_ptr<GCamera> GetRenderGraphCamera();
+		std::shared_ptr<GFramebuffer> GetRenderGraphFramebuffer();
 
 		std::shared_ptr<GPass> GetPass(const std::string& passName);
 

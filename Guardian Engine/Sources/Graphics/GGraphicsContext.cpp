@@ -139,7 +139,7 @@ namespace GE
 		this->CurrentCommandListName = name;
 	}
 
-	void GGraphicsContext::BeginRendering()
+	void GGraphicsContext::BeginRendering(std::shared_ptr<GFramebuffer> framebuffer)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
@@ -148,9 +148,19 @@ namespace GE
 		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Reset(
 			this->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
 
-		this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
-			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
-				D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		if (!framebuffer->IsEnableRTT())
+		{
+			this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
+					D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		}
+		else
+		{
+			this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(framebuffer->GetFramebufferRenderTarget()->GetRTTBuffer().Get(),
+					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE, 
+					D3D12_RESOURCE_STATE_RENDER_TARGET));
+		}
 
 		std::vector<ID3D12DescriptorHeap*> DescriptorList;
 		if (this->SRVDescriptorHeap)
@@ -164,13 +174,23 @@ namespace GE
 		this->GetGraphicsCommandList()->GetCommandListObject()->SetDescriptorHeaps((UINT)DescriptorList.size(), DescriptorList.data());
 	}
 
-	void GGraphicsContext::EndUpRendering()
+	void GGraphicsContext::EndUpRendering(std::shared_ptr<GFramebuffer> framebuffer)
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
-			&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
-				D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		if (!framebuffer->IsEnableRTT())
+		{
+			this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(this->GraphicsSwapChain->GetCurrentBuffer().Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		}
+		else
+		{
+			this->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(framebuffer->GetFramebufferRenderTarget()->GetRTTBuffer().Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET, 
+					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
+		}
 
 		GUARDIAN_AUTO_THROW(this->GetGraphicsCommandList()->GetCommandListObject()->Close());
 	}

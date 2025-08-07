@@ -21,8 +21,8 @@ namespace GE
 		void RegisterGraphicsCommandList(const std::string& name);
 		void SetCurrentCommandList(const std::string& name);
 
-		void BeginRendering();
-		void EndUpRendering();
+		void BeginRendering(std::shared_ptr<GFramebuffer> framebuffer);
+		void EndUpRendering(std::shared_ptr<GFramebuffer> framebuffer);
 		void PresentRenderingResult(UINT syncInternal);
 
 		void ExecuteInitialization();

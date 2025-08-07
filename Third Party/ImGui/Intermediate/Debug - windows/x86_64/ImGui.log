@@ -7,4 +7,4 @@
   imgui_widgets.cpp
 d3d12.lib(d3d12.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR 已在 dxgi.lib(dxgi.dll) 中定义；已忽略第二个定义
 d3dcompiler.lib(D3DCOMPILER_47.dll) : warning LNK4006: __NULL_IMPORT_DESCRIPTOR 已在 dxgi.lib(dxgi.dll) 中定义；已忽略第二个定义
-  ImGui.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\ImGui.lib
+  ImGui.vcxproj -> E:\Dev\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\ImGui.lib

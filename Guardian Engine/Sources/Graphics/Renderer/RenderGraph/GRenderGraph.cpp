@@ -8,9 +8,9 @@ namespace GE
 		this->IsFinalized = false;
 	}
 
-	GRenderGraph::GRenderGraph(const std::string& name) : GRenderGraph()
+	GRenderGraph::GRenderGraph(const std::string& name, bool enableRTT) : GRenderGraph()
 	{
-		this->InitializeRenderGraph(name);
+		this->InitializeRenderGraph(name, enableRTT);
 	}
 
 	GRenderGraph::GRenderGraph(const GRenderGraph& other)
@@ -55,14 +55,15 @@ namespace GE
 		this->PassList.clear();
 	}
 
-	void GRenderGraph::InitializeRenderGraph(const std::string& name)
+	void GRenderGraph::InitializeRenderGraph(const std::string& name, bool enableRTT)
 	{
 		this->RenderGraphName = name;
 		this->RenderGraphId = GUUID();
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->RegisterGraphicsCommandList(this->RenderGraphName);
 
-		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(
+			GGraphicsContextRegistry::GetCurrentGraphicsContext(), enableRTT);
 
 		this->RenderGraphCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
 
@@ -92,14 +93,14 @@ namespace GE
 
 		this->InitializeGraphGraphics();
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering(this->RenderGraphFramebuffer);
 
 		for (auto& pass : this->PassList)
 		{
 			pass.second->Execute();
 		}
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering();
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering(this->RenderGraphFramebuffer);
 	}
 
 	void GRenderGraph::Reset()
@@ -117,6 +118,12 @@ namespace GE
 		}
 	}
 
+	void GRenderGraph::Resize(int newWidth, int newHeight)
+	{
+		this->RenderGraphFramebuffer->ResizeFramebuffer(
+			GGraphicsContextRegistry::GetCurrentGraphicsContext(), newWidth, newHeight);
+	}
+
 	const GUUID& GRenderGraph::GetRenderGraphId() const noexcept
 	{
 		return this->RenderGraphId;
@@ -130,6 +137,11 @@ namespace GE
 	std::shared_ptr<GCamera> GRenderGraph::GetRenderGraphCamera()
 	{
 		return this->RenderGraphCamera;
+	}
+
+	std::shared_ptr<GFramebuffer> GRenderGraph::GetRenderGraphFramebuffer()
+	{
+		return this->RenderGraphFramebuffer;
 	}
 
 	std::shared_ptr<GPass> GRenderGraph::GetPass(const std::string& passName)

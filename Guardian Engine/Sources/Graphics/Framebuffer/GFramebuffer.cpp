@@ -12,9 +12,9 @@ namespace GE
 		this->FramebufferViewport = null;
 	}
 
-	GFramebuffer::GFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext)
+	GFramebuffer::GFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT)
 	{
-		this->InitializeFramebuffer(graphicsContext);
+		this->InitializeFramebuffer(graphicsContext, enableRTT);
 	}
 
 	GFramebuffer::GFramebuffer(const GFramebuffer& other)
@@ -42,12 +42,14 @@ namespace GE
 		this->FramebufferViewport = null;
 	}
 
-	void GFramebuffer::InitializeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext)
+	void GFramebuffer::InitializeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT)
 	{
+		this->EnableRTT = enableRTT;
+
 		this->FramebufferWidth = graphicsContext->GetGraphicsSwapChain()->GetBufferWidth();
 		this->FramebufferHeight = graphicsContext->GetGraphicsSwapChain()->GetBufferHeight();
 
-		this->FramebufferRenderTarget = GRenderTarget::CreateNewRenderTarget(graphicsContext);
+		this->FramebufferRenderTarget = GRenderTarget::CreateNewRenderTarget(graphicsContext, this->EnableRTT);
 		this->FramebufferDepthStencil = GDepthStencil::CreateNewDepthStencil(graphicsContext);
 
 		GViewport::Attribute ViewportAttribute;
@@ -77,7 +79,7 @@ namespace GE
 		GUARDIAN_CHECK_VALUE(newWidth);
 		GUARDIAN_CHECK_VALUE(newHeight);
 
-		this->FramebufferRenderTarget->ResizeRenderTargetView(graphicsContext);
+		this->FramebufferRenderTarget->ResizeRenderTargetView(graphicsContext, newWidth, newHeight);
 		this->FramebufferDepthStencil->ResizeDepthStencilView(graphicsContext);
 
 		GViewport::Attribute ViewportAttribute;
@@ -91,9 +93,24 @@ namespace GE
 		this->FramebufferViewport->SetViewportAttribute(ViewportAttribute);
 	}
 
+	const bool& GFramebuffer::IsEnableRTT() const noexcept
+	{
+		return this->EnableRTT;
+	}
+
 	const GUUID& GFramebuffer::GetFramebufferId() const noexcept
 	{
 		return this->FramebufferId;
+	}
+
+	const int& GFramebuffer::GetFramebufferWidth() const noexcept
+	{
+		return this->FramebufferWidth;
+	}
+
+	const int& GFramebuffer::GetFramebufferHeight() const noexcept
+	{
+		return this->FramebufferHeight;
 	}
 
 	std::shared_ptr<GRenderTarget> GFramebuffer::GetFramebufferRenderTarget()

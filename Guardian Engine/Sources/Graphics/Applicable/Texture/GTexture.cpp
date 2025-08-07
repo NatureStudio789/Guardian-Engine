@@ -35,11 +35,16 @@ namespace GE
 	{
 		GUARDIAN_SETUP_AUTO_THROW();
 
-		GUARDIAN_CHECK_POINTER(rootSignature);
-
 		this->TextureRootSignature = rootSignature;
-		this->TextureRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
-			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, index));
+		if (!this->TextureRootSignature)
+		{
+			this->TextureRootParameterIndex = 0;
+		}
+		else
+		{
+			this->TextureRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
+				GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, index));
+		}
 
 		this->TextureDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(1);
 
@@ -74,6 +79,11 @@ namespace GE
 
 	void GTexture::Apply()
 	{
+		if (!this->TextureRootSignature)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("This texture doesn't support apply!");
+		}
+
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
 			SetGraphicsRootDescriptorTable(this->TextureRootParameterIndex, this->TextureDescriptorHandle->GPUHandle);
 	}

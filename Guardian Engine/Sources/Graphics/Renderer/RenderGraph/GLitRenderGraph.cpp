@@ -2,7 +2,7 @@
 
 namespace GE
 {
-	GLitRenderGraph::GLitRenderGraph(const std::string& name) : GRenderGraph(name)
+	GLitRenderGraph::GLitRenderGraph(const std::string& name) : GRenderGraph(name, true)
 	{
 		{
 			auto pass = std::make_shared<GLightingPass>("Lighting");

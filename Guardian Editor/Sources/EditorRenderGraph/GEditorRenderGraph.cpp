@@ -18,7 +18,30 @@ namespace GE
 		this->InitializeGraphGraphics();
 		this->EditorContext->BeginRendering();
 
-		GApplication::Instance->GetMainWindow()->Render();
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDocking;
+
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
+		const bool isMaximized = IsZoomed(GApplication::Instance->GetMainWindowHandle());
+
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, isMaximized ? ImVec2(6.0f, 6.0f) : ImVec2(1.0f, 1.0f));
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
+
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
+		ImGui::Begin("DockSpaceWindow", nullptr, window_flags);
+		ImGui::PopStyleColor(); // MenuBarBg
+		ImGui::PopStyleVar(2);
+
+		ImGui::PopStyleVar(2);
+
+		ImGui::DockSpace(ImGui::GetID("MyDockspace"));
 
 		static bool open = true;
 		if (open)
@@ -45,7 +68,22 @@ namespace GE
 			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / this->EditorContext->GetEditorIO().Framerate,
 				this->EditorContext->GetEditorIO().Framerate);
 			ImGui::End();
+
+			static bool IsFirst = true;
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
+			ImGui::Begin("Image");
+
+			ImGui::PopStyleVar();
+
+			ImGui::Image(
+				(ImTextureID)GRenderer::GetRenderGraph("Lit")->GetRenderGraphFramebuffer()->GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr,
+				ImGui::GetContentRegionAvail());
+
+			ImGui::End();
 		}
+
+
+		ImGui::End();
 
 		this->EditorContext->EndUpRendering();
 	}

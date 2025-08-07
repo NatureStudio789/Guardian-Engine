@@ -8,26 +8,34 @@ namespace GE
 	{
 	public:
 		GRenderTarget();
-		GRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext);
+		GRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT = false);
 		GRenderTarget(const GRenderTarget& other);
 		~GRenderTarget();
 
-		void InitializeRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext);
+		void InitializeRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT = false);
 
-		void ResizeRenderTargetView(std::shared_ptr<GGraphicsContext> graphicsContext);
+		void ResizeRenderTargetView(
+			std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight);
 		void ClearRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void ApplyRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext,
 			D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView);
 
+		WRL::ComPtr<ID3D12Resource> GetRTTBuffer();
+		std::shared_ptr<GDescriptorHandle> GetTextureDescriptorHandle();
 		D3D12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView(std::shared_ptr<GGraphicsContext> graphicsContext);
 
-		static std::shared_ptr<GRenderTarget> CreateNewRenderTarget(std::shared_ptr<GGraphicsContext> graphicsContext)
+		static std::shared_ptr<GRenderTarget> CreateNewRenderTarget(
+			std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT = false)
 		{
-			return std::make_shared<GRenderTarget>(graphicsContext);
+			return std::make_shared<GRenderTarget>(graphicsContext, enableRTT);
 		}
 
 	private:
+		bool EnableRTT;
+		WRL::ComPtr<ID3D12Resource> RTTBuffer;
+
 		std::shared_ptr<GDescriptorHandle> RTVDescriptorHandle;
+		std::shared_ptr<GDescriptorHandle> RTVTextureDescriptorHandle;
 	};
 }
 

@@ -34,13 +34,13 @@ namespace GE
 				{
 					case GE_STYLE_DEFAULTWINDOW:
 					{
-						this->EnableWindowTitleBar = true;
+						this->EnableCustomizedTitleBar = true;
 						break;
 					}
 
 					case GE_STYLE_FULLSCREEN:
 					{
-						this->EnableWindowTitleBar = false;
+						this->EnableCustomizedTitleBar = false;
 						break;
 					}
 				}
@@ -52,14 +52,14 @@ namespace GE
 				this->WindowTheme = other.WindowTheme;
 			}
 
-			void SetTitleBarEnable(bool enable)
+			void SetCustomizedTitleBarEnable(bool enable)
 			{
 				if (this->WindowStyle == GE_STYLE_FULLSCREEN)
 				{
 					return;
 				}
 
-				this->EnableWindowTitleBar = enable;
+				this->EnableCustomizedTitleBar = enable;
 			}
 
 			std::string WindowTitle = "GuardianWindow";
@@ -67,7 +67,7 @@ namespace GE
 			Theme WindowTheme = GE_THEME_DARK;
 
 		private:
-			bool EnableWindowTitleBar;
+			bool EnableCustomizedTitleBar;
 
 			friend class GWindow;
 		};
@@ -84,7 +84,6 @@ namespace GE
 
 		void DisplayWindow();
 		void UpdateWindow();
-		void Render();
 
 		void DestroyWindow();
 
