@@ -371,6 +371,11 @@
       <Filter>Profile\UUID</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.h" />
+    <ClInclude Include="Sources\Gameplay\Scene\GScene.h" />
+    <ClInclude Include="Sources\Gameplay\Component\GComponent.h" />
+    <ClInclude Include="Sources\Gameplay\Entity\GEntity.h" />
+    <ClInclude Include="Sources\Gameplay\GGameplayEngine.h" />
+    <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -543,5 +548,9 @@
       <Filter>Profile\UUID</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.cpp" />
+    <ClCompile Include="Sources\Gameplay\Scene\GScene.cpp" />
+    <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp" />
+    <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp" />
+    <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp" />
   </ItemGroup>
 </Project>

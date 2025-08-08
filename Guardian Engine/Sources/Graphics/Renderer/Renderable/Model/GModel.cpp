@@ -6,17 +6,24 @@ namespace GE
 	{
 		this->RootMeshNode = null;
 		this->ModelMeshList.clear();
+
+		this->ModelAccumulatedMatrix = GMatrix::IdentityMatrix();
 	}
 
-	GModel::GModel(const std::string& filePath)
+	GModel::GModel(const std::string& filePath, std::string renderGraphName)
 	{
-		this->InitializeModel(filePath);
+		this->InitializeModel(filePath, renderGraphName);
 	}
 
 	GModel::GModel(const GModel& other)
 	{
 		this->RootMeshNode = other.RootMeshNode;
 		this->ModelMeshList = other.ModelMeshList;
+
+		this->ModelAccumulatedMatrix = other.ModelAccumulatedMatrix;
+
+		this->ModelFilePath = other.ModelFilePath;
+		this->ModelFileDirectory = other.ModelFileDirectory;
 	}
 
 	GModel::~GModel()
@@ -27,7 +34,7 @@ namespace GE
 		this->ModelMeshList.clear();
 	}
 
-	void GModel::InitializeModel(const std::string& filePath)
+	void GModel::InitializeModel(const std::string& filePath, std::string renderGraphName)
 	{
 		this->ModelFilePath = filePath;
 		this->ModelFileDirectory = GUtil::GetFilePathDirectory(this->ModelFilePath);
@@ -45,6 +52,8 @@ namespace GE
 		}
 
 		this->RootMeshNode = this->ParseNode(Scene, Scene->mRootNode);
+
+		this->LinkTechnique(renderGraphName);
 	}
 
 	void GModel::SetTransform(const GTransform& transform)
@@ -52,9 +61,14 @@ namespace GE
 		this->RootMeshNode->SetTransform(transform);
 	}
 
+	void GModel::SetAccumulatedMatrix(const GMatrix& accumulatedMatrix)
+	{
+		this->ModelAccumulatedMatrix = accumulatedMatrix;
+	}
+
 	void GModel::Submit(const std::string& channel)
 	{
-		this->RootMeshNode->Submit(channel, GMatrix::IdentityMatrix());
+		this->RootMeshNode->Submit(channel, this->ModelAccumulatedMatrix);
 	}
 
 	void GModel::LinkTechnique(std::string renderGraphName)

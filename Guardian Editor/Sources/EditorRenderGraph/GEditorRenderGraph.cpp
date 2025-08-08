@@ -11,6 +11,15 @@ namespace GE
 		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 
 		this->EditorContext = GEditorContext::CreateNewEditorContext(this->RenderGraphFramebuffer);
+
+		this->EditorEventProcesser = std::make_shared<GEventProcesser>();
+		this->EditorEventProcesser->OnEvent<GWindowResizeEvent>([this](const GWindowResizeEvent& event)
+		{
+			if (event.WindowHandle == GApplication::Instance->GetMainWindowHandle())
+			{
+				this->Resize(event.ResizeWidth, event.ResizeHeight);
+			}
+		});
 	}
 
 	void GEditorRenderGraph::Execute()
@@ -34,20 +43,14 @@ namespace GE
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, isMaximized ? ImVec2(6.0f, 6.0f) : ImVec2(1.0f, 1.0f));
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 3.0f);
 
-		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4{ 0.0f, 0.0f, 0.0f, 0.0f });
+		ImGui::PushStyleColor(ImGuiCol_MenuBarBg, ImVec4{ 0.0f, 0.0f, 0.0f, 1.0f });
 		ImGui::Begin("DockSpaceWindow", nullptr, window_flags);
-		ImGui::PopStyleColor(); // MenuBarBg
+		ImGui::PopStyleColor();
 		ImGui::PopStyleVar(2);
 
 		ImGui::PopStyleVar(2);
 
 		ImGui::DockSpace(ImGui::GetID("MyDockspace"));
-
-		static bool open = true;
-		if (open)
-		{
-			ImGui::ShowDemoWindow(&open);
-		}
 
 		{
 			static float f = 0.0f;
@@ -56,6 +59,7 @@ namespace GE
 			ImGui::Begin("Hello, world!");
 
 			ImGui::Text("This is some useful text.");
+            static bool open;
 			ImGui::Checkbox("Demo Window", &open);
 
 			ImGui::SliderFloat("float", &f, 0.0f, 1.0f);

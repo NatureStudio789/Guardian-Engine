@@ -1,23 +1,21 @@
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiantext.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenuitem.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianimagebutton.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianimage.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenubar.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianeditor.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiandockspace.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianwidget.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenu.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianbutton.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianpanel.obj
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiancolumnlayout.obj
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian eui.pdb
-d:\development\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian eui.lib
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.11776.write.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.command.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.items.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.read.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib-link.read.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib-link.write.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib.command.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\rc.command.1.tlog
-d:\development\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\rc.write.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianbutton.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenu.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiandockspace.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianeditor.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenuitem.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianimage.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiancolumnlayout.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardiantext.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianmenubar.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianwidget.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianimagebutton.obj
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardianpanel.obj
+e:\dev\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian eui.pdb
+e:\dev\c++\nature studio\guardian-engine\build\debug - windows\x86_64\guardian eui.lib
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.12096.write.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.command.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.items.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\cl.read.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib-link.read.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib-link.write.1.tlog
+e:\dev\c++\nature studio\guardian-engine\guardian eui\intermediate\debug - windows\x86_64\guardian eui.tlog\lib.command.1.tlog

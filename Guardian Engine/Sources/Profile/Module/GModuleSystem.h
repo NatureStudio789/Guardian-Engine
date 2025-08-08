@@ -1,6 +1,6 @@
 #ifndef _GE_GMODULESYSTEM_H_
 #define _GE_GMODULESYSTEM_H_
-#include "../../Graphics/GRenderEngine.h"
+#include "../../Gameplay/GGameplayEngine.h"
 
 namespace GE
 {

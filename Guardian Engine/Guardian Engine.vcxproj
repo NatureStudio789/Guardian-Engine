@@ -148,6 +148,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h" />
+    <ClInclude Include="Sources\Gameplay\GGameplayEngine.h" />
+    <ClInclude Include="Sources\Gameplay\Entity\GEntity.h" />
+    <ClInclude Include="Sources\Gameplay\Component\GComponent.h" />
+    <ClInclude Include="Sources\Gameplay\Scene\GScene.h" />
     <ClInclude Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
@@ -221,6 +226,10 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp" />
+    <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp" />
+    <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp" />
+    <ClCompile Include="Sources\Gameplay\Scene\GScene.cpp" />
     <ClCompile Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />

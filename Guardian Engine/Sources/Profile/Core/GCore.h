@@ -1,6 +1,5 @@
 #ifndef _GE_GCORE_H_
 #define _GE_GCORE_H_
-#include <Windows.h>
 #include <filesystem>
 #include <string>
 #include <memory>
@@ -10,26 +9,37 @@
 #include <sstream>
 #include <vector>
 #include <format>
+#include <random>
+#include <map>
+#include <functional>
+
+#include <Windows.h>
 #include <Uxtheme.h>
+
+#include <wrl/client.h>
+
 #include <dxgi.h>
 #include <d3d12.h>
 #include <DirectX 12/d3dx12.h>
 #include <dxgi1_6.h>
-#include <wrl/client.h>
-#include <random>
-#include <map>
-#include <functional>
 #include <DirectXMath.h>
 #include <d3dcompiler.h>
+
+#include <DirectXTex/DirectXTex.h>
+
 #include <xaudio2.h>
+
 #include <imgui.h>
 #include <imgui_impl_dx12.h>
 #include <imgui_impl_win32.h>
 #include <imgui_internal.h>
-#include <DirectXTex/DirectXTex.h>
+
 #include <Assimp/Importer.hpp>
 #include <Assimp/scene.h>
 #include <Assimp/postprocess.h>
+
+#include <entt/entt.hpp>
+
 using namespace Microsoft;
 using namespace DirectX;
 

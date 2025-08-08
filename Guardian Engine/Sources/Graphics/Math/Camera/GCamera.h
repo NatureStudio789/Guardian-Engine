@@ -16,6 +16,8 @@ namespace GE
 		void Translate(const GVector3& translation);
 		void Rotate(const GVector3& rotation);
 
+		void ResizeFrustum(float newWidth, float newHeight);
+
 		const GMatrix GetViewMatrix() const noexcept;
 		
 		const GVector3 GetForwardVector() const noexcept;

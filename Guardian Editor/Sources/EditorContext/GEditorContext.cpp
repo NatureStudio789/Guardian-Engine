@@ -6,7 +6,6 @@ namespace GE
 	{
 		this->ContextFramebuffer = null;
 		this->EditorDescriptorHeap = null;
-		this->ContextEventProcesser = null;
 	}
 
 	GEditorContext::GEditorContext(std::shared_ptr<GFramebuffer> contextFramebuffer)
@@ -18,7 +17,6 @@ namespace GE
 	{
 		this->ContextFramebuffer = other.ContextFramebuffer;
 		this->EditorDescriptorHeap = other.EditorDescriptorHeap;
-		this->ContextEventProcesser = other.ContextEventProcesser;
 	}
 
 	GEditorContext::~GEditorContext()
@@ -33,29 +31,6 @@ namespace GE
 	{
 		this->EditorDescriptorHeap = GDescriptorHeap::CreateNewDescriptorHeap(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice(),
 			2, GDescriptorHeap::GE_DESCRIPTOR_HEAP_CBVSRVUAV, GDescriptorHeap::GE_DESCRIPTOR_HEAP_FLAG_SHADERVISIBLE);
-
-		this->ContextEventProcesser = std::make_shared<GEventProcesser>();
-		this->ContextEventProcesser->OnEvent<GWindowResizeEvent>([=](const GWindowResizeEvent& event)
-		{
-			if (this->ContextFramebuffer && event.WindowHandle == GApplication::Instance->GetMainWindowHandle())
-			{
-				GUARDIAN_SETUP_AUTO_THROW();
-
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Editor");
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
-
-				GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-					Reset(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListAllocator().Get(), null));
-
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->ResizeBuffer(event.ResizeWidth, event.ResizeHeight);
-
-				this->ContextFramebuffer->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(), event.ResizeWidth, event.ResizeHeight);
-
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteCommandList();
-
-				GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
-			}
-		});
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();

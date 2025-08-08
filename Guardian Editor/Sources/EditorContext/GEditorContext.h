@@ -28,8 +28,6 @@ namespace GE
 		std::shared_ptr<GFramebuffer> ContextFramebuffer;
 		std::shared_ptr<GDescriptorHeap> EditorDescriptorHeap;
 
-		std::shared_ptr<GEventProcesser> ContextEventProcesser;
-
 		friend class GEditorRenderGraph;
 	};
 }

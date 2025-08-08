@@ -14,6 +14,7 @@ namespace GE
 
 	private:
 		std::shared_ptr<GEditorContext> EditorContext;
+		std::shared_ptr<GEventProcesser> EditorEventProcesser;
 	};
 }
 

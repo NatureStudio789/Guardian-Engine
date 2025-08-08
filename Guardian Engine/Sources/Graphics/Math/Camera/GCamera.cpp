@@ -45,6 +45,11 @@ namespace GE
         this->Rotation += rotation;
     }
 
+    void GCamera::ResizeFrustum(float newWidth, float newHeight)
+    {
+        this->Projection.Aspect = newWidth / newHeight;
+    }
+
     const GMatrix GCamera::GetViewMatrix() const noexcept
     {
         return GMatrix::LookAtMatrix(this->Position, GMatrix::MultiplyCoord(this->GetRotationMatrix(), GVector3(0.0f, 0.0f, 1.0f)) + this->Position, 

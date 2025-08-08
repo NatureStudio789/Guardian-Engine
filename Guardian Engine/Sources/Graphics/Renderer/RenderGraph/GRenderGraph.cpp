@@ -120,8 +120,22 @@ namespace GE
 
 	void GRenderGraph::Resize(int newWidth, int newHeight)
 	{
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
+
+		if (!this->RenderGraphFramebuffer->IsEnableRTT())
+		{
+			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsSwapChain()->ResizeBuffer(newWidth, newHeight);
+		}
+
 		this->RenderGraphFramebuffer->ResizeFramebuffer(
 			GGraphicsContextRegistry::GetCurrentGraphicsContext(), newWidth, newHeight);
+
+		if (this->RenderGraphCamera)
+		{
+			this->RenderGraphCamera->ResizeFrustum((float)newWidth, (float)newHeight);
+		}
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->FlushCommandQueue();
 	}
 
 	const GUUID& GRenderGraph::GetRenderGraphId() const noexcept

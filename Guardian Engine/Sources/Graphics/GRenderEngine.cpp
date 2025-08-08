@@ -37,11 +37,7 @@ namespace GE
 
 		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("Lit"));
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->SetCurrentCommandList("Lit");
-
 		this->TestModel = GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.obj");
-
-		this->TestModel->LinkTechnique("Lit");
 	}
 
 	void GRenderEngine::UpdateModule()

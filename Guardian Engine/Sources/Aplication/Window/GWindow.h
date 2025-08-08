@@ -1,6 +1,6 @@
 #ifndef _GE_GWINDOW_H_
 #define _GE_GWINDOW_H_
-#include "../../Graphics/Renderer/GRenderer.h"
+#include "../../Gameplay/Entity/GEntity.h"
 
 namespace GE
 {
@@ -118,6 +118,8 @@ namespace GE
 
 		std::shared_ptr<GEventProcesser> WindowEventProcesser;
 		bool IsWindowRunning;
+
+		friend class GEditorRenderGraph;
 	};
 }
 
