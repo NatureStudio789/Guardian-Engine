@@ -376,6 +376,8 @@
     <ClInclude Include="Sources\Gameplay\Entity\GEntity.h" />
     <ClInclude Include="Sources\Gameplay\GGameplayEngine.h" />
     <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GWireframePass.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -552,5 +554,6 @@
     <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp" />
     <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp" />
     <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.cpp" />
   </ItemGroup>
 </Project>

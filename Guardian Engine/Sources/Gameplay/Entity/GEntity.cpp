@@ -12,7 +12,7 @@ namespace GE
 		this->ChildrenEntity.clear();
 	}
 
-	GEntity::GEntity(const std::string& name, GScene* scene)
+	GEntity::GEntity(const std::string& name, GScene* scene) : GEntity()
 	{
 		this->InitializeEntity(name, scene);
 	}
@@ -61,7 +61,7 @@ namespace GE
 			child->GetParent()->RemoveChild(this->EntityName);
 		}
 
-		child->SetParent(this);
+		child->ParentEntity = this;
 		this->ChildrenEntity.push_back(child);
 	}
 
@@ -103,7 +103,7 @@ namespace GE
 
 	bool GEntity::HasParent()
 	{
-		return this->ParentEntity;
+		return this->ParentEntity != null;
 	}
 
 	GEntity* GEntity::GetParent()

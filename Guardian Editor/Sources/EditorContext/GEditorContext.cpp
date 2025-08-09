@@ -103,13 +103,16 @@ namespace GE
 	{
 		ImGui::Render();
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering(this->ContextFramebuffer);
-		
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
+		this->ContextFramebuffer->BeginRendering(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
+
 		this->ContextFramebuffer->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get());
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering(this->ContextFramebuffer);
+		this->ContextFramebuffer->EndUpRendering(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering();
 
 		if (this->GetEditorIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{

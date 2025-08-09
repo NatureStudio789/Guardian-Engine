@@ -22,7 +22,13 @@ namespace GE
 	{
 		this->SceneName = name;
 
+		this->EditCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
+		this->RuntimeCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, 0.0f), GVector3(), GPerspectiveProjection());
+
 		this->SceneRootEntity = GEntity::CreateNewEntity("Root", this);
+
+		this->CameraEntity = this->CreateEntity("Main Camera");
+		this->CameraEntity->AddComponent<GCameraComponent>(this->RuntimeCamera);
 	}
 
 	std::shared_ptr<GEntity> GScene::CreateEntity(const std::string& entityName, std::string rootName)
@@ -40,6 +46,15 @@ namespace GE
 	void GScene::Update()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
+
+		{
+			auto view = this->Registry.view<GTransformComponent, GCameraComponent>();
+			view.each([=](const auto& e, GTransformComponent& TComponent, GCameraComponent& CComponent)
+			{
+				CComponent.Camera->Position = TComponent.Transform.Position;
+				CComponent.Camera->Rotation = TComponent.Transform.Rotation;
+			});
+		}
 
 		{
 			auto view = this->Registry.view<GTransformComponent, GModelComponent>();
@@ -61,6 +76,16 @@ namespace GE
 	const std::string& GScene::GetSceneName() const noexcept
 	{
 		return this->SceneName;
+	}
+
+	std::shared_ptr<GCamera> GScene::GetEditCamera()
+	{
+		return this->EditCamera;
+	}
+
+	std::shared_ptr<GCamera> GScene::GetRuntimeCamera()
+	{
+		return this->RuntimeCamera;
 	}
 
 	void GScene::SetEntityParent(GEntity* entity, const std::string& entityName, std::string rootName)

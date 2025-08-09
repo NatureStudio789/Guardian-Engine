@@ -148,6 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.h" />
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GWireframePass.h" />
     <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h" />
     <ClInclude Include="Sources\Gameplay\GGameplayEngine.h" />
     <ClInclude Include="Sources\Gameplay\Entity\GEntity.h" />
@@ -226,6 +228,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.cpp" />
     <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp" />
     <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp" />
     <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp" />

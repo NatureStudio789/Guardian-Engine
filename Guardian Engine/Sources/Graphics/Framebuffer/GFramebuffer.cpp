@@ -93,6 +93,40 @@ namespace GE
 		this->FramebufferViewport->SetViewportAttribute(ViewportAttribute);
 	}
 
+	void GFramebuffer::BeginRendering(std::shared_ptr<GGraphicsContext> graphicsContext)
+	{
+		if (!this->EnableRTT)
+		{
+			graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(graphicsContext->GetGraphicsSwapChain()->GetCurrentBuffer().Get(),
+					D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET));
+		}
+		else
+		{
+			graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(this->FramebufferRenderTarget->GetRTTBuffer().Get(),
+					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+					D3D12_RESOURCE_STATE_RENDER_TARGET));
+		}
+	}
+
+	void GFramebuffer::EndUpRendering(std::shared_ptr<GGraphicsContext> graphicsContext)
+	{
+		if (!this->EnableRTT)
+		{
+			graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(graphicsContext->GetGraphicsSwapChain()->GetCurrentBuffer().Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT));
+		}
+		else
+		{
+			graphicsContext->GetGraphicsCommandList()->GetCommandListObject()->ResourceBarrier(1,
+				&CD3DX12_RESOURCE_BARRIER::Transition(this->FramebufferRenderTarget->GetRTTBuffer().Get(),
+					D3D12_RESOURCE_STATE_RENDER_TARGET,
+					D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE | D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE));
+		}
+	}
+
 	const bool& GFramebuffer::IsEnableRTT() const noexcept
 	{
 		return this->EnableRTT;

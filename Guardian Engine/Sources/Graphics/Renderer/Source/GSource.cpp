@@ -29,7 +29,7 @@ namespace GE
 
 	void GSource::CheckLinkValidate() const
 	{
-		
+
 	}
 
 	const std::string& GSource::GetSourceName() const noexcept

@@ -2,8 +2,17 @@
 
 namespace GE
 {
+	std::string GRenderer::SCENE_RENDERGRAPH = "Scene";
+	
+	std::shared_ptr<GSceneRenderGraph> GRenderer::SceneRenderGraph;
 	std::map<std::string, std::shared_ptr<GRenderGraph>> GRenderer::RenderGraphList;
 
+
+	void GRenderer::InitializeRender()
+	{
+		SceneRenderGraph = GSceneRenderGraph::CreateNewSceneRenderGraph(SCENE_RENDERGRAPH);
+		RegisterRenderGraph(SceneRenderGraph);
+	}
 
 	void GRenderer::RegisterRenderGraph(std::shared_ptr<GRenderGraph> renderGraph)
 	{
@@ -27,9 +36,14 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
 
 		for (auto& RenderGraph : RenderGraphList)
-		{
+		{\
 			RenderGraph.second->Reset();
 		}
+	}
+
+	std::shared_ptr<GSceneRenderGraph> GRenderer::GetSceneRenderGraph()
+	{
+		return SceneRenderGraph;
 	}
 
 	std::shared_ptr<GRenderGraph> GRenderer::GetRenderGraph(const GUUID& id)

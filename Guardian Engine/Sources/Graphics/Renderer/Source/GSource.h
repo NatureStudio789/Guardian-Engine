@@ -13,7 +13,7 @@ namespace GE
 		virtual ~GSource();
 
 		void InitializeSource(const std::string& name);
-		
+
 		virtual void CheckLinkValidate() const;
 
 		const std::string& GetSourceName() const noexcept;
@@ -28,12 +28,12 @@ namespace GE
 	class GUARDIAN_API GDirectFramebufferSource : public GSource
 	{
 	public:
-		GDirectFramebufferSource(const std::string& name, std::shared_ptr<GFramebuffer>& framebuffer) : 
+		GDirectFramebufferSource(const std::string& name, std::shared_ptr<GFramebuffer>& framebuffer) :
 			GSource(name), Framebuffer(framebuffer)
 		{
 
 		}
-		GDirectFramebufferSource(const GDirectFramebufferSource& other) : 
+		GDirectFramebufferSource(const GDirectFramebufferSource& other) :
 			GSource(other), Framebuffer(other.Framebuffer)
 		{
 			this->IsLinked = other.IsLinked;
@@ -41,7 +41,7 @@ namespace GE
 
 		void CheckLinkValidate() const override
 		{
-			
+
 		}
 		std::shared_ptr<GFramebuffer> YieldFramebuffer() override
 		{
@@ -104,7 +104,7 @@ namespace GE
 		std::shared_ptr<GCamera>& Camera;
 		bool IsLinked = false;
 	};
-	
+
 	template<typename T>
 	class GDirectApplicableSource : public GSource
 	{
@@ -113,7 +113,7 @@ namespace GE
 		{
 			this->InitializeSource(name);
 		}
-		GDirectApplicableSource(const GDirectApplicableSource& other) : 
+		GDirectApplicableSource(const GDirectApplicableSource& other) :
 			GSource(other), Applicable(other.Applicable)
 		{
 		}

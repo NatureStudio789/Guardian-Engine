@@ -12,7 +12,7 @@ namespace GE
 
 	GEngine::~GEngine()
 	{
-
+		
 	}
 
 	void GEngine::InitializeEngine(std::shared_ptr<GProgram> program)

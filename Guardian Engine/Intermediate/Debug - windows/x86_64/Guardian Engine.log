@@ -1,7 +1,2 @@
-﻿  GApplication.cpp
-  GWindow.cpp
-  GEngine.cpp
-  GRenderEngine.cpp
-  GModuleSystem.cpp
-    正在创建库 ..\Build\Debug - windows\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug - windows\x86_64\Guardian Engine.exp
+﻿  GSceneRenderGraph.cpp
   Guardian Engine.vcxproj -> E:\Dev\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll

@@ -9,12 +9,17 @@ namespace GE
 
 	void GRenderQueuePass::Execute()
 	{
+		this->Framebuffer->BeginRendering(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
+
 		this->Apply();
 
 		for (auto& task : this->TaskList)
 		{
 			task->Execute();
 		}
+
+		this->Framebuffer->EndUpRendering(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 	}
 
 	void GRenderQueuePass::Reset()

@@ -3,6 +3,7 @@
 namespace GE
 {
 	const std::string GPipelineStateRegistry::LIGHTING_PSO = "Lighting PSO";
+	const std::string GPipelineStateRegistry::WIREFRAME_PSO = "Wireframe PSO";
 
 	std::map<std::string, std::shared_ptr<GPipelineState>> GPipelineStateRegistry::PipelineStateList;
 
@@ -10,9 +11,9 @@ namespace GE
 	void GPipelineStateRegistry::InitializePipelineStateRegistry()
 	{
 		{
-			auto MeshPipelineState = std::make_shared<GPipelineState>(LIGHTING_PSO);
-			MeshPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Default.gvs"));
-			MeshPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Default.gps"));
+			auto LightingPipelineState = std::make_shared<GPipelineState>(LIGHTING_PSO);
+			LightingPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Default.gvs"));
+			LightingPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Default.gps"));
 
 			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
 			{
@@ -21,43 +22,43 @@ namespace GE
 				{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 20, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, },
 			};
 
-			MeshPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
+			LightingPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
 
-			MeshPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
+			LightingPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
 			
 			GRootSignature::RootParameter TransformCBParameter;
 			TransformCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
 			TransformCBParameter.ShaderRegisterIndex = 0;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(TransformCBParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(TransformCBParameter);
 			GRootSignature::RootParameter CameraCBParameter;
 			CameraCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
 			CameraCBParameter.ShaderRegisterIndex = 1;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(CameraCBParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(CameraCBParameter);
 			GRootSignature::RootParameter MaterialCBParameter;
 			MaterialCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
 			MaterialCBParameter.ShaderRegisterIndex = 2;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(MaterialCBParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(MaterialCBParameter);
 			
 			GRootSignature::RootParameter AlbedoParameter;
 			AlbedoParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			AlbedoParameter.ShaderRegisterIndex = 0;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(AlbedoParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(AlbedoParameter);
 			GRootSignature::RootParameter RoughnessParameter;
 			RoughnessParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			RoughnessParameter.ShaderRegisterIndex = 1;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(RoughnessParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(RoughnessParameter);
 			GRootSignature::RootParameter MetallicParameter;
 			MetallicParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			MetallicParameter.ShaderRegisterIndex = 2;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(MetallicParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(MetallicParameter);
 			GRootSignature::RootParameter AoParameter;
 			AoParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			AoParameter.ShaderRegisterIndex = 3;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(AoParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(AoParameter);
 			GRootSignature::RootParameter NormalParameter;
 			NormalParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			NormalParameter.ShaderRegisterIndex = 4;
-			MeshPipelineState->GetPipelineRootSignature()->AddRootParameter(NormalParameter);
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(NormalParameter);
 			
 			GRootSignature::StaticSamplerDescription Sampler;
 			GUARDIAN_CLEAR_MEMORY(Sampler);
@@ -66,10 +67,37 @@ namespace GE
 			Sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 			Sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 			Sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
-			MeshPipelineState->GetPipelineRootSignature()->AddSamplerDescription(Sampler);
+			LightingPipelineState->GetPipelineRootSignature()->AddSamplerDescription(Sampler);
 
-			MeshPipelineState->InitializePipelineState();
-			PipelineStateList[LIGHTING_PSO] = MeshPipelineState;
+			LightingPipelineState->InitializePipelineState();
+			PipelineStateList[LIGHTING_PSO] = LightingPipelineState;
+		}
+
+		{
+			auto WireframePipelineState = std::make_shared<GPipelineState>(WIREFRAME_PSO);
+			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Wireframe.gvs"));
+			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Wireframe.gps"));
+
+			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0, },
+			};
+
+			WireframePipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
+
+			WireframePipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
+
+			GRootSignature::RootParameter TransformCBParameter;
+			TransformCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			TransformCBParameter.ShaderRegisterIndex = 0;
+			WireframePipelineState->GetPipelineRootSignature()->AddRootParameter(TransformCBParameter);
+			GRootSignature::RootParameter CameraCBParameter;
+			CameraCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			CameraCBParameter.ShaderRegisterIndex = 1;
+			WireframePipelineState->GetPipelineRootSignature()->AddRootParameter(CameraCBParameter);
+
+			WireframePipelineState->InitializePipelineState();
+			PipelineStateList[WIREFRAME_PSO] = WireframePipelineState;
 		}
 	}
 

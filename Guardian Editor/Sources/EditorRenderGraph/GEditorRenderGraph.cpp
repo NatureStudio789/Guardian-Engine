@@ -80,7 +80,8 @@ namespace GE
 			ImGui::PopStyleVar();
 
 			ImGui::Image(
-				(ImTextureID)GRenderer::GetRenderGraph("Lit")->GetRenderGraphFramebuffer()->GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr,
+				(ImTextureID)GRenderer::GetSceneRenderGraph()->GetRenderGraphFramebuffer()->
+				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr,
 				ImGui::GetContentRegionAvail());
 
 			ImGui::End();

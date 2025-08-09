@@ -93,14 +93,14 @@ namespace GE
 
 		this->InitializeGraphGraphics();
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering(this->RenderGraphFramebuffer);
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->BeginRendering();
 
 		for (auto& pass : this->PassList)
 		{
 			pass.second->Execute();
 		}
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering(this->RenderGraphFramebuffer);
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->EndUpRendering();
 	}
 
 	void GRenderGraph::Reset()

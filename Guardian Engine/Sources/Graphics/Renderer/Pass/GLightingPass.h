@@ -1,6 +1,6 @@
 #ifndef _GE_GLIGHTINGPASS_H_
 #define _GE_GLIGHTINGPASS_H_
-#include "GRenderQueuePass.h"
+#include "GWireframePass.h"
 
 namespace GE
 {

@@ -22,6 +22,8 @@ namespace GE
 
 		const GUUID& GetSceneId() const noexcept;
 		const std::string& GetSceneName() const noexcept;
+		std::shared_ptr<GCamera> GetEditCamera();
+		std::shared_ptr<GCamera> GetRuntimeCamera();
 
 		static std::shared_ptr<GScene> CreateNewScene(const std::string& name)
 		{
@@ -39,6 +41,9 @@ namespace GE
 
 		std::map<std::string, std::shared_ptr<GEntity>> SceneEntityList;
 		std::shared_ptr<GEntity> SceneRootEntity;
+		std::shared_ptr<GEntity> CameraEntity;
+		std::shared_ptr<GCamera> EditCamera;
+		std::shared_ptr<GCamera> RuntimeCamera;
 
 		friend class GEntity;
 	};

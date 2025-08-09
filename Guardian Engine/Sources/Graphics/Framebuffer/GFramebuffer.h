@@ -17,6 +17,9 @@ namespace GE
 		void ApplyFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void ResizeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight);
 
+		void BeginRendering(std::shared_ptr<GGraphicsContext> graphicsContext);
+		void EndUpRendering(std::shared_ptr<GGraphicsContext> graphicsContext);
+
 		const bool& IsEnableRTT() const noexcept;
 		const GUUID& GetFramebufferId() const noexcept;
 		const int& GetFramebufferWidth() const noexcept;

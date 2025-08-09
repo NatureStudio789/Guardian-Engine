@@ -39,6 +39,22 @@ namespace GE
 		GMatrix AccumulatedMatrix;
 	};
 
+	struct GUARDIAN_API GCameraComponent
+	{
+	public:
+		GCameraComponent()
+		{
+			this->Camera = std::make_shared<GCamera>();
+		}
+		GCameraComponent(std::shared_ptr<GCamera> camera)
+		{
+			this->Camera = camera;
+		}
+		GCameraComponent(const GCameraComponent&) = default;
+
+		std::shared_ptr<GCamera> Camera;
+	};
+
 	struct GUARDIAN_API GModelComponent
 	{
 	public:

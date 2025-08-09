@@ -8,11 +8,11 @@ namespace GE
 	{
 	public:
 		GModel();
-		GModel(const std::string& filePath, std::string renderGraphName = "Lit");
+		GModel(const std::string& filePath, std::string renderGraphName = "Scene");
 		GModel(const GModel& other);
 		~GModel();
 
-		void InitializeModel(const std::string& filePath, std::string renderGraphName = "Lit");
+		void InitializeModel(const std::string& filePath, std::string renderGraphName = "Scene");
 
 		void SetTransform(const GTransform& transform);
 		void SetAccumulatedMatrix(const GMatrix& accumulatedMatrix);
@@ -20,7 +20,7 @@ namespace GE
 
 		std::shared_ptr<GMeshNode> GetRootMeshNode();
 
-		static std::shared_ptr<GModel> CreateNewModel(const std::string& filePath, std::string renderGraphName = "Lit")
+		static std::shared_ptr<GModel> CreateNewModel(const std::string& filePath, std::string renderGraphName = "Scene")
 		{
 			return std::make_shared<GModel>(filePath, renderGraphName);
 		}
