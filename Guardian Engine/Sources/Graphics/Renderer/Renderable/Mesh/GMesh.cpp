@@ -36,15 +36,29 @@ namespace GE
 			GIndexBuffer::CreateNewIndexBuffer(this->MeshData.Indices.data(), (UINT)this->MeshData.Indices.size()),
 			GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
 
-		auto& PBRTechnique = GTechnique::CreateNewTechnique("PBR", "main");
-		auto& LightingStep = GStep::CreateNewStep("Lighting");
+		auto& LightingTechnique = GTechnique::CreateNewTechnique("Lighting", "main");
 
-		LightingStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-		LightingStep->AddApplicable(this->MeshMaterial);
+		{
+			auto& EditRenderStep = GStep::CreateNewStep("Edit");
 
-		PBRTechnique->AddStep(LightingStep);
-		this->AddTechnique(PBRTechnique);
+			EditRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+			EditRenderStep->AddApplicable(this->MeshMaterial);
+
+			LightingTechnique->AddStep(EditRenderStep);
+		}
+		
+		{
+			auto& RuntimeRenderStep = GStep::CreateNewStep("Runtime");
+
+			RuntimeRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+			RuntimeRenderStep->AddApplicable(this->MeshMaterial);
+
+			LightingTechnique->AddStep(RuntimeRenderStep);
+		}
+
+		this->AddTechnique(LightingTechnique);
 	}
 
 	GMeshNode::GMeshNode()

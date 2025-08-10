@@ -37,17 +37,17 @@ namespace GE
 		return this->SourceName;
 	}
 
-	std::shared_ptr<GApplicable> GSource::YieldApplicable()
+	std::shared_ptr<GApplicable>& GSource::YieldApplicable()
 	{
 		throw GUARDIAN_ERROR_EXCEPTION("This source don't support applicable!");
 	}
 
-	std::shared_ptr<GFramebuffer> GSource::YieldFramebuffer()
+	std::shared_ptr<GFramebuffer>& GSource::YieldFramebuffer()
 	{
 		throw GUARDIAN_ERROR_EXCEPTION("This source don't support framebuffer!");
 	}
 
-	std::shared_ptr<GCamera> GSource::YieldCamera()
+	std::shared_ptr<GCamera>& GSource::YieldCamera()
 	{
 		throw GUARDIAN_ERROR_EXCEPTION("This source don't support camera!");
 	}

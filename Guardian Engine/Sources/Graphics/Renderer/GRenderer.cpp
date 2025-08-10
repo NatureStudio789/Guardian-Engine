@@ -36,7 +36,7 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
 
 		for (auto& RenderGraph : RenderGraphList)
-		{\
+		{
 			RenderGraph.second->Reset();
 		}
 	}

@@ -108,6 +108,7 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
 
 		this->ContextFramebuffer->ApplyFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		this->ContextFramebuffer->ClearFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
 		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject().Get());
 

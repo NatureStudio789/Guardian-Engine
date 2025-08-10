@@ -17,9 +17,9 @@ namespace GE
 		virtual void CheckLinkValidate() const;
 
 		const std::string& GetSourceName() const noexcept;
-		virtual std::shared_ptr<GApplicable> YieldApplicable();
-		virtual std::shared_ptr<GFramebuffer> YieldFramebuffer();
-		virtual std::shared_ptr<GCamera> YieldCamera();
+		virtual std::shared_ptr<GApplicable>& YieldApplicable();
+		virtual std::shared_ptr<GFramebuffer>& YieldFramebuffer();
+		virtual std::shared_ptr<GCamera>& YieldCamera();
 
 	private:
 		std::string SourceName;
@@ -43,7 +43,7 @@ namespace GE
 		{
 
 		}
-		std::shared_ptr<GFramebuffer> YieldFramebuffer() override
+		std::shared_ptr<GFramebuffer>& YieldFramebuffer() override
 		{
 			if (this->IsLinked)
 			{
@@ -83,7 +83,7 @@ namespace GE
 		{
 
 		}
-		std::shared_ptr<GCamera> YieldCamera() override
+		std::shared_ptr<GCamera>& YieldCamera() override
 		{
 			if (this->IsLinked)
 			{
@@ -122,7 +122,7 @@ namespace GE
 		{
 
 		}
-		std::shared_ptr<GApplicable> YieldApplicable() override
+		std::shared_ptr<GApplicable>& YieldApplicable() override
 		{
 			return this->Applicable;
 		}

@@ -17,6 +17,7 @@ namespace GE
 		void InitializeScene(const std::string& name);
 
 		std::shared_ptr<GEntity> CreateEntity(const std::string& entityName, std::string rootName = "Root");
+		std::shared_ptr<GEntity> GetEntity(const std::string& entityName);
 
 		void Update();
 

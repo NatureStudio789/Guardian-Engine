@@ -11,6 +11,9 @@ namespace GE
 
 		void Execute() override;
 
+		std::shared_ptr<GFramebuffer> GetEditFramebuffer();
+		std::shared_ptr<GFramebuffer> GetRuntimeFramebuffer();
+
 		static std::shared_ptr<GSceneRenderGraph> CreateNewSceneRenderGraph(const std::string& name)
 		{
 			return std::make_shared<GSceneRenderGraph>(name);

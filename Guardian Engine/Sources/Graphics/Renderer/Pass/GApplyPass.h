@@ -1,6 +1,6 @@
 #ifndef _GE_GAPPLYPASS_H_
 #define _GE_GAPPLYPASS_H_
-#include "GPass.h"
+#include "GClearFramebufferPass.h"
 
 namespace GE
 {

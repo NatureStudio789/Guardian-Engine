@@ -2,7 +2,7 @@
 
 namespace GE
 {
-	std::map<std::string, std::shared_ptr<GModule>> GModuleSystem::ModuleList;
+	std::vector<std::shared_ptr<GModule>> GModuleSystem::ModuleList;
 
 
 	void GModuleSystem::RegisterModule(const std::string& moduleName)
@@ -24,12 +24,12 @@ namespace GE
 			m = std::make_shared<GGameplayEngine>();
 		}
 
-		ModuleList[moduleName] = m;
+		ModuleList.push_back(m);
 	}
 
 	void GModuleSystem::RegisterMultiModules(const std::vector<std::string>& moduleNameList)
 	{
-		for (auto& moduleName : moduleNameList)
+		for (const auto& moduleName : moduleNameList)
 		{
 			RegisterModule(moduleName);
 		}
@@ -39,20 +39,20 @@ namespace GE
 	{
 		CheckModuleExists(moduleName, true);
 
-		if (ModuleList[moduleName]->GetModuleLoaded())
+		if (GetModule(moduleName)->GetModuleLoaded())
 		{
 			return;
 		}
 
-		ModuleList[moduleName]->InitializeModule();
-		ModuleList[moduleName]->IsModuleLoaded = true;
+		GetModule(moduleName)->InitializeModule();
+		GetModule(moduleName)->IsModuleLoaded = true;
 	}
 
 	void GModuleSystem::LoadAllModules()
 	{
 		for (auto& module : ModuleList)
 		{
-			LoadModule(module.first);
+			LoadModule(module->GetModuleName());
 		}
 	}
 
@@ -60,19 +60,19 @@ namespace GE
 	{
 		CheckModuleExists(moduleName, true);
 
-		if (!ModuleList[moduleName]->GetModuleLoaded())
+		if (!GetModule(moduleName)->GetModuleLoaded())
 		{
 			return;
 		}
 
-		ModuleList[moduleName]->UpdateModule();
+		GetModule(moduleName)->UpdateModule();
 	}
 
 	void GModuleSystem::UpdateAllModules()
 	{
 		for (auto& module : ModuleList)
 		{
-			UpdateModule(module.first);
+			UpdateModule(module->GetModuleName());
 		}
 	}
 
@@ -80,20 +80,20 @@ namespace GE
 	{
 		CheckModuleExists(moduleName, true);
 
-		if (!ModuleList[moduleName]->GetModuleLoaded())
+		if (!GetModule(moduleName)->GetModuleLoaded())
 		{
 			return;
 		}
 
-		ModuleList[moduleName]->ReleaseModule();
-		ModuleList[moduleName]->IsModuleLoaded = false;
+		GetModule(moduleName)->ReleaseModule();
+		GetModule(moduleName)->IsModuleLoaded = false;
 	}
 
 	void GModuleSystem::ReleaseAllModules()
 	{
 		for (auto& module : ModuleList)
 		{
-			ReleaseModule(module.first);
+			ReleaseModule(module->GetModuleName());
 		}
 	}
 
@@ -101,23 +101,39 @@ namespace GE
 	{
 		CheckModuleExists(moduleName, true);
 
-		return ModuleList[moduleName];
+		for (auto& module : ModuleList)
+		{
+			if (module->GetModuleName() == moduleName)
+			{
+				return module;
+			}
+		}
+
+		return null;
 	}
 
 	void GModuleSystem::CheckModuleExists(const std::string& moduleName, bool wanted)
 	{
 		if (wanted)
 		{
-			if (ModuleList.count(moduleName) <= 0)
+			for (auto& module : ModuleList)
 			{
-				throw GUARDIAN_ERROR_EXCEPTION(std::format("No module called '{}' found!", moduleName));
+				if (module->GetModuleName() == moduleName)
+				{
+					return;
+				}
 			}
+			
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No module called '{}' found!", moduleName));
 		}
 		else
 		{
-			if (ModuleList.count(moduleName) > 0)
+			for (auto& module : ModuleList)
 			{
-				throw GUARDIAN_ERROR_EXCEPTION(std::format("The '{}' module has been registerred!", moduleName));
+				if (module->GetModuleName() == moduleName)
+				{
+					throw GUARDIAN_ERROR_EXCEPTION(std::format("The '{}' module has been registerred!", moduleName));
+				}
 			}
 		}
 	}

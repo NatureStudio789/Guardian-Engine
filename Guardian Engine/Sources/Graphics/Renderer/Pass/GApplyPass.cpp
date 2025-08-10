@@ -20,11 +20,6 @@ namespace GE
 
 	GApplyPass::~GApplyPass()
 	{
-		for (auto& applicable : this->ApplicableList)
-		{
-			applicable.reset();
-			applicable = null;
-		}
 		this->ApplicableList.clear();
 	}
 

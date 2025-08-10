@@ -22,7 +22,7 @@ namespace GE
 	private:
 		static void CheckModuleExists(const std::string& moduleName, bool wanted);
 
-		static std::map<std::string, std::shared_ptr<GModule>> ModuleList;
+		static std::vector<std::shared_ptr<GModule>> ModuleList;
 	};
 }
 

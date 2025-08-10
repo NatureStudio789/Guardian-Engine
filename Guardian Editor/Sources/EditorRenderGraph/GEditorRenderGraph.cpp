@@ -73,14 +73,25 @@ namespace GE
 				this->EditorContext->GetEditorIO().Framerate);
 			ImGui::End();
 
-			static bool IsFirst = true;
 			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
-			ImGui::Begin("Image");
+			ImGui::Begin("Scene");
 
 			ImGui::PopStyleVar();
 
 			ImGui::Image(
-				(ImTextureID)GRenderer::GetSceneRenderGraph()->GetRenderGraphFramebuffer()->
+				(ImTextureID)GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->
+				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr,
+				ImGui::GetContentRegionAvail());
+
+			ImGui::End();
+
+			ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, { 0.0f, 0.0f });
+			ImGui::Begin("Game");
+
+			ImGui::PopStyleVar();
+
+			ImGui::Image(
+				(ImTextureID)GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->
 				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr,
 				ImGui::GetContentRegionAvail());
 

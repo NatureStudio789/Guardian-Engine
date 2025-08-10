@@ -43,6 +43,16 @@ namespace GE
 		return this->SceneEntityList[entityName];
 	}
 
+	std::shared_ptr<GEntity> GScene::GetEntity(const std::string& entityName)
+	{
+		if (!this->SceneEntityList.count(entityName))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity named '{}' found in scene", entityName));
+		}
+
+		return SceneEntityList[entityName];
+	}
+
 	void GScene::Update()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());

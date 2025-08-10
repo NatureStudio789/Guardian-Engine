@@ -67,11 +67,14 @@ namespace GE
 	{
 		this->FramebufferViewport->ApplyViewport(graphicsContext->GetGraphicsCommandList());
 
-		this->FramebufferRenderTarget->ClearRenderTarget(graphicsContext);
-		this->FramebufferDepthStencil->ClearDepthStencil(graphicsContext);
-
 		this->FramebufferRenderTarget->ApplyRenderTarget(graphicsContext, 
 			this->FramebufferDepthStencil->GetDSVDescriptorHandle()->CPUHandle);
+	}
+
+	void GFramebuffer::ClearFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext)
+	{
+		this->FramebufferRenderTarget->ClearRenderTarget(graphicsContext);
+		this->FramebufferDepthStencil->ClearDepthStencil(graphicsContext);
 	}
 
 	void GFramebuffer::ResizeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight)
