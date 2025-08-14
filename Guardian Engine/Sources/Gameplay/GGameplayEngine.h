@@ -19,6 +19,7 @@ namespace GE
 		std::shared_ptr<GScene> ActiveScene;
 		std::shared_ptr<GEntity> Nanosuit;
 		std::shared_ptr<GEntity> Hasake;
+		std::shared_ptr<GEntity> House;
 	};
 }
 

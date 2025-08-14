@@ -22,6 +22,18 @@
     <Filter Include="Audio\SourceVoice">
       <UniqueIdentifier>{4D667FF7-B97C-7D8D-02F4-08AF6E494E15}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gameplay">
+      <UniqueIdentifier>{D5936B32-C160-C63D-EA79-B4E5D6A5FBCB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Component">
+      <UniqueIdentifier>{77FA5325-63DE-147B-CC3E-0FCEB841FFFC}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Entity">
+      <UniqueIdentifier>{815EFB16-EDE9-68DB-F6FA-EBCF6205C5DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gameplay\Scene">
+      <UniqueIdentifier>{B2CC7A47-9E9A-6E4D-872E-DF73739B4AB2}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics">
       <UniqueIdentifier>{1653CE33-0220-293F-2B39-17E717655ECD}</UniqueIdentifier>
     </Filter>
@@ -36,6 +48,12 @@
     </Filter>
     <Filter Include="Graphics\Applicable\PipelineState">
       <UniqueIdentifier>{585A60FE-C4C8-B57D-0DB2-707D795FAB19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState\GBlendState">
+      <UniqueIdentifier>{744FE2A1-E0BF-E41A-A9DE-5EA3150E1D1C}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Applicable\PipelineState\GRasterizerState">
+      <UniqueIdentifier>{3A215F50-26B5-54F8-8F79-AEAC7B2C8FEA}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Applicable\PipelineState\InputLayout">
       <UniqueIdentifier>{D5AB5D8B-411C-6004-0A3B-DA8C766A9805}</UniqueIdentifier>
@@ -205,6 +223,21 @@
       <Filter>Audio\SourceVoice</Filter>
     </ClInclude>
     <ClInclude Include="Sources\GEngine.h" />
+    <ClInclude Include="Sources\Gameplay\Component\GComponent.h">
+      <Filter>Gameplay\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Gameplay\Entity\GEntity.h">
+      <Filter>Gameplay\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Gameplay\GGameplayEngine.h">
+      <Filter>Gameplay</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Gameplay\Scene\GScene.h">
+      <Filter>Gameplay\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h">
+      <Filter>Gameplay\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\Buffer\GBuffer.h">
       <Filter>Graphics\Applicable\Buffer</Filter>
     </ClInclude>
@@ -223,11 +256,17 @@
     <ClInclude Include="Sources\Graphics\Applicable\Material\GMaterial.h">
       <Filter>Graphics\Applicable\Material</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GBlendState\GBlendState.h">
+      <Filter>Graphics\Applicable\PipelineState\GBlendState</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineState.h">
       <Filter>Graphics\Applicable\PipelineState</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.h">
       <Filter>Graphics\Applicable\PipelineState</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Applicable\PipelineState\GRasterizerState\GRasterizerState.h">
+      <Filter>Graphics\Applicable\PipelineState\GRasterizerState</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.h">
       <Filter>Graphics\Applicable\PipelineState\InputLayout</Filter>
@@ -249,6 +288,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Graphics\CommandQueue\GCommandQueue.h">
       <Filter>Graphics\CommandQueue</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.h">
+      <Filter>Graphics\DescriptorHeap</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\DescriptorHeap\GDescriptorHeap.h">
       <Filter>Graphics\DescriptorHeap</Filter>
@@ -304,6 +346,9 @@
     <ClInclude Include="Sources\Graphics\Renderer\Pass\GApplyPass.h">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\Pass\GLightingPass.h">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClInclude>
@@ -313,10 +358,16 @@
     <ClInclude Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.h">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\Pass\GWireframePass.h">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.h">
       <Filter>Graphics\Renderer\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.h">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.h">
       <Filter>Graphics\Renderer\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Graphics\Renderer\Renderable\GRenderable.h">
@@ -370,15 +421,6 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.h" />
-    <ClInclude Include="Sources\Gameplay\Scene\GScene.h" />
-    <ClInclude Include="Sources\Gameplay\Component\GComponent.h" />
-    <ClInclude Include="Sources\Gameplay\Entity\GEntity.h" />
-    <ClInclude Include="Sources\Gameplay\GGameplayEngine.h" />
-    <ClInclude Include="Sources\Gameplay\Scene\GSceneRegistry.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GWireframePass.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.h" />
-    <ClInclude Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -409,6 +451,18 @@
       <Filter>Audio\SourceVoice</Filter>
     </ClCompile>
     <ClCompile Include="Sources\GEngine.cpp" />
+    <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp">
+      <Filter>Gameplay\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp">
+      <Filter>Gameplay</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Gameplay\Scene\GScene.cpp">
+      <Filter>Gameplay\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp">
+      <Filter>Gameplay\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\Buffer\GBuffer.cpp">
       <Filter>Graphics\Applicable\Buffer</Filter>
     </ClCompile>
@@ -430,6 +484,9 @@
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GPipelineStateRegistry.cpp">
       <Filter>Graphics\Applicable\PipelineState</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Applicable\PipelineState\GRasterizerState\GRasterizerState.cpp">
+      <Filter>Graphics\Applicable\PipelineState\GRasterizerState</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Applicable\PipelineState\InputLayout\GInputLayout.cpp">
       <Filter>Graphics\Applicable\PipelineState\InputLayout</Filter>
     </ClCompile>
@@ -450,6 +507,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Graphics\CommandQueue\GCommandQueue.cpp">
       <Filter>Graphics\CommandQueue</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.cpp">
+      <Filter>Graphics\DescriptorHeap</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\DescriptorHeap\GDescriptorHeap.cpp">
       <Filter>Graphics\DescriptorHeap</Filter>
@@ -499,6 +559,9 @@
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GApplyPass.cpp">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.cpp">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClCompile>
@@ -509,6 +572,9 @@
       <Filter>Graphics\Renderer\RenderGraph</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GRenderGraph.cpp">
+      <Filter>Graphics\Renderer\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.cpp">
       <Filter>Graphics\Renderer\RenderGraph</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\Renderable\GRenderable.cpp">
@@ -550,12 +616,5 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\DescriptorHeap\GBitmapAllocator.cpp" />
-    <ClCompile Include="Sources\Gameplay\Scene\GScene.cpp" />
-    <ClCompile Include="Sources\Gameplay\Entity\GEntity.cpp" />
-    <ClCompile Include="Sources\Gameplay\GGameplayEngine.cpp" />
-    <ClCompile Include="Sources\Gameplay\Scene\GSceneRegistry.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GSceneRenderGraph.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.cpp" />
   </ItemGroup>
 </Project>

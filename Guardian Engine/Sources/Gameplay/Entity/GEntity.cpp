@@ -142,6 +142,11 @@ namespace GE
 		return false;
 	}
 
+	bool GEntity::HasChildren() const noexcept
+	{
+		return this->ChildrenEntity.empty() != true;
+	}
+
 	GEntity* GEntity::GetChildEntity(const std::string& childName)
 	{
 		for (auto child : this->ChildrenEntity)

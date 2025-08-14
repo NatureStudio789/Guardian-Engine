@@ -4,6 +4,12 @@
     <Filter Include="Sources">
       <UniqueIdentifier>{89565304-F535-D29F-FE4D-5D766AAC3801}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Sources\Editor">
+      <UniqueIdentifier>{9FBFE3DF-8B8D-D7E5-7421-480C608EB34A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources\Editor\SceneEditor">
+      <UniqueIdentifier>{C34AB14A-AF5A-5D1B-1814-C23904434CB4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Sources\EditorContext">
       <UniqueIdentifier>{047CACCD-70E8-67C8-39DC-FF25A5078A30}</UniqueIdentifier>
     </Filter>
@@ -15,6 +21,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Editor\SceneEditor\GSceneEditor.h">
+      <Filter>Sources\Editor\SceneEditor</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\EditorContext\GEditorContext.h">
       <Filter>Sources\EditorContext</Filter>
     </ClInclude>
@@ -29,6 +38,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Editor\SceneEditor\GSceneEditor.cpp">
+      <Filter>Sources\Editor\SceneEditor</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp">
       <Filter>Sources\EditorContext</Filter>
     </ClCompile>

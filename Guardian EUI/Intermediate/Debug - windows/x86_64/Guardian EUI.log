@@ -1,13 +1,14 @@
-﻿  GuardianEditor.cpp
-  GuardianButton.cpp
-  GuardianImageButton.cpp
-  GuardianColumnLayout.cpp
-  GuardianDockspace.cpp
-  GuardianWidget.cpp
-  GuardianImage.cpp
-  GuardianMenuBar.cpp
-  GuardianMenuItem.cpp
-  GuardianMenu.cpp
-  GuardianPanel.cpp
-  GuardianText.cpp
-  Guardian EUI.vcxproj -> E:\Dev\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian EUI.lib
+﻿  GTreeNode.cpp
+  GEditor.cpp
+  GButton.cpp
+  GImageButton.cpp
+  GColumnLayout.cpp
+  GDockspace.cpp
+  GWidget.cpp
+  GImage.cpp
+  GMenuBar.cpp
+  GMenu.cpp
+  GMenuItem.cpp
+  GPanel.cpp
+  GText.cpp
+  Guardian EUI.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian EUI.lib

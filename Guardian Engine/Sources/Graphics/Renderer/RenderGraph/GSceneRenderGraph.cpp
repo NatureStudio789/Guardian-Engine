@@ -24,6 +24,8 @@ namespace GE
 		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("EditFramebuffer", this->RenderGraphFramebuffer));
 		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("WireframeFramebuffer", this->RenderGraphFramebuffer));
 		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("WireframeFramebuffer", this->RenderGraphFramebuffer));
+		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("BillboardFramebuffer", this->RenderGraphFramebuffer));
+		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("BillboardFramebuffer", this->RenderGraphFramebuffer));
 
 		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("ClearingRuntimeFramebuffer", this->RuntimeFramebuffer));
 		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("ClearingRuntimeFramebuffer", this->RuntimeFramebuffer));
@@ -36,6 +38,8 @@ namespace GE
 		this->AddGlobalSink(GDirectCameraSink::CreateNewDirectCameraSink("WireframeCamera", this->RenderGraphCamera));
 		this->AddGlobalSource(GDirectCameraSource::CreateNewDirectCameraSource("RuntimeCamera", this->RuntimeCamera));
 		this->AddGlobalSink(GDirectCameraSink::CreateNewDirectCameraSink("RuntimeCamera", this->RuntimeCamera));
+		this->AddGlobalSource(GDirectCameraSource::CreateNewDirectCameraSource("BillboardCamera", this->RenderGraphCamera));
+		this->AddGlobalSink(GDirectCameraSink::CreateNewDirectCameraSink("BillboardCamera", this->RenderGraphCamera));
 
 		{
 			auto ClearEditFramebufferPass = std::make_shared<GClearFramebufferPass>("Clear Edit");

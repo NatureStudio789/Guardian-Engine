@@ -98,6 +98,16 @@ namespace GE
 		return this->RuntimeCamera;
 	}
 
+	const std::map<std::string, std::shared_ptr<GEntity>>& GScene::GetSceneEntityList() const noexcept
+	{
+		return this->SceneEntityList;
+	}
+
+	std::shared_ptr<GEntity> GScene::GetSceneRootEntity()
+	{
+		return this->SceneRootEntity;
+	}
+
 	void GScene::SetEntityParent(GEntity* entity, const std::string& entityName, std::string rootName)
 	{
 		if (rootName == entity->GetEntityName())

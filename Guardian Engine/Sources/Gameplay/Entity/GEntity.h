@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	class GEntity
+	class GUARDIAN_API GEntity
 	{
 	public:
 		GEntity();
@@ -25,6 +25,7 @@ namespace GE
 		const std::vector<GEntity*>& GetChildren() const noexcept;
 		bool HasChild(const std::string& childName);
 		bool HasChild(const GUUID& childId);
+		bool HasChildren() const noexcept;
 		GEntity* GetChildEntity(const std::string& childName);
 		GEntity* GetChildEntity(const GUUID& childId);
 

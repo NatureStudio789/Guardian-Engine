@@ -14,7 +14,7 @@ namespace GE
 		void InitializeModule() override;
 		void UpdateModule() override;
 		void ReleaseModule() override;
-
+		
 	private:
 		std::shared_ptr<GGraphicsContext> MainGraphicsContext;
 	};

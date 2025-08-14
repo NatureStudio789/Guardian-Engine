@@ -10,6 +10,9 @@ namespace GE
         this->PipelineShaderList.clear();
         this->PipelineTopology = null;
 
+        this->PipelineRasterizerState = null;
+        this->PipelineBlendState = null;
+
         this->IsInitialized = false;
     }
 
@@ -27,6 +30,9 @@ namespace GE
         this->PipelineInputLayout = other.PipelineInputLayout;
         this->PipelineShaderList = other.PipelineShaderList;
         this->PipelineTopology = other.PipelineTopology;
+
+        this->PipelineRasterizerState = null;
+        this->PipelineBlendState = null;
 
         this->IsInitialized = other.IsInitialized;
     }
@@ -46,6 +52,9 @@ namespace GE
         }
         this->PipelineShaderList.clear();
         this->PipelineTopology = null;
+
+        this->PipelineRasterizerState = null;
+        this->PipelineBlendState = null;
 
         this->IsInitialized = false;
     }
@@ -80,6 +89,16 @@ namespace GE
         this->PipelineTopology = topology;
     }
 
+    void GPipelineState::SetRasterizerState(std::shared_ptr<GRasterizerState> rasterizerState)
+    {
+        this->PipelineRasterizerState = rasterizerState;
+    }
+
+    void GPipelineState::SetBlendState(std::shared_ptr<GBlendState> blendState)
+    {
+        this->PipelineBlendState = blendState;
+    }
+
     void GPipelineState::InitializePipelineState()
     {
         GUARDIAN_SETUP_AUTO_THROW();
@@ -92,6 +111,7 @@ namespace GE
 
         PipelineStateDesc.pRootSignature = this->PipelineRootSignature->GetRootSignatureObject().Get();
         PipelineStateDesc.InputLayout = { this->PipelineInputLayout->GetInputElementList(), this->PipelineInputLayout->GetInputElementCount() };
+
         PipelineStateDesc.VS =
         {
             this->PipelineShaderList[GShader::GE_VERTEX_SHADER]->GetShaderByteCode()->GetBufferPointer(),
@@ -102,8 +122,35 @@ namespace GE
             this->PipelineShaderList[GShader::GE_PIXEL_SHADER]->GetShaderByteCode()->GetBufferPointer(),
             this->PipelineShaderList[GShader::GE_PIXEL_SHADER]->GetShaderByteCode()->GetBufferSize()
         };
-        PipelineStateDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-        PipelineStateDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+        auto RS = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        if (this->PipelineRasterizerState)
+        {
+            RS.FillMode = (D3D12_FILL_MODE)this->PipelineRasterizerState->GetFillMode();
+            RS.CullMode = (D3D12_CULL_MODE)this->PipelineRasterizerState->GetCullMode();
+        }
+        PipelineStateDesc.RasterizerState = RS;
+
+        auto BS = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        if (this->PipelineBlendState)
+        {
+            D3D12_RENDER_TARGET_BLEND_DESC RenderTargetBlendDesc;
+            GUARDIAN_CLEAR_MEMORY(RenderTargetBlendDesc);
+            RenderTargetBlendDesc.BlendEnable = true;
+            RenderTargetBlendDesc.BlendOp = D3D12_BLEND_OP_ADD;
+            RenderTargetBlendDesc.BlendOpAlpha = D3D12_BLEND_OP_ADD;
+            RenderTargetBlendDesc.DestBlend = D3D12_BLEND_DEST_COLOR;
+            RenderTargetBlendDesc.DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+            RenderTargetBlendDesc.LogicOp = D3D12_LOGIC_OP_NOOP;
+            RenderTargetBlendDesc.LogicOpEnable = false;
+            RenderTargetBlendDesc.RenderTargetWriteMask = D3D12_COLOR_WRITE_ENABLE_ALL;
+            RenderTargetBlendDesc.SrcBlend = D3D12_BLEND_SRC_COLOR;
+            RenderTargetBlendDesc.SrcBlendAlpha = D3D12_BLEND_SRC_ALPHA;
+
+            BS.RenderTarget[0] = RenderTargetBlendDesc;
+        }
+        PipelineStateDesc.BlendState = BS;
+
         PipelineStateDesc.DepthStencilState = CD3DX12_DEPTH_STENCIL_DESC(D3D12_DEFAULT);
         PipelineStateDesc.SampleMask = UINT_MAX;
 
@@ -123,6 +170,7 @@ namespace GE
             Type = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         }
         PipelineStateDesc.PrimitiveTopologyType = Type;
+
         PipelineStateDesc.NumRenderTargets = 1;
         PipelineStateDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
         PipelineStateDesc.SampleDesc.Count = 1;

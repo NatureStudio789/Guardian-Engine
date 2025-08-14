@@ -2,10 +2,10 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>E:\Dev\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll</FullPath>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll</FullPath>
     </ProjectOutput>
     <ProjectOutput>
-      <FullPath>E:\Dev\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Editor.exe</FullPath>
+      <FullPath>D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Editor.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles />

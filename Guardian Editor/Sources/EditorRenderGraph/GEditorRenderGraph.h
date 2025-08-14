@@ -1,6 +1,6 @@
 #ifndef _GE_GEDITORRENDERGRAPH_H_
 #define _GE_GEDITORRENDERGRAPH_H_
-#include "../EditorContext/GEditorContext.h"
+#include "../Editor/SceneEditor/GSceneEditor.h"
 
 namespace GE
 {
@@ -13,8 +13,12 @@ namespace GE
 		void Reset() override;
 
 	private:
+		void AddEditor(std::shared_ptr<EUI::GEditor> editor);
+
 		std::shared_ptr<GEditorContext> EditorContext;
 		std::shared_ptr<GEventProcesser> EditorEventProcesser;
+
+		std::shared_ptr<EUI::GDockspace> EditorMainDockspace;
 	};
 }
 

@@ -151,12 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Editor\SceneEditor\GSceneEditor.h" />
     <ClInclude Include="Sources\EditorContext\GEditorContext.h" />
     <ClInclude Include="Sources\EditorRenderGraph\GEditorRenderGraph.h" />
     <ClInclude Include="Sources\GEditorEngine.h" />
     <ClInclude Include="Sources\Resource\Resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Editor\SceneEditor\GSceneEditor.cpp" />
     <ClCompile Include="Sources\EditorContext\GEditorContext.cpp" />
     <ClCompile Include="Sources\EditorRenderGraph\GEditorRenderGraph.cpp" />
     <ClCompile Include="Sources\GEditorEngine.cpp" />

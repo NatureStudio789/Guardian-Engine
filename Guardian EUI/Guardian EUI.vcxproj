@@ -125,32 +125,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Editor\GuardianEditor.h" />
-    <ClInclude Include="Sources\Widget\Button\GuardianButton.h" />
-    <ClInclude Include="Sources\Widget\Button\GuardianImageButton.h" />
-    <ClInclude Include="Sources\Widget\ColumnLayout\GuardianColumnLayout.h" />
-    <ClInclude Include="Sources\Widget\Dockspace\GuardianDockspace.h" />
-    <ClInclude Include="Sources\Widget\GuardianWidget.h" />
-    <ClInclude Include="Sources\Widget\Image\GuardianImage.h" />
-    <ClInclude Include="Sources\Widget\MenuBar\GuardianMenuBar.h" />
-    <ClInclude Include="Sources\Widget\MenuBar\Menu\GuardianMenu.h" />
-    <ClInclude Include="Sources\Widget\MenuBar\MenuItem\GuardianMenuItem.h" />
-    <ClInclude Include="Sources\Widget\Panel\GuardianPanel.h" />
-    <ClInclude Include="Sources\Widget\Text\GuardianText.h" />
+    <ClInclude Include="Sources\Widget\TreeNode\GTreeNode.h" />
+    <ClInclude Include="Sources\Editor\GEditor.h" />
+    <ClInclude Include="Sources\Widget\Button\GButton.h" />
+    <ClInclude Include="Sources\Widget\Button\GImageButton.h" />
+    <ClInclude Include="Sources\Widget\ColumnLayout\GColumnLayout.h" />
+    <ClInclude Include="Sources\Widget\Dockspace\GDockspace.h" />
+    <ClInclude Include="Sources\Widget\GWidget.h" />
+    <ClInclude Include="Sources\Widget\Image\GImage.h" />
+    <ClInclude Include="Sources\Widget\MenuBar\GMenuBar.h" />
+    <ClInclude Include="Sources\Widget\MenuBar\Menu\GMenu.h" />
+    <ClInclude Include="Sources\Widget\MenuBar\MenuItem\GMenuItem.h" />
+    <ClInclude Include="Sources\Widget\Panel\GPanel.h" />
+    <ClInclude Include="Sources\Widget\Text\GText.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Editor\GuardianEditor.cpp" />
-    <ClCompile Include="Sources\Widget\Button\GuardianButton.cpp" />
-    <ClCompile Include="Sources\Widget\Button\GuardianImageButton.cpp" />
-    <ClCompile Include="Sources\Widget\ColumnLayout\GuardianColumnLayout.cpp" />
-    <ClCompile Include="Sources\Widget\Dockspace\GuardianDockspace.cpp" />
-    <ClCompile Include="Sources\Widget\GuardianWidget.cpp" />
-    <ClCompile Include="Sources\Widget\Image\GuardianImage.cpp" />
-    <ClCompile Include="Sources\Widget\MenuBar\GuardianMenuBar.cpp" />
-    <ClCompile Include="Sources\Widget\MenuBar\Menu\GuardianMenu.cpp" />
-    <ClCompile Include="Sources\Widget\MenuBar\MenuItem\GuardianMenuItem.cpp" />
-    <ClCompile Include="Sources\Widget\Panel\GuardianPanel.cpp" />
-    <ClCompile Include="Sources\Widget\Text\GuardianText.cpp" />
+    <ClCompile Include="Sources\Widget\TreeNode\GTreeNode.cpp" />
+    <ClCompile Include="Sources\Editor\GEditor.cpp" />
+    <ClCompile Include="Sources\Widget\Button\GButton.cpp" />
+    <ClCompile Include="Sources\Widget\Button\GImageButton.cpp" />
+    <ClCompile Include="Sources\Widget\ColumnLayout\GColumnLayout.cpp" />
+    <ClCompile Include="Sources\Widget\Dockspace\GDockspace.cpp" />
+    <ClCompile Include="Sources\Widget\GWidget.cpp" />
+    <ClCompile Include="Sources\Widget\Image\GImage.cpp" />
+    <ClCompile Include="Sources\Widget\MenuBar\GMenuBar.cpp" />
+    <ClCompile Include="Sources\Widget\MenuBar\Menu\GMenu.cpp" />
+    <ClCompile Include="Sources\Widget\MenuBar\MenuItem\GMenuItem.cpp" />
+    <ClCompile Include="Sources\Widget\Panel\GPanel.cpp" />
+    <ClCompile Include="Sources\Widget\Text\GText.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">

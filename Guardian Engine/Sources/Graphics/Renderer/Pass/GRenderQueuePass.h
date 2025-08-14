@@ -16,6 +16,8 @@ namespace GE
 
 	private:
 		std::vector<std::shared_ptr<GTask>> TaskList;
+
+		friend class GBillboardPass;
 	};
 }
 

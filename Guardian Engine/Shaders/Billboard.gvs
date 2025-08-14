@@ -1,0 +1,33 @@
+cbuffer Transform : register(b0)
+{
+    float4x4 WorldMatrix;
+};
+
+cbuffer Camera : register(b1)
+{
+    float4x4 CameraMatrix;
+};
+
+struct VSInput
+{
+	float3 Position : POSITION;
+    float2 TextureCoord : TEXTURECOORD;
+};
+
+struct VSOutput
+{
+    float4 Position : SV_POSITION;
+    float2 TextureCoord : TEXTURECOORD;
+};
+
+VSOutput main(VSInput InputData)
+{
+    VSOutput OutputData;
+
+    float4 WorldPosition = mul(float4(InputData.Position, 1.0f), WorldMatrix);
+
+    OutputData.Position = mul(WorldPosition, CameraMatrix);
+    OutputData.TextureCoord = InputData.TextureCoord;
+
+    return OutputData;
+}

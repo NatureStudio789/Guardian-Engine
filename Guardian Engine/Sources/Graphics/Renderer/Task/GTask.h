@@ -26,6 +26,8 @@ namespace GE
 	private:
 		std::shared_ptr<GStep> Step;
 		std::shared_ptr<GRenderable> Renderable;
+
+		friend class GBillboardPass;
 	};
 }
 

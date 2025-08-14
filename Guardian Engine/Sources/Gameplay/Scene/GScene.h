@@ -25,6 +25,8 @@ namespace GE
 		const std::string& GetSceneName() const noexcept;
 		std::shared_ptr<GCamera> GetEditCamera();
 		std::shared_ptr<GCamera> GetRuntimeCamera();
+		const std::map<std::string, std::shared_ptr<GEntity>>& GetSceneEntityList() const noexcept;
+		std::shared_ptr<GEntity> GetSceneRootEntity();
 
 		static std::shared_ptr<GScene> CreateNewScene(const std::string& name)
 		{
