@@ -14,6 +14,9 @@ Key technical foundations include:
 - XAudio2 for audio processing and playback.
 - Cross-module communication via singleton patterns (e.g., `GEngine::Instance`, `GApplication::Instance`) and registry systems (e.g., `GSceneRegistry`, `GGraphicsContextRegistry`).
 
+LeadMaker : NullEntityPtr* (Kevin)
+Member : wzy2011
+
 
 ## Get Started
 
