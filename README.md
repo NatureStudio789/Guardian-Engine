@@ -1,6 +1,6 @@
 # Guardian Engine
 
-![Guardian Engine Logo]("Guardian Engine/Resources/Icon/Guardian Engine.png")  
+![Guardian Engine Logo](Guardian%20Engine/Resources/Icon/Guardian%20Engine.png)  
 
 
 ## Engine Introduction
