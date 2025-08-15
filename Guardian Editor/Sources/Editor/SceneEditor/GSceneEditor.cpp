@@ -31,15 +31,22 @@ namespace GE
 				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneRuntimePanel->AddWidgetToPanel(this->SceneRuntimeImage);
 			this->SceneRuntimePanel->SetWidgetEventProcessFunction([=]()
-				{
-					this->SceneRuntimeImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
-				});
+			{
+				this->SceneRuntimeImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
+			});
 
 			this->AddWidgetToEditor(this->SceneRuntimePanel);
 		}
 
 		{
 			this->SceneHierarchyPanel = std::make_shared<EUI::GPanel>("Hierarchy");
+			this->SceneHierarchyPanel->SetWidgetEventProcessFunction([=]()
+			{
+				if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
+				{
+					this->SelectedEntityId = 0;
+				}
+			});
 
 			this->AddWidgetToEditor(this->SceneHierarchyPanel);
 		}
@@ -53,10 +60,17 @@ namespace GE
 
 	void GSceneEditor::Update()
 	{
+		this->UpdateHierarchyPanel();
+
+		this->UpdatePropertiesPanel();
+	}
+
+	void GSceneEditor::UpdateHierarchyPanel()
+	{
 		this->SceneHierarchyPanel->ClearPanelWidgets();
 
 		std::shared_ptr<EUI::GTreeNode> Root = std::make_shared<EUI::GTreeNode>(
-			GSceneRegistry::GetActiveScene()->GetSceneName(), EUI::GTreeNode::GETreeNodeFlags_OpenOnArrow);
+			GSceneRegistry::GetActiveScene()->GetSceneName(), EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
 		this->SceneHierarchyPanel->AddWidgetToPanel(Root);
 
 		for (auto& child : GSceneRegistry::GetActiveScene()->GetSceneRootEntity()->GetChildren())
@@ -67,12 +81,40 @@ namespace GE
 
 	void GSceneEditor::AddSceneNode(GEntity* entity, std::shared_ptr<EUI::GTreeNode> parent)
 	{
-		std::shared_ptr<EUI::GTreeNode> node = std::make_shared<EUI::GTreeNode>(entity->GetEntityName(), EUI::GTreeNode::GETreeNodeFlags_OpenOnArrow);
+		int NodeFlags = (this->SelectedEntityId == entity->GetEntityId()) ? EUI::GTreeNode::GETreeNodeFlags_Selected : EUI::GTreeNode::GETreeNodeFlags_None;
+		std::shared_ptr<EUI::GTreeNode> node = std::make_shared<EUI::GTreeNode>(entity->GetEntityName(), NodeFlags);
 		parent->AddWidgetToTreeNode(node);
+		node->SetWidgetEventProcessFunction([=]()
+			{
+				if (ImGui::IsItemClicked())
+				{
+					this->SelectedEntityId = entity->GetEntityId();
+				}
+			});
 
 		for (auto& child : entity->GetChildren())
 		{
 			this->AddSceneNode(child, node);
+		}
+	}
+
+	void GSceneEditor::UpdatePropertiesPanel()
+	{
+		this->PropertiesPanel->ClearPanelWidgets();
+
+		if (GSceneRegistry::GetActiveScene()->HasEntity(this->SelectedEntityId))
+		{
+			this->AddEntityProperties(GSceneRegistry::GetActiveScene()->GetEntity(this->SelectedEntityId));
+		}
+	}
+
+	void GSceneEditor::AddEntityProperties(std::shared_ptr<GEntity> entity)
+	{
+		GUARDIAN_CHECK_POINTER(entity);
+
+		if (entity->HasComponent<GTagComponent>())
+		{
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GTreeNode>("Tag", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen));
 		}
 	}
 }

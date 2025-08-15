@@ -38,6 +38,10 @@ namespace GE
 			MaterialCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
 			MaterialCBParameter.ShaderRegisterIndex = 2;
 			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(MaterialCBParameter);
+			GRootSignature::RootParameter LightCBParameter;
+			LightCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			LightCBParameter.ShaderRegisterIndex = 3;
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(LightCBParameter);
 			
 			GRootSignature::RootParameter AlbedoParameter;
 			AlbedoParameter.Type = GRootSignature::GE_PARAMETER_SRV;

@@ -4,7 +4,7 @@ namespace GE
 {
 	namespace EUI
 	{
-		GTreeNode::GTreeNode(const std::string& label, Flag flags)
+		GTreeNode::GTreeNode(const std::string& label, int flags)
 		{
 			this->SetTreeNodeLabel(label);
 			this->SetTreeNodeFlags(flags);
@@ -15,7 +15,7 @@ namespace GE
 			this->TreeNodeLabel = label;
 		}
 
-		void GTreeNode::SetTreeNodeFlags(Flag flags)
+		void GTreeNode::SetTreeNodeFlags(int flags)
 		{
 			this->TreeNodeFlags = flags;
 		}

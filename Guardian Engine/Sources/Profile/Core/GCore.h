@@ -12,6 +12,7 @@
 #include <random>
 #include <map>
 #include <functional>
+#include <queue>
 
 #include <Windows.h>
 #include <Uxtheme.h>

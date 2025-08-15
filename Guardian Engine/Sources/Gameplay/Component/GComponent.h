@@ -55,6 +55,22 @@ namespace GE
 		std::shared_ptr<GCamera> Camera;
 	};
 
+	struct GUARDIAN_API GPointLightComponent
+	{
+	public:
+		GPointLightComponent()
+		{
+			this->PointLight = std::make_shared<GPointLight>();
+		}
+		GPointLightComponent(std::shared_ptr<GPointLight> pointLight)
+		{
+			this->PointLight = pointLight;
+		}
+		GPointLightComponent(const GPointLightComponent&) = default;
+
+		std::shared_ptr<GPointLight> PointLight;
+	};
+
 	struct GUARDIAN_API GModelComponent
 	{
 	public:

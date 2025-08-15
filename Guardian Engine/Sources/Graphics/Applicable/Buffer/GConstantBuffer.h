@@ -282,6 +282,40 @@ namespace GE
 
 	private:
 	};
+
+	struct GLightCBData
+	{
+	public:
+		GLightCBData()
+		{
+			this->PointLightCount = 0;
+		}
+
+		GPointLight PointLightList[GLightRegistry::MaxLightCount];
+		int PointLightCount;
+	};
+	class GUARDIAN_API GLightCBuffer : public GConstantBuffer<GLightCBData>
+	{
+	public:
+		GLightCBuffer() : GConstantBuffer< GLightCBData>()
+		{
+			this->BufferData = {};
+		}
+		GLightCBuffer(std::shared_ptr<GRootSignature> rootSignature, UINT index = 3) :
+			GConstantBuffer<GLightCBData>(rootSignature, index)
+		{
+		}
+		GLightCBuffer(const GLightCBuffer& other) : GConstantBuffer<GLightCBData>(other)
+		{
+
+		}
+
+		static std::shared_ptr<GLightCBuffer> CreateNewLightCBuffer(
+			std::shared_ptr<GRootSignature> rootSignature, UINT index = 3)
+		{
+			return std::make_shared<GLightCBuffer>(rootSignature, index);
+		}
+	};
 }
 
 #endif

@@ -148,6 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h" />
+    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
@@ -231,6 +233,7 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\Aplication\GApplication.cpp" />
@@ -272,12 +275,14 @@
     <ClCompile Include="Sources\Graphics\GGraphicsContext.cpp" />
     <ClCompile Include="Sources\Graphics\GGraphicsContextRegistry.cpp" />
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp" />
+    <ClCompile Include="Sources\Graphics\Lighting\PointLight\GPointLight.cpp" />
     <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp" />
     <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
     <ClCompile Include="Sources\Graphics\Math\Transform\GTransform.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\GRenderer.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GApplyPass.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GLightingPass.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GRenderQueuePass.cpp" />
     <ClCompile Include="Sources\Graphics\Renderer\RenderGraph\GLitRenderGraph.cpp" />

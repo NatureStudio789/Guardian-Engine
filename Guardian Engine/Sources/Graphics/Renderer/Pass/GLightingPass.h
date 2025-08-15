@@ -4,6 +4,8 @@
 
 namespace GE
 {
+	class GUARDIAN_API GSceneRegistry;
+	
 	class GUARDIAN_API GLightingPass : public GRenderQueuePass
 	{
 	public:
@@ -24,6 +26,10 @@ namespace GE
 			this->CameraCBuffer = GCameraCBuffer::CreateNewCameraCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
 			this->AddApplicable(this->CameraCBuffer);
+
+			this->LightCBuffer = GLightCBuffer::CreateNewLightCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
+			this->AddApplicable(this->LightCBuffer);
 		}
 
 		void Execute() override
@@ -32,12 +38,18 @@ namespace GE
 			CameraMatrix.Transpose();
 			this->CameraCBuffer->UpdateBufferData({ CameraMatrix });
 
+			this->UpdateLightCBuffer();
+
 			GRenderQueuePass::Execute();
 		}
 
 	private:
+		void UpdateLightCBuffer();
+
 		std::shared_ptr<GCameraCBuffer> CameraCBuffer;
 		std::shared_ptr<GCamera> Camera;
+
+		std::shared_ptr<GLightCBuffer> LightCBuffer;
 	};
 }
 

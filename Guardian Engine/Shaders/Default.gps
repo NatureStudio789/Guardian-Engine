@@ -1,16 +1,4 @@
-cbuffer Material : register(b2)
-{
-    float3 Albedo;
-    float Roughness;
-    float Metallic;
-    float Ao;
-
-    int EnableAlbedoTexture;
-    int EnableRoughnessTexture;
-    int EnableMetallicTexture;
-    int EnableAoTexture;
-    int EnableNormalTexture;
-};
+#include "Lighting/Lighting.gsh"
 
 struct PSInput
 {
@@ -19,20 +7,13 @@ struct PSInput
     float3 Normal : Normal;
 };
 
-SamplerState DefaultSampler : register(s0);
-Texture2D AlbedoTexture : register(t0);
-Texture2D RoughnessTexture : register(t1);
-Texture2D MetallicTexture : register(t2);
-Texture2D AoTexture : register(t3);
-Texture2D NormalTexture : register(t4);
-
 float4 main(PSInput InputData) : SV_TARGET
 {
     float4 PixelColor;
 
     if (EnableAlbedoTexture)
     {
-        PixelColor = float4(AlbedoTexture.Sample(DefaultSampler, InputData.TextureCoord).rgb, 1.0f);
+        PixelColor = float4(AlbedoTexture.Sample(MaterialSampler, InputData.TextureCoord).rgb, 1.0f);
     }
     else
     {

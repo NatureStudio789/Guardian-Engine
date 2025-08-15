@@ -5,7 +5,11 @@
   GEntity.cpp
   GGameplayEngine.cpp
   GScene.cpp
+  GSceneRegistry.cpp
   GRenderEngine.cpp
+  GPointLight.cpp
+  GLightingPass.cpp
+  GSceneRenderGraph.cpp
   GModuleSystem.cpp
     正在创建库 ..\Build\Debug - windows\x86_64\Guardian Engine.lib 和对象 ..\Build\Debug - windows\x86_64\Guardian Engine.exp
   Guardian Engine.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Engine.dll

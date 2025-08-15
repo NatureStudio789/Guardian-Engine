@@ -6,6 +6,7 @@ namespace GE
 	GScene::GScene()
 	{
 		this->SceneName = "";
+		this->LightRegistry = null;
 	}
 
 	GScene::GScene(const std::string& name)
@@ -27,6 +28,8 @@ namespace GE
 
 		this->SceneRootEntity = GEntity::CreateNewEntity("Root", this);
 
+		this->LightRegistry = std::make_shared<GLightRegistry>();
+
 		this->CameraEntity = this->CreateEntity("Main Camera");
 		this->CameraEntity->AddComponent<GCameraComponent>(this->RuntimeCamera);
 	}
@@ -43,22 +46,13 @@ namespace GE
 		return this->SceneEntityList[entityName];
 	}
 
-	std::shared_ptr<GEntity> GScene::GetEntity(const std::string& entityName)
-	{
-		if (!this->SceneEntityList.count(entityName))
-		{
-			throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity named '{}' found in scene", entityName));
-		}
-
-		return SceneEntityList[entityName];
-	}
-
 	void GScene::Update()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
+		this->LightRegistry->Update();
 
 		{
-			auto view = this->Registry.view<GTransformComponent, GCameraComponent>();
+			auto view = this->EntityRegistry.view<GTransformComponent, GCameraComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GCameraComponent& CComponent)
 			{
 				CComponent.Camera->Position = TComponent.Transform.Position;
@@ -67,7 +61,17 @@ namespace GE
 		}
 
 		{
-			auto view = this->Registry.view<GTransformComponent, GModelComponent>();
+			auto view = this->EntityRegistry.view<GTransformComponent, GPointLightComponent>();
+			view.each([=](const auto& e, GTransformComponent& TComponent, GPointLightComponent& PLComponent)
+			{
+				PLComponent.PointLight->Position = TComponent.Transform.Position;
+
+				PLComponent.PointLight->Submit(this);
+			});
+		}
+
+		{
+			auto view = this->EntityRegistry.view<GTransformComponent, GModelComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GModelComponent& MComponent)
 			{
 				MComponent.Model->SetTransform(TComponent.Transform);
@@ -88,6 +92,11 @@ namespace GE
 		return this->SceneName;
 	}
 
+	std::shared_ptr<GLightRegistry> GScene::GetLightRegistry()
+	{
+		return this->LightRegistry;
+	}
+
 	std::shared_ptr<GCamera> GScene::GetEditCamera()
 	{
 		return this->EditCamera;
@@ -106,6 +115,47 @@ namespace GE
 	std::shared_ptr<GEntity> GScene::GetSceneRootEntity()
 	{
 		return this->SceneRootEntity;
+	}
+
+	bool GScene::HasEntity(const std::string& name)
+	{
+		return this->SceneEntityList.count(name) > 0;
+	}
+
+	bool GScene::HasEntity(const GUUID& id)
+	{
+		for (auto& entity : this->SceneEntityList)
+		{
+			if (entity.second->GetEntityId() == id)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	std::shared_ptr<GEntity> GScene::GetEntity(const std::string& name)
+	{
+		if (!this->SceneEntityList.count(name))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity named '{}' found in scene", name));
+		}
+
+		return SceneEntityList[name];
+	}
+
+	std::shared_ptr<GEntity> GScene::GetEntity(const GUUID& id)
+	{
+		for (auto& entity : this->SceneEntityList)
+		{
+			if (entity.second->GetEntityId() == id)
+			{
+				return entity.second;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity with id : '{}' found in scene", (ULONGLONG)id));
 	}
 
 	void GScene::SetEntityParent(GEntity* entity, const std::string& entityName, std::string rootName)

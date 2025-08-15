@@ -13,7 +13,11 @@ namespace GE
 		void Update() override;
 
 	private:
+		void UpdateHierarchyPanel();
 		void AddSceneNode(GEntity* entity, std::shared_ptr<EUI::GTreeNode> parent);
+		
+		void UpdatePropertiesPanel();
+		void AddEntityProperties(std::shared_ptr<GEntity> entity);
 
 		std::shared_ptr<EUI::GPanel> SceneEditPanel;
 		std::shared_ptr<EUI::GPanel> SceneRuntimePanel;
@@ -22,6 +26,7 @@ namespace GE
 
 		std::shared_ptr<EUI::GPanel> SceneHierarchyPanel;
 		std::shared_ptr<EUI::GPanel> PropertiesPanel;
+		GUUID SelectedEntityId;
 	};
 }
 

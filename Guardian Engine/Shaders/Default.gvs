@@ -1,12 +1,4 @@
-cbuffer Transform : register(b0)
-{
-    float4x4 WorldMatrix;
-};
-
-cbuffer Camera : register(b1)
-{
-    float4x4 CameraMatrix;
-};
+#include "Transform/Transform.gsh"
 
 struct VSInput
 {

@@ -33,12 +33,12 @@ namespace GE
 
 		public:
 			GTreeNode() = default;
-			GTreeNode(const std::string& label, Flag flags);
+			GTreeNode(const std::string& label, int flags = 0);
 			GTreeNode(const GTreeNode&) = default;
 			~GTreeNode() = default;
 
 			void SetTreeNodeLabel(const std::string& label);
-			void SetTreeNodeFlags(Flag flags);
+			void SetTreeNodeFlags(int flags);
 
 			void AddWidgetToTreeNode(std::shared_ptr<GWidget> widget);
 			void RemoveWidget(const GUUID& widgetId);
@@ -53,7 +53,7 @@ namespace GE
 
 		private:
 			std::string TreeNodeLabel;
-			Flag TreeNodeFlags;
+			int TreeNodeFlags;
 
 			std::vector<std::shared_ptr<GWidget>> WidgetList;
 		};

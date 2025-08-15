@@ -421,6 +421,8 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h" />
+    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -616,5 +618,8 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Lighting\PointLight\GPointLight.cpp" />
+    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp" />
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GLightingPass.cpp" />
   </ItemGroup>
 </Project>

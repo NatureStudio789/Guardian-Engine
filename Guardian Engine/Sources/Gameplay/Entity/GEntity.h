@@ -37,7 +37,7 @@ namespace GE
 				throw GUARDIAN_ERROR_EXCEPTION("This entity already has this component!");
 			}
 
-			return this->EntityScene->Registry.emplace<T>(this->EntityHandle, std::forward<Args>(args)...);
+			return this->EntityScene->EntityRegistry.emplace<T>(this->EntityHandle, std::forward<Args>(args)...);
 		}
 
 		template<typename T>
@@ -48,7 +48,7 @@ namespace GE
 				throw GUARDIAN_ERROR_EXCEPTION("No matched component found in this entity!");
 			}
 
-			this->EntityScene->Registry.remove<T>(this->EntityHandle);
+			this->EntityScene->EntityRegistry.remove<T>(this->EntityHandle);
 		}
 
 		template<typename T>
@@ -59,13 +59,13 @@ namespace GE
 				throw GUARDIAN_ERROR_EXCEPTION("No matched component found in this entity!");
 			}
 
-			return this->EntityScene->Registry.get<T>(this->EntityHandle);
+			return this->EntityScene->EntityRegistry.get<T>(this->EntityHandle);
 		}
 
 		template<typename T>
 		bool HasComponent()
 		{
-			return this->EntityScene->Registry.any_of<T>(this->EntityHandle);
+			return this->EntityScene->EntityRegistry.any_of<T>(this->EntityHandle);
 		}
 
 		const GUUID& GetEntityId() const noexcept;

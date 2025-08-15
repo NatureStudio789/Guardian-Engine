@@ -46,7 +46,7 @@ namespace GE
 		this->EntityName = name;
 		this->EntityScene = scene;
 
-		this->EntityHandle = this->EntityScene->Registry.create();
+		this->EntityHandle = this->EntityScene->EntityRegistry.create();
 	}
 
 	void GEntity::SetParent(GEntity* parent)
