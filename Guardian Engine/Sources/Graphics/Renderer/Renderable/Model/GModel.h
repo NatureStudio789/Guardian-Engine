@@ -31,6 +31,7 @@ namespace GE
 		std::shared_ptr<GMesh> ParseMesh(const aiScene* scene, aiMesh* mesh);
 		std::shared_ptr<GMeshNode> ParseNode(const aiScene* scene, aiNode* node);
 		std::shared_ptr<GTexture> LoadTexture(aiMaterial* material, aiTextureType type, int index);
+		std::shared_ptr<GTexture> LoadMetallicTexture(aiMaterial* material, int index);
 
 		std::shared_ptr<GMeshNode> RootMeshNode;
 		std::vector<std::shared_ptr<GMesh>> ModelMeshList;

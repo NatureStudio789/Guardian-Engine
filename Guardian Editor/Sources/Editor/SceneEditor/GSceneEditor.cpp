@@ -85,12 +85,12 @@ namespace GE
 		std::shared_ptr<EUI::GTreeNode> node = std::make_shared<EUI::GTreeNode>(entity->GetEntityName(), NodeFlags);
 		parent->AddWidgetToTreeNode(node);
 		node->SetWidgetEventProcessFunction([=]()
+		{
+			if (ImGui::IsItemClicked())
 			{
-				if (ImGui::IsItemClicked())
-				{
-					this->SelectedEntityId = entity->GetEntityId();
-				}
-			});
+				this->SelectedEntityId = entity->GetEntityId();
+			}
+		});
 
 		for (auto& child : entity->GetChildren())
 		{

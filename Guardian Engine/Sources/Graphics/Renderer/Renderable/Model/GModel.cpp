@@ -119,6 +119,7 @@ namespace GE
 
 		aiMaterial* Material = scene->mMaterials[mesh->mMaterialIndex];
 		std::shared_ptr<GMaterial> MeshMaterial = GMaterial::CreateNewMaterial(Material->GetName().C_Str());
+
 		auto& albedo = this->LoadTexture(Material, aiTextureType_DIFFUSE, 0);
 		if (albedo)
 		{
@@ -127,6 +128,46 @@ namespace GE
 		else
 		{
 			MeshMaterial->SetAlbedoValue(GVector3(0.8f, 0.8f, 0.8f));
+		}
+
+		auto& roughness = this->LoadTexture(Material, aiTextureType_SHININESS, 1);
+		if (roughness)
+		{
+			MeshMaterial->SetRoughnessTexture(roughness);
+		}
+		else
+		{
+			MeshMaterial->SetRoughnessValue(0.8f);
+		}
+
+		auto& metallic = this->LoadMetallicTexture(Material, 2);
+		if (metallic)
+		{
+			MeshMaterial->SetMetallicTexture(metallic);
+		}
+		else
+		{
+			MeshMaterial->SetMetallicValue(0.1f);
+		}
+
+		auto& ao = this->LoadTexture(Material, aiTextureType_AMBIENT_OCCLUSION, 3);
+		if (ao)
+		{
+			MeshMaterial->SetAoTexture(ao);
+		}
+		else
+		{
+			MeshMaterial->SetAoValue(0.8f);
+		}
+
+		auto& normal = this->LoadTexture(Material, aiTextureType_NORMALS, 4);
+		if (normal)
+		{
+			MeshMaterial->SetNormalTexture(normal);
+		}
+		else
+		{
+			MeshMaterial->SetNormalTextureEnable(false);
 		}
 
 		return GMesh::CreateNewMesh(mesh->mName.C_Str(), MeshData, MeshMaterial);
@@ -175,5 +216,43 @@ namespace GE
 		}
 
 		return Texture;
+	}
+
+	std::shared_ptr<GTexture> GModel::LoadMetallicTexture(aiMaterial* material, int index)
+	{
+		std::shared_ptr<GTexture> MetallicTexture = null;
+
+		for (UINT i = 0; i < material->mNumProperties; i++)
+		{
+			auto Properties = material->mProperties[i];
+
+			if (Properties->mType == aiPTI_String)
+			{
+				std::string key = Properties->mKey.data;
+				if (key == "$raw.ReflectionFactor|file")
+				{
+					UINT StringLength = *(UINT*)Properties->mData;
+					std::string Path = { Properties->mData + 4, StringLength };
+
+					std::string FilePath;
+					if (!std::filesystem::exists(Path))
+					{
+						FilePath = GUtil::ExtendDirectory(this->ModelFileDirectory, Path);
+					}
+					else
+					{
+						FilePath = Path;
+					}
+
+					MetallicTexture = GTexture::CreateNewTexture(
+						GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+						GSurface(FilePath), index);
+
+					break;
+				}
+			}
+		}
+
+		return MetallicTexture;
 	}
 }

@@ -36,7 +36,7 @@ namespace GE
 		{
 			GMatrix CameraMatrix = this->Camera->GetViewMatrix() * this->Camera->Projection.GetProjectionMatrix();
 			CameraMatrix.Transpose();
-			this->CameraCBuffer->UpdateBufferData({ CameraMatrix });
+			this->CameraCBuffer->UpdateBufferData({ CameraMatrix, this->Camera->Position });
 
 			this->UpdateLightCBuffer();
 

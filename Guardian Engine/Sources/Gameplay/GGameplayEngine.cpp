@@ -25,6 +25,7 @@ namespace GE
 		GSceneRegistry::SetActiveScene("Main");
 
 		this->Nanosuit = this->ActiveScene->CreateEntity("Nanosuit");
+		this->Nanosuit->AddComponent<GPointLightComponent>().PointLight->Strength = 10000.0f;
 		this->Nanosuit->GetComponent<GTransformComponent>().Transform.Scale = { 0.1f, 0.1f, 0.1f };
 		this->Nanosuit->GetComponent<GTransformComponent>().Transform.Position = { -10.0f, 0.0f, 0.0f };
 		this->Nanosuit->AddComponent<GModelComponent>(GModel::CreateNewModel("Assets/Models/Nanosuit/Nanosuit.fbx"));
@@ -33,7 +34,7 @@ namespace GE
 		this->Hasake->AddComponent<GModelComponent>(GModel::CreateNewModel("Assets/Models/Box/Box.fbx"));
 
 		this->House = this->ActiveScene->CreateEntity("House");
-		this->House->AddComponent<GModelComponent>(GModel::CreateNewModel("Assets/Models/House/House.fbx"));
+		this->House->AddComponent<GModelComponent>(GModel::CreateNewModel("Assets/Models/Cerberus/Cerberus.fbx"));
 	}
 
 	void GGameplayEngine::UpdateModule()
@@ -52,11 +53,11 @@ namespace GE
 
 		if (GetAsyncKeyState('Q'))
 		{
-			this->Hasake->GetComponent<GTransformComponent>().Transform.Translate({ -0.1f, 0.0f, 0.0f });
+			this->Hasake->GetComponent<GTransformComponent>().Transform.Translate({ -1.0f, 0.0f, 0.0f });
 		}
 		if (GetAsyncKeyState('E'))
 		{
-			this->Hasake->GetComponent<GTransformComponent>().Transform.Translate({ 0.1f, 0.0f, 0.0f });
+			this->Hasake->GetComponent<GTransformComponent>().Transform.Translate({ 1.0f, 0.0f, 0.0f });
 		}
 		if (GetAsyncKeyState('W'))
 		{

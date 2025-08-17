@@ -22,6 +22,15 @@ namespace GE
 			this->AddApplicable(this->CameraCBuffer);
 		}
 
+		void Execute() override
+		{
+			GMatrix CameraMatrix = this->Camera->GetViewMatrix() * this->Camera->Projection.GetProjectionMatrix();
+			CameraMatrix.Transpose();
+			this->CameraCBuffer->UpdateBufferData({ CameraMatrix, this->Camera->Position });
+
+			GRenderQueuePass::Execute();
+		}
+
 	private:
 		std::shared_ptr<GCameraCBuffer> CameraCBuffer;
 		std::shared_ptr<GCamera> Camera;

@@ -91,7 +91,7 @@ namespace GE
 		GUARDIAN_SETUP_AUTO_THROW();
 
 		this->BufferIndex = index;
-		this->DataSize = (sizeof(T) + 255) & ~255;
+		this->DataSize = sizeof(T) + (16 - (sizeof(T) % 16));
 		this->BufferRootSignature = rootSignature;
 		this->BufferRootParameterIndex = this->BufferRootSignature->GetRootParameterIndex(
 			GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_CBV, this->BufferIndex));
@@ -199,13 +199,16 @@ namespace GE
 		GCameraCBData()
 		{
 			this->CameraMatrix = GMatrix::IdentityMatrix();
+			this->CameraPosition = {};
 		}
-		GCameraCBData(GMatrix cameraMatrix)
+		GCameraCBData(GMatrix cameraMatrix, GVector3 cameraPosition)
 		{
 			this->CameraMatrix = cameraMatrix;
+			this->CameraPosition = cameraPosition;
 		}
 
 		GMatrix CameraMatrix;
+		GVector3 CameraPosition;
 	};
 	class GUARDIAN_API GCameraCBuffer : public GConstantBuffer<GCameraCBData>
 	{
@@ -292,6 +295,7 @@ namespace GE
 		}
 
 		GPointLight PointLightList[GLightRegistry::MaxLightCount];
+	public:
 		int PointLightCount;
 	};
 	class GUARDIAN_API GLightCBuffer : public GConstantBuffer<GLightCBData>

@@ -1,2 +1,5 @@
-﻿  GSceneEditor.cpp
+﻿  GEditorContext.cpp
+  GEditorRenderGraph.cpp
+  GSceneEditor.cpp
+  GEditorEngine.cpp
   Guardian Editor.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian Editor.exe
