@@ -38,7 +38,8 @@ namespace GE
 		}
 
 	private:
-		void SetEntityParent(GEntity* entity, const std::string& entityName, std::string rootName);
+		void BuildEntityTree();
+		void SetEntityParent(GEntity* parent, const std::string& entityName, std::string rootName);
 		void UpdateEntityTransform(GEntity* entity);
 
 		GUUID SceneId = GUUID();
@@ -56,6 +57,7 @@ namespace GE
 		std::shared_ptr<GCamera> RuntimeCamera;
 
 		friend class GEntity;
+		friend class GSceneSerializer;
 	};
 }
 

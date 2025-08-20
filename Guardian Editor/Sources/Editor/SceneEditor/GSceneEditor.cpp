@@ -116,5 +116,46 @@ namespace GE
 		{
 			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GTreeNode>("Tag", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen));
 		}
+
+		if (entity->HasComponent<GTransformComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Transform", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GTransformComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &component.Transform.Position, 0.1f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &component.Transform.Rotation, 0.1f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Scale", &component.Transform.Scale, 0.1f));
+		}
+
+		if (entity->HasComponent<GCameraComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Camera", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GCameraComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("FOV", &component.Camera->Projection.FOV, 0.1f, 30.0f, 100.0f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("NearZ", &component.Camera->Projection.NearZ, 0.001f, 0.01f, 1.0f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("FarZ", &component.Camera->Projection.FarZ, 0.1f, 1.0f));
+		}
+
+		if (entity->HasComponent<GPointLightComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Point Light", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GPointLightComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Color", &component.PointLight->Color, 0.1f, 0.0f, 1.0f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Strength", &component.PointLight->Strength, 0.1f, 1.0f));
+		}
+
+		if (entity->HasComponent<GModelComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Model", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+		}
 	}
 }

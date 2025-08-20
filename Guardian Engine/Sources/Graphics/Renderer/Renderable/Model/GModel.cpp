@@ -157,7 +157,7 @@ namespace GE
 		}
 		else
 		{
-			MeshMaterial->SetAoValue(0.8f);
+			MeshMaterial->SetAoValue(1.0f);
 		}
 
 		auto& normal = this->LoadTexture(Material, aiTextureType_NORMALS, 4);

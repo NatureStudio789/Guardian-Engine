@@ -100,6 +100,12 @@
     <Filter Include="Graphics\Framebuffer\Viewport">
       <UniqueIdentifier>{B953B343-256C-9A6D-EE18-2A075AF02E07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Lighting">
+      <UniqueIdentifier>{5BBF6932-C7D5-67C8-104D-F3E97CA23850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Lighting\PointLight">
+      <UniqueIdentifier>{6CA3F587-585E-E533-0116-5E7EEDAF2FC4}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Graphics\Math">
       <UniqueIdentifier>{AF158A97-1BD6-05CE-E410-4F4B50904AAA}</UniqueIdentifier>
     </Filter>
@@ -325,6 +331,12 @@
     <ClInclude Include="Sources\Graphics\GRenderEngine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h">
+      <Filter>Graphics\Lighting</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h">
+      <Filter>Graphics\Lighting\PointLight</Filter>
+    </ClInclude>
     <ClInclude Include="Sources\Graphics\Math\Camera\GCamera.h">
       <Filter>Graphics\Math\Camera</Filter>
     </ClInclude>
@@ -421,8 +433,8 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h">
       <Filter>Profile\UUID</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h" />
-    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h" />
+    <ClInclude Include="Sources\Gameplay\Serializer\GSceneSerializer.h" />
+    <ClInclude Include="Sources\Gameplay\Serializer\GEntitySerializer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp">
@@ -546,6 +558,12 @@
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp">
+      <Filter>Graphics\Lighting</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Lighting\PointLight\GPointLight.cpp">
+      <Filter>Graphics\Lighting\PointLight</Filter>
+    </ClCompile>
     <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp">
       <Filter>Graphics\Math\Camera</Filter>
     </ClCompile>
@@ -562,6 +580,9 @@
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GClearFramebufferPass.cpp">
+      <Filter>Graphics\Renderer\Pass</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Graphics\Renderer\Pass\GLightingPass.cpp">
       <Filter>Graphics\Renderer\Pass</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Graphics\Renderer\Pass\GPass.cpp">
@@ -618,8 +639,7 @@
     <ClCompile Include="Sources\Profile\UUID\GUUID.cpp">
       <Filter>Profile\UUID</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Graphics\Lighting\PointLight\GPointLight.cpp" />
-    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp" />
-    <ClCompile Include="Sources\Graphics\Renderer\Pass\GLightingPass.cpp" />
+    <ClCompile Include="Sources\Gameplay\Serializer\GSceneSerializer.cpp" />
+    <ClCompile Include="Sources\Gameplay\Serializer\GEntitySerializer.cpp" />
   </ItemGroup>
 </Project>

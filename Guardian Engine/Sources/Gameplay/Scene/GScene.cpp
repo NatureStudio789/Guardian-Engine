@@ -51,6 +51,47 @@ namespace GE
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
 		this->LightRegistry->Update();
 
+		if (GetAsyncKeyState('W'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetForwardVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('S'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetBackwardVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('A'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetLeftVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('D'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetRightVector() * 0.1f);
+		}
+		if (GetAsyncKeyState(VK_LSHIFT))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetDownVector() * 0.1f);
+		}
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetUpVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('Q'))
+		{
+			this->EditCamera->Rotate({ 0.0f, -0.1f, 0.0f });
+		}
+		if (GetAsyncKeyState('E'))
+		{
+			this->EditCamera->Rotate({ 0.0f, 0.1f, 0.0f });
+		}
+		if (GetAsyncKeyState('R'))
+		{
+			this->EditCamera->Rotate({ 0.1f, 0.0f, 0.0f });
+		}
+		if (GetAsyncKeyState('T'))
+		{
+			this->EditCamera->Rotate({ -0.1f, 0.0f, 0.0f });
+		}
+
 		{
 			auto view = this->EntityRegistry.view<GTransformComponent, GCameraComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GCameraComponent& CComponent)
@@ -158,17 +199,25 @@ namespace GE
 		throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity with id : '{}' found in scene", (ULONGLONG)id));
 	}
 
-	void GScene::SetEntityParent(GEntity* entity, const std::string& entityName, std::string rootName)
+	void GScene::BuildEntityTree()
 	{
-		if (rootName == entity->GetEntityName())
+		for (auto& entity : this->SceneEntityList)
 		{
-			this->SceneEntityList[entityName]->SetParent(entity);
+			this->SetEntityParent(this->SceneRootEntity.get(), entity.second->GetEntityName(), entity.second->ParentEntityName);
+		}
+	}
+
+	void GScene::SetEntityParent(GEntity* parent, const std::string& entityName, std::string rootName)
+	{
+		if (rootName == parent->GetEntityName())
+		{
+			this->SceneEntityList[entityName]->SetParent(parent);
 
 			return;
 		}
 		else
 		{
-			for (auto child : entity->GetChildren())
+			for (auto child : parent->GetChildren())
 			{
 				this->SetEntityParent(child, entityName, rootName);
 			}

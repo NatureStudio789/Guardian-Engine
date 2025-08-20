@@ -17,6 +17,11 @@ namespace GE
 		this->InitializeEntity(name, scene);
 	}
 
+	GEntity::GEntity(const GUUID& id, const std::string& name, GScene* scene)
+	{
+		this->InitializeEntity(id, name, scene);
+	}
+
 	GEntity::GEntity(const GEntity& other)
 	{
 		this->EntityId = other.EntityId;
@@ -43,6 +48,15 @@ namespace GE
 
 	void GEntity::InitializeEntity(const std::string& name, GScene* scene)
 	{
+		this->EntityName = name;
+		this->EntityScene = scene;
+
+		this->EntityHandle = this->EntityScene->EntityRegistry.create();
+	}
+
+	void GEntity::InitializeEntity(const GUUID& id, const std::string& name, GScene* scene)
+	{
+		this->EntityId = id;
 		this->EntityName = name;
 		this->EntityScene = scene;
 

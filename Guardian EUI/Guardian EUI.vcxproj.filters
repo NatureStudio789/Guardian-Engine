@@ -16,6 +16,9 @@
     <Filter Include="Widget\Dockspace">
       <UniqueIdentifier>{2538C894-1131-E7E6-3A63-CC6B26BBC6F2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\Drag">
+      <UniqueIdentifier>{D6CE23E6-4284-9CDB-CB78-96B2372D93DF}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Widget\Image">
       <UniqueIdentifier>{9B66F5AA-87C9-844F-304F-BD051C9150D2}</UniqueIdentifier>
     </Filter>
@@ -34,6 +37,9 @@
     <Filter Include="Widget\Text">
       <UniqueIdentifier>{9D602CE6-0916-A5DB-920A-9FB2FEBE9BDF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Widget\TreeNode">
+      <UniqueIdentifier>{6EB4F5AB-DA3F-6370-E350-E6644F5BBF70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Editor\GEditor.h">
@@ -50,6 +56,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Widget\Dockspace\GDockspace.h">
       <Filter>Widget\Dockspace</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Widget\Drag\GDrag.h">
+      <Filter>Widget\Drag</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Widget\GWidget.h">
       <Filter>Widget</Filter>
@@ -72,7 +81,9 @@
     <ClInclude Include="Sources\Widget\Text\GText.h">
       <Filter>Widget\Text</Filter>
     </ClInclude>
-    <ClInclude Include="Sources\Widget\TreeNode\GTreeNode.h" />
+    <ClInclude Include="Sources\Widget\TreeNode\GTreeNode.h">
+      <Filter>Widget\TreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Sources\Editor\GEditor.cpp">
@@ -89,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="Sources\Widget\Dockspace\GDockspace.cpp">
       <Filter>Widget\Dockspace</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Widget\Drag\GDrag.cpp">
+      <Filter>Widget\Drag</Filter>
     </ClCompile>
     <ClCompile Include="Sources\Widget\GWidget.cpp">
       <Filter>Widget</Filter>
@@ -111,6 +125,8 @@
     <ClCompile Include="Sources\Widget\Text\GText.cpp">
       <Filter>Widget\Text</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Widget\TreeNode\GTreeNode.cpp" />
+    <ClCompile Include="Sources\Widget\TreeNode\GTreeNode.cpp">
+      <Filter>Widget\TreeNode</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -78,8 +78,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
@@ -101,8 +101,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -126,8 +126,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_BUILD_DLL;GE_DISTRIBUTION;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Dependencies\Includes;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Guardian EUI\Sources;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -148,8 +148,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h" />
-    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h" />
+    <ClInclude Include="Sources\Gameplay\Serializer\GEntitySerializer.h" />
+    <ClInclude Include="Sources\Gameplay\Serializer\GSceneSerializer.h" />
     <ClInclude Include="Sources\Aplication\Event\GApplicationEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEvent.h" />
     <ClInclude Include="Sources\Aplication\Event\GEventDispatcher.h" />
@@ -199,6 +199,8 @@
     <ClInclude Include="Sources\Graphics\GGraphicsContext.h" />
     <ClInclude Include="Sources\Graphics\GGraphicsContextRegistry.h" />
     <ClInclude Include="Sources\Graphics\GRenderEngine.h" />
+    <ClInclude Include="Sources\Graphics\Lighting\GLightRegistry.h" />
+    <ClInclude Include="Sources\Graphics\Lighting\PointLight\GPointLight.h" />
     <ClInclude Include="Sources\Graphics\Math\Camera\GCamera.h" />
     <ClInclude Include="Sources\Graphics\Math\Camera\Projection\GProjection.h" />
     <ClInclude Include="Sources\Graphics\Math\Matrix\GMatrix.h" />
@@ -233,7 +235,8 @@
     <ClInclude Include="Sources\Profile\UUID\GUUID.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp" />
+    <ClCompile Include="Sources\Gameplay\Serializer\GEntitySerializer.cpp" />
+    <ClCompile Include="Sources\Gameplay\Serializer\GSceneSerializer.cpp" />
     <ClCompile Include="Sources\Aplication\Event\GEventDispatcher.cpp" />
     <ClCompile Include="Sources\Aplication\Exception\GException.cpp" />
     <ClCompile Include="Sources\Aplication\GApplication.cpp" />
@@ -275,6 +278,7 @@
     <ClCompile Include="Sources\Graphics\GGraphicsContext.cpp" />
     <ClCompile Include="Sources\Graphics\GGraphicsContextRegistry.cpp" />
     <ClCompile Include="Sources\Graphics\GRenderEngine.cpp" />
+    <ClCompile Include="Sources\Graphics\Lighting\GLightRegistry.cpp" />
     <ClCompile Include="Sources\Graphics\Lighting\PointLight\GPointLight.cpp" />
     <ClCompile Include="Sources\Graphics\Math\Camera\GCamera.cpp" />
     <ClCompile Include="Sources\Graphics\Math\Matrix\GMatrix.cpp" />
@@ -305,6 +309,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">
       <Project>{C0FF640D-2C14-8DBE-F595-301E616989EF}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\Third Party\yaml-cpp\yaml-cpp.vcxproj">
+      <Project>{88F1A057-74BE-FB62-9DD7-E90A890331F1}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Guardian EUI\Guardian EUI.vcxproj">
       <Project>{738D630D-5FF0-F2B1-0876-2B68F4B7BE34}</Project>

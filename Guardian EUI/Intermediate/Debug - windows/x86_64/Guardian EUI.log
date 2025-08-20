@@ -1,9 +1,9 @@
-﻿  GTreeNode.cpp
-  GEditor.cpp
+﻿  GEditor.cpp
   GButton.cpp
   GImageButton.cpp
   GColumnLayout.cpp
   GDockspace.cpp
+  GDrag.cpp
   GWidget.cpp
   GImage.cpp
   GMenuBar.cpp
@@ -11,4 +11,5 @@
   GMenuItem.cpp
   GPanel.cpp
   GText.cpp
+  GTreeNode.cpp
   Guardian EUI.vcxproj -> D:\Development\C++\Nature Studio\Guardian-Engine\Build\Debug - windows\x86_64\Guardian EUI.lib

@@ -9,10 +9,12 @@ namespace GE
 	public:
 		GEntity();
 		GEntity(const std::string& name, GScene* scene);
+		GEntity(const GUUID& id, const std::string& name, GScene* scene);
 		GEntity(const GEntity& other);
 		~GEntity();
 
 		void InitializeEntity(const std::string& name, GScene* scene);
+		void InitializeEntity(const GUUID& id, const std::string& name, GScene* scene);
 
 		void SetParent(GEntity* parent);
 		void AddChild(GEntity* child);
@@ -77,6 +79,11 @@ namespace GE
 		{
 			return std::make_shared<GEntity>(name, scene);
 		}
+		static std::shared_ptr<GEntity> CreateNewEntity(
+			const GUUID& id, const std::string& name, GScene* scene)
+		{
+			return std::make_shared<GEntity>(id, name, scene);
+		}
 
 	private:
 		GUUID EntityId = GUUID();
@@ -87,6 +94,12 @@ namespace GE
 
 		entt::entity EntityHandle;
 		GScene* EntityScene;
+		
+		//This is only for serializer and scene.
+		std::string ParentEntityName;
+
+		friend class GScene;
+		friend class GEntitySerializer;
 	};
 }
 

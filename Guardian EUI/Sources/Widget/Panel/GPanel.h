@@ -5,6 +5,7 @@
 #include "../Button/GImageButton.h"
 #include "../ColumnLayout/GColumnLayout.h"
 #include "../TreeNode/GTreeNode.h"
+#include "../Drag/GDrag.h"
 
 namespace GE
 {

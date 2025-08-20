@@ -17,9 +17,9 @@ namespace GE
 
 	private:
 		std::shared_ptr<GScene> ActiveScene;
-		std::shared_ptr<GEntity> Nanosuit;
-		std::shared_ptr<GEntity> Hasake;
-		std::shared_ptr<GEntity> House;
+		std::shared_ptr<GEntity> Light1;
+		std::shared_ptr<GEntity> Light2;
+		std::shared_ptr<GEntity> Cerberus;
 	};
 }
 

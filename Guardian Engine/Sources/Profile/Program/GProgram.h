@@ -17,7 +17,7 @@ namespace GE
 
 	public:
 		GProgram() {}
-		virtual ~GProgram() { this->ReleaseProgram(); }
+		virtual ~GProgram() {}
 
 		virtual void PreInitializeProgram()
 		{

@@ -75,8 +75,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
@@ -93,8 +93,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;GE_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -111,8 +111,8 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>GE_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;GE_PLATFORM_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\Guardian Engine\Sources;..\Third Party\ImGui\Sources;..\Third Party\yaml-cpp\include;..\Dependencies\Includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Disabled</Optimization>
       <MinimalRebuild>false</MinimalRebuild>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -125,12 +125,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Sources\Widget\TreeNode\GTreeNode.h" />
     <ClInclude Include="Sources\Editor\GEditor.h" />
     <ClInclude Include="Sources\Widget\Button\GButton.h" />
     <ClInclude Include="Sources\Widget\Button\GImageButton.h" />
     <ClInclude Include="Sources\Widget\ColumnLayout\GColumnLayout.h" />
     <ClInclude Include="Sources\Widget\Dockspace\GDockspace.h" />
+    <ClInclude Include="Sources\Widget\Drag\GDrag.h" />
     <ClInclude Include="Sources\Widget\GWidget.h" />
     <ClInclude Include="Sources\Widget\Image\GImage.h" />
     <ClInclude Include="Sources\Widget\MenuBar\GMenuBar.h" />
@@ -138,14 +138,15 @@
     <ClInclude Include="Sources\Widget\MenuBar\MenuItem\GMenuItem.h" />
     <ClInclude Include="Sources\Widget\Panel\GPanel.h" />
     <ClInclude Include="Sources\Widget\Text\GText.h" />
+    <ClInclude Include="Sources\Widget\TreeNode\GTreeNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Sources\Widget\TreeNode\GTreeNode.cpp" />
     <ClCompile Include="Sources\Editor\GEditor.cpp" />
     <ClCompile Include="Sources\Widget\Button\GButton.cpp" />
     <ClCompile Include="Sources\Widget\Button\GImageButton.cpp" />
     <ClCompile Include="Sources\Widget\ColumnLayout\GColumnLayout.cpp" />
     <ClCompile Include="Sources\Widget\Dockspace\GDockspace.cpp" />
+    <ClCompile Include="Sources\Widget\Drag\GDrag.cpp" />
     <ClCompile Include="Sources\Widget\GWidget.cpp" />
     <ClCompile Include="Sources\Widget\Image\GImage.cpp" />
     <ClCompile Include="Sources\Widget\MenuBar\GMenuBar.cpp" />
@@ -153,6 +154,7 @@
     <ClCompile Include="Sources\Widget\MenuBar\MenuItem\GMenuItem.cpp" />
     <ClCompile Include="Sources\Widget\Panel\GPanel.cpp" />
     <ClCompile Include="Sources\Widget\Text\GText.cpp" />
+    <ClCompile Include="Sources\Widget\TreeNode\GTreeNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Third Party\ImGui\ImGui.vcxproj">
