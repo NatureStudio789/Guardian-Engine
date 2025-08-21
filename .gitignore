@@ -1,0 +1,13 @@
+.vs/
+Build/
+
+Guardian Editor/Intermediate/
+Guardian Engine/Intermediate/
+Guardian EUI/Intermediate/
+Third Party/ImGui/Intermediate/
+Third Party/yaml-cpp/Intermediate/
+
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user

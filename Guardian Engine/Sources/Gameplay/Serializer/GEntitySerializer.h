@@ -1,6 +1,6 @@
 #ifndef _GE_GENTITYSERIALIZER_H_
 #define _GE_GENTITYSERIALIZER_H_
-#include "../Entity/GEntity.h"
+#include "GAssetSerializer.h"
 
 namespace GE
 {
@@ -11,8 +11,10 @@ namespace GE
 
 		static void Deserialize(std::shared_ptr<GEntity> entity, YAML::Node& deserializingData);
 
-		static void Export(const std::string& filePath, YAML::Emitter& serializingData);
+		static void Export(const std::string& filePath, std::shared_ptr<GEntity> entity);
 		static void Import(const std::string& filePath, std::shared_ptr<GEntity> entity);
+
+		static YAML::Node Load(const std::string& filePath);
 	};
 }
 

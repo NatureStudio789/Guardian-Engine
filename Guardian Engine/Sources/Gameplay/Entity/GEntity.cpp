@@ -65,6 +65,7 @@ namespace GE
 
 	void GEntity::SetParent(GEntity* parent)
 	{
+		this->ParentEntityName = parent->EntityName;
 		parent->AddChild(this);
 	}
 

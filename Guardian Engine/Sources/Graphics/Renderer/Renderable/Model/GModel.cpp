@@ -15,6 +15,11 @@ namespace GE
 		this->InitializeModel(filePath, renderGraphName);
 	}
 
+	GModel::GModel(const Data& data, std::string renderGraphName)
+	{
+		this->InitializeModel(data, renderGraphName);
+	}
+
 	GModel::GModel(const GModel& other)
 	{
 		this->RootMeshNode = other.RootMeshNode;
@@ -39,19 +44,29 @@ namespace GE
 		this->ModelFilePath = filePath;
 		this->ModelFileDirectory = GUtil::GetFilePathDirectory(this->ModelFilePath);
 
-		Assimp::Importer Importer;
-		const aiScene* Scene = Importer.ReadFile(filePath, aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
-		if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
+		const auto& Data = Load(filePath);
+
+		for (const auto& meshData : Data.MeshDataList)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION(Importer.GetErrorString());
+			this->ModelMeshList.push_back(GMesh::CreateNewMesh(meshData));
 		}
 
-		for (UINT i = 0; i < Scene->mNumMeshes; i++)
+		this->RootMeshNode = this->BuildMeshNode(Data.RootMeshNodeData);
+
+		this->LinkTechnique(renderGraphName);
+	}
+
+	void GModel::InitializeModel(const Data& data, std::string renderGraphName)
+	{
+		this->ModelFilePath = data.FilePath;
+		this->ModelFileDirectory = data.FileDirectory;
+
+		for (const auto& meshData : data.MeshDataList)
 		{
-			this->ModelMeshList.push_back(this->ParseMesh(Scene, Scene->mMeshes[i]));
+			this->ModelMeshList.push_back(GMesh::CreateNewMesh(meshData));
 		}
 
-		this->RootMeshNode = this->ParseNode(Scene, Scene->mRootNode);
+		this->RootMeshNode = this->BuildMeshNode(data.RootMeshNodeData);
 
 		this->LinkTechnique(renderGraphName);
 	}
@@ -79,12 +94,32 @@ namespace GE
 		}
 	}
 
+	std::shared_ptr<GMeshNode> GModel::BuildMeshNode(GMeshNode::Data meshNodeData)
+	{
+		std::shared_ptr<GMeshNode> Node;
+		std::vector<std::shared_ptr<GMesh>> NodeMeshList;
+		for (auto& index : meshNodeData.MeshDataIndexList)
+		{
+			NodeMeshList.push_back(this->ModelMeshList[index]);
+		}
+
+		Node = std::make_shared<GMeshNode>(meshNodeData.NodeName, NodeMeshList);
+		Node->SetExtraMatrix(meshNodeData.ExtraMatrix);
+
+		for (auto& child : meshNodeData.ChildrenList)
+		{
+			Node->AddChild(BuildMeshNode(child));
+		}
+
+		return Node;
+	}
+
 	std::shared_ptr<GMeshNode> GModel::GetRootMeshNode()
 	{
 		return this->RootMeshNode;
 	}
 
-	std::shared_ptr<GMesh> GModel::ParseMesh(const aiScene* scene, aiMesh* mesh)
+	GMesh::Data GModel::ParseMesh(const aiScene* scene, aiMesh* mesh, std::string modelFileDirectory)
 	{
 		GMesh::Data MeshData;
 		std::vector<GMesh::Vertex> Vertices;
@@ -120,7 +155,7 @@ namespace GE
 		aiMaterial* Material = scene->mMaterials[mesh->mMaterialIndex];
 		std::shared_ptr<GMaterial> MeshMaterial = GMaterial::CreateNewMaterial(Material->GetName().C_Str());
 
-		auto& albedo = this->LoadTexture(Material, aiTextureType_DIFFUSE, 0);
+		auto& albedo = LoadTexture(Material, aiTextureType_DIFFUSE, 0, modelFileDirectory);
 		if (albedo)
 		{
 			MeshMaterial->SetAlbedoTexture(albedo);
@@ -130,7 +165,7 @@ namespace GE
 			MeshMaterial->SetAlbedoValue(GVector3(0.8f, 0.8f, 0.8f));
 		}
 
-		auto& roughness = this->LoadTexture(Material, aiTextureType_SHININESS, 1);
+		auto& roughness = LoadTexture(Material, aiTextureType_SHININESS, 1, modelFileDirectory);
 		if (roughness)
 		{
 			MeshMaterial->SetRoughnessTexture(roughness);
@@ -140,7 +175,7 @@ namespace GE
 			MeshMaterial->SetRoughnessValue(0.8f);
 		}
 
-		auto& metallic = this->LoadMetallicTexture(Material, 2);
+		auto& metallic = LoadMetallicTexture(Material, 2, modelFileDirectory);
 		if (metallic)
 		{
 			MeshMaterial->SetMetallicTexture(metallic);
@@ -150,7 +185,7 @@ namespace GE
 			MeshMaterial->SetMetallicValue(0.1f);
 		}
 
-		auto& ao = this->LoadTexture(Material, aiTextureType_AMBIENT_OCCLUSION, 3);
+		auto& ao = LoadTexture(Material, aiTextureType_AMBIENT_OCCLUSION, 3, modelFileDirectory);
 		if (ao)
 		{
 			MeshMaterial->SetAoTexture(ao);
@@ -160,7 +195,7 @@ namespace GE
 			MeshMaterial->SetAoValue(1.0f);
 		}
 
-		auto& normal = this->LoadTexture(Material, aiTextureType_NORMALS, 4);
+		auto& normal = LoadTexture(Material, aiTextureType_NORMALS, 4, modelFileDirectory);
 		if (normal)
 		{
 			MeshMaterial->SetNormalTexture(normal);
@@ -170,28 +205,33 @@ namespace GE
 			MeshMaterial->SetNormalTextureEnable(false);
 		}
 
-		return GMesh::CreateNewMesh(mesh->mName.C_Str(), MeshData, MeshMaterial);
+		MeshData.MeshMaterial = MeshMaterial;
+
+		return MeshData;
 	}
 
-	std::shared_ptr<GMeshNode> GModel::ParseNode(const aiScene* scene, aiNode* node)
+	GMeshNode::Data GModel::ParseNode(const aiScene* scene, aiNode* node, std::vector<GMesh::Data> meshDataList)
 	{
-		std::vector<std::shared_ptr<GMesh>> NodeMeshList;
+		GMeshNode::Data NodeData;
+		
+		std::vector<UINT> NodeMeshDataList;
 		for (UINT i = 0; i < node->mNumMeshes; i++)
 		{
-			NodeMeshList.push_back(this->ModelMeshList.at(node->mMeshes[i]));
+			NodeMeshDataList.push_back(i);
 		}
 
-		auto Node = std::make_shared<GMeshNode>(node->mName.C_Str(), NodeMeshList);
-		Node->SetExtraMatrix(XMMatrixTranspose(XMLoadFloat4x4((XMFLOAT4X4*)&node->mTransformation)));
+		NodeData.NodeName = node->mName.C_Str();
+		NodeData.MeshDataIndexList = NodeMeshDataList;
+		NodeData.ExtraMatrix = XMMatrixTranspose(XMLoadFloat4x4((XMFLOAT4X4*)&node->mTransformation));
 		for (UINT i = 0; i < node->mNumChildren; i++)
 		{
-			Node->AddChild(this->ParseNode(scene, node->mChildren[i]));
+			NodeData.ChildrenList.push_back(ParseNode(scene, node->mChildren[i], meshDataList));
 		}
 
-		return Node;
+		return NodeData;
 	}
 
-	std::shared_ptr<GTexture> GModel::LoadTexture(aiMaterial* material, aiTextureType type, int index)
+	std::shared_ptr<GTexture> GModel::LoadTexture(aiMaterial* material, aiTextureType type, int index, std::string modelFileDirectory)
 	{
 		std::shared_ptr<GTexture> Texture = null;
 
@@ -207,7 +247,7 @@ namespace GE
 			}
 			else
 			{
-				TextureFilePath = GUtil::ExtendDirectory(this->ModelFileDirectory, Path.C_Str());
+				TextureFilePath = GUtil::ExtendDirectory(modelFileDirectory, Path.C_Str());
 			}
 
 			Texture = GTexture::CreateNewTexture(
@@ -218,7 +258,7 @@ namespace GE
 		return Texture;
 	}
 
-	std::shared_ptr<GTexture> GModel::LoadMetallicTexture(aiMaterial* material, int index)
+	std::shared_ptr<GTexture> GModel::LoadMetallicTexture(aiMaterial* material, int index, std::string modelFileDirectory)
 	{
 		std::shared_ptr<GTexture> MetallicTexture = null;
 
@@ -237,7 +277,7 @@ namespace GE
 					std::string FilePath;
 					if (!std::filesystem::exists(Path))
 					{
-						FilePath = GUtil::ExtendDirectory(this->ModelFileDirectory, Path);
+						FilePath = GUtil::ExtendDirectory(modelFileDirectory, Path);
 					}
 					else
 					{

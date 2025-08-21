@@ -19,6 +19,10 @@ namespace GE
 		{
 			m = std::make_shared<GAudioEngine>();
 		}
+		else if (moduleName == "Asset")
+		{
+			m = std::make_shared<GAssetEngine>();
+		}
 		else if (moduleName == "Gameplay")
 		{
 			m = std::make_shared<GGameplayEngine>();

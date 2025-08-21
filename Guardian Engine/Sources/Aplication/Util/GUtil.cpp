@@ -53,6 +53,28 @@ namespace GE
 		return Directory;
 	}
 
+	std::string GUtil::GetFileName(const std::string& filePath)
+	{
+		if (std::filesystem::directory_entry(filePath).is_directory())
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The path is a directory!");
+		}
+
+		std::string Filename = std::filesystem::path(filePath).filename().stem().string();
+		return Filename;
+	}
+
+	std::string GUtil::GetFileExtension(const std::string& filePath)
+	{
+		if (std::filesystem::directory_entry(filePath).is_directory())
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("The path is a directory!");
+		}
+
+		std::string Extension = std::filesystem::path(filePath).filename().extension().string();
+		return Extension;
+	}
+
 	std::string GUtil::ExtendDirectory(const std::string& directory, const std::string& childPath)
 	{
 		std::string Result;

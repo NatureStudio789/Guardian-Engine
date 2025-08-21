@@ -40,10 +40,13 @@ namespace GE
 		scene->BuildEntityTree();
 	}
 
-	void GSceneSerializer::Export(const std::string& filePath, YAML::Emitter& serializingData)
+	void GSceneSerializer::Export(const std::string& filePath, std::shared_ptr<GScene> scene)
 	{
+		YAML::Emitter SerializeData;
+		Serialize(scene, SerializeData);
+
 		std::stringstream OutputStringStream;
-		OutputStringStream << serializingData.c_str();
+		OutputStringStream << SerializeData.c_str();
 
 		std::ofstream OutputFileStream(filePath);
 		OutputFileStream << OutputStringStream.rdbuf();
@@ -52,6 +55,11 @@ namespace GE
 	}
 
 	void GSceneSerializer::Import(const std::string& filePath, std::shared_ptr<GScene> scene)
+	{
+		Deserialize(scene, Load(filePath));
+	}
+
+	YAML::Node GSceneSerializer::Load(const std::string& filePath)
 	{
 		std::ifstream InputFileStream(filePath);
 		if (!InputFileStream.is_open())
@@ -65,6 +73,7 @@ namespace GE
 		std::string SceneFileString = InputStringStream.str();
 
 		YAML::Node SceneData = YAML::Load(SceneFileString);
-		Deserialize(scene, SceneData);
+
+		return SceneData;
 	}
 }

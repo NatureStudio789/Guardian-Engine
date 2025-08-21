@@ -16,30 +16,47 @@ namespace GE
 
 		struct Data
 		{
+			Data() = default;
+			Data(const Data&) = default;
+
+			std::string MeshName;
 			std::vector<Vertex> Vertices;
 			std::vector<UINT> Indices;
+			std::shared_ptr<GMaterial> MeshMaterial;
 		};
 
 	public:
 		GMesh();
-		GMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material);
+		GMesh(const Data& data);
 		GMesh(const GMesh& other);
 		~GMesh() override;
 
-		void InitializeMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material);
+		void InitializeMesh(const Data& data);
 
-		static std::shared_ptr<GMesh> CreateNewMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
+		static std::shared_ptr<GMesh> CreateNewMesh(const Data& data)
 		{
-			return std::make_shared<GMesh>(name, data, material);
+			return std::make_shared<GMesh>(data);
 		}
 
 	private:
 		Data MeshData;
-		std::shared_ptr<GMaterial> MeshMaterial;
 	};
 
 	class GUARDIAN_API GMeshNode
 	{
+	public:
+		struct Data
+		{
+			Data() = default;
+			Data(const Data&) = default;
+
+			std::string NodeName;
+			std::vector<UINT> MeshDataIndexList;
+			GMatrix ExtraMatrix;
+
+			std::vector<Data> ChildrenList;
+		};
+
 	public:
 		GMeshNode();
 		GMeshNode(const std::string& nodeName, std::vector<std::shared_ptr<GMesh>> meshList);

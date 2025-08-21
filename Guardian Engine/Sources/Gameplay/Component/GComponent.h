@@ -1,6 +1,6 @@
 #ifndef _GE_GCOMPONENT_H_
 #define _GE_GCOMPONENT_H_
-#include "../../Graphics/Renderer/GRenderer.h"
+#include "../../Asset/GAsset.h"
 
 namespace GE
 {
@@ -36,7 +36,11 @@ namespace GE
 		GTransformComponent(const GTransformComponent& ) = default;
 
 		GTransform Transform;
+
+	private:
 		GMatrix AccumulatedMatrix;
+
+		friend class GScene;
 	};
 
 	struct GUARDIAN_API GCameraComponent

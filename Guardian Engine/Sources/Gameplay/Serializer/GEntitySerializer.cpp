@@ -150,10 +150,13 @@ namespace GE
 		}
 	}
 
-	void GEntitySerializer::Export(const std::string& filePath, YAML::Emitter& serializingData)
+	void GEntitySerializer::Export(const std::string& filePath, std::shared_ptr<GEntity> entity)
 	{
+		YAML::Emitter SerializingData;
+		Serialize(entity, SerializingData);
+
 		std::stringstream OutputStringStream;
-		OutputStringStream << serializingData.c_str();
+		OutputStringStream << SerializingData.c_str();
 
 		std::ofstream OutputFileStream(filePath);
 		OutputFileStream << OutputStringStream.rdbuf();
@@ -161,12 +164,17 @@ namespace GE
 		OutputFileStream.close();
 	}
 
-	void GEntitySerializer::Import(const std::string& filePath, std::shared_ptr<GEntity> scene)
+	void GEntitySerializer::Import(const std::string& filePath, std::shared_ptr<GEntity> entity)
+	{
+		Deserialize(entity, Load(filePath));
+	}
+
+	YAML::Node GEntitySerializer::Load(const std::string& filePath)
 	{
 		std::ifstream InputFileStream(filePath);
 		if (!InputFileStream.is_open())
 		{
-			throw GUARDIAN_ERROR_EXCEPTION("The entity file is invalid!");
+			throw GUARDIAN_ERROR_EXCEPTION("The scene file is invalid!");
 		}
 
 		std::stringstream InputStringStream;
@@ -175,6 +183,7 @@ namespace GE
 		std::string SceneFileString = InputStringStream.str();
 
 		YAML::Node SceneData = YAML::Load(SceneFileString);
-		Deserialize(scene, SceneData);
+
+		return SceneData;
 	}
 }

@@ -5,12 +5,12 @@ namespace GE
 	GMesh::GMesh() : GRenderable()
 	{
 		this->MeshData = {};
-		this->MeshMaterial = null;
+		this->MeshData.MeshMaterial = null;
 	}
 
-	GMesh::GMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
+	GMesh::GMesh(const Data& data)
 	{
-		this->InitializeMesh(name, data, material);
+		this->InitializeMesh(data);
 	}
 
 	GMesh::GMesh(const GMesh& other) : GRenderable(other)
@@ -23,15 +23,14 @@ namespace GE
 		this->MeshData.Vertices.clear();
 		this->MeshData.Indices.clear();
 
-		this->MeshMaterial = null;
+		this->MeshData.MeshMaterial = null;
 	}
 
-	void GMesh::InitializeMesh(const std::string& name, const Data& data, std::shared_ptr<GMaterial> material)
+	void GMesh::InitializeMesh(const Data& data)
 	{
 		this->MeshData = data;
-		this->MeshMaterial = material;
 
-		this->InitializeRenderable(name,
+		this->InitializeRenderable(this->MeshData.MeshName,
 			GVertexBuffer::CreateNewVertexBuffer((void*)this->MeshData.Vertices.data(), (UINT)this->MeshData.Vertices.size(), (UINT)sizeof(Vertex)),
 			GIndexBuffer::CreateNewIndexBuffer(this->MeshData.Indices.data(), (UINT)this->MeshData.Indices.size()),
 			GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
@@ -43,7 +42,7 @@ namespace GE
 
 			EditRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			EditRenderStep->AddApplicable(this->MeshMaterial);
+			EditRenderStep->AddApplicable(this->MeshData.MeshMaterial);
 
 			LightingTechnique->AddStep(EditRenderStep);
 		}
@@ -53,7 +52,7 @@ namespace GE
 
 			RuntimeRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			RuntimeRenderStep->AddApplicable(this->MeshMaterial);
+			RuntimeRenderStep->AddApplicable(this->MeshData.MeshMaterial);
 
 			LightingTechnique->AddStep(RuntimeRenderStep);
 		}

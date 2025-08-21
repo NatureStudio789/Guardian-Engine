@@ -33,7 +33,7 @@ namespace GE
 		}
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteCommandListBatch();
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(false);
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
 
 		for (auto& RenderGraph : RenderGraphList)
 		{

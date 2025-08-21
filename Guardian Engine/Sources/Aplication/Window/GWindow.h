@@ -1,6 +1,6 @@
 #ifndef _GE_GWINDOW_H_
 #define _GE_GWINDOW_H_
-#include "../../Gameplay/Serializer/GEntitySerializer.h"
+#include "../../Gameplay/Serializer/GSceneSerializer.h"
 
 namespace GE
 {
