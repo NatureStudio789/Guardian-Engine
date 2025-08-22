@@ -1,6 +1,6 @@
 #ifndef _GE_GCOMPONENT_H_
 #define _GE_GCOMPONENT_H_
-#include "../../Asset/GAsset.h"
+#include "../../Asset/Loader/GAssetLoader.h"
 
 namespace GE
 {

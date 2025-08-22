@@ -93,4 +93,9 @@ namespace GE
 
 		return Result;
 	}
+
+	bool GUtil::FileExists(const std::string& filePath)
+	{
+		return std::filesystem::exists(filePath);
+	}
 }

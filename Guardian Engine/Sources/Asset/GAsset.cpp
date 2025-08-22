@@ -114,6 +114,8 @@ namespace GE
 				break;
 			}
 		}
+
+		GAssetSerializer::Export(this->GetAssetPath(), this);
 	}
 
 	const GUUID& GAsset::GetAssetId() const noexcept

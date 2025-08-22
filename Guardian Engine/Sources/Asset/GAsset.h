@@ -34,8 +34,13 @@ namespace GE
 		template<typename T>
 		T GetAssetData();
 
+		static std::shared_ptr<GAsset> CreateNewAsset(const std::string& assetFilePath)
+		{
+			return std::make_shared<GAsset>(assetFilePath);
+		}
+
 	private:
-		Category GetAssetCategoryFromExtension(const std::string& extension);
+		static Category GetAssetCategoryFromExtension(const std::string& extension);
 		static std::string GetCategoryName(Category category);
 		static Category GetCategoryFromName(std::string name);
 
@@ -48,6 +53,7 @@ namespace GE
 		std::any AssetData;
 
 		friend class GAssetSerializer;
+		friend class GAssetLoader;
 	};
 
 	template<typename T>
