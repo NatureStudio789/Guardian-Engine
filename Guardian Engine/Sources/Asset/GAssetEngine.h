@@ -1,6 +1,6 @@
 #ifndef _GE_GASSETENGINE_H_
 #define _GE_GASSETENGINE_H_
-#include "../Graphics/GRenderEngine.h"
+#include "../Project/GProjectEngine.h"
 
 namespace GE
 {

@@ -156,6 +156,14 @@ namespace GE
 		{
 			this->AssetSourcePathList.push_back(filePath);
 		}
+
+		for (const auto& unloadedSourcePath : this->GetUnloadedSourceList())
+		{
+			std::shared_ptr<GAsset> asset = std::make_shared<GAsset>();
+			asset->LoadAsset(unloadedSourcePath);
+
+			this->LoadedAssetList[asset->GetAssetName()] = asset;
+		}
 	}
 
 	void GAssetLoader::IterateAndLoadAsset(const std::string& filePath)

@@ -13,6 +13,7 @@ namespace GE
 		~GAssetLoader();
 
 		void InitializeAssetLoader(const std::string& assetDirectory);
+		void LoadAsset(const std::string& filePath);
 		void LoadAllAsset();
 		void ResetAssetDirectory(const std::string& assetDirectory);
 		void ReloadAllAsset();
@@ -27,7 +28,6 @@ namespace GE
 		const std::map<std::string, std::shared_ptr<GAsset>>& GetLoadedAssetList() const noexcept;
 
 	private:
-		void LoadAsset(const std::string& filePath);
 		void IterateAndLoadAsset(const std::string& filePath);
 		bool CheckIsAsset(const std::string& filePath);
 

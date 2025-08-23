@@ -1,6 +1,6 @@
 #ifndef _GE_GASSETSERIALIZER_H_
 #define _GE_GASSETSERIALIZER_H_
-#include "../Entity/GEntity.h"
+#include "GProjectSerializer.h"
 
 namespace GE
 {

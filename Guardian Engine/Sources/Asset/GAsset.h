@@ -1,6 +1,6 @@
 #ifndef _GE_GASSET_H_
 #define _GE_GASSET_H_
-#include "../Graphics/Renderer/GRenderer.h"
+#include "../Project/GProject.h"
 
 namespace GE
 {

@@ -1,5 +1,6 @@
 workspace "Guardian Engine"
 	architecture "x64"
+	startproject "Guardian Editor"
 	
 	configurations
 	{
