@@ -36,12 +36,23 @@ namespace GE
 		return strings;
     }
 
-	std::string GUtil::GetFilePathDirectory(const std::string& filePath)
+	void GUtil::StandardizePath(std::string& filePath)
 	{
+		if (filePath.find('/') != std::string::npos && filePath.find('\\') != std::string::npos)
+		{
+			std::replace(filePath.begin(), filePath.end(), '/', '\\');
+		}
+	}
+
+	std::string GUtil::GetFilePathDirectory(std::string filePath)
+	{
+		StandardizePath(filePath);
+		
 		if (std::filesystem::directory_entry(filePath).is_directory())
 		{
 			return filePath;
 		}
+
 
 		std::string Directory;
 		Directory = filePath.substr(0, filePath.find_last_of('/'));
@@ -75,8 +86,11 @@ namespace GE
 		return Extension;
 	}
 
-	std::string GUtil::ExtendDirectory(const std::string& directory, const std::string& childPath)
+	std::string GUtil::ExtendDirectory(std::string directory, std::string childPath)
 	{
+		StandardizePath(directory);
+		StandardizePath(childPath);
+
 		std::string Result;
 		if (directory[directory.size() - 1] == '/' || directory[directory.size() - 1] == '\\')
 		{
@@ -91,6 +105,7 @@ namespace GE
 			}
 		}
 
+		StandardizePath(Result);
 		return Result;
 	}
 

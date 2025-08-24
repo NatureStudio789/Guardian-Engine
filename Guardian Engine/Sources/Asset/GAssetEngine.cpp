@@ -4,7 +4,7 @@ namespace GE
 {
 	GAssetEngine::GAssetEngine()
 	{
-
+		this->ModuleName = "Asset";
 	}
 
 	GAssetEngine::GAssetEngine(const GAssetEngine& other)

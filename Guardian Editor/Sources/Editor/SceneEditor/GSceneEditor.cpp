@@ -156,6 +156,11 @@ namespace GE
 		{
 			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Model", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
 			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GModelComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GText>("Static Mesh"));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GButton>(component.ModelAssetName, []() {}, GVector2(50.0f, 50.0f)));
 		}
 	}
 }

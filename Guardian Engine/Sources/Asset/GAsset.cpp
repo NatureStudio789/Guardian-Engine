@@ -71,16 +71,16 @@ namespace GE
 
 	void GAsset::LoadAsset(const std::string& sourceFilePath)
 	{
+		this->AssetId = GUUID();
+		this->AssetSourcePath = sourceFilePath;
+		this->AssetPackage = GUtil::GetFilePathDirectory(this->AssetSourcePath);
+		this->AssetName = GUtil::GetFileName(this->AssetSourcePath);
+
 		this->AssetCategory = this->GetAssetCategoryFromExtension(GUtil::GetFileExtension(this->AssetSourcePath));
 		if (this->AssetCategory == GE_ASSET_UNKNOWN)
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Unknown asset category!");
 		}
-
-		this->AssetId = GUUID();
-		this->AssetSourcePath = sourceFilePath;
-		this->AssetPackage = GUtil::GetFilePathDirectory(this->AssetSourcePath);
-		this->AssetName = GUtil::GetFileName(this->AssetSourcePath);
 
 		switch (this->AssetCategory)
 		{

@@ -5,8 +5,7 @@ namespace GE
 {
 	GScene::GScene()
 	{
-		this->SceneName = "";
-		this->LightRegistry = null;
+
 	}
 
 	GScene::GScene(const std::string& name)
@@ -39,7 +38,7 @@ namespace GE
 		auto entity =  GEntity::CreateNewEntity(entityName, this);
 		this->SceneEntityList[entityName] = entity;
 
-		this->SetEntityParent(this->SceneRootEntity.get(), entityName, rootName);
+		this->SetEntityParent(entityName, rootName);
 		this->SceneEntityList[entityName]->AddComponent<GTagComponent>(entityName);
 		this->SceneEntityList[entityName]->AddComponent<GTransformComponent>(GTransform({}, {}, {1.0f, 1.0f, 1.0f}));
 
@@ -115,6 +114,13 @@ namespace GE
 			auto view = this->EntityRegistry.view<GTransformComponent, GModelComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GModelComponent& MComponent)
 			{
+				if (!MComponent.Model.get())
+				{
+					auto AssetData = GProject::Instance->GetProjectAssetLoader()->GetAsset(MComponent.ModelAssetName)->GetAssetData<GModel::Data>();
+
+					MComponent.Model = GModel::CreateNewModel(AssetData);
+				}
+
 				MComponent.Model->SetTransform(TComponent.Transform);
 				MComponent.Model->SetAccumulatedMatrix(TComponent.AccumulatedMatrix);
 
@@ -203,24 +209,26 @@ namespace GE
 	{
 		for (auto& entity : this->SceneEntityList)
 		{
-			this->SetEntityParent(this->SceneRootEntity.get(), entity.second->GetEntityName(), entity.second->ParentEntityName);
+			this->SetEntityParent(entity.second->EntityName, entity.second->ParentEntityName);
 		}
 	}
 
-	void GScene::SetEntityParent(GEntity* parent, const std::string& entityName, std::string rootName)
+	void GScene::SetEntityParent(const std::string& entityName, std::string rootName)
 	{
-		if (rootName == parent->GetEntityName())
+		if (rootName == this->SceneRootEntity->GetEntityName())
 		{
-			this->SceneEntityList[entityName]->SetParent(parent);
+			this->SceneEntityList[entityName]->SetParent(this->SceneRootEntity.get());
 
 			return;
 		}
 		else
 		{
-			for (auto child : parent->GetChildren())
+			if (this->SceneEntityList.count(this->SceneEntityList[entityName]->ParentEntityName) <= 0)
 			{
-				this->SetEntityParent(child, entityName, rootName);
+				throw GUARDIAN_ERROR_EXCEPTION(std::format("Unknown parent entity : '{}'", this->SceneEntityList[entityName]->ParentEntityName));
 			}
+
+			this->SceneEntityList[entityName]->SetParent(this->SceneEntityList[this->SceneEntityList[entityName]->ParentEntityName].get());
 		}
 	}
 

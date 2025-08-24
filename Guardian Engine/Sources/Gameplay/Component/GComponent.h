@@ -82,13 +82,19 @@ namespace GE
 		{
 			this->Model = null;
 		}
-		GModelComponent(std::shared_ptr<GModel> model)
+		GModelComponent(const std::string& modelAssetName)
 		{
-			this->Model = model;
+			this->Model = null;
+			this->ModelAssetName = modelAssetName;
 		}
 		GModelComponent(const GModelComponent&) = default;
 
+		std::string ModelAssetName;
+
+	private:
 		std::shared_ptr<GModel> Model;
+
+		friend class GScene;
 	};
 }
 

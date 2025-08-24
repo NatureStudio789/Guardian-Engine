@@ -23,7 +23,7 @@ namespace GE
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
 		this->ProgramAttribute.ProgramWindowAttribute.SetCustomizedTitleBarEnable(false);
 
-        this->ProgramAttribute.ProgramRequiredModuleList = { "Asset", "Render", "Audio", "Gameplay" };
+        this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Asset", "Project", "Audio", "Gameplay"};
     }
 
     void GEditorEngine::InitializeProgram()

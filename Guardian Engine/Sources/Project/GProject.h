@@ -18,7 +18,7 @@ namespace GE
 
 		void InitializeProject(const std::string& projectFilePath);
 		void CreateProject(const std::string& projectName, const std::string& projectDirectory,
-			const std::string& projectAssetDirectory = "Assets/");
+			const std::string& projectAssetDirectory = "Assets\\");
 
 		const GUUID& GetProjectId() const noexcept;
 		const std::string& GetProjectName() const noexcept;

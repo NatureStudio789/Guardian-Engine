@@ -4,7 +4,7 @@
 
 namespace GE
 {
-	std::shared_ptr<GProject> GProject::Instance;
+	std::shared_ptr<GProject> GProject::Instance = std::make_shared<GProject>();
 
 
 	GProject::GProject()
@@ -57,10 +57,11 @@ namespace GE
 	{
 		this->ProjectDirectory = GUtil::GetFilePathDirectory(projectFilePth);
 
-		GProjectSerializer::Import(this->GetProjectFilePath(), this);
+		GProjectSerializer::Import(projectFilePth, this);
 
 		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->GetFullAssetDirectory());
 
+		this->ActiveScene = std::make_shared<GScene>();
 		GSceneSerializer::Deserialize(this->ActiveScene, this->ProjectAssetLoader->GetAsset(this->ActiveSceneName)->GetAssetData<YAML::Node>());
 		GSceneRegistry::RegisterScene(this->ActiveScene);
 		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
@@ -81,14 +82,13 @@ namespace GE
 		this->ActiveSceneName = "Sample Scene";
 		this->ActiveScene = GScene::CreateNewScene(this->ActiveSceneName);
 
-		auto MainCamera = this->ActiveScene->CreateEntity("Main Camera");
-		MainCamera->AddComponent<GCameraComponent>();
-
-		GSceneSerializer::Export(GUtil::ExtendDirectory(this->ProjectAssetDirectory, this->ActiveSceneName + ".gscene"), this->ActiveScene);
+		GSceneSerializer::Export(GUtil::ExtendDirectory(this->GetFullAssetDirectory(), this->ActiveSceneName + ".gscene"), this->ActiveScene);
 		GSceneRegistry::RegisterScene(this->ActiveScene);
 		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
 
 		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->GetFullAssetDirectory());
+
+		GProjectSerializer::Export(this->GetProjectFilePath(), this);
 	}
 
 	const GUUID& GProject::GetProjectId() const noexcept

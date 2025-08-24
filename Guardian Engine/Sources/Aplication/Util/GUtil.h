@@ -12,10 +12,11 @@ namespace GE
 
 		static std::vector<std::string> SplitString(const std::string& text, const std::string& delim);
 		
-		static std::string GetFilePathDirectory(const std::string& filePath);
+		static void StandardizePath(std::string& filePath);
+		static std::string GetFilePathDirectory(std::string filePath);
 		static std::string GetFileName(const std::string& filePath);
 		static std::string GetFileExtension(const std::string& filePath);
-		static std::string ExtendDirectory(const std::string& directory, const std::string& childPath);
+		static std::string ExtendDirectory(std::string directory, std::string childPath);
 		static bool FileExists(const std::string& filePath);
 	};
 }

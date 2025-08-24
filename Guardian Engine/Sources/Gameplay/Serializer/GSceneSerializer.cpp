@@ -25,6 +25,11 @@ namespace GE
 
 	void GSceneSerializer::Deserialize(std::shared_ptr<GScene> scene, YAML::Node& deserializingData)
 	{
+		scene->SceneRootEntity = GEntity::CreateNewEntity("Root", scene.get());
+		scene->EditCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
+		scene->RuntimeCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, 0.0f), GVector3(), GPerspectiveProjection());
+		scene->LightRegistry = std::make_shared<GLightRegistry>();
+
 		scene->SceneId = deserializingData["Scene"].as<unsigned long long>();
 		scene->SceneName = deserializingData["Name"].as<std::string>();
 
@@ -32,6 +37,8 @@ namespace GE
 		for (auto& EntityData : EntitiesData)
 		{
 			std::shared_ptr<GEntity> entity = std::make_shared<GEntity>();
+			entity->EntityScene = scene.get();
+			entity->EntityHandle = scene->EntityRegistry.create();
 			GEntitySerializer::Deserialize(entity, EntityData);
 
 			scene->SceneEntityList[entity->GetEntityName()] = entity;

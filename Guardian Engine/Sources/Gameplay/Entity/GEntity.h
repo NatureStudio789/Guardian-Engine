@@ -99,6 +99,7 @@ namespace GE
 		std::string ParentEntityName;
 
 		friend class GScene;
+		friend class GSceneSerializer;
 		friend class GEntitySerializer;
 	};
 }

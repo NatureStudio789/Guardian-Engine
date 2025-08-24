@@ -9,8 +9,8 @@ namespace GE
 		SerializeData << YAML::BeginMap;
 		SerializeData << YAML::Key << "Entity";
 		SerializeData << YAML::Value << (unsigned long long)entity->GetEntityId();
-		SerializeData << YAML::Key << "Handle";
-		SerializeData << YAML::Value << (UINT)entity->GetEntityHandle();
+		SerializeData << YAML::Key << "Name";
+		SerializeData << YAML::Value << entity->GetEntityName();
 		SerializeData << YAML::Key << "Parent";
 		SerializeData << YAML::Value << entity->ParentEntityName;
 
@@ -86,7 +86,8 @@ namespace GE
 			SerializeData << YAML::Key << "Model Component";
 			SerializeData << YAML::BeginMap;
 
-			//TO DO: Add the model asset id for model component after add the asset system.
+			auto& ModelAssetName = entity->GetComponent<GModelComponent>().ModelAssetName;
+			SerializeData << YAML::Key << "Asset Name" << YAML::Value << ModelAssetName;
 
 			SerializeData << YAML::EndMap;
 		}
@@ -98,7 +99,6 @@ namespace GE
 	{
 		entity->EntityId = deserializingData["Entity"].as<unsigned long long>();
 		entity->EntityName = deserializingData["Name"].as<std::string>();
-		entity->EntityHandle = (entt::entity)deserializingData["Handle"].as<UINT>();
 		entity->ParentEntityName = deserializingData["Parent"].as<std::string>();
 
 		auto TagComponent = deserializingData["Tag Component"];
@@ -146,7 +146,7 @@ namespace GE
 		{
 			auto& Model = entity->AddComponent<GModelComponent>();
 
-			Model.Model = GModel::CreateNewModel("Assets/Models/Box/Box.fbx");
+			Model.ModelAssetName = ModelComponent["Asset Name"].as<std::string>();
 		}
 	}
 

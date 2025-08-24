@@ -39,7 +39,7 @@ namespace GE
 
 	private:
 		void BuildEntityTree();
-		void SetEntityParent(GEntity* parent, const std::string& entityName, std::string rootName);
+		void SetEntityParent(const std::string& entityName, std::string rootName);
 		void UpdateEntityTransform(GEntity* entity);
 
 		GUUID SceneId = GUUID();

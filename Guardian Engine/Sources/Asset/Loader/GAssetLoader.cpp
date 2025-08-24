@@ -49,6 +49,15 @@ namespace GE
 		}
 
 		IterateAndLoadAsset(this->AssetDirectory);
+
+		const auto& UnloadedSourceList = this->GetUnloadedSourceList();
+		for (const auto& unloadedSourcePath : UnloadedSourceList)
+		{
+			std::shared_ptr<GAsset> asset = std::make_shared<GAsset>();
+			asset->LoadAsset(unloadedSourcePath);
+
+			this->LoadedAssetList[asset->GetAssetName()] = asset;
+		}
 	}
 
 	void GAssetLoader::ResetAssetDirectory(const std::string& assetDirectory)
@@ -156,14 +165,6 @@ namespace GE
 		{
 			this->AssetSourcePathList.push_back(filePath);
 		}
-
-		for (const auto& unloadedSourcePath : this->GetUnloadedSourceList())
-		{
-			std::shared_ptr<GAsset> asset = std::make_shared<GAsset>();
-			asset->LoadAsset(unloadedSourcePath);
-
-			this->LoadedAssetList[asset->GetAssetName()] = asset;
-		}
 	}
 
 	void GAssetLoader::IterateAndLoadAsset(const std::string& filePath)
@@ -171,13 +172,13 @@ namespace GE
 		for (const auto& directoryEntry : std::filesystem::recursive_directory_iterator(filePath))
 		{
 			auto& path = directoryEntry.path();
-			if (directoryEntry.is_regular_file() && CheckIsAsset(path.string()))
-			{
-				this->LoadAsset(path.string());
-			}
-			else
+			if (directoryEntry.is_directory())
 			{
 				IterateAndLoadAsset(path.string());
+			}
+			else if (directoryEntry.is_regular_file() && CheckIsAsset(path.string()))
+			{
+				this->LoadAsset(path.string());
 			}
 		}
 	}
@@ -185,6 +186,6 @@ namespace GE
 	bool GAssetLoader::CheckIsAsset(const std::string& filePath)
 	{
 		const auto& category = GAsset::GetAssetCategoryFromExtension(GUtil::GetFileExtension(filePath));
-		return category != GAsset::GE_ASSET_UNKNOWN;
+		return category != GAsset::GE_ASSET_UNKNOWN || GUtil::GetFileExtension(filePath) == ".gasset";
 	}
 }
