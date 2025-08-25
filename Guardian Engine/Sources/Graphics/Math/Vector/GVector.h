@@ -1,6 +1,6 @@
 #ifndef _GE_GVECTOR_H_
 #define _GE_GVECTOR_H_
-#include "../../../Audio/SourceVoice/GSourceVoice.h"
+#include "../../../Audio/SoundEffect/GSoundEffect.h"
 
 namespace GE
 {

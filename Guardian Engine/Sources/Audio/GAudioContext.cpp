@@ -4,32 +4,45 @@ namespace GE
 {
     GAudioContext::GAudioContext()
     {
-        this->ContextId = GUUID();
+        this->ContextId = 0;
+        this->ContextName = "";
+    }
+
+    GAudioContext::GAudioContext(const std::string& name)
+    {
+        this->InitializeAudioContext(name);
     }
 
     GAudioContext::GAudioContext(const GAudioContext& other)
     {
         this->ContextId = other.ContextId;
-        this->AudioObject = other.AudioObject;
-        this->MasteringVoice = other.MasteringVoice;
+        this->ContextName = other.ContextName;
+
+        this->AudioEngine = other.AudioEngine;
     }
 
     GAudioContext::~GAudioContext()
     {
         this->ContextId = 0;
+        this->ContextName.clear();
+
+        this->AudioEngine.reset();
     }
 
-    void GAudioContext::InitializeAudioContext()
+    void GAudioContext::InitializeAudioContext(const std::string& name)
     {
-        GUARDIAN_SETUP_AUTO_THROW();
+        this->ContextId = GUUID();
+        this->ContextName = name;
 
-        GUARDIAN_AUTO_THROW(CoInitializeEx(null, COINIT_MULTITHREADED));
+        this->AudioEngine = std::make_shared<DirectX::AudioEngine>(DirectX::AudioEngine_Default);
+    }
 
-        GUARDIAN_AUTO_THROW(XAudio2Create(
-            &this->AudioObject, 0, XAUDIO2_DEFAULT_PROCESSOR));
-
-        GUARDIAN_AUTO_THROW(this->AudioObject->CreateMasteringVoice(
-            &this->MasteringVoice));
+    void GAudioContext::Update()
+    {
+        if (!this->AudioEngine->Update())
+        {
+            throw GUARDIAN_ERROR_EXCEPTION("Failed to update audio engine!");
+        }
     }
     
     const GUUID& GAudioContext::GetContextId() const noexcept
@@ -37,13 +50,13 @@ namespace GE
         return this->ContextId;
     }
 
-    IXAudio2* GAudioContext::GetAudioObject()
+    const std::string& GAudioContext::GetContextName() const noexcept
     {
-        return this->AudioObject;
+        return this->ContextName;
     }
 
-    IXAudio2MasteringVoice* GAudioContext::GetMasteringVoice()
+    std::shared_ptr<DirectX::AudioEngine> GAudioContext::GetAudioEngine()
     {
-        return this->MasteringVoice;
+        return this->AudioEngine;
     }
 }

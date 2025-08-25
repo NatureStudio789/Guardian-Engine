@@ -44,6 +44,7 @@ project "Guardian Engine"
 	{
 		dependenciesdir .. "Libraries/DirectXTex/%{cfg.buildcfg}/",
 		dependenciesdir .. "Libraries/Assimp/%{cfg.buildcfg}/",
+		dependenciesdir .. "Libraries/DirectXTK/%{cfg.buildcfg}/",
 	}
 
 	links
@@ -59,8 +60,7 @@ project "Guardian Engine"
 		"d3dcompiler",
 		"dxguid",
 		"DirectXTex",
-
-		"xaudio2",
+		"DirectXTK",
 
 		"assimp"
 	}

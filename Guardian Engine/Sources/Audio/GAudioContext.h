@@ -8,26 +8,28 @@ namespace GE
 	{
 	public:
 		GAudioContext();
+		GAudioContext(const std::string& name);
 		GAudioContext(const GAudioContext& other);
 		~GAudioContext();
 
-		void InitializeAudioContext();
+		void InitializeAudioContext(const std::string& name);
+
+		void Update();
 
 		const GUUID& GetContextId() const noexcept;
-		IXAudio2* GetAudioObject();
-		IXAudio2MasteringVoice* GetMasteringVoice();
+		const std::string& GetContextName() const noexcept;
+		std::shared_ptr<DirectX::AudioEngine> GetAudioEngine();
 
-		static std::shared_ptr<GAudioContext> CreateNewContext()
+		static std::shared_ptr<GAudioContext> CreateNewContext(const std::string& name)
 		{
-			auto context = std::make_shared<GAudioContext>();
-			context->InitializeAudioContext();
-			return context;
+			return std::make_shared<GAudioContext>(name);
 		}
 
 	private:
 		GUUID ContextId;
-		IXAudio2* AudioObject;
-		IXAudio2MasteringVoice* MasteringVoice;
+		std::string ContextName;
+
+		std::shared_ptr<DirectX::AudioEngine> AudioEngine;
 	};
 }
 

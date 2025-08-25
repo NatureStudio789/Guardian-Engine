@@ -28,7 +28,7 @@
 
 #include <DirectXTex/DirectXTex.h>
 
-#include <xaudio2.h>
+#include <DirectXTK/Audio.h>
 
 #include <imgui.h>
 #include <imgui_impl_dx12.h>

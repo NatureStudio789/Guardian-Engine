@@ -6,15 +6,14 @@ namespace GE
 	std::map<std::string, std::shared_ptr<GAudioContext>> GAudioContextRegistry::AudioContextList;
 
 
-	void GAudioContextRegistry::RegisterAudioContext(
-		std::string name, std::shared_ptr<GAudioContext> context)
+	void GAudioContextRegistry::RegisterAudioContext(std::shared_ptr<GAudioContext> context)
 	{
-		if (AudioContextList.count(name) > 0)
+		if (AudioContextList.count(context->GetContextName()) > 0)
 		{
-			throw GUARDIAN_ERROR_EXCEPTION(std::format("The Audio context named '{}' has been in registry.", name));
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("The Audio context named '{}' has been in registry.", context->GetContextName()));
 		}
 
-		AudioContextList[name] = context;
+		AudioContextList[context->GetContextName()] = context;
 	}
 
 	void GAudioContextRegistry::SetCurrentAudioContext(const std::string& name)

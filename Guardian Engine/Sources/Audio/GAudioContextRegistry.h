@@ -7,8 +7,7 @@ namespace GE
 	class GUARDIAN_API GAudioContextRegistry
 	{
 	public:
-		static void RegisterAudioContext(
-			std::string name, std::shared_ptr<GAudioContext> context);
+		static void RegisterAudioContext(std::shared_ptr<GAudioContext> context);
 
 		static void SetCurrentAudioContext(const std::string& name);
 		static void SetCurrentAudioContext(const GUUID& id);
