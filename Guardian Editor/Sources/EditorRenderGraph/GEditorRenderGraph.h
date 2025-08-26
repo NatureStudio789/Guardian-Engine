@@ -1,6 +1,7 @@
 #ifndef _GE_GEDITORRENDERGRAPH_H_
 #define _GE_GEDITORRENDERGRAPH_H_
 #include "../Editor/SceneEditor/GSceneEditor.h"
+#include "../Editor/AssetEditor/GAssetEditor.h"
 
 namespace GE
 {

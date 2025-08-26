@@ -112,9 +112,25 @@ namespace GE
 	{
 		GUARDIAN_CHECK_POINTER(entity);
 
+		std::shared_ptr<EUI::GPopup> ComponentPopup = std::make_shared<EUI::GPopup>("Component List");
+
 		if (entity->HasComponent<GTagComponent>())
 		{
-			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GTreeNode>("Tag", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen));
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Tag", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+			
+			auto& component = entity->GetComponent<GTagComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GInputBox>("Tag", &component.Tag));
+
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Tag", [entity]()
+			{
+				entity->AddComponent<GTagComponent>();
+			}));
 		}
 
 		if (entity->HasComponent<GTransformComponent>())
@@ -127,6 +143,15 @@ namespace GE
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &component.Transform.Position, 0.1f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &component.Transform.Rotation, 0.1f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Scale", &component.Transform.Scale, 0.1f));
+
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Transform", [entity]()
+				{
+					entity->AddComponent<GTransformComponent>();
+				}));
 		}
 
 		if (entity->HasComponent<GCameraComponent>())
@@ -139,6 +164,15 @@ namespace GE
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("FOV", &component.Camera->Projection.FOV, 0.1f, 30.0f, 100.0f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("NearZ", &component.Camera->Projection.NearZ, 0.001f, 0.01f, 1.0f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("FarZ", &component.Camera->Projection.FarZ, 0.1f, 1.0f));
+
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Camera", [entity]()
+				{
+					entity->AddComponent<GCameraComponent>();
+				}));
 		}
 
 		if (entity->HasComponent<GPointLightComponent>())
@@ -150,6 +184,15 @@ namespace GE
 
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Color", &component.PointLight->Color, 0.1f, 0.0f, 1.0f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Strength", &component.PointLight->Strength, 0.1f, 1.0f));
+
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Point Light", [entity]()
+				{
+					entity->AddComponent<GPointLightComponent>();
+				}));
 		}
 
 		if (entity->HasComponent<GModelComponent>())
@@ -161,6 +204,23 @@ namespace GE
 
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GText>("Static Mesh"));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GButton>(component.ModelAssetName, []() {}, GVector2(50.0f, 50.0f)));
+
+			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
 		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Model", [entity]()
+				{
+					entity->AddComponent<GModelComponent>().ModelAssetName = "Box";
+				}));
+		}
+
+		this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GButton>("Add Component",
+			[ComponentPopup]()
+			{
+				ComponentPopup->ActivePopup();
+			}, GVector2(150.0f, 40.0f)));
+
+		this->PropertiesPanel->AddWidgetToPanel(ComponentPopup);
 	}
 }

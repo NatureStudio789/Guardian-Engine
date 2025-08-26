@@ -4,18 +4,24 @@ namespace GE
 {
 	GAssetLoader::GAssetLoader()
 	{
+		this->AssetLoaderId = 0;
+		this->AssetLoaderName = "";
+
 		this->AssetDirectory = "";
 		this->AssetSourcePathList.clear();
 		this->LoadedAssetList.clear();
 	}
 
-	GAssetLoader::GAssetLoader(const std::string& assetDirectory)
+	GAssetLoader::GAssetLoader(const std::string& name, const std::string& assetDirectory)
 	{
-		this->InitializeAssetLoader(assetDirectory);
+		this->InitializeAssetLoader(name, assetDirectory);
 	}
 
 	GAssetLoader::GAssetLoader(const GAssetLoader& other)
 	{
+		this->AssetLoaderId = other.AssetLoaderId;
+		this->AssetLoaderName = other.AssetLoaderName;
+
 		this->AssetDirectory = other.AssetDirectory;
 		this->AssetSourcePathList = other.AssetSourcePathList;
 		this->LoadedAssetList = other.LoadedAssetList;
@@ -23,6 +29,9 @@ namespace GE
 
 	GAssetLoader::~GAssetLoader()
 	{
+		this->AssetLoaderId = 0;
+		this->AssetLoaderName.clear();
+
 		this->AssetDirectory.clear();
 		this->AssetSourcePathList.clear();
 
@@ -34,8 +43,11 @@ namespace GE
 		this->LoadedAssetList.clear();
 	}
 
-	void GAssetLoader::InitializeAssetLoader(const std::string& assetDirectory)
+	void GAssetLoader::InitializeAssetLoader(const std::string& name, const std::string& assetDirectory)
 	{
+		this->AssetLoaderId = GUUID();
+		this->AssetLoaderName = name;
+
 		this->AssetDirectory = assetDirectory;
 
 		LoadAllAsset();
@@ -106,6 +118,16 @@ namespace GE
 		}
 
 		return this->LoadedAssetList[assetName];
+	}
+
+	const GUUID& GAssetLoader::GetAssetLoaderId() const noexcept
+	{
+		return this->AssetLoaderId;
+	}
+
+	const std::string& GAssetLoader::GetAssetLoaderName() const noexcept
+	{
+		return this->AssetLoaderName;
 	}
 
 	const std::string& GAssetLoader::GetAssetDirectory() const noexcept

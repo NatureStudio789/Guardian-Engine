@@ -64,6 +64,12 @@ namespace GE
 		return Directory;
 	}
 
+	std::string GUtil::GetDirectoryName(const std::string& filePath)
+	{
+		std::string Filename = std::filesystem::path(filePath).filename().string();
+		return Filename;
+	}
+
 	std::string GUtil::GetFileName(const std::string& filePath)
 	{
 		if (std::filesystem::directory_entry(filePath).is_directory())

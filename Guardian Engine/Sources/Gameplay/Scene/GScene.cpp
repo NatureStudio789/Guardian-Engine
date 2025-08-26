@@ -97,6 +97,8 @@ namespace GE
 			{
 				CComponent.Camera->Position = TComponent.Transform.Position;
 				CComponent.Camera->Rotation = TComponent.Transform.Rotation;
+
+				this->RuntimeCamera = CComponent.Camera;
 			});
 		}
 
@@ -116,7 +118,7 @@ namespace GE
 			{
 				if (!MComponent.Model.get())
 				{
-					auto AssetData = GProject::Instance->GetProjectAssetLoader()->GetAsset(MComponent.ModelAssetName)->GetAssetData<GModel::Data>();
+					auto AssetData = GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(MComponent.ModelAssetName)->GetAssetData<GModel::Data>();
 
 					MComponent.Model = GModel::CreateNewModel(AssetData);
 				}

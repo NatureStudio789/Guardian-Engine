@@ -19,7 +19,7 @@ Entities:
       Tag: Cerberus
     Transform Component:
       Position: [0, 0, 0]
-      Rotation: [0, -13.6999998, 0]
+      Rotation: [0, 0, 0]
       Scale: [0.100000001, 0.100000001, 0.100000001]
     Model Component:
       Asset Name: Cerberus
@@ -55,6 +55,12 @@ Entities:
     Tag Component:
       Tag: Main Camera
     Transform Component:
-      Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Position: [97.9000015, 0, -10.8999996]
+      Rotation: [0, -82.5999985, 0]
       Scale: [1, 1, 1]
+    Camera Component:
+      IsFreeLook: true
+      Projection:
+        FOV: 60
+        NearZ: 0.100000001
+        FarZ: 1000

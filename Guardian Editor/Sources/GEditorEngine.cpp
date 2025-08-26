@@ -28,6 +28,9 @@ namespace GE
 
     void GEditorEngine::InitializeProgram()
     {
+        this->EditorAssetLoader = std::make_shared<GAssetLoader>("EditorAssetLoader", "..\\Guardian Engine\\Resources\\Editor\\");
+        GAssetLoaderRegistry::RegistryAssetLoader(this->EditorAssetLoader);
+
         GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
     }
 

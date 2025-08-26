@@ -44,7 +44,7 @@ namespace GE
 
 		if (entity->HasComponent<GCameraComponent>())
 		{
-			SerializeData << YAML::Key << "Transform Component";
+			SerializeData << YAML::Key << "Camera Component";
 			SerializeData << YAML::BeginMap;
 
 			auto& IsFreeLook = entity->GetComponent<GCameraComponent>().Camera->IsFreeLook;
@@ -124,9 +124,9 @@ namespace GE
 		{
 			auto& Camera = entity->AddComponent<GCameraComponent>();
 
-			Camera.Camera->IsFreeLook = TransformComponent["IsFreeLook"].as<bool>();
+			Camera.Camera->IsFreeLook = CameraComponent["IsFreeLook"].as<bool>();
 			
-			auto& Projection = TransformComponent["Projection"];
+			auto& Projection = CameraComponent["Projection"];
 			Camera.Camera->Projection.FOV = Projection["FOV"].as<float>();
 			Camera.Camera->Projection.NearZ = Projection["NearZ"].as<float>();
 			Camera.Camera->Projection.FarZ = Projection["FarZ"].as<float>();

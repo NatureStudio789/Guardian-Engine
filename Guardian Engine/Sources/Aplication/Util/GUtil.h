@@ -14,6 +14,7 @@ namespace GE
 		
 		static void StandardizePath(std::string& filePath);
 		static std::string GetFilePathDirectory(std::string filePath);
+		static std::string GetDirectoryName(const std::string& filePath);
 		static std::string GetFileName(const std::string& filePath);
 		static std::string GetFileExtension(const std::string& filePath);
 		static std::string ExtendDirectory(std::string directory, std::string childPath);

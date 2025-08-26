@@ -6,6 +6,12 @@
 #include "../ColumnLayout/GColumnLayout.h"
 #include "../TreeNode/GTreeNode.h"
 #include "../Drag/GDrag.h"
+#include "../InputBox/GInputBox.h"
+#include "../Popup/GPopup.h"
+#include "../MenuBar/GMenuBar.h"
+#include "../MenuBar/Menu/GMenu.h"
+#include "../MenuBar/MenuItem/GMenuItem.h"
+#include "../Separator/GSeparator.h"
 
 namespace GE
 {

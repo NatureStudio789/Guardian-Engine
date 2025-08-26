@@ -59,10 +59,13 @@ namespace GE
 
 		GProjectSerializer::Import(projectFilePth, this);
 
-		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->GetFullAssetDirectory());
+		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->ProjectName + "AssetLoader", this->GetFullAssetDirectory());
+		GAssetLoaderRegistry::RegistryAssetLoader(this->ProjectAssetLoader);
+		GAssetLoaderRegistry::SetCurrentAssetLoader(this->ProjectAssetLoader->GetAssetLoaderName());
 
 		this->ActiveScene = std::make_shared<GScene>();
-		GSceneSerializer::Deserialize(this->ActiveScene, this->ProjectAssetLoader->GetAsset(this->ActiveSceneName)->GetAssetData<YAML::Node>());
+		GSceneSerializer::Deserialize(this->ActiveScene, GAssetLoaderRegistry::GetCurrentAssetLoader()->
+			GetAsset(this->ActiveSceneName)->GetAssetData<YAML::Node>());
 		GSceneRegistry::RegisterScene(this->ActiveScene);
 		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
 	}
@@ -86,7 +89,9 @@ namespace GE
 		GSceneRegistry::RegisterScene(this->ActiveScene);
 		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
 
-		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->GetFullAssetDirectory());
+		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->ProjectName + "AssetLoader", this->GetFullAssetDirectory());
+		GAssetLoaderRegistry::RegistryAssetLoader(this->ProjectAssetLoader);
+		GAssetLoaderRegistry::SetCurrentAssetLoader(this->ProjectAssetLoader->GetAssetLoaderName());
 
 		GProjectSerializer::Export(this->GetProjectFilePath(), this);
 	}
@@ -124,11 +129,6 @@ namespace GE
 	const std::string& GProject::GetActiveSceneName() const noexcept
 	{
 		return this->ActiveSceneName;
-	}
-
-	std::shared_ptr<GAssetLoader> GProject::GetProjectAssetLoader()
-	{
-		return this->ProjectAssetLoader;
 	}
 
 	std::shared_ptr<GScene> GProject::GetActiveScene()

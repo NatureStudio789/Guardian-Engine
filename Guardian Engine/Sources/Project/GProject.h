@@ -29,7 +29,6 @@ namespace GE
 
 		const std::string& GetActiveSceneName() const noexcept;
 
-		std::shared_ptr<GAssetLoader> GetProjectAssetLoader();
 		std::shared_ptr<GScene> GetActiveScene();
 
 		static std::shared_ptr<GProject> Instance;

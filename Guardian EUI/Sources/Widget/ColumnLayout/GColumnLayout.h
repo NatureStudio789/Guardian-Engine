@@ -13,7 +13,7 @@ namespace GE
 			GColumnLayout(const GColumnLayout&) = default;
 			virtual ~GColumnLayout() = default;
 
-			void AddWidgetToLayout(std::shared_ptr<GWidget> widget);
+			void AddColumn(std::vector<std::shared_ptr<GWidget>> column);
 			void SetColumnCount(int count);
 			void ClearLayoutWidgets();
 
@@ -25,7 +25,7 @@ namespace GE
 		protected:
 			void RenderLayoutWidgets();
 
-			std::vector<std::shared_ptr<GWidget>> LayoutWidgetList;
+			std::vector<std::vector<std::shared_ptr<GWidget>>> ColumnList;
 			int LayoutColumnCount;
 		};
 	}

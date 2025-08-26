@@ -43,13 +43,19 @@ namespace GE
 			if (this->DragValue.type() == typeid(float*))
 			{
 				ImGui::DragFloat(this->DragLabel.c_str(), std::any_cast<float*>(this->DragValue), this->DragingSpeed,
-					this->MinValue, this->MaxValue);;
+					this->MinValue, this->MaxValue);
+
+				this->CallWidgetEventProcessFunction();
 			}
 			else if (this->DragValue.type() == typeid(GVector2*))
 			{
 				GVector2* value = std::any_cast<GVector2*>(this->DragValue);
 				float float2[2] = { value->x, value->y };
-				if (ImGui::DragFloat2(this->DragLabel.c_str(), float2, this->DragingSpeed, this->MinValue, this->MaxValue))
+				bool isModified = ImGui::DragFloat2(this->DragLabel.c_str(), float2, this->DragingSpeed, this->MinValue, this->MaxValue);
+				
+				this->CallWidgetEventProcessFunction();
+
+				if (isModified)
 				{
 					value->x = float2[0];
 					value->y = float2[1];
@@ -59,7 +65,11 @@ namespace GE
 			{
 				GVector3* value = std::any_cast<GVector3*>(this->DragValue);
 				float float3[3] = { value->x, value->y, value->z };
-				if (ImGui::DragFloat3(this->DragLabel.c_str(), float3, this->DragingSpeed, this->MinValue, this->MaxValue))
+				bool isModified = ImGui::DragFloat3(this->DragLabel.c_str(), float3, this->DragingSpeed, this->MinValue, this->MaxValue);
+
+				this->CallWidgetEventProcessFunction();
+
+				if (isModified)
 				{
 					value->x = float3[0];
 					value->y = float3[1];
@@ -70,7 +80,11 @@ namespace GE
 			{
 				GVector4* value = std::any_cast<GVector4*>(this->DragValue);
 				float float4[4] = { value->x, value->y, value->z, value->w };
-				if (ImGui::DragFloat4(this->DragLabel.c_str(), float4, this->DragingSpeed, this->MinValue, this->MaxValue))
+				bool isModified = ImGui::DragFloat4(this->DragLabel.c_str(), float4, this->DragingSpeed, this->MinValue, this->MaxValue);
+
+				this->CallWidgetEventProcessFunction();
+
+				if (isModified)
 				{
 					value->x = float4[0];
 					value->y = float4[1];

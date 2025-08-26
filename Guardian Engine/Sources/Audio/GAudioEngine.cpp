@@ -26,8 +26,8 @@ namespace GE
 		GAudioContextRegistry::RegisterAudioContext(this->MainAudioContext);
 		GAudioContextRegistry::SetCurrentAudioContext("Main");
 
-		Test = GSoundEffect::CreateNewSoundEffect("Assets\\Audios\\I'm Alive.wav");
-		Test->Play();
+		/*Test = GSoundEffect::CreateNewSoundEffect("Assets\\Audios\\I'm Alive.wav");
+		Test->Play();*/
 	}
 
 	void GAudioEngine::UpdateModule()

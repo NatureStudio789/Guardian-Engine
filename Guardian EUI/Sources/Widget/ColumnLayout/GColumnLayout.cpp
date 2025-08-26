@@ -4,9 +4,9 @@ namespace GE
 {
     namespace EUI
     {
-        void GColumnLayout::AddWidgetToLayout(std::shared_ptr<GWidget> widget)
+        void GColumnLayout::AddColumn(std::vector<std::shared_ptr<GWidget>> column)
         {
-            this->LayoutWidgetList.push_back(widget);
+            this->ColumnList.push_back(column);
         }
 
         void GColumnLayout::SetColumnCount(int count)
@@ -16,7 +16,7 @@ namespace GE
 
         void GColumnLayout::ClearLayoutWidgets()
         {
-            this->LayoutWidgetList.clear();
+            this->ColumnList.clear();
         }
 
         void GColumnLayout::Update()
@@ -36,42 +36,45 @@ namespace GE
 
         void GColumnLayout::RenderLayoutWidgets()
         {
-            ImGui::Columns(this->LayoutColumnCount);
+            ImGui::Columns(this->LayoutColumnCount, 0, false);
 
-            for (int i = 0; i < (int)this->LayoutWidgetList.size(); i++)
+            for (int i = 0; i < (int)this->ColumnList.size(); i++)
             {
-                if (this->LayoutWidgetList[i]->IsEnableRendering())
+                for (int j = 0; j < (int)this->ColumnList[i].size(); j++)
                 {
-                    for (int j = 0; j < (int)this->LayoutWidgetList[i]->GetWidgetStyleList().size(); j++)
+                    if (this->ColumnList[i][j]->IsEnableRendering())
                     {
-                        GVector2 value = this->LayoutWidgetList[i]->GetWidgetStyleList()[j].Value;
-                        const ImGuiDataVarInfo* info = ImGui::GetStyleVarInfo((ImGuiStyleVar)this->LayoutWidgetList[i]->GetWidgetStyleList()[j].Index);
-                        if (info->Count == 1)
+                        for (int q = 0; q < (int)this->ColumnList[i][j]->GetWidgetStyleList().size(); q++)
                         {
-                            ImGui::PushStyleVar(
-                                (ImGuiStyleVar)this->LayoutWidgetList[i]->GetWidgetStyleList()[j].Index, value.x);
+                            GVector2 value = this->ColumnList[i][j]->GetWidgetStyleList()[q].Value;
+                            const ImGuiDataVarInfo* info = ImGui::GetStyleVarInfo((ImGuiStyleVar)this->ColumnList[i][j]->GetWidgetStyleList()[q].Index);
+                            if (info->Count == 1)
+                            {
+                                ImGui::PushStyleVar(
+                                    (ImGuiStyleVar)this->ColumnList[i][j]->GetWidgetStyleList()[q].Index, value.x);
+                            }
+                            else if (info->Count == 2)
+                            {
+                                ImGui::PushStyleVar(
+                                    (ImGuiStyleVar)this->ColumnList[i][j]->GetWidgetStyleList()[q].Index, ImVec2(value.x, value.y));
+                            }
                         }
-                        else if (info->Count == 2)
+
+                        for (int q = 0; q < (int)this->ColumnList[i][j]->GetWidgetColorList().size(); q++)
                         {
-                            ImGui::PushStyleVar(
-                                (ImGuiStyleVar)this->LayoutWidgetList[i]->GetWidgetStyleList()[j].Index, ImVec2(value.x, value.y));
+                            GVector4 value = this->ColumnList[i][j]->GetWidgetColorList()[q].Value;
+                            ImGui::PushStyleColor((ImGuiCol)this->ColumnList[i][j]->GetWidgetColorList()[q].Index,
+                                ImVec4(value.x, value.y, value.z, value.w));
                         }
+
+                        this->ColumnList[i][j]->Render();
+
+                        ImGui::PopStyleVar((int)this->ColumnList[i][j]->GetWidgetStyleList().size());
+                        ImGui::PopStyleColor((int)this->ColumnList[i][j]->GetWidgetColorList().size());
                     }
-
-                    for (int j = 0; j < (int)this->LayoutWidgetList[i]->GetWidgetColorList().size(); j++)
-                    {
-                        GVector4 value = this->LayoutWidgetList[i]->GetWidgetColorList()[j].Value;
-                        ImGui::PushStyleColor((ImGuiCol)this->LayoutWidgetList[i]->GetWidgetColorList()[j].Index,
-                            ImVec4(value.x, value.y, value.z, value.w));
-                    }
-
-                    this->LayoutWidgetList[i]->Render();
-
-                    ImGui::PopStyleVar((int)this->LayoutWidgetList[i]->GetWidgetStyleList().size());
-                    ImGui::PopStyleColor((int)this->LayoutWidgetList[i]->GetWidgetColorList().size());
-
-                    ImGui::NextColumn();
                 }
+
+                ImGui::NextColumn();
             }
 
             ImGui::Columns(1);

@@ -23,6 +23,7 @@ namespace GE
 
 		this->EditorMainDockspace = std::make_shared<EUI::GDockspace>("Guardian Editor Dockspace");
 		this->AddEditor(std::make_shared<GSceneEditor>());
+		this->AddEditor(std::make_shared<GAssetEditor>());
 	}
 
 	void GEditorRenderGraph::Execute()
