@@ -10,12 +10,15 @@ namespace GE
 			this->AddWidgetToEditor(this->AssetBrowserPanel);
 		}
 
-		this->CurrentDirectory = GProject::Instance->GetFullAssetDirectory();
+		this->AssetDirectory = GProject::Instance->GetFullAssetDirectory();
+		this->CurrentDirectory = this->AssetDirectory;
 
 		this->DirectoryTexture = GTexture::CreateNewTexture(null,
 			*GAssetLoaderRegistry::GetAssetLoader("EditorAssetLoader")->GetAsset("Directory")->GetAssetData<std::shared_ptr<GSurface>>().get());
 		this->FileTexture = GTexture::CreateNewTexture(null, 
 			*GAssetLoaderRegistry::GetAssetLoader("EditorAssetLoader")->GetAsset("File")->GetAssetData<std::shared_ptr<GSurface>>().get());
+		this->BackTexture = GTexture::CreateNewTexture(null,
+			*GAssetLoaderRegistry::GetAssetLoader("EditorAssetLoader")->GetAsset("Back")->GetAssetData<std::shared_ptr<GSurface>>().get());
 	}
 
 	void GAssetEditor::Update()
@@ -27,6 +30,16 @@ namespace GE
 		this->AssetBrowserPanel->AddPanelFlag(EUI::GPanel::GEPanelFlag_MenuBar);
 
 		static std::string Directory = this->CurrentDirectory;
+
+		MenuBar->AddWidgetToMenuBar(std::make_shared<EUI::GImageButton>("Back", [=]()
+			{
+				if (!GUtil::CompareFileDirectory(this->CurrentDirectory, this->AssetDirectory))
+				{
+					this->CurrentDirectory = std::filesystem::path(this->CurrentDirectory).parent_path().string();
+					Directory = this->CurrentDirectory;
+				}
+			}, (EUI::GImage::Id)this->BackTexture->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2(20.0f, 20.0f)));
+
 		MenuBar->AddWidgetToMenuBar(std::make_shared<EUI::GInputBox>("Path", &Directory));
 		if (std::filesystem::exists(Directory) && std::filesystem::is_directory(Directory))
 		{
@@ -37,11 +50,15 @@ namespace GE
 			Directory = this->CurrentDirectory;
 		}
 
-		static float padding = 16.0f;
+		static float padding = 20.0f;
 		static float IconSize = 64.0f;
 		float CellSize = IconSize + padding;
 
-		float panelWidth = ImGui::GetContentRegionAvail().x;
+		static float panelWidth = ImGui::GetContentRegionAvail().x;
+		this->AssetBrowserPanel->SetWidgetEventProcessFunction([]()
+			{
+				panelWidth = ImGui::GetContentRegionAvail().x;
+			});
 		int ColumnCount = (int)(panelWidth / CellSize);
 		if (ColumnCount < 1)
 		{

@@ -14,10 +14,12 @@ namespace GE
 
 	private:
 		std::shared_ptr<EUI::GPanel> AssetBrowserPanel;
+		std::string AssetDirectory;
 		std::string CurrentDirectory;
 
 		std::shared_ptr<GTexture> DirectoryTexture;
 		std::shared_ptr<GTexture> FileTexture;
+		std::shared_ptr<GTexture> BackTexture;
 	};
 }
 

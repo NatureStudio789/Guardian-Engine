@@ -119,4 +119,46 @@ namespace GE
 	{
 		return std::filesystem::exists(filePath);
 	}
+
+	bool GUtil::CompareFileDirectory(std::string directory1, std::string directory2)
+	{
+		if (directory1.find('\\') != std::string::npos)
+		{
+			std::replace(directory2.begin(), directory2.end(), '/', '\\');
+
+			if ((directory1[directory1.size() - 1] == '\\' && directory2[directory2.size() - 1] == '\\') || 
+				(directory1[directory1.size() - 1] != '\\' && directory2[directory2.size() - 1] != '\\'))
+			{
+				return directory1 == directory2;
+			}
+			else if (directory1[directory1.size() - 1] != '\\' && directory2[directory2.size() - 1] == '\\')
+			{
+				return (directory1 + '\\') == directory2;
+			}
+			else if (directory1[directory1.size() - 1] == '\\' && directory2[directory2.size() - 1] != '\\')
+			{
+				return (directory2 + '\\') == directory1;
+			}
+		}
+		else if (directory1.find('/') != std::string::npos)
+		{
+			std::replace(directory2.begin(), directory2.end(), '\\', '/');
+
+			if ((directory1[directory1.size() - 1] == '/' && directory2[directory2.size() - 1] == '/') ||
+				(directory1[directory1.size() - 1] != '/' && directory2[directory2.size() - 1] != '/'))
+			{
+				return directory1 == directory2;
+			}
+			else if (directory1[directory1.size() - 1] != '/' && directory2[directory2.size() - 1] == '/')
+			{
+				return (directory1 + '/') == directory2;
+			}
+			else if (directory1[directory1.size() - 1] == '/' && directory2[directory2.size() - 1] != '/')
+			{
+				return (directory2 + '/') == directory1;
+			}
+		}
+
+		return false;
+	}
 }

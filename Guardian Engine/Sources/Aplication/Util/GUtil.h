@@ -19,6 +19,7 @@ namespace GE
 		static std::string GetFileExtension(const std::string& filePath);
 		static std::string ExtendDirectory(std::string directory, std::string childPath);
 		static bool FileExists(const std::string& filePath);
+		static bool CompareFileDirectory(std::string directory1, std::string directory2);
 	};
 }
 

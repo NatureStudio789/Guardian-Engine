@@ -7,6 +7,8 @@ namespace GE
 		GText::GText(const std::string& label, const GVector4& color, bool isWrapped)
 		{
 			this->SetTextLabel(label);
+			this->SetTextColor(color);
+			this->SetTextWrapped(isWrapped);
 		}
 
 		void GText::SetTextLabel(const std::string& label)

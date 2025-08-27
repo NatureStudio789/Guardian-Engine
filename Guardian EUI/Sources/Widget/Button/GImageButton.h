@@ -11,7 +11,7 @@ namespace GE
 		public:
 			GImageButton() = default;
 			GImageButton(const std::string& stringId, const std::function<void()>& callback,
-				GImage::Id imageId, const GVector2& buttonSize);
+				GImage::Id imageId, const GVector2& buttonSize = {});
 			GImageButton(const GImageButton&) = default;
 
 			void SetButtonCallbackFunction(const std::function<void()>& callback);
