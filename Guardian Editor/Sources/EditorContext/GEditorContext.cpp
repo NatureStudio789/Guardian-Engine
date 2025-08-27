@@ -58,6 +58,12 @@ namespace GE
 
 		ThemeColors[ImGuiCol_CheckMark] = ImColor(200, 200, 200, 255);
 
+		ThemeColors[ImGuiCol_Tab] = ImColor(38, 38, 40, 255);
+		ThemeColors[ImGuiCol_TabHovered] = ImColor(35, 35, 38, 255);
+		ThemeColors[ImGuiCol_TabActive] = ImColor(30, 30, 25, 255);
+		ThemeColors[ImGuiCol_TabUnfocused] = ThemeColors[ImGuiCol_Tab];
+		ThemeColors[ImGuiCol_TabUnfocusedActive] = ThemeColors[ImGuiCol_TabHovered];
+
 		ThemeColors[ImGuiCol_SliderGrab] = ImVec4(0.51f, 0.51f, 0.51f, 0.7f);
 		ThemeColors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
 
@@ -77,7 +83,7 @@ namespace GE
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
-			style.WindowRounding = 0.0F;
+			style.WindowRounding = 0.0f;
 			style.Colors[ImGuiCol_WindowBg].w = 1.0;
 		}
 		
