@@ -117,6 +117,91 @@ namespace GE
 
 		GAssetSerializer::Export(this->GetAssetPath(), this);
 	}
+		
+	void GAsset::LoadAssetData(const std::string& sourceFilePath)
+	{
+		this->AssetSourcePath = sourceFilePath;
+
+		if (this->AssetCategory != this->GetAssetCategoryFromExtension(GUtil::GetFileExtension(sourceFilePath)))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Incorrect asset source file!");
+		}
+
+		switch (this->AssetCategory)
+		{
+			case GE_ASSET_TEXTURE:
+			{
+				std::shared_ptr<GSurface> TextureData = std::make_shared<GSurface>(this->AssetSourcePath);
+				this->AssetData = TextureData;
+
+				break;
+			}
+
+			case GE_ASSET_STATIC_MODEL:
+			{
+				GModel::Data ModelData = GModel::Load(this->AssetSourcePath);
+				this->AssetData = ModelData;
+
+				break;
+			}
+
+			case GE_ASSET_SCENE:
+			{
+				YAML::Node SceneData = GSceneSerializer::Load(this->AssetSourcePath);
+				this->AssetData = SceneData;
+
+				break;
+			}
+
+			default:
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("Unknown asset category!");
+				break;
+			}
+		}
+
+		GAssetSerializer::Export(this->GetAssetPath(), this);
+	}
+
+	void GAsset::LoadAssetData(const std::string& sourceFilePath, char* data, unsigned long long dataSize)
+	{
+		this->AssetSourcePath = sourceFilePath;
+
+		switch (this->AssetCategory)
+		{
+			case GE_ASSET_TEXTURE:
+			{
+				std::shared_ptr<GSurface> TextureData = std::make_shared<GSurface>((unsigned char*)data, dataSize);
+				this->AssetData = TextureData;
+
+				break;
+			}
+
+			case GE_ASSET_STATIC_MODEL:
+			{
+				GModel::Data ModelData = GModel::Load(this->AssetSourcePath, data, dataSize);
+				this->AssetData = ModelData;
+
+				break;
+			}
+
+			case GE_ASSET_SCENE:
+			{
+				std::stringstream SceneFileStringStream;
+				SceneFileStringStream << data;
+				YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
+				this->AssetData = SceneData;
+
+				break;
+			}
+
+			default:
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("Unknown asset category!");
+				break;
+			}
+		}
+	}
 
 	const GUUID& GAsset::GetAssetId() const noexcept
 	{

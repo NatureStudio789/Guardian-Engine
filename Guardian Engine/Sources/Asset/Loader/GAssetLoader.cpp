@@ -81,6 +81,13 @@ namespace GE
 
 	void GAssetLoader::ReloadAllAsset()
 	{
+		this->ClearAllAsset();
+
+		this->LoadAllAsset();
+	}
+
+	void GAssetLoader::ClearAllAsset()
+	{
 		this->AssetSourcePathList.clear();
 		for (auto& asset : this->LoadedAssetList)
 		{
@@ -88,8 +95,6 @@ namespace GE
 			asset.second = null;
 		}
 		this->LoadedAssetList.clear();
-
-		this->LoadAllAsset();
 	}
 
 	void GAssetLoader::UpdateAssetLoader()

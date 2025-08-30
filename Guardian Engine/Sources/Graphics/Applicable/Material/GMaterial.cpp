@@ -1,5 +1,6 @@
 #include "GMaterial.h"
 #include "../PipelineState/GPipelineStateRegistry.h"
+#include "../../../Asset/Loader/GAssetLoaderRegistry.h"
 
 namespace GE
 {
@@ -7,26 +8,29 @@ namespace GE
 	{
 		this->MaterialName = "";
 
+		this->AlbedoTextureAssetName.clear();
 		this->AlbedoTexture = null;
 		this->AlbedoValue = {};
 		this->EnableAlbedoTexture = false;
 
+		this->RoughnessTextureAssetName.clear();
 		this->RoughnessTexture = null;
 		this->RoughnessValue = 0.8f;
 		this->EnableRoughnessTexture = false;
 
+		this->MetallicTextureAssetName.clear();
 		this->MetallicTexture = null;
 		this->MetallicValue = 0.0f;
 		this->EnableMetallicTexture = false;
 
+		this->AoTextureAssetName.clear();
 		this->AoTexture = null;
 		this->AoValue = 0.8f;
 		this->EnableAoTexture = false;
 
+		this->NormalTextureAssetName.clear();
 		this->NormalTexture = null;
 		this->EnableNormalTexture = false;
-
-		this->MaterialCBuffer = null;
 	}
 
 	GMaterial::GMaterial(const std::string& name)
@@ -39,21 +43,29 @@ namespace GE
 		this->MaterialId = other.MaterialId;
 		this->MaterialName = other.MaterialName;
 
+		this->AlbedoTextureAssetName = other.AlbedoTextureAssetName;
 		this->AlbedoTexture = other.AlbedoTexture;
 		this->AlbedoValue = other.AlbedoValue;
 		this->EnableAlbedoTexture = other.EnableAlbedoTexture;
 
+		this->RoughnessTextureAssetName = other.RoughnessTextureAssetName;
 		this->RoughnessTexture = other.RoughnessTexture;
 		this->RoughnessValue = other.RoughnessValue;
 		this->EnableRoughnessTexture;
 
+		this->MetallicTextureAssetName = other.MetallicTextureAssetName;
 		this->MetallicTexture = other.MetallicTexture;
 		this->MetallicValue = other.MetallicValue;
 		this->EnableMetallicTexture = other.EnableMetallicTexture;
 
+		this->AoTextureAssetName = other.AoTextureAssetName;
 		this->AoTexture = other.AoTexture;
 		this->AoValue = other.AoValue;
 		this->EnableAoTexture = other.EnableAoTexture;
+
+		this->NormalTextureAssetName = other.NormalTextureAssetName;
+		this->NormalTexture = other.NormalTexture;
+		this->EnableNormalTexture = other.EnableNormalTexture;
 
 		this->MaterialCBuffer = other.MaterialCBuffer;
 	}
@@ -71,29 +83,39 @@ namespace GE
 		this->MaterialCBuffer = GMaterialCBuffer::CreateNewMaterialCBuffer(
 			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
 
+		this->AlbedoTextureAssetName.clear();
 		this->AlbedoTexture = null;
 		this->AlbedoValue = {};
 		this->EnableAlbedoTexture = false;
 
+		this->RoughnessTextureAssetName.clear();
 		this->RoughnessTexture = null;
 		this->RoughnessValue = 0.8f;
 		this->EnableRoughnessTexture = false;
 
+		this->MetallicTextureAssetName.clear();
 		this->MetallicTexture = null;
 		this->MetallicValue = 0.0f;
 		this->EnableMetallicTexture = false;
 
+		this->AoTextureAssetName.clear();
 		this->AoTexture = null;
 		this->AoValue = 0.8f;
 		this->EnableAoTexture = false;
 
+		this->NormalTextureAssetName.clear();
 		this->NormalTexture = null;
 		this->EnableNormalTexture = false;
 	}
 
-	void GMaterial::SetAlbedoTexture(std::shared_ptr<GTexture> albedo, bool enableAlbedoTexure)
+	void GMaterial::SetAlbedoTexture(const std::string& albedoAssetName, bool enableAlbedoTexure)
 	{
-		this->AlbedoTexture = albedo;
+		this->AlbedoTextureAssetName = albedoAssetName;
+		if (this->AlbedoTexture)
+		{
+			this->AlbedoTexture.reset();
+			this->AlbedoTexture = null;
+		}
 
 		this->SetAlbedoTextureEnable(enableAlbedoTexure);
 	}
@@ -110,9 +132,14 @@ namespace GE
 		this->EnableAlbedoTexture = enable;
 	}
 
-	void GMaterial::SetRoughnessTexture(std::shared_ptr<GTexture> roughness, bool enableRoughnessTexture)
+	void GMaterial::SetRoughnessTexture(const std::string& roughnessAssetName, bool enableRoughnessTexture)
 	{
-		this->RoughnessTexture = roughness;
+		this->RoughnessTextureAssetName = roughnessAssetName;
+		if (this->RoughnessTexture)
+		{
+			this->RoughnessTexture.reset();
+			this->RoughnessTexture = null;
+		}
 
 		this->SetRoughnessTextureEnable(enableRoughnessTexture);
 	}
@@ -129,9 +156,14 @@ namespace GE
 		this->EnableRoughnessTexture = enable;
 	}
 
-	void GMaterial::SetMetallicTexture(std::shared_ptr<GTexture> metallic, bool enableMetallicTexture)
+	void GMaterial::SetMetallicTexture(const std::string& metallicAssetName, bool enableMetallicTexture)
 	{
-		this->MetallicTexture = metallic;
+		this->MetallicTextureAssetName = metallicAssetName;
+		if (this->MetallicTexture)
+		{
+			this->MetallicTexture.reset();
+			this->MetallicTexture = null;
+		}
 
 		this->SetMetallicTextureEnable(enableMetallicTexture);
 	}
@@ -148,9 +180,14 @@ namespace GE
 		this->EnableMetallicTexture = enable;
 	}
 
-	void GMaterial::SetAoTexture(std::shared_ptr<GTexture> ao, bool enableAoTexture)
+	void GMaterial::SetAoTexture(const std::string& aoAssetName, bool enableAoTexture)
 	{
-		this->AoTexture = ao;
+		this->AoTextureAssetName = aoAssetName;
+		if (this->AoTexture)
+		{
+			this->AoTexture.reset();
+			this->AoTexture = null;
+		}
 
 		this->SetAlbedoTextureEnable(enableAoTexture);
 	}
@@ -167,9 +204,14 @@ namespace GE
 		this->EnableAoTexture = enable;
 	}
 
-	void GMaterial::SetNormalTexture(std::shared_ptr<GTexture> normal, bool enableNormalTexture)
+	void GMaterial::SetNormalTexture(const std::string& normalAssetName, bool enableNormalTexture)
 	{
-		this->NormalTexture = normal;
+		this->NormalTextureAssetName = normalAssetName;
+		if (this->NormalTexture)
+		{
+			this->NormalTexture.reset();
+			this->NormalTexture = null;
+		}
 
 		this->SetNormalTextureEnable(enableNormalTexture);
 	}
@@ -197,22 +239,57 @@ namespace GE
 
 		if (this->EnableAlbedoTexture)
 		{
+			if (!this->AlbedoTexture)
+			{
+				this->AlbedoTexture = GTexture::CreateNewTexture(
+					GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+					*GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(this->AlbedoTextureAssetName)->GetAssetData<std::shared_ptr<GSurface>>().get(), 0);
+			}
+
 			this->AlbedoTexture->Apply();
 		}
 		if (this->EnableRoughnessTexture)
 		{
+			if (!this->RoughnessTexture)
+			{
+				this->RoughnessTexture = GTexture::CreateNewTexture(
+					GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+					*GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(this->RoughnessTextureAssetName)->GetAssetData<std::shared_ptr<GSurface>>().get(), 1);
+			}
+
 			this->RoughnessTexture->Apply();
 		}
 		if (this->EnableMetallicTexture)
 		{
+			if (!this->MetallicTexture)
+			{
+				this->MetallicTexture = GTexture::CreateNewTexture(
+					GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+					*GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(this->MetallicTextureAssetName)->GetAssetData<std::shared_ptr<GSurface>>().get(), 2);
+			}
+
 			this->MetallicTexture->Apply();
 		}
 		if (this->EnableAoTexture)
 		{
+			if (!this->AoTexture)
+			{
+				this->AoTexture = GTexture::CreateNewTexture(
+					GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+					*GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(this->AoTextureAssetName)->GetAssetData<std::shared_ptr<GSurface>>().get(), 3);
+			}
+
 			this->AoTexture->Apply();
 		}
 		if (this->EnableNormalTexture)
 		{
+			if (!this->NormalTexture)
+			{
+				this->NormalTexture = GTexture::CreateNewTexture(
+					GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
+					*GAssetLoaderRegistry::GetCurrentAssetLoader()->GetAsset(this->NormalTextureAssetName)->GetAssetData<std::shared_ptr<GSurface>>().get(), 4);
+			}
+
 			this->NormalTexture->Apply();
 		}
 	}

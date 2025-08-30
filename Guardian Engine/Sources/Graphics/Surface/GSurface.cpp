@@ -12,6 +12,11 @@ namespace GE
 		this->InitializeSurface(width, height);
 	}
 
+	GSurface::GSurface(unsigned char* data, unsigned long long dataSize)
+	{
+		this->InitializeSurface(data, dataSize);
+	}
+
 	GSurface::GSurface(const std::string& filePath)
 	{
 		this->InitializeSurface(filePath);
@@ -22,6 +27,24 @@ namespace GE
 		GUARDIAN_SETUP_AUTO_THROW();
 
 		GUARDIAN_AUTO_THROW(this->SurfaceImage.Initialize2D(DXGI_FORMAT_R8G8B8A8_UNORM, width, height, 1, 1));
+	}
+
+	void GSurface::InitializeSurface(unsigned char* data, unsigned long long dataSize)
+	{
+		GUARDIAN_SETUP_AUTO_THROW();
+
+		GUARDIAN_AUTO_THROW(CoInitializeEx(null, COINIT_MULTITHREADED));
+
+		GUARDIAN_AUTO_THROW(LoadFromWICMemory(data, dataSize, WIC_FLAGS_IGNORE_SRGB, null, this->SurfaceImage));
+
+		if (this->SurfaceImage.GetMetadata().format != DXGI_FORMAT_R8G8B8A8_UNORM)
+		{
+			ScratchImage ConvertedImage;
+			GUARDIAN_AUTO_THROW(Convert(*this->SurfaceImage.GetImage(0, 0, 0), DXGI_FORMAT_R8G8B8A8_UNORM,
+				TEX_FILTER_DEFAULT, TEX_THRESHOLD_DEFAULT, ConvertedImage));
+
+			this->SurfaceImage = std::move(ConvertedImage);
+		}
 	}
 
 	void GSurface::InitializeSurface(const std::string& filePath)

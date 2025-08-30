@@ -32,6 +32,8 @@ namespace GE
         GAssetLoaderRegistry::RegistryAssetLoader(this->EditorAssetLoader);
 
         GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
+
+        GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_EDIT);
     }
 
     void GEditorEngine::UpdateProgram()

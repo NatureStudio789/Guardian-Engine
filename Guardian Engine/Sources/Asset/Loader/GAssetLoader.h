@@ -17,6 +17,7 @@ namespace GE
 		void LoadAllAsset();
 		void ResetAssetDirectory(const std::string& assetDirectory);
 		void ReloadAllAsset();
+		void ClearAllAsset();
 
 		void UpdateAssetLoader();
 
@@ -40,6 +41,9 @@ namespace GE
 
 		std::vector<std::string> AssetSourcePathList;
 		std::map<std::string, std::shared_ptr<GAsset>> LoadedAssetList;
+
+		friend class GAssetPacker;
+		friend class GRuntime;
 	};
 }
 

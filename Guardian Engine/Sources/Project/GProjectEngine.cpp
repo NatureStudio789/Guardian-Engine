@@ -25,7 +25,18 @@ namespace GE
 
 	void GProjectEngine::UpdateModule()
 	{
-
+		if (GetAsyncKeyState('P') && GetAsyncKeyState(VK_CONTROL))
+		{
+			GProjectPacker::PackProject(GProject::Instance, "TestPack");
+		}
+		if (GetAsyncKeyState('U') && GetAsyncKeyState(VK_CONTROL))
+		{
+			GAssetPacker::UnpackAsset("TestPack\\Sandbox\\Sandbox-Asset.gepack", "TestUnpack");
+		}
+		if (GetAsyncKeyState('Q') && GetAsyncKeyState(VK_CONTROL))
+		{
+			GAssetPacker::LoadAssetPackage(GAssetLoaderRegistry::GetCurrentAssetLoader(), "TestPack\\Sandbox\\Sandbox-Asset.gepack");
+		}
 	}
 
 	void GProjectEngine::ReleaseModule()

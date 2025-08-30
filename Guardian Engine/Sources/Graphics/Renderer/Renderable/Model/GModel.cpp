@@ -153,59 +153,20 @@ namespace GE
 		MeshData.Indices = Indices;
 
 		aiMaterial* Material = scene->mMaterials[mesh->mMaterialIndex];
-		std::shared_ptr<GMaterial> MeshMaterial = GMaterial::CreateNewMaterial(Material->GetName().C_Str());
+		if (!GMaterialRegistry::HasMaterial(Material->GetName().C_Str()))
+		{
+			std::shared_ptr<GMaterial> MeshMaterial = GMaterial::CreateNewMaterial(Material->GetName().C_Str());
 
-		auto& albedo = LoadTexture(Material, aiTextureType_DIFFUSE, 0, modelFileDirectory);
-		if (albedo)
-		{
-			MeshMaterial->SetAlbedoTexture(albedo);
-		}
-		else
-		{
-			MeshMaterial->SetAlbedoValue(GVector3(0.8f, 0.8f, 0.8f));
-		}
+			LoadTexture(Material, MeshMaterial, aiTextureType_DIFFUSE, modelFileDirectory);
+			LoadTexture(Material, MeshMaterial, aiTextureType_SHININESS, modelFileDirectory);
+			LoadMetallicTexture(Material, MeshMaterial, modelFileDirectory);
+			LoadTexture(Material, MeshMaterial, aiTextureType_AMBIENT_OCCLUSION, modelFileDirectory);
+			LoadTexture(Material, MeshMaterial, aiTextureType_NORMALS, modelFileDirectory);
 
-		auto& roughness = LoadTexture(Material, aiTextureType_SHININESS, 1, modelFileDirectory);
-		if (roughness)
-		{
-			MeshMaterial->SetRoughnessTexture(roughness);
-		}
-		else
-		{
-			MeshMaterial->SetRoughnessValue(0.8f);
+			GMaterialRegistry::RegistryMaterial(MeshMaterial);
 		}
 
-		auto& metallic = LoadMetallicTexture(Material, 2, modelFileDirectory);
-		if (metallic)
-		{
-			MeshMaterial->SetMetallicTexture(metallic);
-		}
-		else
-		{
-			MeshMaterial->SetMetallicValue(0.1f);
-		}
-
-		auto& ao = LoadTexture(Material, aiTextureType_AMBIENT_OCCLUSION, 3, modelFileDirectory);
-		if (ao)
-		{
-			MeshMaterial->SetAoTexture(ao);
-		}
-		else
-		{
-			MeshMaterial->SetAoValue(1.0f);
-		}
-
-		auto& normal = LoadTexture(Material, aiTextureType_NORMALS, 4, modelFileDirectory);
-		if (normal)
-		{
-			MeshMaterial->SetNormalTexture(normal);
-		}
-		else
-		{
-			MeshMaterial->SetNormalTextureEnable(false);
-		}
-
-		MeshData.MeshMaterial = MeshMaterial;
+		MeshData.MeshMaterialId = GMaterialRegistry::GetMaterial(Material->GetName().C_Str())->GetMaterialId();
 
 		return MeshData;
 	}
@@ -231,34 +192,46 @@ namespace GE
 		return NodeData;
 	}
 
-	std::shared_ptr<GTexture> GModel::LoadTexture(aiMaterial* material, aiTextureType type, int index, std::string modelFileDirectory)
+	void GModel::LoadTexture(aiMaterial* material, std::shared_ptr<GMaterial> outMat, 
+		aiTextureType type, std::string modelFileDirectory)
 	{
-		std::shared_ptr<GTexture> Texture = null;
-
 		if (material->GetTextureCount(type))
 		{
 			aiString Path;
 			material->GetTexture(type, 0, &Path);
 
-			std::string TextureFilePath;
-			if (std::filesystem::exists(Path.C_Str()))
-			{
-				TextureFilePath = Path.C_Str();
-			}
-			else
-			{
-				TextureFilePath = GUtil::ExtendDirectory(modelFileDirectory, Path.C_Str());
-			}
+			std::string AssetName = GUtil::GetFileName(Path.C_Str());
 
-			Texture = GTexture::CreateNewTexture(
-				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
-				GSurface(TextureFilePath), index);
+			switch (type)
+			{
+				case aiTextureType_DIFFUSE:
+				{
+					outMat->SetAlbedoTexture(AssetName);
+					break;
+				}
+
+				case aiTextureType_NORMALS:
+				{
+					outMat->SetNormalTexture(AssetName);
+					break;
+				}
+
+				case aiTextureType_SHININESS:
+				{
+					outMat->SetRoughnessTexture(AssetName);
+					break;
+				}
+
+				case aiTextureType_AMBIENT_OCCLUSION:
+				{
+					outMat->SetAoTexture(AssetName);
+					break;
+				}
+			}
 		}
-
-		return Texture;
 	}
 
-	std::shared_ptr<GTexture> GModel::LoadMetallicTexture(aiMaterial* material, int index, std::string modelFileDirectory)
+	void GModel::LoadMetallicTexture(aiMaterial* material, std::shared_ptr<GMaterial> outMat, std::string modelFileDirectory)
 	{
 		std::shared_ptr<GTexture> MetallicTexture = null;
 
@@ -274,25 +247,13 @@ namespace GE
 					UINT StringLength = *(UINT*)Properties->mData;
 					std::string Path = { Properties->mData + 4, StringLength };
 
-					std::string FilePath;
-					if (!std::filesystem::exists(Path))
-					{
-						FilePath = GUtil::ExtendDirectory(modelFileDirectory, Path);
-					}
-					else
-					{
-						FilePath = Path;
-					}
+					std::string AssetName = GUtil::GetFileName(Path);
 
-					MetallicTexture = GTexture::CreateNewTexture(
-						GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature(),
-						GSurface(FilePath), index);
+					outMat->SetMetallicTexture(AssetName);
 
-					break;
+					return;
 				}
 			}
 		}
-
-		return MetallicTexture;
 	}
 }

@@ -7,11 +7,14 @@ namespace GE
 	class GUARDIAN_API GUtil
 	{
 	public:
+		//String Processing Functions.
 		static std::wstring StringToWideString(std::string text);
-		static float DegreeToAngle(float degree);
-
 		static std::vector<std::string> SplitString(const std::string& text, const std::string& delim);
 		
+		//Mathematics Functions.
+		static float DegreeToAngle(float degree);
+		
+		//File System Functions.
 		static void StandardizePath(std::string& filePath);
 		static std::string GetFilePathDirectory(std::string filePath);
 		static std::string GetDirectoryName(const std::string& filePath);

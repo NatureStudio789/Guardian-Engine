@@ -86,14 +86,16 @@ namespace GE
 	public:
 		GSurface();
 		GSurface(unsigned int width, unsigned int height);
+		GSurface(unsigned char* data, unsigned long long dataSize);
 		GSurface(const std::string& filePath);
 		GSurface(GSurface&&) = default;
 		GSurface(const GSurface&) = delete;
 		~GSurface() = default;
 
 		void InitializeSurface(unsigned int width, unsigned int height);
+		void InitializeSurface(unsigned char* data, unsigned long long dataSize);
 		void InitializeSurface(const std::string& filePath);
-
+				
 		void ClearSurface(GColor fillValue);
 		void ReplacePixel(unsigned int x, unsigned int y, GColor replaceColor);
 		void SaveSurface(const std::string& savePath);

@@ -23,6 +23,8 @@ namespace GE
 
 		void InitializeAsset(const std::string& assetFilePath);
 		void LoadAsset(const std::string& sourceFilePath);
+		void LoadAssetData(const std::string& sourceFilePath);
+		void LoadAssetData(const std::string& sourceFilePath, char* data, unsigned long long dataSize);
 
 		const GUUID& GetAssetId() const noexcept;
 		const std::string& GetAssetName() const noexcept;

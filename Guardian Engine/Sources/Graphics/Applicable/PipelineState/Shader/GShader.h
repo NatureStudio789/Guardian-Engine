@@ -1,6 +1,6 @@
 #ifndef _GE_GSHADER_H_
 #define _GE_GSHADER_H_
-#include "../../Material/GMaterial.h"
+#include "../../Material/GMaterialRegistry.h"
 
 namespace GE
 {

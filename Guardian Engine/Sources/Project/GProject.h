@@ -1,11 +1,10 @@
 #ifndef _GE_GPROJECT_H_
 #define _GE_GPROJECT_H_
-#include "../Graphics/Renderer/GRenderer.h"
+#include "Packer/GProjectPacker.h"
 
 namespace GE
 {
 	class GUARDIAN_API GAsset;
-	class GUARDIAN_API GAssetLoader;
 	class GUARDIAN_API GScene;
 
 	class GUARDIAN_API GProject
@@ -27,7 +26,7 @@ namespace GE
 		const std::string& GetProjectAssetDirectory() const noexcept;
 		const std::string GetFullAssetDirectory() const noexcept;
 
-		const std::string& GetActiveSceneName() const noexcept;
+		const GUUID& GetStartupSceneAssetId() const noexcept;
 
 		std::shared_ptr<GScene> GetActiveScene();
 
@@ -41,10 +40,11 @@ namespace GE
 		
 		std::shared_ptr<GAssetLoader> ProjectAssetLoader;
 		
-		std::string ActiveSceneName;
+		GUUID StartupSceneAssetId;
 		std::shared_ptr<GScene> ActiveScene;
 
 		friend class GProjectSerializer;
+		friend class GProjectPacker;
 	};
 }
 

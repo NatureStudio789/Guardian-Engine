@@ -5,7 +5,6 @@ namespace GE
 	GMesh::GMesh() : GRenderable()
 	{
 		this->MeshData = {};
-		this->MeshData.MeshMaterial = null;
 	}
 
 	GMesh::GMesh(const Data& data)
@@ -23,7 +22,7 @@ namespace GE
 		this->MeshData.Vertices.clear();
 		this->MeshData.Indices.clear();
 
-		this->MeshData.MeshMaterial = null;
+		this->MeshData.MeshMaterialId = 0;
 	}
 
 	void GMesh::InitializeMesh(const Data& data)
@@ -42,7 +41,7 @@ namespace GE
 
 			EditRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			EditRenderStep->AddApplicable(this->MeshData.MeshMaterial);
+			EditRenderStep->AddApplicable(GMaterialRegistry::GetMaterial(this->MeshData.MeshMaterialId));
 
 			LightingTechnique->AddStep(EditRenderStep);
 		}
@@ -52,7 +51,7 @@ namespace GE
 
 			RuntimeRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			RuntimeRenderStep->AddApplicable(this->MeshData.MeshMaterial);
+			RuntimeRenderStep->AddApplicable(GMaterialRegistry::GetMaterial(this->MeshData.MeshMaterialId));
 
 			LightingTechnique->AddStep(RuntimeRenderStep);
 		}

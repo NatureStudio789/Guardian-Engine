@@ -16,7 +16,7 @@ namespace GE
 
 		this->ProjectAssetLoader = null;
 
-		this->ActiveSceneName = "";
+		this->StartupSceneAssetId = 0;
 		this->ActiveScene = null;
 	}
 
@@ -34,7 +34,7 @@ namespace GE
 		
 		this->ProjectAssetLoader = other.ProjectAssetLoader;
 
-		this->ActiveSceneName = other.ActiveSceneName;
+		this->StartupSceneAssetId = other.StartupSceneAssetId;
 		this->ActiveScene = other.ActiveScene;
 	}
 
@@ -48,7 +48,7 @@ namespace GE
 		this->ProjectAssetLoader.reset();
 		this->ProjectAssetLoader = null;
 
-		this->ActiveSceneName.clear();
+		this->StartupSceneAssetId = 0;
 		this->ActiveScene.reset();
 		this->ActiveScene = null;
 	}
@@ -65,9 +65,9 @@ namespace GE
 
 		this->ActiveScene = std::make_shared<GScene>();
 		GSceneSerializer::Deserialize(this->ActiveScene, GAssetLoaderRegistry::GetCurrentAssetLoader()->
-			GetAsset(this->ActiveSceneName)->GetAssetData<YAML::Node>());
+			GetAsset(this->StartupSceneAssetId)->GetAssetData<YAML::Node>());
 		GSceneRegistry::RegisterScene(this->ActiveScene);
-		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
+		GSceneRegistry::SetActiveScene(this->ActiveScene->GetSceneName());
 	}
 
 	void GProject::CreateProject(const std::string& projectName, 
@@ -82,16 +82,17 @@ namespace GE
 			std::filesystem::create_directory(this->GetFullAssetDirectory());
 		}
 
-		this->ActiveSceneName = "Sample Scene";
-		this->ActiveScene = GScene::CreateNewScene(this->ActiveSceneName);
+		this->ActiveScene = GScene::CreateNewScene("Sample Scene");
 
-		GSceneSerializer::Export(GUtil::ExtendDirectory(this->GetFullAssetDirectory(), this->ActiveSceneName + ".gscene"), this->ActiveScene);
+		GSceneSerializer::Export(GUtil::ExtendDirectory(this->GetFullAssetDirectory(), this->ActiveScene->GetSceneName() + ".gscene"), this->ActiveScene);
 		GSceneRegistry::RegisterScene(this->ActiveScene);
-		GSceneRegistry::SetActiveScene(this->ActiveSceneName);
+		GSceneRegistry::SetActiveScene(this->ActiveScene->GetSceneName());
 
 		this->ProjectAssetLoader = std::make_shared<GAssetLoader>(this->ProjectName + "AssetLoader", this->GetFullAssetDirectory());
 		GAssetLoaderRegistry::RegistryAssetLoader(this->ProjectAssetLoader);
 		GAssetLoaderRegistry::SetCurrentAssetLoader(this->ProjectAssetLoader->GetAssetLoaderName());
+
+		this->StartupSceneAssetId = this->ProjectAssetLoader->GetAsset("Sample Scene")->GetAssetId();
 
 		GProjectSerializer::Export(this->GetProjectFilePath(), this);
 	}
@@ -126,9 +127,9 @@ namespace GE
 		return GUtil::ExtendDirectory(this->ProjectDirectory, this->ProjectAssetDirectory);
 	}
 
-	const std::string& GProject::GetActiveSceneName() const noexcept
+	const GUUID& GProject::GetStartupSceneAssetId() const noexcept
 	{
-		return this->ActiveSceneName;
+		return this->StartupSceneAssetId;
 	}
 
 	std::shared_ptr<GScene> GProject::GetActiveScene()

@@ -22,7 +22,7 @@ namespace GE
 			std::string MeshName;
 			std::vector<Vertex> Vertices;
 			std::vector<UINT> Indices;
-			std::shared_ptr<GMaterial> MeshMaterial;
+			GUUID MeshMaterialId;
 		};
 
 	public:

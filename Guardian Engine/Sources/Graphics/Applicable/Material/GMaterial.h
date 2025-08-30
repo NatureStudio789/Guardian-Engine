@@ -14,23 +14,23 @@ namespace GE
 
 		void InitializeMaterial(const std::string& name);
 
-		void SetAlbedoTexture(std::shared_ptr<GTexture> albedo, bool enableAlbedoTexure = true);
+		void SetAlbedoTexture(const std::string& albedoAssetName, bool enableAlbedoTexure = true);
 		void SetAlbedoValue(const GVector3& albedo, bool disableAlbedoTexture = true);
 		void SetAlbedoTextureEnable(bool enable);
 
-		void SetRoughnessTexture(std::shared_ptr<GTexture> roughness, bool enableRoughnessTexture = true);
+		void SetRoughnessTexture(const std::string& roughnessAssetName, bool enableRoughnessTexture = true);
 		void SetRoughnessValue(const float& roughness, bool disableRoughnessTexture = true);
 		void SetRoughnessTextureEnable(bool enable);
 
-		void SetMetallicTexture(std::shared_ptr<GTexture> metallic, bool enableMetallicTexture = true);
+		void SetMetallicTexture(const std::string& metallicAssetName, bool enableMetallicTexture = true);
 		void SetMetallicValue(const float& metallic, bool disableMetallicTexture = true);
 		void SetMetallicTextureEnable(bool enable);
 
-		void SetAoTexture(std::shared_ptr<GTexture> ao, bool enableAoTexture = true);
+		void SetAoTexture(const std::string& aoAssetName, bool enableAoTexture = true);
 		void SetAoValue(const float& ao, bool disableAoTexture = true);
 		void SetAoTextureEnable(bool enable);
 
-		void SetNormalTexture(std::shared_ptr<GTexture> normal, bool enableNormalTexture = true);
+		void SetNormalTexture(const std::string& normalAssetName, bool enableNormalTexture = true);
 		void SetNormalTextureEnable(bool enable);
 
 		void Apply() override;
@@ -47,22 +47,27 @@ namespace GE
 		GUUID MaterialId = GUUID();
 		std::string MaterialName;
 
+		std::string AlbedoTextureAssetName;
 		std::shared_ptr<GTexture> AlbedoTexture;
 		GVector3 AlbedoValue;
 		bool EnableAlbedoTexture;
 
+		std::string RoughnessTextureAssetName;
 		std::shared_ptr<GTexture> RoughnessTexture;
 		float RoughnessValue;
 		bool EnableRoughnessTexture;
 
+		std::string MetallicTextureAssetName;
 		std::shared_ptr<GTexture> MetallicTexture;
 		float MetallicValue;
 		bool EnableMetallicTexture;
 
+		std::string AoTextureAssetName;
 		std::shared_ptr<GTexture> AoTexture;
 		float AoValue;
 		bool EnableAoTexture;
 
+		std::string NormalTextureAssetName;
 		std::shared_ptr<GTexture> NormalTexture;
 		bool EnableNormalTexture;
 

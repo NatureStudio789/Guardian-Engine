@@ -69,14 +69,43 @@ namespace GE
 			return ModelData;
 		}
 
+		static Data Load(const std::string& filePath, char* data, unsigned long long dataSize)
+		{
+			Data ModelData;
+			ModelData.FilePath = filePath;
+			ModelData.FileDirectory = GUtil::GetFilePathDirectory(filePath);
+
+			std::string Extension = GUtil::GetFileExtension(filePath);
+			std::string Hint = Extension.substr(Extension.find_first_of('.') + 1);
+			Assimp::Importer Importer;
+			const aiScene* Scene = Importer.ReadFileFromMemory(data, dataSize, 
+				aiProcess_Triangulate | aiProcess_ConvertToLeftHanded, Hint.c_str());
+			if (!Scene || Scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !Scene->mRootNode)
+			{
+				throw GUARDIAN_ERROR_EXCEPTION(Importer.GetErrorString());
+			}
+
+			std::vector<GMesh::Data> MeshDataList;
+			for (UINT i = 0; i < Scene->mNumMeshes; i++)
+			{
+				MeshDataList.push_back(ParseMesh(Scene, Scene->mMeshes[i], GUtil::GetFilePathDirectory(filePath)));
+			}
+
+			ModelData.MeshDataList = MeshDataList;
+
+			ModelData.RootMeshNodeData = ParseNode(Scene, Scene->mRootNode, MeshDataList);
+
+			return ModelData;
+		}
+
 	private:
 		void LinkTechnique(std::string renderGraphName);
 		std::shared_ptr<GMeshNode> BuildMeshNode(GMeshNode::Data meshNodeData);
 
 		static GMesh::Data ParseMesh(const aiScene* scene, aiMesh* mesh, std::string modelFileDirectory);
 		static GMeshNode::Data ParseNode(const aiScene* scene, aiNode* node, std::vector<GMesh::Data> meshDataList);
-		static std::shared_ptr<GTexture> LoadTexture(aiMaterial* material, aiTextureType type, int index, std::string modelFileDirectory);
-		static std::shared_ptr<GTexture> LoadMetallicTexture(aiMaterial* material, int index, std::string modelFileDirectory);
+		static void LoadTexture(aiMaterial* material, std::shared_ptr<GMaterial> outMat, aiTextureType type, std::string modelFileDirectory);
+		static void LoadMetallicTexture(aiMaterial* material, std::shared_ptr<GMaterial> outMat, std::string modelFileDirectory);
 
 		std::shared_ptr<GMeshNode> RootMeshNode;
 		std::vector<std::shared_ptr<GMesh>> ModelMeshList;

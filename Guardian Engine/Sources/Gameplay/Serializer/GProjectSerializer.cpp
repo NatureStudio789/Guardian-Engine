@@ -15,8 +15,8 @@ namespace GE
 		SerializingData << YAML::Key << "Asset Directory";
 		SerializingData << YAML::Value << project->GetProjectAssetDirectory();
 
-		SerializingData << YAML::Key << "Active Scene";
-		SerializingData << YAML::Value << project->GetActiveSceneName();
+		SerializingData << YAML::Key << "Startup Scene";
+		SerializingData << YAML::Value << project->GetStartupSceneAssetId();
 
 		SerializingData << YAML::EndMap;
 	}
@@ -34,8 +34,8 @@ namespace GE
 		SerializingData << YAML::Key << "Asset Directory";
 		SerializingData << YAML::Value << project->GetProjectAssetDirectory();
 
-		SerializingData << YAML::Key << "Active Scene";
-		SerializingData << YAML::Value << project->GetActiveSceneName();
+		SerializingData << YAML::Key << "Startup Scene";
+		SerializingData << YAML::Value << project->GetStartupSceneAssetId();
 
 		SerializingData << YAML::EndMap;
 	}
@@ -47,7 +47,7 @@ namespace GE
 
 		project->ProjectAssetDirectory = deserializingData["Asset Directory"].as<std::string>();
 
-		project->ActiveSceneName = deserializingData["Active Scene"].as<std::string>();
+		project->StartupSceneAssetId = deserializingData["Active Scene"].as<unsigned long long>();
 	}
 
 	void GProjectSerializer::Deserialize(GProject* project, YAML::Node& deserializingData)
@@ -57,7 +57,7 @@ namespace GE
 
 		project->ProjectAssetDirectory = deserializingData["Asset Directory"].as<std::string>();
 
-		project->ActiveSceneName = deserializingData["Active Scene"].as<std::string>();
+		project->StartupSceneAssetId = deserializingData["Startup Scene"].as<unsigned long long>();
 	}
 
 	void GProjectSerializer::Export(const std::string& filePath, std::shared_ptr<GProject> project)

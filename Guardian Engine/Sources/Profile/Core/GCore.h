@@ -42,6 +42,7 @@
 #include <entt/entt.hpp>
 
 #include <yaml-cpp/yaml.h>
+#include <inicpp/inicpp.hpp>
 
 using namespace Microsoft;
 using namespace DirectX;

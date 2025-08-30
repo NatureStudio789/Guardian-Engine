@@ -9,14 +9,25 @@ namespace GE
 	class GUARDIAN_API GScene
 	{
 	public:
+		enum State
+		{
+			GE_STATE_NONE,
+			GE_STATE_EDIT,
+			GE_STATE_RUNTIME
+		};
+
+	public:
 		GScene();
 		GScene(const std::string& name);
-		GScene(const GScene& other) = default;
+		GScene(const GScene& ) = default;
 		~GScene();
 
 		void InitializeScene(const std::string& name);
 
 		std::shared_ptr<GEntity> CreateEntity(const std::string& entityName, std::string rootName = "Root");
+
+		void SwitchSceneState(State state);
+		const State& GetSceneState() const noexcept;
 
 		void Update();
 
@@ -38,12 +49,19 @@ namespace GE
 		}
 
 	private:
+		void UpdateEdit();
+
+		void StartRuntime();
+		void UpdateRuntime();
+		void EndUpRuntime();
+
 		void BuildEntityTree();
 		void SetEntityParent(const std::string& entityName, std::string rootName);
 		void UpdateEntityTransform(GEntity* entity);
 
 		GUUID SceneId = GUUID();
 		std::string SceneName;
+		State SceneState;
 
 		entt::registry EntityRegistry;
 

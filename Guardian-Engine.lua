@@ -147,6 +147,7 @@ project "Guardian Editor"
     defines
     {
         "YAML_CPP_STATIC_DEFINE",
+		"GE_EDITOR_MODE",
     }
 
 	filter "system:Windows"
@@ -182,6 +183,83 @@ project "Guardian Editor"
 		optimize "On"
 
 	filter "configurations:Distribution"
+		runtime "Release"
+		defines
+		{
+			"GE_DISTRIBUTION"
+		}
+		optimize "On"
+
+project "Guardian Runtime"
+	location "Guardian Runtime"
+	kind "ConsoleApp"
+	language "C++"
+
+	targetdir ("Build/" .. outputdir)
+    objdir ("%{prj.name}/Intermediate/" .. outputdir)
+
+    files
+    {
+        "%{prj.name}/Sources/**.h",
+        "%{prj.name}/Sources/**.cpp",
+    }
+
+	includedirs
+	{
+		dependenciesdir .. "Includes/",
+		"Guardian Engine/Sources",
+		"Third Party/ImGui/Sources/",
+		"Third Party/yaml-cpp/include/",
+	}
+
+	links
+	{
+		"ImGui",
+		"yaml-cpp",
+
+		"Guardian Engine",
+	}
+
+    defines
+    {
+        "YAML_CPP_STATIC_DEFINE",
+		"GE_RUNTIME_MODE",
+    }
+
+	filter "system:Windows"
+		cppdialect "C++20"
+		staticruntime "Off"
+		systemversion "latest"
+
+		defines
+		{
+			"GE_PLATFORM_WINDOWS",
+		}
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		defines
+		{
+			"GE_DEBUG"
+		}
+		symbols "On"
+		
+        buildoptions {"/wd4251", "/MP"}
+        buildoptions {"/wd4275", "/MP"}
+        buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4099", "/MP"}
+        buildoptions { "/permissive" }
+
+	filter "configurations:Release"
+		runtime "Release"
+		defines
+		{
+			"GE_RELEASE"
+		}
+		optimize "On"
+
+	filter "configurations:Distribution"
+		runtime "Release"
 		defines
 		{
 			"GE_DISTRIBUTION"
