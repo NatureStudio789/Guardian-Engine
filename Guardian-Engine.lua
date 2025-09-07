@@ -37,6 +37,7 @@ project "Guardian Engine"
 		dependenciesdir .. "Includes/",
 		"Third Party/ImGui/Sources/",
 		"Third Party/yaml-cpp/include/",
+		"Third Party/spdlog/include/",
 		"Guardian EUI/Sources/",
 	}
 
@@ -51,6 +52,7 @@ project "Guardian Engine"
 	{
 		"ImGui",
 		"yaml-cpp",
+		"spdlog",
 		"Guardian EUI",
 	
 		"Uxtheme",
@@ -93,6 +95,7 @@ project "Guardian Engine"
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
         buildoptions {"/wd4099", "/MP"}
+        buildoptions {"/wd4996", "/MP"}
         buildoptions { "/permissive" }
 
 	filter "configurations:Release"
@@ -132,6 +135,7 @@ project "Guardian Editor"
 		"Guardian Engine/Sources",
 		"Third Party/ImGui/Sources/",
 		"Third Party/yaml-cpp/include/",
+		"Third Party/spdlog/include/",
 		"Guardian EUI/Sources/",
 	}
 
@@ -139,6 +143,7 @@ project "Guardian Editor"
 	{
 		"ImGui",
 		"yaml-cpp",
+		"spdlog",
 
 		"Guardian Engine",
 		"Guardian EUI"
@@ -172,6 +177,7 @@ project "Guardian Editor"
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
         buildoptions {"/wd4099", "/MP"}
+        buildoptions {"/wd4996", "/MP"}
         buildoptions { "/permissive" }
 
 	filter "configurations:Release"
@@ -210,12 +216,14 @@ project "Guardian Runtime"
 		"Guardian Engine/Sources",
 		"Third Party/ImGui/Sources/",
 		"Third Party/yaml-cpp/include/",
+		"Third Party/spdlog/include/",
 	}
 
 	links
 	{
 		"ImGui",
 		"yaml-cpp",
+		"spdlog",
 
 		"Guardian Engine",
 	}
@@ -248,6 +256,7 @@ project "Guardian Runtime"
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
         buildoptions {"/wd4099", "/MP"}
+        buildoptions {"/wd4996", "/MP"}
         buildoptions { "/permissive" }
 
 	filter "configurations:Release"
@@ -285,12 +294,14 @@ project "Guardian EUI"
         "Guardian Engine/Sources/",
 		"Third Party/ImGui/Sources/",
 		"Third Party/yaml-cpp/include/",
+		"Third Party/spdlog/include/",
         dependenciesdir .. "Includes/",
     }
 
     links
     {
         "ImGui",
+        "spdlog",
     }
 
     defines
@@ -318,6 +329,7 @@ project "Guardian EUI"
         buildoptions {"/wd4251", "/MP"}
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
+        buildoptions {"/wd4996", "/MP"}
 
     filter "configurations:Release"
         runtime "Release"
@@ -358,6 +370,7 @@ project "ImGui"
         systemversion "latest"
 
     filter "configurations:Debug"
+        buildoptions {"/wd4996", "/MP"}
         runtime "Debug"
 
     filter "configurations:Release"
@@ -396,6 +409,45 @@ project "yaml-cpp"
 		staticruntime "Off"
 
 	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"
+
+project "spdlog"
+    location "Third Party/spdlog"
+	kind "StaticLib"
+	language "C++"
+
+	targetdir ("Build/" .. outputdir)
+    objdir ("Third Party/%{prj.name}/Intermediate/" .. outputdir)
+
+	files
+	{
+		"Third Party/%{prj.name}/include/**.h",
+		"Third Party/%{prj.name}/src/**.h",
+		"Third Party/%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Third Party/%{prj.name}/include/"
+	}
+
+	defines
+	{
+		"SPDLOG_COMPILED_LIB"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+		cppdialect "C++20"
+		staticruntime "Off"
+
+	filter "configurations:Debug"
+        buildoptions {"/wd4996", "/MP"}
 		runtime "Debug"
 		symbols "on"
 

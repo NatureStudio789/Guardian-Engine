@@ -1,6 +1,6 @@
 #ifndef _GE_GEXCEPTION_H_
 #define _GE_GEXCEPTION_H_
-#include "../Util/GUtil.h"
+#include "../Log/GLogger.h"
 
 namespace GE
 {

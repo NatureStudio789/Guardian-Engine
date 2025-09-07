@@ -44,6 +44,10 @@
 #include <yaml-cpp/yaml.h>
 #include <inicpp/inicpp.hpp>
 
+#include <spdlog/spdlog.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
+#include <spdlog/sinks/basic_file_sink.h>
+
 using namespace Microsoft;
 using namespace DirectX;
 

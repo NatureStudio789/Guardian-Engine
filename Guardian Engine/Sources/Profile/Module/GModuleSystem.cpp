@@ -39,7 +39,10 @@ namespace GE
 	{
 		for (const auto& moduleName : moduleNameList)
 		{
+			GUARDIAN_ENGINE_INFO("Required Module : {0}", moduleName);
+
 			RegisterModule(moduleName);
+			GUARDIAN_ENGINE_INFO("Registered Module {0}", moduleName);
 		}
 	}
 
@@ -61,6 +64,7 @@ namespace GE
 		for (auto& module : ModuleList)
 		{
 			LoadModule(module->GetModuleName());
+			GUARDIAN_ENGINE_INFO("{0} Module Loaded.", module->GetModuleName());
 		}
 	}
 
