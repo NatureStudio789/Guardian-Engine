@@ -44,6 +44,8 @@ namespace GE
 		GSceneRegistry::SetActiveScene(this->RuntimeScene->GetSceneName());
 
 		GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_RUNTIME);
+
+		GRenderer::RegisterRenderGraph(std::make_shared<GRuntimeRenderGraph>("RuntimeMain"));
 	}
 
 	void GRuntime::UpdateProgram()

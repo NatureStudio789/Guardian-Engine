@@ -67,7 +67,7 @@ namespace GE
 			Theme WindowTheme = GE_THEME_DARK;
 
 		private:
-			bool EnableCustomizedTitleBar;
+			bool EnableCustomizedTitleBar = false;
 
 			friend class GWindow;
 		};

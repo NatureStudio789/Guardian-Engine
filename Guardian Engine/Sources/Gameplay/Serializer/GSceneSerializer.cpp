@@ -43,7 +43,7 @@ namespace GE
 
 			scene->SceneEntityList[entity->GetEntityName()] = entity;
 		}
-		
+
 		scene->BuildEntityTree();
 	}
 
@@ -57,7 +57,7 @@ namespace GE
 
 		std::ofstream OutputFileStream(filePath);
 		OutputFileStream << OutputStringStream.rdbuf();
-
+		
 		OutputFileStream.close();
 	}
 

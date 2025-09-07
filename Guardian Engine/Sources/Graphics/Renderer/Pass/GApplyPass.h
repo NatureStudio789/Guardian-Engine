@@ -17,7 +17,7 @@ namespace GE
 			std::vector<std::shared_ptr<GApplicable>> applicables = {});
 		void AddApplicable(std::shared_ptr<GApplicable> applicable);
 
-		void Apply();
+		virtual void Apply();
 		void Finalize() override;
 
 	protected:

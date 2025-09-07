@@ -4,6 +4,7 @@ namespace GE
 {
 	const std::string GPipelineStateRegistry::LIGHTING_PSO = "Lighting PSO";
 	const std::string GPipelineStateRegistry::WIREFRAME_PSO = "Wireframe PSO";
+	const std::string GPipelineStateRegistry::FULLSCREEN_PSO = "Fullscreen PSO";
 
 	std::map<std::string, std::shared_ptr<GPipelineState>> GPipelineStateRegistry::PipelineStateList;
 
@@ -105,6 +106,38 @@ namespace GE
 
 			WireframePipelineState->InitializePipelineState();
 			PipelineStateList[WIREFRAME_PSO] = WireframePipelineState;
+		}
+
+		{
+			auto FullscreenPipelineState = std::make_shared<GPipelineState>(FULLSCREEN_PSO);
+			FullscreenPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Fullscreen.gvs"));
+			FullscreenPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Fullscreen.gps"));
+
+			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			};
+
+			FullscreenPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
+
+			FullscreenPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
+
+			GRootSignature::RootParameter SourceFramebufferParameter;
+			SourceFramebufferParameter.Type = GRootSignature::GE_PARAMETER_SRV;
+			SourceFramebufferParameter.ShaderRegisterIndex = 0;
+			FullscreenPipelineState->GetPipelineRootSignature()->AddRootParameter(SourceFramebufferParameter);
+
+			GRootSignature::StaticSamplerDescription Sampler;
+			GUARDIAN_CLEAR_MEMORY(Sampler);
+			Sampler.ShaderRegister = 0;
+			Sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
+			Sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			Sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			Sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
+			FullscreenPipelineState->GetPipelineRootSignature()->AddSamplerDescription(Sampler);
+
+			FullscreenPipelineState->InitializePipelineState();
+			PipelineStateList[FULLSCREEN_PSO] = FullscreenPipelineState;
 		}
 	}
 

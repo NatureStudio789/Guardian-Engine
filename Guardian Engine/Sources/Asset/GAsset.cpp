@@ -188,8 +188,8 @@ namespace GE
 			case GE_ASSET_SCENE:
 			{
 				std::stringstream SceneFileStringStream;
-				SceneFileStringStream << data;
-				YAML::Node SceneData = YAML::Load(SceneFileStringStream.str());
+				SceneFileStringStream.write(data, dataSize);
+				YAML::Node SceneData = YAML::Load(SceneFileStringStream);
 				this->AssetData = SceneData;
 
 				break;

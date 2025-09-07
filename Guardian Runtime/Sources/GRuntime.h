@@ -1,6 +1,7 @@
 #ifndef _GE_GRUNTIME_H_
 #define _GE_GRUNTIME_H_
 #include <Profile/EntryPoint/GEntryPoint.h>
+#include "RenderGraph/GRuntimeRenderGraph.h"
 
 namespace GE
 {

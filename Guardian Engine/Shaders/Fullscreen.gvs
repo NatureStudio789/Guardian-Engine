@@ -1,0 +1,20 @@
+struct VSInput
+{
+	float2 Position : POSITION;
+};
+
+struct VSOutput
+{
+    float4 Position : SV_POSITION;
+    float2 TextureCoord : TEXTURECOORD;
+};
+
+VSOutput main(VSInput InputData)
+{
+    VSOutput OutputData;
+
+    OutputData.Position = float4(InputData.Position, 0.0f, 1.0f);
+    OutputData.TextureCoord = float2((InputData.Position.x + 1.0f) / 2.0f, -(InputData.Position.y - 1.0f) / 2.0f);
+
+    return OutputData;
+}

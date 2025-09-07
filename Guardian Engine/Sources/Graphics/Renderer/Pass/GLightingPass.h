@@ -1,6 +1,6 @@
 #ifndef _GE_GLIGHTINGPASS_H_
 #define _GE_GLIGHTINGPASS_H_
-#include "GWireframePass.h"
+#include "GFullscreenPass.h"
 
 namespace GE
 {
