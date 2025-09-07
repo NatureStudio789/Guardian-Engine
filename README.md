@@ -35,7 +35,7 @@ Member : wzy2011
 1. **Clone the Repository**  
    ```bash
    git clone <repository-url>
-   cd GuardianEngine
+   cd Guardian-Engine
    ```
 
 2. **Open the Project**  
@@ -44,11 +44,6 @@ Member : wzy2011
    Generate Project.bat
    ```
    And input your IDE name, like vs2022 to build the project files.
-
-   Or directly launch the solution file for Visual Studio 2022:  
-   ```bash
-   GuardianEngine.sln
-   ```
 
 3. **Configure Dependencies**  
    Ensure all required libraries (DirectX 12, Assimp, etc.) are linked correctly in the project settings. The engine uses preprocessor definitions (`GE_PLATFORM_WINDOWS`, `GE_BUILD_DLL`) to handle platform-specific builds.
@@ -74,35 +69,44 @@ Guardian Engine follows a modular design, with key components organized into int
 - **Model Rendering**: `GModel` loads meshes/textures via Assimp, with `GMesh` and `GMaterial` handling geometry and shading data.
 
 
-### 3. Gameplay System
+### 3. Asset System
+- **GAsset**: The asset instance class in Guardian Engine, storing the asset data by using std::any and asset metadata like id and name.
+- **Asset Loader**: It loads the assets in a directory and stores the asset instances, which hasn't supported the hot loading yet.
+- **Asset Packer**: Packs the assets in asset loader into a Guardian Asset Package for the project package.
+
+
+### 4. Gameplay System
 - **GGameplayEngine**: Manages active scenes (`GScene`), entities (`GEntity`), and gameplay updates.
 - **Scene Management**: `GScene` and `GSceneRegistry` manage entity hierarchies, with support for parent-child relationships.
 - **Components**: Entities extend functionality via components like `GTransformComponent` (position/rotation/scale) and `GModelComponent` (model attachment).
 
 
-### 4. Audio System (`GAudioEngine`)
+### 5. Audio System
 - Initializes and manages `GAudioContext` (via XAudio2) for audio playback.
 - Supports audio sources (`GSourceVoice`) with buffer management for continuous playback.
 
 
-### 5. Utility & Infrastructure
+### 6. Project System
+- An optional module in Guardian Engine. The Guardian Editor needs it, but Guardian Runtime doesn't.
+- **GProject**: The project instance in Guardian Engine, which is singleton. A project has name and an asset loader.
+- **Project Packer**: Packs the current project in edit mode, it will pack project information, project binary and assets.
+
+
+### 7. Utility & Infrastructure
 - **Core Utilities**: `GCore.h` defines platform-specific macros, type aliases, and dependencies (e.g., DirectXMath, Windows.h).
 - **Error Handling**: Uses custom exceptions and message boxes for runtime error reporting.
 
 
-## Future Plans
-1. **Resource Management System**  
-   Implement a centralized system to handle loading, caching, and unloading of assets (models, textures, audio files) to optimize memory usage and reduce redundant I/O operations.
+### 8. Module System Introduction
+   In Guardian Engine Architecture, each module is not independent. Every module can use or call the content of other modules, or even some module need to rely on some another module (e.g., the Gameplay module need to use asset loader which is in Asset module for getting the loaded assets.).
 
-2. **Ray Tracing Support**  
+
+## Future Plans
+1. **Ray Tracing Support**  
    Extend the rendering pipeline with DirectX Raytracing (DXR) to enable realistic lighting, reflections, and shadows, enhancing visual fidelity for modern games.
 
-3. **Scripting System**  
+2. **Scripting System**  
    Integrate a scripting language (e.g., Lua) to allow designers and developers to prototype gameplay logic without recompiling the engine, improving iteration speed and flexibility.
-
-
-## License
-MIT
 
 
 ## Acknowledgements
