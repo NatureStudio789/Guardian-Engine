@@ -12,6 +12,7 @@
 #include "../MenuBar/Menu/GMenu.h"
 #include "../MenuBar/MenuItem/GMenuItem.h"
 #include "../Separator/GSeparator.h"
+#include "../Manipulater/GManipulater.h"
 
 namespace GE
 {

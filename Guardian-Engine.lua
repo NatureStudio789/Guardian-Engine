@@ -36,6 +36,7 @@ project "Guardian Engine"
 	{
 		dependenciesdir .. "Includes/",
 		"Third Party/ImGui/Sources/",
+		"Third Party/ImGuizmo/Sources/",
 		"Third Party/yaml-cpp/include/",
 		"Third Party/spdlog/include/",
 		"Guardian EUI/Sources/",
@@ -51,6 +52,7 @@ project "Guardian Engine"
 	links
 	{
 		"ImGui",
+		"ImGuizmo",
 		"yaml-cpp",
 		"spdlog",
 		"Guardian EUI",
@@ -134,6 +136,7 @@ project "Guardian Editor"
 		dependenciesdir .. "Includes/",
 		"Guardian Engine/Sources",
 		"Third Party/ImGui/Sources/",
+		"Third Party/ImGuizmo/Sources/",
 		"Third Party/yaml-cpp/include/",
 		"Third Party/spdlog/include/",
 		"Guardian EUI/Sources/",
@@ -142,6 +145,7 @@ project "Guardian Editor"
 	links
 	{
 		"ImGui",
+		"ImGuizmo",
 		"yaml-cpp",
 		"spdlog",
 
@@ -215,6 +219,7 @@ project "Guardian Runtime"
 		dependenciesdir .. "Includes/",
 		"Guardian Engine/Sources",
 		"Third Party/ImGui/Sources/",
+		"Third Party/ImGuizmo/Sources/",
 		"Third Party/yaml-cpp/include/",
 		"Third Party/spdlog/include/",
 	}
@@ -222,6 +227,7 @@ project "Guardian Runtime"
 	links
 	{
 		"ImGui",
+		"ImGuizmo",
 		"yaml-cpp",
 		"spdlog",
 
@@ -293,6 +299,7 @@ project "Guardian EUI"
     {
         "Guardian Engine/Sources/",
 		"Third Party/ImGui/Sources/",
+		"Third Party/ImGuizmo/Sources/",
 		"Third Party/yaml-cpp/include/",
 		"Third Party/spdlog/include/",
         dependenciesdir .. "Includes/",
@@ -301,6 +308,7 @@ project "Guardian EUI"
     links
     {
         "ImGui",
+        "ImGuizmo",
         "spdlog",
     }
 
@@ -362,6 +370,45 @@ project "ImGui"
 		"d3d12",
 		"d3dcompiler",
 		"dxguid",
+	}
+
+    filter "system:windows"
+        cppdialect "C++20"
+        staticruntime "On"
+        systemversion "latest"
+
+    filter "configurations:Debug"
+        buildoptions {"/wd4996", "/MP"}
+        runtime "Debug"
+
+    filter "configurations:Release"
+        runtime "Release"
+
+	filter "configurations:Distribution"
+		optimize "On"
+
+project "ImGuizmo"
+	location "Third Party/ImGuizmo"
+	kind "StaticLib"
+	language "C++"
+
+	targetdir ("Build/" .. outputdir)
+	objdir ("Third Party/%{prj.name}/Intermediate/" .. outputdir)
+
+	files
+	{
+		"Third Party/%{prj.name}/Sources/**.h",
+		"Third Party/%{prj.name}/Sources/**.cpp",
+	}
+
+    includedirs
+    {
+        "Third Party/ImGui/Sources/"
+    }
+
+	links
+	{
+		"ImGui"
 	}
 
     filter "system:windows"

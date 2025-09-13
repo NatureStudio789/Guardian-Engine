@@ -77,13 +77,23 @@ namespace GE
 			{
 				ImageId = (unsigned long long)this->DirectoryTexture->GetTextureDescriptorHandle()->GPUHandle.ptr;
 
-				ColumnLayout->AddColumn({ 
-					std::make_shared<EUI::GImageButton>(GUtil::GetDirectoryName(Path.string()), [=]()
+				auto& DirectoryButton = std::make_shared<EUI::GImageButton>(GUtil::GetDirectoryName(Path.string()), [=]()
 					{
-						this->CurrentDirectory = Path.string();
-						Directory = this->CurrentDirectory;
-					}, ImageId, GVector2(IconSize, IconSize)), 
-						
+						/*this->CurrentDirectory = Path.string();
+						Directory = this->CurrentDirectory;*/
+					}, ImageId, GVector2(IconSize, IconSize));
+
+				DirectoryButton->SetWidgetEventProcessFunction([=]()
+					{
+						if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered())
+						{
+							this->CurrentDirectory = Path.string();
+							Directory = this->CurrentDirectory;
+						}
+					});
+
+				ColumnLayout->AddColumn({ 
+					DirectoryButton, 
 					std::make_shared<EUI::GText>(GUtil::GetDirectoryName(Path.string()), GVector4{1.0f, 1.0f, 1.0f, 1.0f}, true) });
 			}
 			else

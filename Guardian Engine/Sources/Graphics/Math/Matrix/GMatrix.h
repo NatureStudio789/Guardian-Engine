@@ -17,12 +17,13 @@ namespace GE
 			float m20, float m21, float m22, float m23,
 			float m30, float m31, float m32, float m33);
 		GMatrix(XMMATRIX xmmatrix);
+		GMatrix(const float* data);
 		GMatrix(const GMatrix& other);
 
 		void Identity();
 		void Inverse();
 		void Transpose();
-		void Decompose(GVector3& translation, GVector4& quaternion, GVector3& scale) const;
+		void Decompose(GVector3& translation, GVector3& rotation, GVector3& scale) const;
 
 		operator const XMMATRIX& () const noexcept;
 		operator XMMATRIX& () noexcept;

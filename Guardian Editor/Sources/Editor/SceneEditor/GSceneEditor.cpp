@@ -15,8 +15,15 @@ namespace GE
 			this->SceneEditImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->
 				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneEditPanel->AddWidgetToPanel(this->SceneEditImage);
+
+			this->EditManipulater = std::make_shared<EUI::GManipulater>();
+			this->EditManipulater->DisableWidgetRendering();
+			this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_ROTATE);
+			this->SceneEditPanel->AddWidgetToPanel(this->EditManipulater);
+
 			this->SceneEditPanel->SetWidgetEventProcessFunction([=]()
 				{
+					this->EditManipulater->SetManipulateRect({ ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y }, {ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - ImGui::GetWindowContentRegionMin().y });
 					this->SceneEditImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
 				});
 
@@ -60,9 +67,77 @@ namespace GE
 
 	void GSceneEditor::Update()
 	{
-		this->UpdateHierarchyPanel();
+		GEditor::Update();
 
+		this->UpdateEditPanel();
+		this->UpdateHierarchyPanel();
 		this->UpdatePropertiesPanel();
+	}
+
+	void GSceneEditor::UpdateEditPanel()
+	{
+		if (GSceneRegistry::GetActiveScene()->HasEntity(this->SelectedEntityId))
+		{
+			this->EditManipulater->EnableWidgetRendering();
+
+			static XMFLOAT4X4 view;
+			static XMFLOAT4X4 projection;
+			XMStoreFloat4x4(&view, GSceneRegistry::GetActiveScene()->GetEditCamera()->GetViewMatrix());
+			XMStoreFloat4x4(&projection, GSceneRegistry::GetActiveScene()->GetEditCamera()->Projection.GetProjectionMatrix());
+
+			this->EditManipulater->SetViewMatrix((const float*)view.m);
+			this->EditManipulater->SetProjectionMatrix((const float*)projection.m);
+
+			static XMFLOAT4X4 transform;
+			XMStoreFloat4x4(&transform, GSceneRegistry::GetActiveScene()->GetEntity(this->SelectedEntityId)->GetComponent<GTransformComponent>().Transform.GetTransformMatrix());
+			this->EditManipulater->SetTransformMatrix((float*)transform.m);
+
+			this->EditManipulater->SetOperationProcessFunction([this](const EUI::GManipulater::Operation& operation)
+				{
+					if (ImGuizmo::IsUsing())
+					{
+						switch (operation)
+						{
+							case EUI::GManipulater::GE_OPERATION_TRANSLATE:
+							{
+								GVector3 tempr;
+								GVector3 temps;
+								GMatrix(XMLoadFloat4x4(&transform)).Decompose(GSceneRegistry::GetActiveScene()->GetEntity(this->SelectedEntityId)->
+									GetComponent<GTransformComponent>().Transform.Position,
+									tempr, temps);
+
+								break;
+							}
+
+							case EUI::GManipulater::GE_OPERATION_ROTATE:
+							{
+								GVector3 tempt;
+								GVector3 temps;
+								GMatrix(XMLoadFloat4x4(&transform)).Decompose(tempt,
+									GSceneRegistry::GetActiveScene()->GetEntity(this->SelectedEntityId)->
+									GetComponent<GTransformComponent>().Transform.Rotation, temps);
+
+								break;
+							}
+
+							case EUI::GManipulater::GE_OPERATION_SCALE:
+							{
+								GVector3 tempt;
+								GVector3 tempr;
+								GMatrix(XMLoadFloat4x4(&transform)).Decompose(tempt, tempr,
+									GSceneRegistry::GetActiveScene()->GetEntity(this->SelectedEntityId)->
+									GetComponent<GTransformComponent>().Transform.Scale);
+
+								break;
+							}
+						}
+					}
+				});
+		}
+		else
+		{
+			this->EditManipulater->DisableWidgetRendering();
+		}
 	}
 
 	void GSceneEditor::UpdateHierarchyPanel()

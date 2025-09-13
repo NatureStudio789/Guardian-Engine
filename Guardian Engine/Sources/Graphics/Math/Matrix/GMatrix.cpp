@@ -35,6 +35,12 @@ namespace GE
 		this->Matrix = xmmatrix;
 	}
 
+	GMatrix::GMatrix(const float* data)
+	{
+		XMFLOAT4X4 float4x4(data);
+		this->Matrix = XMLoadFloat4x4(&float4x4);
+	}
+
 	GMatrix::GMatrix(const GMatrix& other)
 	{
 		this->Matrix = other.Matrix;
@@ -61,7 +67,7 @@ namespace GE
 		this->Matrix = XMMatrixTranspose(this->Matrix);
 	}
 
-	void GMatrix::Decompose(GVector3& translation, GVector4& quaternion, GVector3& scale) const
+	void GMatrix::Decompose(GVector3& translation, GVector3& rotation, GVector3& scale) const
 	{
 		XMVECTOR Scale, Translation, Quaternion;
 		if (!XMMatrixDecompose(&Scale, &Quaternion, &Translation, this->Matrix))
@@ -76,7 +82,8 @@ namespace GE
 		XMStoreFloat4(&FQuaternion, Quaternion);
 
 		translation = { FTranslation.x, FTranslation.y, FTranslation.z };
-		quaternion = { FQuaternion.x, FQuaternion.y, FQuaternion.z, FQuaternion.w };
+		GVector4 quaternion = { FQuaternion.x, FQuaternion.y, FQuaternion.z, FQuaternion.w };
+		rotation = GVector4::QuaternionToEuler(quaternion);
 		scale = { FScale.x, FScale.y, FScale.z };
 	}
 

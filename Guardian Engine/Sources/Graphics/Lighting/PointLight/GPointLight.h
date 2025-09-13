@@ -1,6 +1,6 @@
 #ifndef _GE_GPOINTLIGHT_H_
 #define _GE_GPOINTLIGHT_H_
-#include "../../Math/Camera/GCamera.h"
+#include "../../Math/Ray/GRay.h"
 
 namespace GE
 {

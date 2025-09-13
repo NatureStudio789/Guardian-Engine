@@ -8,6 +8,7 @@ Guardian Runtime/Intermediate/
 Third Party/ImGui/Intermediate/
 Third Party/yaml-cpp/Intermediate/
 Third Party/spdlog/Intermediate/
+Third Party/ImGuizmo/Intermediate/
 
 *.sln
 *.vcxproj
