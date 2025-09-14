@@ -40,8 +40,10 @@ namespace GE
 		std::shared_ptr<GEntity> GetSceneRootEntity();
 		bool HasEntity(const std::string& name);
 		bool HasEntity(const GUUID& id);
+		bool HasEntity(const entt::entity& handle);
 		std::shared_ptr<GEntity> GetEntity(const std::string& name);
 		std::shared_ptr<GEntity> GetEntity(const GUUID& id);
+		std::shared_ptr<GEntity> GetEntity(const entt::entity& handle);
 
 		static std::shared_ptr<GScene> CreateNewScene(const std::string& name)
 		{
@@ -76,6 +78,7 @@ namespace GE
 
 		friend class GEntity;
 		friend class GSceneSerializer;
+		friend class GSceneEditor;
 	};
 }
 

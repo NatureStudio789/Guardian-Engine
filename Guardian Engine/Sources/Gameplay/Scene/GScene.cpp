@@ -162,6 +162,19 @@ namespace GE
 		return false;
 	}
 
+	bool GScene::HasEntity(const entt::entity& handle)
+	{
+		for (auto& entity : this->SceneEntityList)
+		{
+			if (entity.second->GetEntityHandle() == handle)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	std::shared_ptr<GEntity> GScene::GetEntity(const std::string& name)
 	{
 		if (!this->SceneEntityList.count(name))
@@ -183,6 +196,19 @@ namespace GE
 		}
 
 		throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity with id : '{}' found in scene", (ULONGLONG)id));
+	}
+
+	std::shared_ptr<GEntity> GScene::GetEntity(const entt::entity& handle)
+	{
+		for (auto& entity : this->SceneEntityList)
+		{
+			if (entity.second->GetEntityHandle() == handle)
+			{
+				return entity.second;
+			}
+		}
+
+		throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity with handle : '{}' found in scene", (ULONGLONG)handle));
 	}
 
 	void GScene::UpdateEdit()

@@ -113,6 +113,8 @@ namespace GE
 
 		std::string ModelFilePath;
 		std::string ModelFileDirectory;
+
+		friend class GSceneEditor;
 	};
 }
 

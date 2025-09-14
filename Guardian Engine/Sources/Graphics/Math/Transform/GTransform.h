@@ -1,6 +1,6 @@
 #ifndef _GE_GTRANSFORM_H_
 #define _GE_GTRANSFORM_H_
-#include "../Matrix/GMatrix.h"
+#include "../AABB/GAABB.h"
 
 namespace GE
 {

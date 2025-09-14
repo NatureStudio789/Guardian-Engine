@@ -73,6 +73,11 @@ namespace GE
 
 	}
 
+	const GMesh::Data& GMesh::GetMeshData() const noexcept
+	{
+		return this->MeshData;
+	}
+
 	GMeshNode::GMeshNode()
 	{
 		this->NodeName = "";

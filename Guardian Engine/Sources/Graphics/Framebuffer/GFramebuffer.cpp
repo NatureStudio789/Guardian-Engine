@@ -82,6 +82,9 @@ namespace GE
 		GUARDIAN_CHECK_VALUE(newWidth);
 		GUARDIAN_CHECK_VALUE(newHeight);
 
+		this->FramebufferWidth = newWidth;
+		this->FramebufferHeight = newHeight;
+
 		this->FramebufferRenderTarget->ResizeRenderTargetView(graphicsContext, newWidth, newHeight);
 		this->FramebufferDepthStencil->ResizeDepthStencilView(graphicsContext);
 

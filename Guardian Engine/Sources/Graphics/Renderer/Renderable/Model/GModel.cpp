@@ -122,6 +122,7 @@ namespace GE
 	GMesh::Data GModel::ParseMesh(const aiScene* scene, aiMesh* mesh, std::string modelFileDirectory)
 	{
 		GMesh::Data MeshData;
+		MeshData.MeshName = mesh->mName.C_Str();
 		std::vector<GMesh::Vertex> Vertices;
 		std::vector<UINT> Indices;
 

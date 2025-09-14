@@ -8,7 +8,7 @@ Entities:
       Tag: Cerberus
     Transform Component:
       Position: [0, 0, 0]
-      Rotation: [0, 0, 0]
+      Rotation: [-0, 0, -0]
       Scale: [0.100000001, 0.100000001, 0.100000001]
     Model Component:
       Asset Name: Cerberus

@@ -95,6 +95,7 @@ namespace GE
 		std::shared_ptr<GModel> Model;
 
 		friend class GScene;
+		friend class GSceneEditor;
 	};
 }
 

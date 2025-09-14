@@ -17,7 +17,13 @@ namespace GE
 		struct Data
 		{
 			Data() = default;
-			Data(const Data&) = default;
+			Data(const Data& other)
+			{
+				this->MeshName = other.MeshName;
+				this->Vertices = other.Vertices;
+				this->Indices = other.Indices;
+				this->MeshMaterialId = other.MeshMaterialId;
+			}
 
 			std::string MeshName;
 			std::vector<Vertex> Vertices;
@@ -33,6 +39,8 @@ namespace GE
 
 		void InitializeMesh(const Data& data);
 
+		const Data& GetMeshData() const noexcept;
+
 		static std::shared_ptr<GMesh> CreateNewMesh(const Data& data)
 		{
 			return std::make_shared<GMesh>(data);
@@ -40,6 +48,8 @@ namespace GE
 
 	private:
 		Data MeshData;
+
+		friend class GMeshNode;
 	};
 
 	class GUARDIAN_API GMeshNode

@@ -17,8 +17,8 @@ namespace GE
 		this->RenderTechniqueList.clear();
 	}
 
-	GRenderable::GRenderable(const std::string& name, 
-		std::shared_ptr<GVertexBuffer> vertexBuffer, std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
+	GRenderable::GRenderable(const std::string& name, std::shared_ptr<GVertexBuffer> vertexBuffer, 
+		std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
 	{
 		this->InitializeRenderable(name, vertexBuffer, indexBuffer, topology);
 	}
@@ -65,8 +65,8 @@ namespace GE
 		this->RenderTechniqueList.clear();
 	}
 
-	void GRenderable::InitializeRenderable(const std::string& name, 
-		std::shared_ptr<GVertexBuffer> vertexBuffer, std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
+	void GRenderable::InitializeRenderable(const std::string& name, std::shared_ptr<GVertexBuffer> vertexBuffer, 
+		std::shared_ptr<GIndexBuffer> indexBuffer, std::shared_ptr<GTopology> topology)
 	{
 		GUARDIAN_CHECK_POINTER(vertexBuffer);
 		GUARDIAN_CHECK_POINTER(topology);

@@ -51,6 +51,8 @@ namespace GE
 		GMatrix AccumulatedMatrix = GMatrix::IdentityMatrix();
 
 		std::vector<std::shared_ptr<GTechnique>> RenderTechniqueList;
+
+		friend class GTransformCBuffer;
 	};
 }
 

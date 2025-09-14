@@ -1,4 +1,5 @@
 #include "GSceneEditor.h"
+#include <iostream>
 
 namespace GE
 {
@@ -24,7 +25,73 @@ namespace GE
 			this->SceneEditPanel->SetWidgetEventProcessFunction([=]()
 				{
 					this->EditManipulater->SetManipulateRect({ ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y }, {ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - ImGui::GetWindowContentRegionMin().y });
+					
+					if (GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
+						GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
+					{
+						GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(),
+							(int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+
+						GSceneRegistry::GetActiveScene()->EditCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+					}
 					this->SceneEditImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
+
+					if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+					{
+						ImVec2 MousePos = ImGui::GetMousePos();
+						GVector2 MousePosition = 
+						{
+							MousePos.x - (ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMin().x),
+							MousePos.y - (ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y)
+						};
+
+						auto& PickingRay = std::make_shared<GRay>(*GSceneRegistry::GetActiveScene()->GetEditCamera(),
+							GVector2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - ImGui::GetWindowContentRegionMin().y),
+							MousePosition);
+
+						bool Hosted = false;
+						auto view = GSceneRegistry::GetActiveScene()->EntityRegistry.view<GModelComponent>();
+						view.each([&Hosted, PickingRay, this](const entt::entity& handle, GModelComponent& MComponent)
+						{
+							if (!Hosted)
+							{
+								for (auto& mesh : MComponent.Model->ModelMeshList)
+								{
+									auto& Vertices = mesh->GetMeshData().Vertices;
+									GAABB BoundingBox;
+									BoundingBox.Max = { -FLT_MAX, -FLT_MAX, -FLT_MAX };
+									BoundingBox.Min = { FLT_MAX,  FLT_MAX,  FLT_MAX };
+									for (ULONGLONG i = 0; i < Vertices.size(); i++)
+									{
+										BoundingBox.Max.x = max(Vertices[i].Position.x, BoundingBox.Max.x);
+										BoundingBox.Max.y = max(Vertices[i].Position.y, BoundingBox.Max.y);
+										BoundingBox.Max.z = max(Vertices[i].Position.z, BoundingBox.Max.z);
+
+										BoundingBox.Min.x = std::min(Vertices[i].Position.x, BoundingBox.Min.x);
+										BoundingBox.Min.y = std::min(Vertices[i].Position.y, BoundingBox.Min.y);
+										BoundingBox.Min.z = std::min(Vertices[i].Position.z, BoundingBox.Min.z);
+									}
+
+									BoundingBox.SetTransform(mesh->GetTransform().GetTransformMatrix() * mesh->GetExtraMatrix() * mesh->GetAccumulatedMatrix());
+
+									float dist = 0.0f;
+									if (BoundingBox.Intersect(PickingRay->GetOrigin(), PickingRay->GetDirection(), &dist))
+									{
+										std::cout << "Intersected!" << " Distance : " << dist << ", Entity : " << GSceneRegistry::GetActiveScene()->GetEntity(handle)->GetEntityName() << "\n";
+
+										this->SelectedEntityId = GSceneRegistry::GetActiveScene()->GetEntity(handle)->GetEntityId();
+										Hosted = true;
+										break;
+									}
+								}
+							}
+						});
+
+						if (!Hosted)
+						{
+							this->SelectedEntityId = 0;
+						}
+					}
 				});
 
 			this->AddWidgetToEditor(this->SceneEditPanel);
@@ -39,6 +106,14 @@ namespace GE
 			this->SceneRuntimePanel->AddWidgetToPanel(this->SceneRuntimeImage);
 			this->SceneRuntimePanel->SetWidgetEventProcessFunction([=]()
 			{
+				if (GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
+					GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
+				{
+					GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(),
+						(int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+
+					GSceneRegistry::GetActiveScene()->RuntimeCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
+				}
 				this->SceneRuntimeImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
 			});
 
