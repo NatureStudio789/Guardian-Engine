@@ -1,6 +1,6 @@
 #ifndef _GE_GRENDERENGINE_H_
 #define _GE_GRENDERENGINE_H_
-#include "../Audio/GAudioEngine.h"
+#include "../Physics/GPhysicsEngine.h"
 
 namespace GE
 {

@@ -35,6 +35,7 @@ project "Guardian Engine"
 	includedirs
 	{
 		dependenciesdir .. "Includes/",
+        dependenciesdir .. "Includes/PhysX/",
 		"Third Party/ImGui/Sources/",
 		"Third Party/ImGuizmo/Sources/",
 		"Third Party/yaml-cpp/include/",
@@ -47,6 +48,7 @@ project "Guardian Engine"
 		dependenciesdir .. "Libraries/DirectXTex/%{cfg.buildcfg}/",
 		dependenciesdir .. "Libraries/Assimp/%{cfg.buildcfg}/",
 		dependenciesdir .. "Libraries/DirectXTK/%{cfg.buildcfg}/",
+        dependenciesdir .. "Libraries/PhysX/%{cfg.buildcfg}/",
 	}
 
 	links
@@ -66,7 +68,22 @@ project "Guardian Engine"
 		"DirectXTex",
 		"DirectXTK",
 
-		"assimp"
+		"assimp",
+
+        "LowLevel_static_64",
+        "LowLevelAABB_static_64",
+        "LowLevelDynamics_static_64",
+        "PhysX_64",
+        "PhysXCharacterKinematic_static_64",
+        "PhysXCommon_64",
+        "PhysXCooking_64",
+        "PhysXExtensions_static_64",
+        "PhysXFoundation_64",
+        "PhysXPvdSDK_static_64",
+        "PhysXTask_static_64",
+        "PhysXVehicle_static_64",
+        "PhysXVehicle2_static_64",
+        "PVDRuntime_64"
 	}
 
     defines
@@ -144,11 +161,6 @@ project "Guardian Editor"
 
 	links
 	{
-		"ImGui",
-		"ImGuizmo",
-		"yaml-cpp",
-		"spdlog",
-
 		"Guardian Engine",
 		"Guardian EUI"
 	}

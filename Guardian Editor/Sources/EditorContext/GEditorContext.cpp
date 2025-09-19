@@ -60,9 +60,10 @@ namespace GE
 
 		ThemeColors[ImGuiCol_Tab] = ImColor(38, 38, 40, 255);
 		ThemeColors[ImGuiCol_TabHovered] = ImColor(35, 35, 38, 255);
-		ThemeColors[ImGuiCol_TabActive] = ImColor(30, 30, 25, 255);
+		ThemeColors[ImGuiCol_TabActive] = ImColor(58, 58, 66, 255);
 		ThemeColors[ImGuiCol_TabUnfocused] = ThemeColors[ImGuiCol_Tab];
 		ThemeColors[ImGuiCol_TabUnfocusedActive] = ThemeColors[ImGuiCol_TabHovered];
+		ThemeColors[ImGuiCol_TabSelectedOverline] = ImColor(15, 15, 15);
 
 		ThemeColors[ImGuiCol_SliderGrab] = ImVec4(0.51f, 0.51f, 0.51f, 0.7f);
 		ThemeColors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
@@ -73,6 +74,10 @@ namespace GE
 		ThemeColors[ImGuiCol_FrameBgHovered] = ImColor(15, 15, 15);
 		ThemeColors[ImGuiCol_FrameBgActive] = ImColor(15, 15, 15);
 
+		ThemeColors[ImGuiCol_Header] = ImColor(56, 56, 56, 200); 
+		ThemeColors[ImGuiCol_HeaderHovered] = ImColor(70, 70, 70, 255);
+		ThemeColors[ImGuiCol_HeaderActive] = ImColor(56, 56, 56, 150);
+
 		ImGuiStyle& style = ImGui::GetStyle();
 		style.WindowPadding = ImVec2(10.0f, 10.0f);
 		style.FramePadding = ImVec2(8.0f, 6.0f);
@@ -81,6 +86,8 @@ namespace GE
 		style.PopupRounding = 6.0f;
 		style.FrameRounding = 6.0f;
 		style.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+		style.FrameRounding = 2.5f;
+		style.FrameBorderSize = 1.0f;
 		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
 		{
 			style.WindowRounding = 0.0f;

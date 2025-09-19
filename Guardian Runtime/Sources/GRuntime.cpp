@@ -26,7 +26,7 @@ namespace GE
 		this->ProgramAttribute.ProgramWindowAttribute.WindowStyle = GWindow::GE_STYLE_DEFAULTWINDOW;
 		this->ProgramAttribute.ProgramWindowAttribute.WindowTheme = GWindow::GE_THEME_DARK;
 
-		this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Asset"/*, "Audio"*/, "Gameplay" };
+		this->ProgramAttribute.ProgramRequiredModuleList = { "Render", "Physics", "Asset"/*, "Audio"*/, "Gameplay"};
 	}
 
 	void GRuntime::InitializeProgram()
@@ -46,6 +46,18 @@ namespace GE
 		GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_RUNTIME);
 
 		GRenderer::RegisterRenderGraph(std::make_shared<GRuntimeRenderGraph>("RuntimeMain"));
+
+		this->RuntimeEventProcesser = std::make_shared<GEventProcesser>();
+		this->RuntimeEventProcesser->OnEvent<GWindowResizeEvent>([](const GWindowResizeEvent& e)
+			{
+				if (e.WindowHandle == GApplication::Instance->GetMainWindowHandle())
+				{
+					GRenderer::GetSceneRenderGraph()->Resize(e.ResizeWidth, e.ResizeHeight);
+					GRenderer::GetRenderGraph("RuntimeMain")->Resize(e.ResizeWidth, e.ResizeHeight);
+
+					GSceneRegistry::GetActiveScene()->GetRuntimeCamera()->ResizeFrustum((float)e.ResizeWidth, (float)e.ResizeHeight);
+				}
+			});
 	}
 
 	void GRuntime::UpdateProgram()

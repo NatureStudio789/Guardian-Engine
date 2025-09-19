@@ -36,7 +36,7 @@ namespace GE
 					}
 					this->SceneEditImage->SetImageSize({ ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y });
 
-					if (ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
+					if (ImGui::IsMouseReleased(ImGuiMouseButton_Left) && ImGui::IsWindowHovered())
 					{
 						ImVec2 MousePos = ImGui::GetMousePos();
 						GVector2 MousePosition = 

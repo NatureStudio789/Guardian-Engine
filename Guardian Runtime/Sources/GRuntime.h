@@ -21,6 +21,8 @@ namespace GE
 		GUUID StartupSceneId;
 		std::string AssetPackage;
 
+		std::shared_ptr<GEventProcesser> RuntimeEventProcesser;
+
 		std::shared_ptr<GAssetLoader> RuntimeAssetLoader;
 		std::shared_ptr<GScene> RuntimeScene;
 	};
