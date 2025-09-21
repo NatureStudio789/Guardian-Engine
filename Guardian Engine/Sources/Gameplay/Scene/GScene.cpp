@@ -30,6 +30,8 @@ namespace GE
 
 		this->LightRegistry = std::make_shared<GLightRegistry>();
 
+		this->PhysicsWorld = null;
+
 		this->CameraEntity = this->CreateEntity("Main Camera");
 		this->CameraEntity->AddComponent<GCameraComponent>(this->RuntimeCamera);
 	}
@@ -299,7 +301,13 @@ namespace GE
 
 	void GScene::StartRuntime()
 	{
-
+		if (this->PhysicsWorld)
+		{
+			this->PhysicsWorld.reset();
+		}
+		this->PhysicsWorld = GPhysicsWorld::CreateNewPhysicsWorld(this->SceneName, GVector3(0.0f, -9.81f, 0.0f));
+		GPhysicsWorldRegistry::RegistryPhysicsWorld(this->PhysicsWorld);
+		GPhysicsWorldRegistry::SetCurrentPhysicsWorld(this->PhysicsWorld->GetWorldName());
 	}
 
 	void GScene::UpdateRuntime()
@@ -349,7 +357,8 @@ namespace GE
 
 	void GScene::EndUpRuntime()
 	{
-
+		GPhysicsWorldRegistry::RemovePhysicsWorld(this->PhysicsWorld->GetWorldName());
+		this->PhysicsWorld.reset();
 	}
 
 	void GScene::BuildEntityTree()

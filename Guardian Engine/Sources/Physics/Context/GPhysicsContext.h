@@ -18,6 +18,7 @@ namespace GE
 		const std::string& GetContextName() const noexcept;
 		PxFoundation* GetPhysicsFoundation();
 		PxPhysics* GetPhysicsHandle();
+		PxDefaultCpuDispatcher* GetPhysicsCpuDispatcher();
 		
 		static std::shared_ptr<GPhysicsContext> CreateNewPhysicsContext(const std::string& name)
 		{
@@ -33,6 +34,7 @@ namespace GE
 		PxFoundation* PhysicsFoundation;
 		PxPhysics* PhysicsHandle;
 		PxPvd* PhysicsDebugger;
+		PxDefaultCpuDispatcher* PhysicsCpuDispatcher;
 	};
 }
 

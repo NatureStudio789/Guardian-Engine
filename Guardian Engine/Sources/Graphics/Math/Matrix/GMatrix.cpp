@@ -115,7 +115,7 @@ namespace GE
 	const GVector3 GMatrix::Multiply(const GMatrix& matrix, const GVector3& vector)
 	{
 		XMVECTOR Output = XMVector3Transform(XMVectorSet(vector.x, vector.y, vector.z, 0.0f), matrix);
-
+		
 		XMFLOAT3 FOutput;
 		XMStoreFloat3(&FOutput, Output);
 

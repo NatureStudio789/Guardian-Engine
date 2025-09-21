@@ -19,7 +19,7 @@ namespace GE
 
 			this->EditManipulater = std::make_shared<EUI::GManipulater>();
 			this->EditManipulater->DisableWidgetRendering();
-			this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_ROTATE);
+			this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_TRANSLATE);
 			this->SceneEditPanel->AddWidgetToPanel(this->EditManipulater);
 
 			this->SceneEditPanel->SetWidgetEventProcessFunction([=]()
@@ -289,6 +289,43 @@ namespace GE
 			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
 
 			auto& component = entity->GetComponent<GTransformComponent>();
+
+			static bool translate = false;
+			static bool rotate = false;
+			static bool scale = false;
+			if (this->EditManipulater->GetCurrentOperation() == EUI::GManipulater::GE_OPERATION_TRANSLATE)
+			{
+				translate = true;
+				rotate = false;
+				scale = false;
+			}
+			else if (this->EditManipulater->GetCurrentOperation() == EUI::GManipulater::GE_OPERATION_ROTATE)
+			{
+				rotate = true;
+				translate = false;
+				scale = false;
+			}
+			else if (this->EditManipulater->GetCurrentOperation() == EUI::GManipulater::GE_OPERATION_SCALE)
+			{
+				scale = true;
+				rotate = false;
+				translate = false;
+			}
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GCheckbox>("Translate", &translate, [=]()
+				{
+					this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_TRANSLATE);
+				}));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GSameLine>());
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GCheckbox>("Rotate", &rotate, [=]()
+				{
+					this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_ROTATE);
+				}));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GSameLine>());
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GCheckbox>("Scale", &scale, [=]()
+				{
+					this->EditManipulater->SetCurrentOperation(EUI::GManipulater::GE_OPERATION_SCALE);
+				}));
 
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &component.Transform.Position, 0.1f));
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &component.Transform.Rotation, 0.1f));

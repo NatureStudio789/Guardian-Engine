@@ -17,7 +17,7 @@ namespace GE
 
 	GPhysicsEngine::~GPhysicsEngine()
 	{
-		this->MainPhysicsContext.reset();
+
 	}
 
 	void GPhysicsEngine::InitializeModule()
@@ -29,11 +29,14 @@ namespace GE
 
 	void GPhysicsEngine::UpdateModule()
 	{
-
+		if (GPhysicsWorldRegistry::IsCurrentPhysicsWorldAvailable())
+		{
+			GPhysicsWorldRegistry::GetCurrentPhysicsWorld()->Simulate();
+		}
 	}
 
 	void GPhysicsEngine::ReleaseModule()
 	{
-
+		this->MainPhysicsContext.reset();
 	}
 }

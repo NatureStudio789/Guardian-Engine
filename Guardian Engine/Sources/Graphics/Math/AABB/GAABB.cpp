@@ -22,8 +22,8 @@ namespace GE
 
     void GAABB::SetTransform(GMatrix transformMatrix)
     {
-        this->Max = GMatrix::MultiplyCoord(transformMatrix, this->Max);
-        this->Min = GMatrix::MultiplyCoord(transformMatrix, this->Min);
+        this->Max = GMatrix::Multiply(transformMatrix, this->Max);
+        this->Min = GMatrix::Multiply(transformMatrix, this->Min);
     }
 
     bool GAABB::Intersect(const GVector3& rayOrigin, const GVector3& rayDirection, float* distance) const

@@ -72,6 +72,8 @@ namespace GE
 
 		std::shared_ptr<GLightRegistry> LightRegistry;
 
+		std::shared_ptr<GPhysicsWorld> PhysicsWorld;
+
 		std::shared_ptr<GEntity> CameraEntity;
 		std::shared_ptr<GCamera> EditCamera;
 		std::shared_ptr<GCamera> RuntimeCamera;

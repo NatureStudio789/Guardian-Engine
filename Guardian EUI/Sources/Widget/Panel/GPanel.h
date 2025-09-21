@@ -1,6 +1,7 @@
 #ifndef _GE_GPANEL_H_
 #define _GE_GPANEL_H_
 #include "../Button/GButton.h"
+#include "../Checkbox/GCheckbox.h"
 #include "../Text/GText.h"
 #include "../Button/GImageButton.h"
 #include "../ColumnLayout/GColumnLayout.h"
@@ -12,6 +13,7 @@
 #include "../MenuBar/Menu/GMenu.h"
 #include "../MenuBar/MenuItem/GMenuItem.h"
 #include "../Separator/GSeparator.h"
+#include "../SameLine/GSameLine.h"
 #include "../Manipulater/GManipulater.h"
 
 namespace GE

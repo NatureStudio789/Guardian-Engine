@@ -57,6 +57,12 @@ namespace GE
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to create physics handle!");
 		}
+
+		this->PhysicsCpuDispatcher = PxDefaultCpuDispatcherCreate(std::thread::hardware_concurrency());
+		if (!this->PhysicsCpuDispatcher)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to create cpu dispatcher!");
+		}
 	}
 
 	const GUUID& GPhysicsContext::GetContextId() const noexcept
@@ -77,5 +83,10 @@ namespace GE
 	PxPhysics* GPhysicsContext::GetPhysicsHandle()
 	{
 		return this->PhysicsHandle;
+	}
+
+	PxDefaultCpuDispatcher* GPhysicsContext::GetPhysicsCpuDispatcher()
+	{
+		return this->PhysicsCpuDispatcher;
 	}
 }

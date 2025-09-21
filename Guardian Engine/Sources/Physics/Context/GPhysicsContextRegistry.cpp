@@ -33,6 +33,7 @@ namespace GE
 			if (context->GetContextId() == id)
 			{
 				CurrentPhysicsContext = name;
+				return;
 			}
 		}
 

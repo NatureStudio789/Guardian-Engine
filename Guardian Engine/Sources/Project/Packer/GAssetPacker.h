@@ -1,6 +1,6 @@
 #ifndef _GE_GASSETPACKER_H_
 #define _GE_GASSETPACKER_H_
-#include "../../Physics/Context/GPhysicsContextRegistry.h"
+#include "../../Physics/World/GPhysicsWorldRegistry.h"
 
 namespace GE
 {

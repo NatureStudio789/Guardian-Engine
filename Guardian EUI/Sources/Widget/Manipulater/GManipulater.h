@@ -49,6 +49,8 @@ namespace GE
 			void Update() override;
 			void Render() override;
 
+			const Operation& GetCurrentOperation() const noexcept;
+
 		private:
 			GVector2 RectPosition;
 			GVector2 RectSize;

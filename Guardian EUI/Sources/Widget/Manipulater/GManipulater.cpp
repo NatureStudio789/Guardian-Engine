@@ -69,5 +69,10 @@ namespace GE
 				this->OperationProcessFunction(this->CurrentOperation);
 			}
 		}
+
+		const GManipulater::Operation& GManipulater::GetCurrentOperation() const noexcept
+		{
+			return this->CurrentOperation;
+		}
 	}
 }
