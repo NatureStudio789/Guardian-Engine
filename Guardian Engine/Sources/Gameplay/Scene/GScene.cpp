@@ -308,6 +308,30 @@ namespace GE
 		this->PhysicsWorld = GPhysicsWorld::CreateNewPhysicsWorld(this->SceneName, GVector3(0.0f, -9.81f, 0.0f));
 		GPhysicsWorldRegistry::RegistryPhysicsWorld(this->PhysicsWorld);
 		GPhysicsWorldRegistry::SetCurrentPhysicsWorld(this->PhysicsWorld->GetWorldName());
+
+		{
+			auto view = this->EntityRegistry.view<GColliderComponent, GRigidBodyComponent>();
+			view.each([=](const auto& e, GColliderComponent& CComponent, GRigidBodyComponent& RBComponent)
+			{
+				CComponent.Collider->InitializeCollider();
+
+				RBComponent.RigidBody->SetCollider(CComponent.Collider);
+				RBComponent.RigidBody->InitializeRigidBody();
+
+				this->PhysicsWorld->AttatchRigidBody(RBComponent.RigidBody);
+			});
+		}
+
+		{
+			auto view = this->EntityRegistry.view<GColliderComponent>();
+			view.each([=](const entt::entity& e, GColliderComponent& CComponent)
+				{
+					if (!this->GetEntity(e)->HasComponent<GRigidBodyComponent>())
+					{
+						// TODO: Add static rigid body for single collider component.
+					}
+				});
+		}
 	}
 
 	void GScene::UpdateRuntime()
@@ -352,6 +376,16 @@ namespace GE
 
 					MComponent.Model->Submit("main");
 				});
+		}
+
+		{
+			auto view = this->EntityRegistry.view<GTransformComponent, GRigidBodyComponent>();
+			view.each([=](const auto& e, GTransformComponent& TComponent, GRigidBodyComponent& RBComponent)
+			{
+				auto& Transform = RBComponent.RigidBody->GetRigidBodyTransform();
+				TComponent.Transform.Position = Transform.Position;
+				TComponent.Transform.Rotation = Transform.Rotation;
+			});
 		}
 	}
 

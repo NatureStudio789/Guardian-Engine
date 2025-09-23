@@ -10,13 +10,15 @@ namespace GE
 		GCollider();
 		~GCollider();
 
-		void AddShape(std::shared_ptr<GBoxShape> shape);
-		void AddShape(std::shared_ptr<GSphereShape> shape);
+		void AddShape(std::shared_ptr<GShape> shape);
 		void InitializeCollider();
 
+		const std::vector<std::shared_ptr<GShape>>& GetColliderShapeList() const noexcept;
+
 	private:
-		std::vector<std::shared_ptr<GBoxShape>> BoxShapeList;
-		std::vector<std::shared_ptr<GSphereShape>> SphereShapeList;
+		std::vector<std::shared_ptr<GShape>> ColliderShapeList;
+
+		friend class GDynamicRigidBody;
 	};
 }
 

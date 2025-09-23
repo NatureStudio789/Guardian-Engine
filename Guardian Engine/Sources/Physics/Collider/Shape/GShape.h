@@ -7,6 +7,15 @@ namespace GE
 	class GUARDIAN_API GShape
 	{
 	public:
+		enum Category
+		{
+			GE_SHAPE_UNKNOWN = 0,
+			GE_SHAPE_BOX,
+			GE_SHAPE_SPHERE,
+			GE_SHAPE_CAPSULE
+		};
+
+	public:
 		GShape();
 		GShape(const GTransform& localTransform, std::shared_ptr<GPhysicsMaterial> material, PxShape* shape);
 		GShape(const GShape& other);
@@ -19,6 +28,10 @@ namespace GE
 
 		virtual void InitializeShape() {}
 
+		virtual const Category GetShapeCategory() const noexcept
+		{
+			return GE_SHAPE_UNKNOWN;
+		}
 		virtual const GTransform& GetLocalTransform() const noexcept;
 
 		virtual std::shared_ptr<GPhysicsMaterial> GetShapeMaterial();
@@ -71,9 +84,19 @@ namespace GE
 			this->ShapeObject->setLocalPose(transform);
 		}
 
+		const Category GetShapeCategory() const noexcept override
+		{
+			return GE_SHAPE_BOX;
+		}
+
 		const GVector3& GetEdgeLength() const noexcept
 		{
 			return this->EdgeLength;
+		}
+
+		static std::shared_ptr<GBoxShape> CreateNewBoxShape(const GVector3& edgeLength)
+		{
+			return std::make_shared<GBoxShape>(edgeLength);
 		}
 
 		GVector3 EdgeLength;
@@ -117,6 +140,21 @@ namespace GE
 			PxTransform transform(PxVec3(this->LocalTransform.Position.x, this->LocalTransform.Position.y, this->LocalTransform.Position.z),
 				PxQuat(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
 			this->ShapeObject->setLocalPose(transform);
+		}
+
+		const Category GetShapeCategory() const noexcept override
+		{
+			return GE_SHAPE_SPHERE;
+		}
+
+		float GetRadius() const noexcept
+		{
+			return this->Radius;
+		}
+
+		static std::shared_ptr<GSphereShape> CreateNewBoxShape(float radius)
+		{
+			return std::make_shared<GSphereShape>(radius);
 		}
 
 		float Radius;

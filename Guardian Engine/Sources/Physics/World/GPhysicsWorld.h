@@ -1,6 +1,6 @@
 #ifndef _GE_GPHYSICSWORLD_H_
 #define _GE_GPHYSICSWORLD_H_
-#include "../Collider/GCollider.h"
+#include "../RigidBody/GDynamicRigidBody.h"
 
 namespace GE
 {
@@ -12,6 +12,8 @@ namespace GE
 		~GPhysicsWorld();
 
 		void InitializePhysicsWorld(const std::string& name, const GVector3& gravity);
+
+		void AttatchRigidBody(std::shared_ptr<GDynamicRigidBody> dynamicRigidBody);
 
 		void Simulate();
 

@@ -75,6 +75,38 @@ namespace GE
 		std::shared_ptr<GPointLight> PointLight;
 	};
 
+	struct GUARDIAN_API GColliderComponent
+	{
+	public:
+		GColliderComponent()
+		{
+			this->Collider = std::make_shared<GCollider>();
+		}
+		GColliderComponent(std::shared_ptr<GCollider> collider)
+		{
+			this->Collider = collider;
+		}
+		GColliderComponent(const GColliderComponent&) = default;
+
+		std::shared_ptr<GCollider> Collider;
+	};
+
+	struct GUARDIAN_API GRigidBodyComponent
+	{
+	public:
+		GRigidBodyComponent()
+		{
+			this->RigidBody = std::make_shared<GDynamicRigidBody>();
+		}
+		GRigidBodyComponent(std::shared_ptr<GDynamicRigidBody> rigidBody)
+		{
+			this->RigidBody = rigidBody;
+		}
+		GRigidBodyComponent(const GRigidBodyComponent&) = default;
+
+		std::shared_ptr<GDynamicRigidBody> RigidBody;
+	};
+
 	struct GUARDIAN_API GModelComponent
 	{
 	public:
