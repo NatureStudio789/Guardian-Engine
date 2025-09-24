@@ -1,5 +1,6 @@
 #include "GScene.h"
 #include "../Entity/GEntity.h"
+#include "../Serializer/GSceneSerializer.h"
 
 namespace GE
 {
@@ -46,6 +47,19 @@ namespace GE
 		this->SceneEntityList[entityName]->AddComponent<GTransformComponent>(GTransform({}, {}, {1.0f, 1.0f, 1.0f}));
 
 		return this->SceneEntityList[entityName];
+	}
+	
+	void GScene::RemoveAllEntity()
+	{
+		for (auto& [name, entity] : this->SceneEntityList)
+		{
+			this->EntityRegistry.destroy(entity->EntityHandle);
+			entity.reset();
+			entity = null;
+		}
+		this->SceneEntityList.clear();
+
+		this->SceneRootEntity.reset();
 	}
 
 	void GScene::SwitchSceneState(State state)
@@ -179,6 +193,11 @@ namespace GE
 
 	std::shared_ptr<GEntity> GScene::GetEntity(const std::string& name)
 	{
+		if (name == this->SceneRootEntity->EntityName)
+		{
+			return this->SceneRootEntity;
+		}
+
 		if (!this->SceneEntityList.count(name))
 		{
 			throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity named '{}' found in scene", name));
@@ -189,6 +208,11 @@ namespace GE
 
 	std::shared_ptr<GEntity> GScene::GetEntity(const GUUID& id)
 	{
+		if (id == this->SceneRootEntity->EntityId)
+		{
+			return this->SceneRootEntity;
+		}
+
 		for (auto& entity : this->SceneEntityList)
 		{
 			if (entity.second->GetEntityId() == id)
@@ -202,6 +226,11 @@ namespace GE
 
 	std::shared_ptr<GEntity> GScene::GetEntity(const entt::entity& handle)
 	{
+		if (handle == this->SceneRootEntity->EntityHandle)
+		{
+			return this->SceneRootEntity;
+		}
+
 		for (auto& entity : this->SceneEntityList)
 		{
 			if (entity.second->GetEntityHandle() == handle)
@@ -309,13 +338,16 @@ namespace GE
 		GPhysicsWorldRegistry::RegistryPhysicsWorld(this->PhysicsWorld);
 		GPhysicsWorldRegistry::SetCurrentPhysicsWorld(this->PhysicsWorld->GetWorldName());
 
+		GSceneSerializer::Export("SavedEdit.gscene", this);
+
 		{
-			auto view = this->EntityRegistry.view<GColliderComponent, GRigidBodyComponent>();
-			view.each([=](const auto& e, GColliderComponent& CComponent, GRigidBodyComponent& RBComponent)
+			auto view = this->EntityRegistry.view<GTransformComponent, GColliderComponent, GRigidBodyComponent>();
+			view.each([=](const auto& e, GTransformComponent& TComponent, GColliderComponent& CComponent, GRigidBodyComponent& RBComponent)
 			{
 				CComponent.Collider->InitializeCollider();
 
 				RBComponent.RigidBody->SetCollider(CComponent.Collider);
+				RBComponent.RigidBody->SetTransform(TComponent.Transform);
 				RBComponent.RigidBody->InitializeRigidBody();
 
 				this->PhysicsWorld->AttatchRigidBody(RBComponent.RigidBody);
@@ -323,14 +355,22 @@ namespace GE
 		}
 
 		{
-			auto view = this->EntityRegistry.view<GColliderComponent>();
-			view.each([=](const entt::entity& e, GColliderComponent& CComponent)
+			auto view = this->EntityRegistry.view<GTransformComponent, GColliderComponent>();
+			view.each([=](const entt::entity& e, GTransformComponent& TComponent, GColliderComponent& CComponent)
+			{
+				if (!this->GetEntity(e)->HasComponent<GRigidBodyComponent>())
 				{
-					if (!this->GetEntity(e)->HasComponent<GRigidBodyComponent>())
-					{
-						// TODO: Add static rigid body for single collider component.
-					}
-				});
+					CComponent.Collider->InitializeCollider();
+
+					CComponent.StaticRigidBody = std::make_shared<GStaticRigidBody>();
+					CComponent.StaticRigidBody->SetCollider(CComponent.Collider);
+					CComponent.StaticRigidBody->SetTransform(TComponent.Transform);
+
+					CComponent.StaticRigidBody->InitializeRigidBody();
+
+					this->PhysicsWorld->AttatchRigidBody(CComponent.StaticRigidBody);
+				}
+			});
 		}
 	}
 
@@ -379,6 +419,30 @@ namespace GE
 		}
 
 		{
+			auto view = this->EntityRegistry.view<GTransformComponent, GColliderComponent>();
+			view.each([=](const entt::entity& e, GTransformComponent& TComponent, GColliderComponent& CComponent)
+			{
+				if (!this->GetEntity(e)->HasComponent<GRigidBodyComponent>())
+				{
+					if (!CComponent.StaticRigidBody)
+					{
+						CComponent.StaticRigidBody = std::make_shared<GStaticRigidBody>();
+						CComponent.StaticRigidBody->SetTransform(TComponent.Transform);
+						CComponent.StaticRigidBody->SetCollider(CComponent.Collider);
+
+						CComponent.StaticRigidBody->InitializeRigidBody();
+
+						this->PhysicsWorld->AttatchRigidBody(CComponent.StaticRigidBody);
+					}
+
+					auto& transform = CComponent.StaticRigidBody->GetRigidBodyTransform();
+					TComponent.Transform.Position = transform.Position;
+					TComponent.Transform.Rotation = transform.Rotation;
+				}
+			});
+		}
+
+		{
 			auto view = this->EntityRegistry.view<GTransformComponent, GRigidBodyComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GRigidBodyComponent& RBComponent)
 			{
@@ -393,6 +457,15 @@ namespace GE
 	{
 		GPhysicsWorldRegistry::RemovePhysicsWorld(this->PhysicsWorld->GetWorldName());
 		this->PhysicsWorld.reset();
+		this->PhysicsWorld = null;
+
+		this->RemoveAllEntity();
+
+		if (!GUtil::FileExists("SavedEdit.gscene"))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to find the edit mode saved scene data!");
+		}
+		GSceneSerializer::Import("SavedEdit.gscene", this);
 	}
 
 	void GScene::BuildEntityTree()

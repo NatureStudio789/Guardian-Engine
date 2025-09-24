@@ -21,8 +21,7 @@ namespace GE
 
 	GTask::~GTask()
 	{
-		this->Step = null;
-		this->Renderable = null;
+
 	}
 
 	void GTask::InitializeTask(std::shared_ptr<GStep> step, std::shared_ptr<GRenderable> renderable)

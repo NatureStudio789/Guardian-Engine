@@ -30,6 +30,12 @@ namespace GE
 
 		std::shared_ptr<EUI::GPanel> SceneHierarchyPanel;
 		std::shared_ptr<EUI::GPanel> PropertiesPanel;
+
+		std::shared_ptr<EUI::GPanel> ControlPanel;
+		std::shared_ptr<EUI::GImageButton> PlayButton;
+		UINT PlayState;
+		std::shared_ptr<GTexture> PlayButtonTexture;
+		std::shared_ptr<GTexture> StopButtonTexture;
 		GUUID SelectedEntityId;
 	};
 }

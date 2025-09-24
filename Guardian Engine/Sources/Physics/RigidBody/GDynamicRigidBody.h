@@ -1,6 +1,6 @@
 #ifndef _GE_GDYNAMICRIGIDBODY_H_
 #define _GE_GDYNAMICRIGIDBODY_H_
-#include "../Collider/GCollider.h"
+#include "GStaticRigidBody.h"
 
 namespace GE
 {

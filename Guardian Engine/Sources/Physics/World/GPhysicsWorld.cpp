@@ -51,6 +51,11 @@ namespace GE
 		this->WorldScene->addActor(*dynamicRigidBody->GetRigidBodyObject());
 	}
 
+	void GPhysicsWorld::AttatchRigidBody(std::shared_ptr<GStaticRigidBody> staticRigidBody)
+	{
+		this->WorldScene->addActor(*staticRigidBody->GetRigidBodyObject());
+	}
+
 	void GPhysicsWorld::Simulate()
 	{
 		this->WorldScene->simulate(0.001f);

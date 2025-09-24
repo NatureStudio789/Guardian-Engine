@@ -14,6 +14,7 @@ namespace GE
 		void InitializePhysicsWorld(const std::string& name, const GVector3& gravity);
 
 		void AttatchRigidBody(std::shared_ptr<GDynamicRigidBody> dynamicRigidBody);
+		void AttatchRigidBody(std::shared_ptr<GStaticRigidBody> staticRigidBody);
 
 		void Simulate();
 

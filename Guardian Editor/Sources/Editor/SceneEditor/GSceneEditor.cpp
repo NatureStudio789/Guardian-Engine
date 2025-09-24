@@ -8,6 +8,13 @@ namespace GE
 		EUI::GWidget::Style NoPaddingStyle;
 		NoPaddingStyle.Index = NoPaddingStyle.GEStyleVar_WindowPadding;
 		NoPaddingStyle.Value = GVector2(0.0f, 0.0f);
+
+		{
+			this->PlayButtonTexture = GTexture::CreateNewTexture(null, 
+				*GAssetLoaderRegistry::GetAssetLoader("EditorAssetLoader")->GetAsset("Play")->GetAssetData<std::shared_ptr<GSurface>>().get());
+			this->StopButtonTexture = GTexture::CreateNewTexture(null, 
+				*GAssetLoaderRegistry::GetAssetLoader("EditorAssetLoader")->GetAsset("Stop")->GetAssetData<std::shared_ptr<GSurface>>().get());
+		}
 		
 		{
 			this->SceneEditPanel = std::make_shared<EUI::GPanel>("Scene");
@@ -137,6 +144,35 @@ namespace GE
 			this->PropertiesPanel = std::make_shared<EUI::GPanel>("Properties");
 
 			this->AddWidgetToEditor(this->PropertiesPanel);
+		}
+
+		{
+			this->ControlPanel = std::make_shared<EUI::GPanel>("Control");
+
+			this->PlayState = 0;
+			this->PlayButton = std::make_shared<EUI::GImageButton>("Play",
+			[=]()
+			{
+				if (this->PlayState == 0)
+				{
+					GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_RUNTIME);
+					this->PlayButton->SetButtonImageId(this->StopButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr);
+					this->PlayState = 1;
+
+					ImGui::SetWindowFocus(this->SceneRuntimePanel->GetPanelName().c_str());
+				}
+				else if (this->PlayState == 1)
+				{
+					GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_EDIT);
+					this->PlayButton->SetButtonImageId(this->PlayButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr);
+					this->PlayState = 0;
+
+					ImGui::SetWindowFocus(this->SceneEditPanel->GetPanelName().c_str());
+				}
+			}, this->PlayButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2{50.0f, 50.0f});
+			this->ControlPanel->AddWidgetToPanel(this->PlayButton);
+
+			this->AddWidgetToEditor(this->ControlPanel);
 		}
 	}
 

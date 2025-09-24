@@ -1,0 +1,57 @@
+Scene: 8768267435523757796
+Name: Sample Scene
+Entities:
+  - Entity: 13268956092010720253
+    Name: Cerberus
+    Parent: Root
+    Tag Component:
+      Tag: Cerberus
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [-0, 0, -0]
+      Scale: [0.100000001, 0.100000001, 0.100000001]
+    Model Component:
+      Asset Name: Cerberus
+  - Entity: 16540817398987549085
+    Name: Light1
+    Parent: Root
+    Tag Component:
+      Tag: Light1
+    Transform Component:
+      Position: [20, 51, 35.7999992]
+      Rotation: [0, 0, 0]
+      Scale: [0.100000001, 0.100000001, 0.100000001]
+    Point Light Component:
+      Color: [1, 1, 1]
+      Strength: 10000
+    Model Component:
+      Asset Name: Box
+  - Entity: 12113719906026999298
+    Name: Light2
+    Parent: Root
+    Tag Component:
+      Tag: Light2
+    Transform Component:
+      Position: [20, 33, -45.5]
+      Rotation: [0, 0, 0]
+      Scale: [0.100000001, 0.100000001, 0.100000001]
+    Point Light Component:
+      Color: [1, 1, 1]
+      Strength: 10000
+    Model Component:
+      Asset Name: Box
+  - Entity: 12115211088824830474
+    Name: Main Camera
+    Parent: Root
+    Tag Component:
+      Tag: Main Camera
+    Transform Component:
+      Position: [0, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      IsFreeLook: true
+      Projection:
+        FOV: 60
+        NearZ: 0.100000001
+        FarZ: 1000

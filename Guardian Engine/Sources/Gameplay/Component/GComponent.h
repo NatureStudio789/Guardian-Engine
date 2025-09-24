@@ -81,6 +81,7 @@ namespace GE
 		GColliderComponent()
 		{
 			this->Collider = std::make_shared<GCollider>();
+			this->StaticRigidBody = null;
 		}
 		GColliderComponent(std::shared_ptr<GCollider> collider)
 		{
@@ -89,6 +90,11 @@ namespace GE
 		GColliderComponent(const GColliderComponent&) = default;
 
 		std::shared_ptr<GCollider> Collider;
+
+	private:
+		std::shared_ptr<GStaticRigidBody> StaticRigidBody;
+
+		friend class GScene;
 	};
 
 	struct GUARDIAN_API GRigidBodyComponent

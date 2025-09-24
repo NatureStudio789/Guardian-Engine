@@ -74,7 +74,7 @@ namespace GE
 
 		if (auto pass = dynamic_cast<GRenderQueuePass*>(RenderGraph->GetPass(this->TargetPassName).get()))
 		{
-			this->TargetPass.reset(pass);
+			this->TargetPass = pass;
 		}
 		else
 		{

@@ -8,11 +8,15 @@ namespace GE
 	{
 	public:
 		static void Serialize(std::shared_ptr<GScene> scene, YAML::Emitter& serializingData);
+		static void Serialize(GScene* scene, YAML::Emitter& serializingData);
 
 		static void Deserialize(std::shared_ptr<GScene> scene, YAML::Node& deserializingData);
+		static void Deserialize(GScene* scene, YAML::Node& deserializingData);
 
 		static void Export(const std::string& filePath, std::shared_ptr<GScene> scene);
+		static void Export(const std::string& filePath, GScene* scene);
 		static void Import(const std::string& filePath, std::shared_ptr<GScene> scene);
+		static void Import(const std::string& filePath, GScene* scene);
 
 		static YAML::Node Load(const std::string& filePath);
 	};

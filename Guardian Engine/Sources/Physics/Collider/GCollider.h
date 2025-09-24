@@ -19,6 +19,7 @@ namespace GE
 		std::vector<std::shared_ptr<GShape>> ColliderShapeList;
 
 		friend class GDynamicRigidBody;
+		friend class GStaticRigidBody;
 	};
 }
 

@@ -25,6 +25,7 @@ namespace GE
 		void InitializeScene(const std::string& name);
 
 		std::shared_ptr<GEntity> CreateEntity(const std::string& entityName, std::string rootName = "Root");
+		void RemoveAllEntity();
 
 		void SwitchSceneState(State state);
 		const State& GetSceneState() const noexcept;

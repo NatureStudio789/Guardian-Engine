@@ -43,27 +43,35 @@ namespace GE
 
 		ImGui::StyleColorsDark();
 
+		ImVec4 Unactive = ImColor(38, 38, 40);
+		ImVec4 UnactiveDark = ImColor(20, 20, 20);
+		ImVec4 UnactiveLight = ImColor(56, 56, 56);
+		ImVec4 Active = ImColor(255, 125, 55);
+		ImVec4 ActiveLight = ImColor(255, 125, 23);
+		ImVec4 Hovered = ImColor(155, 100, 20);
+		ImVec4 Light = ImColor(200, 200, 208);
+
 		auto& ThemeColors = ImGui::GetStyle().Colors;
 		ThemeColors[ImGuiCol_TitleBg] = ImColor(11, 11, 11);
 		ThemeColors[ImGuiCol_TitleBgActive] = ImColor(16, 16, 16);
 		ThemeColors[ImGuiCol_TitleBgCollapsed] = ImVec4{ 0.15f, 0.1505f, 0.151f, 1.0f };
 
-		ThemeColors[ImGuiCol_Button] = ImColor(56, 56, 56, 200);
+		ThemeColors[ImGuiCol_Button] = UnactiveLight;
 		ThemeColors[ImGuiCol_ButtonHovered] = ImColor(70, 70, 70, 255);
-		ThemeColors[ImGuiCol_ButtonActive] = ImColor(56, 56, 56, 150);
+		ThemeColors[ImGuiCol_ButtonActive] = Active;
 
 		ThemeColors[ImGuiCol_ResizeGrip] = ImVec4(0.91f, 0.91f, 0.91f, 0.25f);
 		ThemeColors[ImGuiCol_ResizeGripHovered] = ImVec4(0.81f, 0.81f, 0.81f, 0.67f);
 		ThemeColors[ImGuiCol_ResizeGripActive] = ImVec4(0.46f, 0.46f, 0.46f, 0.95f);
 
-		ThemeColors[ImGuiCol_CheckMark] = ImColor(200, 200, 200, 255);
+		ThemeColors[ImGuiCol_CheckMark] = Light;
 
-		ThemeColors[ImGuiCol_Tab] = ImColor(38, 38, 40, 255);
-		ThemeColors[ImGuiCol_TabHovered] = ImColor(35, 35, 38, 255);
-		ThemeColors[ImGuiCol_TabActive] = ImColor(58, 58, 66, 255);
+		ThemeColors[ImGuiCol_Tab] = Unactive;
+		ThemeColors[ImGuiCol_TabHovered] = Hovered;
+		ThemeColors[ImGuiCol_TabActive] = Active;
 		ThemeColors[ImGuiCol_TabUnfocused] = ThemeColors[ImGuiCol_Tab];
-		ThemeColors[ImGuiCol_TabUnfocusedActive] = ThemeColors[ImGuiCol_TabHovered];
-		ThemeColors[ImGuiCol_TabSelectedOverline] = ImColor(15, 15, 15);
+		ThemeColors[ImGuiCol_TabUnfocusedActive] = Unactive;
+		ThemeColors[ImGuiCol_TabSelectedOverline] = Light;
 
 		ThemeColors[ImGuiCol_SliderGrab] = ImVec4(0.51f, 0.51f, 0.51f, 0.7f);
 		ThemeColors[ImGuiCol_SliderGrabActive] = ImVec4(0.66f, 0.66f, 0.66f, 1.0f);
