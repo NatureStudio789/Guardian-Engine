@@ -57,20 +57,6 @@ namespace GE
 		}
 
 		this->AddTechnique(LightingTechnique);
-
-		auto& DebugTechnique = GTechnique::CreateNewTechnique("Debug", "main", false);
-
-		{
-			auto& WireframeStep = GStep::CreateNewStep("Wireframe");
-
-			WireframeStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
-				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-
-			DebugTechnique->AddStep(WireframeStep);
-		}
-
-		this->AddTechnique(DebugTechnique);
-
 	}
 
 	const GMesh::Data& GMesh::GetMeshData() const noexcept

@@ -1,6 +1,6 @@
 #ifndef _GE_GMESH_H_
 #define _GE_GMESH_H_
-#include "../GRenderable.h"
+#include "../Wireframe/GWireframe.h"
 
 namespace GE
 {
@@ -13,7 +13,7 @@ namespace GE
 			GVector2 TextureCoord;
 			GVector3 Normal;
 		};
-
+		
 		struct Data
 		{
 			Data() = default;

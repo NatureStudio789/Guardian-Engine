@@ -1,6 +1,6 @@
 #ifndef _GE_GGRAPHICSFACTORY_H_
 #define _GE_GGRAPHICSFACTORY_H_
-#include "../Lighting/GLightRegistry.h"
+#include "../Geometry/GGeometry.h"
 
 namespace GE
 {

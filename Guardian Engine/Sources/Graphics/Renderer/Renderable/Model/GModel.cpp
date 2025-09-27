@@ -184,7 +184,7 @@ namespace GE
 
 		NodeData.NodeName = node->mName.C_Str();
 		NodeData.MeshDataIndexList = NodeMeshDataList;
-		NodeData.ExtraMatrix = XMMatrixTranspose(XMLoadFloat4x4((XMFLOAT4X4*)&node->mTransformation));
+		NodeData.ExtraMatrix = XMMatrixIdentity();
 		for (UINT i = 0; i < node->mNumChildren; i++)
 		{
 			NodeData.ChildrenList.push_back(ParseNode(scene, node->mChildren[i], meshDataList));
