@@ -32,8 +32,17 @@ namespace GE
 		this->ContextId = 0;
 		this->ContextName.clear();
 
-		this->PhysicsDebugger->release();
+		PxCloseVehicleExtension();
+
 		this->PhysicsHandle->release();
+
+		if (this->PhysicsDebugger)
+		{
+			PxPvdTransport* transport = this->PhysicsDebugger->getTransport();
+			this->PhysicsDebugger->release();
+			transport->release();
+		}
+
 		this->PhysicsFoundation->release();
 	}
 
@@ -62,6 +71,11 @@ namespace GE
 		if (!this->PhysicsCpuDispatcher)
 		{
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to create cpu dispatcher!");
+		}
+
+		if (!PxInitVehicleExtension(*this->PhysicsFoundation))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Failed to initialize physics vehicle extension!");
 		}
 	}
 

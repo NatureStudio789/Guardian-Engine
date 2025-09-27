@@ -56,6 +56,7 @@
 using namespace Microsoft;
 using namespace DirectX;
 using namespace physx;
+using namespace vehicle2;
 
 #ifdef GE_PLATFORM_WINDOWS
 	
