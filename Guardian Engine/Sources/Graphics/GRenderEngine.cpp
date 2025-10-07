@@ -33,8 +33,6 @@ namespace GE
 		GGraphicsContextRegistry::RegisterGraphicsContext("Main", this->MainGraphicsContext);
 		GGraphicsContextRegistry::SetCurrentGraphicsContext("Main");
 		GPipelineStateRegistry::InitializePipelineStateRegistry();
-
-		GRenderer::InitializeRender();
 	}
 
 	void GRenderEngine::UpdateModule()

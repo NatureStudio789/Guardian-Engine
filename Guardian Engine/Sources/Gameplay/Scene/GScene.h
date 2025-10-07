@@ -37,6 +37,10 @@ namespace GE
 		std::shared_ptr<GLightRegistry> GetLightRegistry();
 		std::shared_ptr<GCamera> GetEditCamera();
 		std::shared_ptr<GCamera> GetRuntimeCamera();
+		std::shared_ptr<GFramebuffer> GetEditFramebuffer();
+		std::shared_ptr<GFramebuffer> GetRuntimeFramebuffer();
+		std::shared_ptr<GMission> GetEditRenderMission();
+		std::shared_ptr<GMission> GetRuntimeRenderMission();
 		const std::map<std::string, std::shared_ptr<GEntity>>& GetSceneEntityList() const noexcept;
 		std::shared_ptr<GEntity> GetSceneRootEntity();
 		bool HasEntity(const std::string& name);
@@ -52,6 +56,8 @@ namespace GE
 		}
 
 	private:
+		void InitializeSceneRender();
+
 		void UpdateEdit();
 
 		void StartRuntime();
@@ -76,6 +82,9 @@ namespace GE
 		std::shared_ptr<GPhysicsWorld> PhysicsWorld;
 
 		std::shared_ptr<GEntity> CameraEntity;
+
+		std::shared_ptr<GMission> EditRenderMission;
+		std::shared_ptr<GMission> RuntimeRenderMission;
 		std::shared_ptr<GCamera> EditCamera;
 		std::shared_ptr<GCamera> RuntimeCamera;
 

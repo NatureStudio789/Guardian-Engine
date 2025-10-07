@@ -33,6 +33,8 @@ namespace GE
 
 		this->PhysicsWorld = null;
 
+		this->InitializeSceneRender();
+
 		this->CameraEntity = this->CreateEntity("Main Camera");
 		this->CameraEntity->AddComponent<GCameraComponent>(this->RuntimeCamera);
 	}
@@ -150,6 +152,26 @@ namespace GE
 		return this->RuntimeCamera;
 	}
 
+	std::shared_ptr<GFramebuffer> GScene::GetEditFramebuffer()
+	{
+		return this->EditRenderMission->GetRenderFramebuffer();
+	}
+
+	std::shared_ptr<GFramebuffer> GScene::GetRuntimeFramebuffer()
+	{
+		return this->RuntimeRenderMission->GetRenderFramebuffer();
+	}
+
+	std::shared_ptr<GMission> GScene::GetEditRenderMission()
+	{
+		return this->EditRenderMission;
+	}
+
+	std::shared_ptr<GMission> GScene::GetRuntimeRenderMission()
+	{
+		return this->RuntimeRenderMission;
+	}
+
 	const std::map<std::string, std::shared_ptr<GEntity>>& GScene::GetSceneEntityList() const noexcept
 	{
 		return this->SceneEntityList;
@@ -242,6 +264,22 @@ namespace GE
 		throw GUARDIAN_ERROR_EXCEPTION(std::format("No entity with handle : '{}' found in scene", (ULONGLONG)handle));
 	}
 
+	void GScene::InitializeSceneRender()
+	{
+		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("SceneEdit"));
+		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("SceneRuntime"));
+
+		this->EditRenderMission = GMission::CreateNewMission("SceneEdit",
+			GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(), true),
+			this->EditCamera);
+		this->EditRenderMission->Request();
+
+		this->RuntimeRenderMission = GMission::CreateNewMission("SceneRuntime",
+			GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(), true),
+			this->RuntimeCamera);
+		this->RuntimeRenderMission->Request();
+	}
+
 	void GScene::UpdateEdit()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
@@ -296,6 +334,7 @@ namespace GE
 					CComponent.Camera->Rotation = TComponent.Transform.Rotation;
 
 					this->RuntimeCamera = CComponent.Camera;
+					this->RuntimeRenderMission->SetRenderCamera(this->RuntimeCamera);
 				});
 		}
 
@@ -387,6 +426,7 @@ namespace GE
 					CComponent.Camera->Rotation = TComponent.Transform.Rotation;
 
 					this->RuntimeCamera = CComponent.Camera;
+					this->RuntimeRenderMission->SetRenderCamera(this->RuntimeCamera);
 				});
 		}
 

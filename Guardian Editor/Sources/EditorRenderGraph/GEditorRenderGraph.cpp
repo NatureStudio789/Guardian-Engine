@@ -9,6 +9,7 @@ namespace GE
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->RegisterGraphicsCommandList(this->RenderGraphName);
 
 		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext());
+		this->RenderGraphCamera = std::make_shared<GCamera>();
 
 		this->EditorContext = GEditorContext::CreateNewEditorContext(this->RenderGraphFramebuffer);
 
@@ -24,6 +25,16 @@ namespace GE
 		this->EditorMainDockspace = std::make_shared<EUI::GDockspace>("Guardian Editor Dockspace");
 		this->AddEditor(std::make_shared<GSceneEditor>());
 		this->AddEditor(std::make_shared<GAssetEditor>());
+	}
+
+	void GEditorRenderGraph::SetFramebuffer(std::shared_ptr<GFramebuffer> framebuffer)
+	{
+
+	}
+
+	void GEditorRenderGraph::SetCamera(std::shared_ptr<GCamera> camera)
+	{
+
 	}
 
 	void GEditorRenderGraph::Execute()

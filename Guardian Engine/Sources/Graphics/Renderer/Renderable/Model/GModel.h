@@ -20,13 +20,13 @@ namespace GE
 
 	public:
 		GModel();
-		GModel(const std::string& filePath, std::string renderGraphName = "Scene");
-		GModel(const Data& data, std::string renderGraphName = "Scene");
+		GModel(const std::string& filePath);
+		GModel(const Data& data);
 		GModel(const GModel& other);
 		~GModel();
 
-		void InitializeModel(const std::string& filePath, std::string renderGraphName = "Scene");
-		void InitializeModel(const Data& data, std::string renderGraphName = "Scene");
+		void InitializeModel(const std::string& filePath);
+		void InitializeModel(const Data& data);
 
 		void SetTransform(const GTransform& transform);
 		void SetAccumulatedMatrix(const GMatrix& accumulatedMatrix);
@@ -34,13 +34,13 @@ namespace GE
 
 		std::shared_ptr<GMeshNode> GetRootMeshNode();
 
-		static std::shared_ptr<GModel> CreateNewModel(const std::string& filePath, std::string renderGraphName = "Scene")
+		static std::shared_ptr<GModel> CreateNewModel(const std::string& filePath)
 		{
-			return std::make_shared<GModel>(filePath, renderGraphName);
+			return std::make_shared<GModel>(filePath);
 		}
-		static std::shared_ptr<GModel> CreateNewModel(const Data& data, std::string renderGraphName = "Scene")
+		static std::shared_ptr<GModel> CreateNewModel(const Data& data)
 		{
-			return std::make_shared<GModel>(data, renderGraphName);
+			return std::make_shared<GModel>(data);
 		}
 
 		static Data Load(const std::string& filePath)

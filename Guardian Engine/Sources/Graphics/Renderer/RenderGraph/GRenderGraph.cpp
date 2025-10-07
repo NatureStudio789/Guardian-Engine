@@ -8,9 +8,9 @@ namespace GE
 		this->IsFinalized = false;
 	}
 
-	GRenderGraph::GRenderGraph(const std::string& name, bool enableRTT) : GRenderGraph()
+	GRenderGraph::GRenderGraph(const std::string& name) : GRenderGraph()
 	{
-		this->InitializeRenderGraph(name, enableRTT);
+		this->InitializeRenderGraph(name);
 	}
 
 	GRenderGraph::GRenderGraph(const GRenderGraph& other)
@@ -55,23 +55,21 @@ namespace GE
 		this->PassList.clear();
 	}
 
-	void GRenderGraph::InitializeRenderGraph(const std::string& name, bool enableRTT)
+	void GRenderGraph::InitializeRenderGraph(const std::string& name)
 	{
 		this->RenderGraphName = name;
 		this->RenderGraphId = GUUID();
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->RegisterGraphicsCommandList(this->RenderGraphName);
 
-		this->RenderGraphFramebuffer = GFramebuffer::CreateNewFramebuffer(
-			GGraphicsContextRegistry::GetCurrentGraphicsContext(), enableRTT);
+		this->RenderGraphFramebuffer = std::make_shared<GFramebuffer>();
 
 		this->RenderGraphCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
+	}
 
-		this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("Framebuffer", this->RenderGraphFramebuffer));
-		this->AddGlobalSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("Framebuffer", this->RenderGraphFramebuffer));
-
-		this->AddGlobalSource(GDirectCameraSource::CreateNewDirectCameraSource("Camera", this->RenderGraphCamera));
-		this->AddGlobalSink(GDirectCameraSink::CreateNewDirectCameraSink("Camera", this->RenderGraphCamera));
+	void GRenderGraph::SetFramebuffer(std::shared_ptr<GFramebuffer> framebuffer)
+	{
+		this->RenderGraphFramebuffer = framebuffer;
 	}
 
 	void GRenderGraph::SetCamera(std::shared_ptr<GCamera> camera)
@@ -210,11 +208,18 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION("The render graph has been finalized!");
 		}
 
+		for (auto& [name, pass] : this->PassList)
+		{
+			this->LinkSinks(pass);
+		}
+
 		for (auto& pass : this->PassList)
 		{
 			pass.second->Finalize();
 		}
+
 		this->LinkGlobalSinks();
+
 		this->IsFinalized = true;
 	}
 
@@ -229,8 +234,6 @@ namespace GE
 		{
 			throw GUARDIAN_ERROR_EXCEPTION(std::format("The pass named '{}' already exists in render graph!", pass->GetPassName()));
 		}
-
-		this->LinkSinks(pass);
 
 		this->PassList[pass->GetPassName()] = pass;
 	}

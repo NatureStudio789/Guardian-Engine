@@ -2,17 +2,9 @@
 
 namespace GE
 {
-	std::string GRenderer::SCENE_RENDERGRAPH = "Scene";
-	
-	std::shared_ptr<GSceneRenderGraph> GRenderer::SceneRenderGraph;
+	std::vector<GMission*> GRenderer::RenderMissionList;
 	std::map<std::string, std::shared_ptr<GRenderGraph>> GRenderer::RenderGraphList;
 
-
-	void GRenderer::InitializeRender()
-	{
-		SceneRenderGraph = GSceneRenderGraph::CreateNewSceneRenderGraph(SCENE_RENDERGRAPH);
-		RegisterRenderGraph(SceneRenderGraph);
-	}
 
 	void GRenderer::RegisterRenderGraph(std::shared_ptr<GRenderGraph> renderGraph)
 	{
@@ -25,25 +17,38 @@ namespace GE
 		RenderGraphList[renderGraph->GetRenderGraphName()] = renderGraph;
 	}
 
+	void GRenderer::Accept(GMission* mission)
+	{
+		RenderMissionList.push_back(mission);
+
+		if (!RenderGraphList.count(mission->GetTargetRenderGraphName()))
+		{
+			throw GUARDIAN_ERROR_EXCEPTION(std::format("No render graph named '{}' found in renderer!", mission->GetTargetRenderGraphName()));
+		}
+
+		auto& RenderGraph = RenderGraphList[mission->GetTargetRenderGraphName()];
+
+		RenderGraph->SetFramebuffer(mission->GetRenderFramebuffer());
+		RenderGraph->Finalize();
+	}
+
 	void GRenderer::Render()
 	{
-		for (auto& RenderGraph : RenderGraphList)
+		for (auto& mission : RenderMissionList)
 		{
-			RenderGraph.second->Execute();
+			auto& RenderGraph = RenderGraphList[mission->GetTargetRenderGraphName()];
+			RenderGraph->SetCamera(mission->GetRenderCamera());
+
+			RenderGraph->Execute();
 		}
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteCommandListBatch();
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->PresentRenderingResult(true);
 
-		for (auto& RenderGraph : RenderGraphList)
+		for (auto& mission : RenderMissionList)
 		{
-			RenderGraph.second->Reset();
+			RenderGraphList[mission->GetTargetRenderGraphName()]->Reset();
 		}
-	}
-
-	std::shared_ptr<GSceneRenderGraph> GRenderer::GetSceneRenderGraph()
-	{
-		return SceneRenderGraph;
 	}
 
 	std::shared_ptr<GRenderGraph> GRenderer::GetRenderGraph(const GUUID& id)

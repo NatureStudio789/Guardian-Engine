@@ -20,9 +20,10 @@ namespace GE
 			GWindow::Handle handle, UINT message, WPARAM wParam, LPARAM lParam) override;
 
 	private:
-		std::shared_ptr<GEditorContext> EditorContext;
-
 		std::shared_ptr<GAssetLoader> EditorAssetLoader;
+
+		std::shared_ptr<GEditorRenderGraph> EditorRenderGraph;
+		std::shared_ptr<GMission> EditorRenderMission;
 	};
 }
 

@@ -8,17 +8,24 @@ namespace GE
 	{
 	public:
 		GRenderGraph();
-		GRenderGraph(const std::string& name, bool enableRTT = false);
+		GRenderGraph(const std::string& name);
 		GRenderGraph(const GRenderGraph& other);
 		~GRenderGraph();
 
-		void InitializeRenderGraph(const std::string& name, bool enableRTT = false);
+		void InitializeRenderGraph(const std::string& name);
 
-		void SetCamera(std::shared_ptr<GCamera> camera);
+		/*This function must be and only can be called before calling the Execute() function.
+		Or the framebuffer for render graph would be invalid or wouldn't be updated!*/
+		virtual void SetFramebuffer(std::shared_ptr<GFramebuffer> framebuffer);
+		/*This function can be called per frame update. 
+		It will be updated to each pass which has sink or source of camera.*/
+		virtual void SetCamera(std::shared_ptr<GCamera> camera);
 
 		virtual void Execute();
 		virtual void Reset();
 		virtual void Resize(int newWidth, int newHeight);
+		/*For linking the sink-source, must call it before calling Execute() function.*/
+		void Finalize();
 
 		const GUUID& GetRenderGraphId() const noexcept;
 		const std::string& GetRenderGraphName() const noexcept;
@@ -39,7 +46,6 @@ namespace GE
 		void SetSinkTarget(const std::string& sinkName, const std::string& target);
 		void AddGlobalSource(std::shared_ptr<GSource> source);
 		void AddGlobalSink(std::shared_ptr<GSink> sink);
-		void Finalize();
 		void AppendPass(std::shared_ptr<GPass> pass);
 
 		std::shared_ptr<GFramebuffer> RenderGraphFramebuffer;

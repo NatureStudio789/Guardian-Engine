@@ -6,7 +6,7 @@ namespace GE
 {
     GEditorEngine::GEditorEngine()
     {
-        this->EditorContext = null;
+
     }
 
     GEditorEngine::~GEditorEngine()
@@ -31,7 +31,11 @@ namespace GE
         this->EditorAssetLoader = std::make_shared<GAssetLoader>("EditorAssetLoader", "..\\Guardian Engine\\Resources\\Editor\\");
         GAssetLoaderRegistry::RegistryAssetLoader(this->EditorAssetLoader);
 
-        GRenderer::RegisterRenderGraph(std::make_shared<GEditorRenderGraph>("Editor"));
+        this->EditorRenderGraph = std::make_shared<GEditorRenderGraph>("Editor");
+        GRenderer::RegisterRenderGraph(this->EditorRenderGraph);
+        
+        this->EditorRenderMission = GMission::CreateNewMission("Editor", null, null);
+        this->EditorRenderMission->Request();
 
         GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_EDIT);
     }
@@ -43,8 +47,7 @@ namespace GE
 
     void GEditorEngine::ReleaseProgram()
     {
-        this->EditorContext.reset();
-        this->EditorContext = null;
+
     }
 
     LRESULT GEditorEngine::ProcessWindowMessage(GWindow::Handle handle, UINT message, WPARAM wParam, LPARAM lParam)

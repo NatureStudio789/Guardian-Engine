@@ -10,6 +10,9 @@ namespace GE
 	public:
 		GEditorRenderGraph(const std::string& name);
 
+		void SetFramebuffer(std::shared_ptr<GFramebuffer> framebuffer) override;
+		void SetCamera(std::shared_ptr<GCamera> camera) override;
+
 		void Execute() override;
 		void Reset() override;
 

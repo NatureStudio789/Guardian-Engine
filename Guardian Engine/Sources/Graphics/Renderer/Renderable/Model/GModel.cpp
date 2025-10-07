@@ -10,14 +10,14 @@ namespace GE
 		this->ModelAccumulatedMatrix = GMatrix::IdentityMatrix();
 	}
 
-	GModel::GModel(const std::string& filePath, std::string renderGraphName)
+	GModel::GModel(const std::string& filePath)
 	{
-		this->InitializeModel(filePath, renderGraphName);
+		this->InitializeModel(filePath);
 	}
 
-	GModel::GModel(const Data& data, std::string renderGraphName)
+	GModel::GModel(const Data& data)
 	{
-		this->InitializeModel(data, renderGraphName);
+		this->InitializeModel(data);
 	}
 
 	GModel::GModel(const GModel& other)
@@ -39,7 +39,7 @@ namespace GE
 		this->ModelMeshList.clear();
 	}
 
-	void GModel::InitializeModel(const std::string& filePath, std::string renderGraphName)
+	void GModel::InitializeModel(const std::string& filePath)
 	{
 		this->ModelFilePath = filePath;
 		this->ModelFileDirectory = GUtil::GetFilePathDirectory(this->ModelFilePath);
@@ -53,10 +53,11 @@ namespace GE
 
 		this->RootMeshNode = this->BuildMeshNode(Data.RootMeshNodeData);
 
-		this->LinkTechnique(renderGraphName);
+		this->LinkTechnique("SceneEdit");
+		this->LinkTechnique("SceneRuntime");
 	}
 
-	void GModel::InitializeModel(const Data& data, std::string renderGraphName)
+	void GModel::InitializeModel(const Data& data)
 	{
 		this->ModelFilePath = data.FilePath;
 		this->ModelFileDirectory = data.FileDirectory;
@@ -68,7 +69,8 @@ namespace GE
 
 		this->RootMeshNode = this->BuildMeshNode(data.RootMeshNodeData);
 
-		this->LinkTechnique(renderGraphName);
+		this->LinkTechnique("SceneEdit");
+		this->LinkTechnique("SceneRuntime");
 	}
 
 	void GModel::SetTransform(const GTransform& transform)

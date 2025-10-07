@@ -34,7 +34,7 @@ namespace GE
 		std::vector<std::shared_ptr<GApplicable>> ApplicableList;
 
 		std::string TargetPassName;
-		GRenderQueuePass* TargetPass;
+		std::vector<GRenderQueuePass*> TargetPassList;
 	};
 }
 

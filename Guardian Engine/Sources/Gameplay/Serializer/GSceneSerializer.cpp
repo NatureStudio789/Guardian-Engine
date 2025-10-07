@@ -66,6 +66,7 @@ namespace GE
 		}
 
 		scene->BuildEntityTree();
+		scene->InitializeSceneRender();
 	}
 
 	void GSceneSerializer::Deserialize(GScene* scene, YAML::Node& deserializingData)
@@ -93,6 +94,7 @@ namespace GE
 		}
 
 		scene->BuildEntityTree();
+		scene->InitializeSceneRender();
 	}
 
 	void GSceneSerializer::Export(const std::string& filePath, std::shared_ptr<GScene> scene)

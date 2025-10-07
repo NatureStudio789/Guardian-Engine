@@ -20,7 +20,7 @@ namespace GE
 			this->SceneEditPanel = std::make_shared<EUI::GPanel>("Scene");
 			this->SceneEditPanel->AddStyleToWidget(NoPaddingStyle);
 
-			this->SceneEditImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->
+			this->SceneEditImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->
 				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneEditPanel->AddWidgetToPanel(this->SceneEditImage);
 
@@ -33,11 +33,10 @@ namespace GE
 				{
 					this->EditManipulater->SetManipulateRect({ ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowContentRegionMin().y }, {ImGui::GetWindowSize().x, ImGui::GetWindowSize().y - ImGui::GetWindowContentRegionMin().y });
 					
-					if (GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
-						GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
+					if (GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
+						GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
 					{
-						GRenderer::GetSceneRenderGraph()->GetEditFramebuffer()->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(),
-							(int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+						//GRenderer::GetRenderGraph("SceneEdit")->Resize((int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
 
 						GSceneRegistry::GetActiveScene()->EditCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 					}
@@ -108,16 +107,15 @@ namespace GE
 			this->SceneRuntimePanel = std::make_shared<EUI::GPanel>("Game");
 			this->SceneRuntimePanel->AddStyleToWidget(NoPaddingStyle);
 
-			this->SceneRuntimeImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->
+			this->SceneRuntimeImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->
 				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneRuntimePanel->AddWidgetToPanel(this->SceneRuntimeImage);
 			this->SceneRuntimePanel->SetWidgetEventProcessFunction([=]()
 			{
-				if (GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
-					GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
+				if (GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
+					GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
 				{
-					GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()->ResizeFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(),
-						(int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+					//GRenderer::GetRenderGraph("SceneRuntime")->Resize((int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
 
 					GSceneRegistry::GetActiveScene()->RuntimeCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 				}

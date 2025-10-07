@@ -37,23 +37,13 @@ namespace GE
 		auto& LightingTechnique = GTechnique::CreateNewTechnique("Lighting", "main");
 
 		{
-			auto& EditRenderStep = GStep::CreateNewStep("Edit");
+			auto& LightingStep = GStep::CreateNewStep("Lighting");
 
-			EditRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+			LightingStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			EditRenderStep->AddApplicable(GMaterialRegistry::GetMaterial(this->MeshData.MeshMaterialId));
+			LightingStep->AddApplicable(GMaterialRegistry::GetMaterial(this->MeshData.MeshMaterialId));
 
-			LightingTechnique->AddStep(EditRenderStep);
-		}
-		
-		{
-			auto& RuntimeRenderStep = GStep::CreateNewStep("Runtime");
-
-			RuntimeRenderStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
-				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
-			RuntimeRenderStep->AddApplicable(GMaterialRegistry::GetMaterial(this->MeshData.MeshMaterialId));
-
-			LightingTechnique->AddStep(RuntimeRenderStep);
+			LightingTechnique->AddStep(LightingStep);
 		}
 
 		this->AddTechnique(LightingTechnique);

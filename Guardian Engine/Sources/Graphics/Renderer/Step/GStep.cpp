@@ -8,7 +8,7 @@ namespace GE
 		this->ApplicableList.clear();
 
 		this->TargetPassName = "";
-		this->TargetPass = null;
+		this->TargetPassList.clear();
 	}
 
 	GStep::GStep(const std::string& renderQueuePassName)
@@ -21,7 +21,7 @@ namespace GE
 		this->ApplicableList = other.ApplicableList;
 
 		this->TargetPassName = other.TargetPassName;
-		this->TargetPass = other.TargetPass;
+		this->TargetPassList = other.TargetPassList;
 	}
 
 	GStep::~GStep()
@@ -34,7 +34,7 @@ namespace GE
 		this->ApplicableList.clear();
 
 		this->TargetPassName = "";
-		this->TargetPass = null;
+		this->TargetPassList.clear();
 	}
 
 	void GStep::InitializeStep(const std::string& renderQueuePassName)
@@ -65,7 +65,10 @@ namespace GE
 
 	void GStep::Submit(std::shared_ptr<GRenderable> renderable)
 	{
-		this->TargetPass->Accept(GTask::CreateNewTask(std::make_shared<GStep>(*this), renderable));
+		for (auto& targetPass : this->TargetPassList)
+		{
+			targetPass->Accept(GTask::CreateNewTask(std::make_shared<GStep>(*this), renderable));
+		}
 	}
 
 	void GStep::Link(std::string renderGraphName)
@@ -74,7 +77,7 @@ namespace GE
 
 		if (auto pass = dynamic_cast<GRenderQueuePass*>(RenderGraph->GetPass(this->TargetPassName).get()))
 		{
-			this->TargetPass = pass;
+			this->TargetPassList.push_back(pass);
 		}
 		else
 		{
