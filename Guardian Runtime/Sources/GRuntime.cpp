@@ -45,14 +45,19 @@ namespace GE
 
 		GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_RUNTIME);
 
-		GRenderer::RegisterRenderGraph(std::make_shared<GRuntimeRenderGraph>("RuntimeMain"));
+		auto& RenderGraph = std::make_shared<GRuntimeRenderGraph>("RuntimeMain");
+		GRenderer::RegisterRenderGraph(RenderGraph);
+		this->RuntimeRenderMission = GMission::CreateNewMission("RuntimeMain",
+			GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext()),
+			std::make_shared<GCamera>());
+		this->RuntimeRenderMission->Request();
 
 		this->RuntimeEventProcesser = std::make_shared<GEventProcesser>();
 		this->RuntimeEventProcesser->OnEvent<GWindowResizeEvent>([](const GWindowResizeEvent& e)
 			{
 				if (e.WindowHandle == GApplication::Instance->GetMainWindowHandle())
 				{
-					GRenderer::GetSceneRenderGraph()->Resize(e.ResizeWidth, e.ResizeHeight);
+					GRenderer::GetRenderGraph("SceneRuntime")->Resize(e.ResizeWidth, e.ResizeHeight);
 					GRenderer::GetRenderGraph("RuntimeMain")->Resize(e.ResizeWidth, e.ResizeHeight);
 
 					GSceneRegistry::GetActiveScene()->GetRuntimeCamera()->ResizeFrustum((float)e.ResizeWidth, (float)e.ResizeHeight);

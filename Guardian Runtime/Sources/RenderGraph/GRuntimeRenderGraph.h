@@ -12,10 +12,10 @@ namespace GE
 			this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource(
 				"ClearingFramebuffer", this->RenderGraphFramebuffer));
 			this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource(
-				"SceneFramebuffer", GRenderer::GetSceneRenderGraph()->GetRuntimeFramebuffer()));
+				"SceneFramebuffer", GRenderer::GetRenderGraph("SceneRuntime")->GetRenderGraphFramebuffer()));
 
 			{
-				auto ClearFullscreenPass = std::make_shared<GClearFramebufferPass>("Clear Fullscreen");
+				auto ClearFullscreenPass = std::make_shared<GClearFramebufferPass>("Clearing");
 				ClearFullscreenPass->SetSinkLinkage("ClearingFramebuffer", "$.ClearingFramebuffer");
 
 				this->AppendPass(ClearFullscreenPass);
@@ -24,12 +24,10 @@ namespace GE
 			{
 				auto FullscreenPass = std::make_shared<GFullscreenPass>("Fullscreen");
 				FullscreenPass->SetSinkLinkage("SourceFramebuffer", "$.SceneFramebuffer");
-				FullscreenPass->SetSinkLinkage("TargetFramebuffer", "$.Framebuffer");
+				FullscreenPass->SetSinkLinkage("TargetFramebuffer", "Clearing.ClearingFramebuffer");
 
 				this->AppendPass(FullscreenPass);
 			}
-
-			this->Finalize();
 		}
 
 	private:

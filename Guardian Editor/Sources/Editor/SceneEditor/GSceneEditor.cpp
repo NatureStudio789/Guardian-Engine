@@ -36,7 +36,7 @@ namespace GE
 					if (GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
 						GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
 					{
-						//GRenderer::GetRenderGraph("SceneEdit")->Resize((int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+						GRenderer::ResizeRenderGraph("SceneEdit", (int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
 
 						GSceneRegistry::GetActiveScene()->EditCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 					}
@@ -115,7 +115,7 @@ namespace GE
 				if (GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->GetFramebufferWidth() != (int)ImGui::GetContentRegionAvail().x ||
 					GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->GetFramebufferHeight() != (int)ImGui::GetContentRegionAvail().y)
 				{
-					//GRenderer::GetRenderGraph("SceneRuntime")->Resize((int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
+					GRenderer::ResizeRenderGraph("SceneRuntime", (int)ImGui::GetContentRegionAvail().x, (int)ImGui::GetContentRegionAvail().y);
 
 					GSceneRegistry::GetActiveScene()->RuntimeCamera->ResizeFrustum(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y);
 				}

@@ -22,6 +22,7 @@ namespace GE
 		std::string AssetPackage;
 
 		std::shared_ptr<GEventProcesser> RuntimeEventProcesser;
+		std::shared_ptr<GMission> RuntimeRenderMission;
 
 		std::shared_ptr<GAssetLoader> RuntimeAssetLoader;
 		std::shared_ptr<GScene> RuntimeScene;

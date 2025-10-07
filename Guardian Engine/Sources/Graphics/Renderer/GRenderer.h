@@ -10,6 +10,8 @@ namespace GE
 		static void RegisterRenderGraph(std::shared_ptr<GRenderGraph> renderGraph);
 
 		static void Accept(GMission* mission);
+		static void ResizeRenderGraph(const GUUID& id, int newWidth, int newHeight);
+		static void ResizeRenderGraph(const std::string& name, int newWidth, int newHeight);
 		static void Render();
 
 		static std::shared_ptr<GRenderGraph> GetRenderGraph(const GUUID& id);
@@ -18,6 +20,10 @@ namespace GE
 	private:
 		static std::vector<GMission*> RenderMissionList;
 		static std::map<std::string, std::shared_ptr<GRenderGraph>> RenderGraphList;
+
+		static std::queue<GRenderGraphResizeEvent> ResizeEventList;
+		static std::shared_ptr<GEventProcesser> RendererEventProcesser;
+		static std::shared_ptr<GEventDispatcher> RendererEventDispatcher;
 	};
 }
 

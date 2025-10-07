@@ -6,6 +6,7 @@
 namespace GE
 {
 	class GWindowResizeEvent;
+	class GRenderGraphResizeEvent;
 
 	class GUARDIAN_API GEventProcesser
 	{
@@ -25,6 +26,7 @@ namespace GE
 	}
 
 	template GUARDIAN_API void GEventProcesser::OnEvent<GWindowResizeEvent>(const std::function<void(const GWindowResizeEvent&)>& function);
+	template GUARDIAN_API void GEventProcesser::OnEvent<GRenderGraphResizeEvent>(const std::function<void(const GRenderGraphResizeEvent&)>& function);
 }
 
 #endif

@@ -5,6 +5,10 @@ namespace GE
 	std::vector<GMission*> GRenderer::RenderMissionList;
 	std::map<std::string, std::shared_ptr<GRenderGraph>> GRenderer::RenderGraphList;
 
+	std::queue<GRenderGraphResizeEvent> GRenderer::ResizeEventList;
+	std::shared_ptr<GEventProcesser> GRenderer::RendererEventProcesser;
+	std::shared_ptr<GEventDispatcher> GRenderer::RendererEventDispatcher;
+
 
 	void GRenderer::RegisterRenderGraph(std::shared_ptr<GRenderGraph> renderGraph)
 	{
@@ -32,6 +36,16 @@ namespace GE
 		RenderGraph->Finalize();
 	}
 
+	void GRenderer::ResizeRenderGraph(const GUUID& id, int newWidth, int newHeight)
+	{
+		ResizeEventList.push(GRenderGraphResizeEvent(GetRenderGraph(id)->GetRenderGraphName(), newWidth, newHeight));
+	}
+	
+	void GRenderer::ResizeRenderGraph(const std::string& name, int newWidth, int newHeight)
+	{
+		ResizeEventList.push(GRenderGraphResizeEvent(GetRenderGraph(name)->GetRenderGraphName(), newWidth, newHeight));
+	}
+
 	void GRenderer::Render()
 	{
 		for (auto& mission : RenderMissionList)
@@ -48,6 +62,29 @@ namespace GE
 		for (auto& mission : RenderMissionList)
 		{
 			RenderGraphList[mission->GetTargetRenderGraphName()]->Reset();
+		}
+
+		while (!ResizeEventList.empty())
+		{
+			if (!RendererEventProcesser)
+			{
+				RendererEventProcesser = std::make_shared<GEventProcesser>();
+				RendererEventProcesser->OnEvent<GRenderGraphResizeEvent>([](const GRenderGraphResizeEvent& e)
+				{
+					auto& RenderGraph = GetRenderGraph(e.RenderGraphName);
+
+					RenderGraph->Resize(e.ResizeWidth, e.ResizeHeight);
+				});
+			}
+			if (!RendererEventDispatcher)
+			{
+				RendererEventDispatcher = std::make_shared<GEventDispatcher>();
+			}
+
+			auto& event = ResizeEventList.front();
+			RendererEventDispatcher->DispatchEvent(event);
+
+			ResizeEventList.pop();
 		}
 	}
 

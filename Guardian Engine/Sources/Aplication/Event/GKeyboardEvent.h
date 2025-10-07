@@ -1,6 +1,7 @@
 #ifndef _GE_GKEYBOARDEVENT_H_
 #define _GE_GKEYBOARDEVENT_H_
 #include "GApplicationEvent.h"
+#include "../../Graphics/Renderer/Event/GRenderEvent.h"
 
 namespace GE
 {
