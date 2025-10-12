@@ -120,6 +120,11 @@ namespace GE
 		return std::filesystem::exists(filePath);
 	}
 
+	void GUtil::RemoveFile(const std::string& filePath)
+	{
+		std::filesystem::remove(filePath);
+	}
+
 	bool GUtil::CompareFileDirectory(std::string directory1, std::string directory2)
 	{
 		if (directory1.find('\\') != std::string::npos)

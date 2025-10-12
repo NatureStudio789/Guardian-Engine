@@ -18,6 +18,7 @@ namespace GE
 
 		struct Data
 		{
+			std::string PartName;
 			std::vector<GVector3> Vertices;
 			std::vector<UINT> Indices;
 
@@ -32,19 +33,29 @@ namespace GE
 
 		void InitializeGeometry(const Category& category, const std::vector<Data>& data);
 
-		const Category& GetGeometryCategory() const noexcept;
-		const std::vector<Data>& GetGeometryData() const noexcept;
+		virtual void UpdateGeometry();
 
-	private:
+		const Category& GetGeometryCategory() const noexcept;
+		const std::vector<Data>& GetGeometryDataList() const noexcept;
+
+	protected:
 		Category GeometryCategory;
-		std::vector<Data> GeometryData;
+		std::vector<Data> GeometryDataList;
+
+		friend class GGeometryWireframe;
 	};
 
 	class GUARDIAN_API GBoxGeometry : public GGeometry
 	{
 	public:
 		using GGeometry::GGeometry;
+		GBoxGeometry() : GGeometry()
+		{
+			this->GeometryCategory = GE_GEOMETRY_BOX;
+		}
 		GBoxGeometry(const GVector3& edgeLength);
+
+		void UpdateGeometry() override;
 
 		GVector3 EdgeLength;
 	};
@@ -53,7 +64,13 @@ namespace GE
 	{
 	public:
 		using GGeometry::GGeometry;
+		GSphereGeometry() : GGeometry()
+		{
+			this->GeometryCategory = GE_GEOMETRY_SPHERE;
+		}
 		GSphereGeometry(float radius);
+
+		void UpdateGeometry() override;
 
 		float Radius;
 	};
@@ -62,7 +79,13 @@ namespace GE
 	{
 	public:
 		using GGeometry::GGeometry;
+		GCapsuleGeometry() : GGeometry()
+		{
+			this->GeometryCategory = GE_GEOMETRY_CAPSULE;
+		}
 		GCapsuleGeometry(float height, float halfSphereRadius);
+
+		void UpdateGeometry() override;
 
 		float Height, HalfSphereRadius;
 	};
@@ -71,7 +94,13 @@ namespace GE
 	{
 	public:
 		using GGeometry::GGeometry;
+		GPlaneGeometry() : GGeometry()
+		{
+			this->GeometryCategory = GE_GEOMETRY_PLANE;
+		}
 		GPlaneGeometry(const GVector2& edgeLength);
+
+		void UpdateGeometry() override;
 
 		GVector2 EdgeLength;
 	};

@@ -81,6 +81,7 @@ namespace GE
 		GColliderComponent()
 		{
 			this->Collider = std::make_shared<GCollider>();
+			this->ColliderWireframeList.clear();
 			this->StaticRigidBody = null;
 		}
 		GColliderComponent(std::shared_ptr<GCollider> collider)
@@ -89,9 +90,50 @@ namespace GE
 		}
 		GColliderComponent(const GColliderComponent&) = default;
 
+		void AddColliderShape(std::shared_ptr<GShape> shape)
+		{
+			this->Collider->AddShape(shape);
+
+			std::shared_ptr<GGeometry> geometry;
+			switch (shape->GetShapeCategory())
+			{
+				case GShape::GE_SHAPE_BOX:
+				{
+					geometry = std::make_shared<GBoxGeometry>(std::dynamic_pointer_cast<GBoxShape>(shape)->EdgeLength);
+
+					break;
+				}
+
+				case GShape::GE_SHAPE_SPHERE:
+				{
+					geometry = std::make_shared<GSphereGeometry>(std::dynamic_pointer_cast<GSphereShape>(shape)->Radius);
+
+					break;
+				}
+
+				case GShape::GE_SHAPE_CAPSULE:
+				{
+					geometry = std::make_shared<GCapsuleGeometry>(std::dynamic_pointer_cast<GCapsuleShape>(shape)->Height, 
+						std::dynamic_pointer_cast<GCapsuleShape>(shape)->HalfSphereRadius);
+
+					break;
+				}
+
+				default:
+				{
+					throw GUARDIAN_ERROR_EXCEPTION("Unknown collider shape category!");
+					break;
+				}
+			}
+			this->ColliderGeometryList.push_back(geometry);
+			this->ColliderWireframeList.push_back(GGeometryWireframe::CreateNewGeometryWireframe(geometry));
+		}
+
 		std::shared_ptr<GCollider> Collider;
 
 	private:
+		std::vector<std::shared_ptr<GGeometry>> ColliderGeometryList;
+		std::vector<std::shared_ptr<GGeometryWireframe>> ColliderWireframeList;
 		std::shared_ptr<GStaticRigidBody> StaticRigidBody;
 
 		friend class GScene;

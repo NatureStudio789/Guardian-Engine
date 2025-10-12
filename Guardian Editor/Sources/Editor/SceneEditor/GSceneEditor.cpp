@@ -416,6 +416,102 @@ namespace GE
 				}));
 		}
 
+		if (entity->HasComponent<GColliderComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Collider", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GColliderComponent>();
+
+			std::shared_ptr<EUI::GPopup> ShapeListPopup = std::make_shared<EUI::GPopup>("Shape List");
+			ComponentNode->AddWidgetToTreeNode(ShapeListPopup);
+
+			for (UINT i = 0; i < (UINT)component.Collider->GetColliderShapeList().size(); i++)
+			{
+				auto& shape = component.Collider->GetColliderShapeList()[i];
+
+				auto& ShapeNode = std::make_shared<EUI::GTreeNode>("Shape " + std::to_string(i), EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+
+				ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &shape->LocalTransform.Position, 0.1f));
+				ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &shape->LocalTransform.Rotation, 0.1f));
+
+				switch (shape->GetShapeCategory())
+				{
+					case GShape::GE_SHAPE_BOX:
+					{
+						auto& boxShape = std::dynamic_pointer_cast<GBoxShape>(shape);
+
+						ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Edge Length", &boxShape->EdgeLength, 0.1f));
+
+						break;
+					}
+
+					case GShape::GE_SHAPE_SPHERE:
+					{
+						auto& sphereShape = std::dynamic_pointer_cast<GSphereShape>(shape);
+
+						ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Radius", &sphereShape->Radius, 0.1f));
+
+						break;
+					}
+
+					case GShape::GE_SHAPE_CAPSULE:
+					{
+						auto& capsuleShape = std::dynamic_pointer_cast<GCapsuleShape>(shape);
+
+						ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Half Sphere Radius", &capsuleShape->HalfSphereRadius));
+						ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Height", &capsuleShape->Height));
+
+						break;
+					}
+				}
+
+				ComponentNode->AddWidgetToTreeNode(ShapeNode);
+			}
+
+			ShapeListPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Box", [&component]()
+				{
+					component.AddColliderShape(std::make_shared<GBoxShape>(GVector3(1.0f, 1.0f, 1.0f)));
+				}));
+			ShapeListPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Sphere", [&component]()
+				{
+					component.AddColliderShape(std::make_shared<GSphereShape>(0.5f));
+				}));
+			ShapeListPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Capsule", [&component]()
+				{
+					component.AddColliderShape(std::make_shared<GCapsuleShape>(0.5f, 1.0f));
+				}));
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GButton>("Add Shape", [ShapeListPopup]()
+				{
+					ShapeListPopup->ActivePopup();
+				}, GVector2(150.0f, 40.0f)));
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Collider", [entity]()
+				{
+					entity->AddComponent<GColliderComponent>();
+				}));
+		}
+
+		if (entity->HasComponent<GRigidBodyComponent>())
+		{
+			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Rigid Body", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+			this->PropertiesPanel->AddWidgetToPanel(ComponentNode);
+
+			auto& component = entity->GetComponent<GRigidBodyComponent>();
+
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Mass", &component.RigidBody->RigidBodyMass, 0.1f, 0.0f, 1000000.0f));
+		}
+		else
+		{
+			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Rigid Body", [entity]()
+				{
+					entity->AddComponent<GRigidBodyComponent>();
+				}));
+		}
+
 		if (entity->HasComponent<GModelComponent>())
 		{
 			auto& ComponentNode = std::make_shared<EUI::GTreeNode>("Model", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);

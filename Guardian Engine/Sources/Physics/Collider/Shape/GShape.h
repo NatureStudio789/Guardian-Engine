@@ -42,6 +42,8 @@ namespace GE
 
 		std::shared_ptr<GPhysicsMaterial> ShapeMaterial;
 		PxShape* ShapeObject;
+
+		friend class GSceneEditor;
 	};
 
 	class GUARDIAN_API GBoxShape : public GShape
@@ -158,6 +160,72 @@ namespace GE
 		}
 
 		float Radius;
+	};
+
+	class GUARDIAN_API GCapsuleShape : public GShape
+	{
+	public:
+		GCapsuleShape()
+		{
+			this->HalfSphereRadius = 0.5f;
+			this->Height = 2.0f;
+		}
+		GCapsuleShape(float halfSphereRadius, float height)
+		{
+			this->HalfSphereRadius = halfSphereRadius;
+			this->Height = height;
+		}
+		GCapsuleShape(const GCapsuleShape& other) : GShape(other)
+		{
+			this->HalfSphereRadius = other.HalfSphereRadius;
+			this->Height = other.Height;
+		}
+
+		void SetHalfSphereRadius(float halfSphereRadius)
+		{
+			this->HalfSphereRadius = halfSphereRadius;
+		}
+		void SetHeight(float height)
+		{
+			this->Height = height;
+		}
+
+		void InitializeShape() override
+		{
+			this->ShapeMaterial->InitializeMaterial();
+
+			this->ShapeObject = GPhysicsContextRegistry::GetCurrentPhysicsContext()->GetPhysicsHandle()->createShape(
+				PxCapsuleGeometry(this->HalfSphereRadius, this->Height / 2.0f),
+				*this->ShapeMaterial->GetMaterialObject());
+
+			if (!this->ShapeObject)
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("Failed to create capsule shape!");
+			}
+
+			auto& quaternion = GVector4::EulerToQuaternion(this->LocalTransform.Rotation);
+			PxTransform transform(PxVec3(this->LocalTransform.Position.x, this->LocalTransform.Position.y, this->LocalTransform.Position.z),
+				PxQuat(quaternion.x, quaternion.y, quaternion.z, quaternion.w));
+			this->ShapeObject->setLocalPose(transform);
+		}
+
+		const Category GetShapeCategory() const noexcept override
+		{
+			return GE_SHAPE_CAPSULE;
+		}
+
+		float GetRadius() const noexcept
+		{
+			return this->HalfSphereRadius;
+		}
+
+		static std::shared_ptr<GCapsuleShape> CreateNewCapsuleShape(float halfSphereRadius, float height)
+		{
+			return std::make_shared<GCapsuleShape>(halfSphereRadius, height);
+		}
+
+		float Height;
+		float HalfSphereRadius;
 	};
 }
 

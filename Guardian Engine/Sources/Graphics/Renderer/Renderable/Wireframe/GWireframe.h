@@ -9,12 +9,25 @@ namespace GE
 	public:
 		struct Vertex
 		{
-			GVector3 Vertex;
+			Vertex() = default;
+			Vertex(const GVector3& position)
+			{
+				this->Position = position;
+			}
+			Vertex(const Vertex&) = default;
+
+			GVector3 Position;
 		};
 
 		struct Data
 		{
 			Data() = default;
+			Data(std::string instanceName, std::vector<Vertex> vertices, std::vector<UINT> indices)
+			{
+				this->InstanceName = instanceName;
+				this->Vertices = vertices;
+				this->Indices = indices;
+			}
 			Data(const Data&) = default;
 
 			std::string InstanceName;
@@ -54,23 +67,23 @@ namespace GE
 
 	public:
 		GWireframe();
-		GWireframe(const Data& data, std::string renderGraphName = "Scene");
+		GWireframe(const Data& data);
 		GWireframe(const GWireframe& other);
 		virtual ~GWireframe();
 
-		void InitializeWireframe(const Data& data, std::string renderGraphName = "Scene");
+		void InitializeWireframe(const Data& data);
 
 		void SetTransform(GTransform transform);
-		void Submit(const std::string& channel);
+		virtual void Submit(const std::string& channel);
 
 		void LinkTechnique(std::string renderGraphName);
 
 		const Data& GetWireframeData() const noexcept;
 		std::shared_ptr<GWireframeInstance> GetWireframeInstance(const std::string& name);
 
-		static std::shared_ptr<GWireframe> CreateNewWireframe(const Data& data, std::string renderGraphName = "Scene")
+		static std::shared_ptr<GWireframe> CreateNewWireframe(const Data& data)
 		{
-			return std::make_shared<GWireframe>(data, renderGraphName);
+			return std::make_shared<GWireframe>(data);
 		}
 
 	private:
@@ -84,45 +97,25 @@ namespace GE
 	class GUARDIAN_API GGeometryWireframe : public GWireframe
 	{
 	public:
-		enum Category
-		{
-			GE_GEOMETRY_BOX,
-			GE_GEOMETRY_SPHERE,
-			GE_GEOMETRY_CAPSULE,
-			GE_GEOMETRY_PLANE
-		};
-
-		struct Box
-		{
-			GVector3 EdgeLength;
-		};
-
-		struct Sphere
-		{
-			float Radius;
-		};
-
-		struct Capsule
-		{
-			float Height;
-			float HalfSphereRadius;
-		};
-
-		struct Plane
-		{
-			GVector2 EdgeLength;
-		};
-
-	public:
 		GGeometryWireframe();
-		GGeometryWireframe(std::shared_ptr<GGeometry> geometry, std::string renderGraphName = "Scene");
+		GGeometryWireframe(std::shared_ptr<GGeometry> geometry);
 		GGeometryWireframe(const GGeometryWireframe& other);
 		~GGeometryWireframe() override;
 
-		void InitializeGeometryWireframe(std::shared_ptr<GGeometry> geometry, std::string renderGraphName = "Scene");
+		void InitializeGeometryWireframe(std::shared_ptr<GGeometry> geometry);
+
+		void Submit(const std::string& channel) override;
+
+		const GGeometry::Category& GetGeometryCategory() const noexcept;
+		std::shared_ptr<GGeometry> GetGeometryObject();
+
+		static std::shared_ptr<GGeometryWireframe> CreateNewGeometryWireframe(
+			std::shared_ptr<GGeometry> geometry)
+		{
+			return std::make_shared<GGeometryWireframe>(geometry);
+		}
 
 	private:
-		Category GeometryCategory;
 		std::shared_ptr<GGeometry> Geometry;
 	};
 }

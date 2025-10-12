@@ -33,7 +33,7 @@ namespace GE
 		PxRigidDynamic* GetRigidBodyObject();
 		std::shared_ptr<GCollider> GetRigidBodyCollider();
 		const GTransform& GetRigidBodyTransform();
-		float GetRigidBodyMax() const noexcept;
+		float GetRigidBodyMass() const noexcept;
 		bool GetKinematic() const noexcept;
 
 	private:
@@ -43,6 +43,8 @@ namespace GE
 		GTransform RigidBodyTransform;
 		float RigidBodyMass;
 		bool IsKinematic;
+
+		friend class GSceneEditor;
 	};
 }
 

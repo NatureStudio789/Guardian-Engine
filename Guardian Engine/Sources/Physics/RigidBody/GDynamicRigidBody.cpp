@@ -145,7 +145,7 @@ namespace GE
 		return this->RigidBodyTransform;
 	}
 
-	float GDynamicRigidBody::GetRigidBodyMax() const noexcept
+	float GDynamicRigidBody::GetRigidBodyMass() const noexcept
 	{
 		return this->RigidBodyMass;
 	}

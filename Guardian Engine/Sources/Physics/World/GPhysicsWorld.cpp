@@ -58,7 +58,7 @@ namespace GE
 
 	void GPhysicsWorld::Simulate()
 	{
-		this->WorldScene->simulate(0.001f);
+		this->WorldScene->simulate(0.01f);
 
 		this->WorldScene->fetchResults(true);
 	}

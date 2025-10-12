@@ -7,6 +7,7 @@ namespace GE
 	GScene::GScene()
 	{
 		this->SceneState = GE_STATE_NONE;
+		this->IsRenderingInitialized = false;
 	}
 
 	GScene::GScene(const std::string& name)
@@ -266,6 +267,11 @@ namespace GE
 
 	void GScene::InitializeSceneRender()
 	{
+		if (this->IsRenderingInitialized)
+		{
+			return;
+		}
+
 		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("SceneEdit"));
 		GRenderer::RegisterRenderGraph(GLitRenderGraph::CreateNewLitRenderGraph("SceneRuntime"));
 
@@ -278,6 +284,8 @@ namespace GE
 			GFramebuffer::CreateNewFramebuffer(GGraphicsContextRegistry::GetCurrentGraphicsContext(), true),
 			this->RuntimeCamera);
 		this->RuntimeRenderMission->Request();
+
+		this->IsRenderingInitialized = true;
 	}
 
 	void GScene::UpdateEdit()
@@ -345,6 +353,48 @@ namespace GE
 					PLComponent.PointLight->Position = TComponent.Transform.Position;
 
 					PLComponent.PointLight->Submit(this);
+				});
+		}
+
+		{
+			auto view = this->EntityRegistry.view<GTransformComponent, GColliderComponent>();
+			view.each([=](const auto& e, GTransformComponent& TComponent, GColliderComponent& CComponent)
+				{
+					for (UINT i = 0; i < (UINT)CComponent.Collider->GetColliderShapeList().size(); i++)
+					{
+						auto& shape = CComponent.Collider->GetColliderShapeList()[i];
+						auto& wireframe = CComponent.ColliderWireframeList[i];
+						auto& geometry = CComponent.ColliderGeometryList[i];
+
+						switch (shape->GetShapeCategory())
+						{
+							case GShape::GE_SHAPE_BOX:
+							{
+								std::dynamic_pointer_cast<GBoxGeometry>(geometry)->EdgeLength = std::dynamic_pointer_cast<GBoxShape>(shape)->EdgeLength;
+
+								break;
+							}
+
+							case GShape::GE_SHAPE_SPHERE:
+							{
+								std::dynamic_pointer_cast<GSphereGeometry>(geometry)->Radius = std::dynamic_pointer_cast<GSphereShape>(shape)->Radius;
+
+								break;
+							}
+
+							case GShape::GE_SHAPE_CAPSULE:
+							{
+								std::dynamic_pointer_cast<GCapsuleGeometry>(geometry)->HalfSphereRadius = std::dynamic_pointer_cast<GCapsuleShape>(shape)->HalfSphereRadius;
+								std::dynamic_pointer_cast<GCapsuleGeometry>(geometry)->Height = std::dynamic_pointer_cast<GCapsuleShape>(shape)->Height;
+
+								break;
+							}
+						}
+						
+						geometry->UpdateGeometry();
+						wireframe->SetTransform(shape->GetLocalTransform());
+						wireframe->Submit("debug");
+					}
 				});
 		}
 
@@ -506,6 +556,7 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION("Failed to find the edit mode saved scene data!");
 		}
 		GSceneSerializer::Import("SavedEdit.gscene", this);
+		GUtil::RemoveFile("SavedEdit.gscene");
 	}
 
 	void GScene::BuildEntityTree()

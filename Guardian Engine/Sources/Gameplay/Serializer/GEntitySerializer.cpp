@@ -81,6 +81,36 @@ namespace GE
 			SerializeData << YAML::EndMap;
 		}
 
+		if (entity->HasComponent<GColliderComponent>())
+		{
+			SerializeData << YAML::Key << "Collider Component";
+			SerializeData << YAML::BeginMap;
+
+			SerializeData << YAML::Key << "Shapes";
+			SerializeData << YAML::Value << YAML::BeginSeq;
+
+			for (auto& shape : entity->GetComponent<GColliderComponent>().Collider->GetColliderShapeList())
+			{
+				SerializeData << YAML::Key << "Local Transform";
+				SerializeData << YAML::BeginMap;
+
+				auto& LocalTransform = shape->GetLocalTransform();
+				auto& Position = LocalTransform.Position;
+				SerializeData << YAML::Key << "Position" << YAML::Value << Position;
+
+				auto& Rotation = LocalTransform.Rotation;
+				SerializeData << YAML::Key << "Rotation" << YAML::Value << Rotation;
+
+				SerializeData << YAML::EndMap;
+
+				SerializeData << YAML::Key << "Category";
+			}
+
+			SerializeData << YAML::EndSeq;
+
+			SerializeData << YAML::EndMap;
+		}
+
 		if (entity->HasComponent<GModelComponent>())
 		{
 			SerializeData << YAML::Key << "Model Component";

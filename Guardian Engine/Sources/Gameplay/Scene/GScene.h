@@ -83,6 +83,7 @@ namespace GE
 
 		std::shared_ptr<GEntity> CameraEntity;
 
+		bool IsRenderingInitialized;
 		std::shared_ptr<GMission> EditRenderMission;
 		std::shared_ptr<GMission> RuntimeRenderMission;
 		std::shared_ptr<GCamera> EditCamera;
