@@ -432,9 +432,6 @@ namespace GE
 
 				auto& ShapeNode = std::make_shared<EUI::GTreeNode>("Shape " + std::to_string(i), EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
 
-				ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &shape->LocalTransform.Position, 0.1f));
-				ShapeNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &shape->LocalTransform.Rotation, 0.1f));
-
 				switch (shape->GetShapeCategory())
 				{
 					case GShape::GE_SHAPE_BOX:
@@ -465,6 +462,17 @@ namespace GE
 						break;
 					}
 				}
+				
+				auto& LocalTransformNode = std::make_shared<EUI::GTreeNode>("Local Transform", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+				ShapeNode->AddWidgetToTreeNode(LocalTransformNode);
+				LocalTransformNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Position", &shape->LocalTransform.Position, 0.1f));
+				LocalTransformNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Rotation", &shape->LocalTransform.Rotation, 0.1f));
+
+				auto& PhyicsMaterialNode = std::make_shared<EUI::GTreeNode>("Physics Material", EUI::GTreeNode::GETreeNodeFlags_DefaultOpen);
+				ShapeNode->AddWidgetToTreeNode(PhyicsMaterialNode);
+				PhyicsMaterialNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Static Friction", &shape->GetShapeMaterial()->StaticFriction, 0.1f));
+				PhyicsMaterialNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Dynamic Friction", &shape->GetShapeMaterial()->DynamicFriction, 0.1f));
+				PhyicsMaterialNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Restituion", &shape->GetShapeMaterial()->Restitution, 0.1f));
 
 				ComponentNode->AddWidgetToTreeNode(ShapeNode);
 			}

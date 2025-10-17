@@ -100,11 +100,16 @@ namespace GE
 		this->WireframeTransform = transform;
 	}
 
+	void GWireframe::SetAccumulatedMatrix(GMatrix accumulatedMatrix)
+	{
+		this->AccumulatedMatrix = accumulatedMatrix;
+	}
+
 	void GWireframe::Submit(const std::string& channel)
 	{
 		for (auto& [name, instance] : this->InstanceList)
 		{
-			instance->SetAccumulatedMatrix(this->WireframeTransform.GetTransformMatrix());
+			instance->SetAccumulatedMatrix(this->WireframeTransform.GetTransformMatrix() * this->AccumulatedMatrix);
 
 			instance->Submit(channel);
 		}

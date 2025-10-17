@@ -30,6 +30,8 @@ namespace GE
 		float StaticFriction;
 		float DynamicFriction;
 		float Restitution;
+
+		friend class GSceneEditor;
 	};
 }
 

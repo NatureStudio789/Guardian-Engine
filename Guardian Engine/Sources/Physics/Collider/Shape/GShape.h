@@ -24,7 +24,6 @@ namespace GE
 		virtual void SetLocalTransform(const GTransform& transform);
 		virtual void SetLocalPosition(const GVector3& position);
 		virtual void SetLocalRotation(const GVector3& rotation);
-		virtual void SetLocalScale(const GVector3& scale);
 
 		virtual void InitializeShape() {}
 
@@ -154,7 +153,7 @@ namespace GE
 			return this->Radius;
 		}
 
-		static std::shared_ptr<GSphereShape> CreateNewBoxShape(float radius)
+		static std::shared_ptr<GSphereShape> CreateNewSphereShape(float radius)
 		{
 			return std::make_shared<GSphereShape>(radius);
 		}
@@ -214,9 +213,14 @@ namespace GE
 			return GE_SHAPE_CAPSULE;
 		}
 
-		float GetRadius() const noexcept
+		float GetHalfSphereRadius() const noexcept
 		{
 			return this->HalfSphereRadius;
+		}
+
+		float GetHeight() const noexcept
+		{
+			return this->Height;
 		}
 
 		static std::shared_ptr<GCapsuleShape> CreateNewCapsuleShape(float halfSphereRadius, float height)

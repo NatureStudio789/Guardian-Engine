@@ -163,7 +163,7 @@ namespace GE
 		UINT segments = 16;
 		UINT hemisphereRings = 16;
 
-		const float halfCylinderHeight = this->Height * 0.5f;
+		const float halfCylinderHeight = 0.5f;
 
 		for (UINT ring = 0; ring <= hemisphereRings; ++ring) 
 		{

@@ -74,6 +74,7 @@ namespace GE
 		void InitializeWireframe(const Data& data);
 
 		void SetTransform(GTransform transform);
+		void SetAccumulatedMatrix(GMatrix accumulatedMatrix);
 		virtual void Submit(const std::string& channel);
 
 		void LinkTechnique(std::string renderGraphName);
@@ -92,6 +93,7 @@ namespace GE
 		std::map<std::string, std::shared_ptr<GWireframeInstance>> InstanceList;
 
 		GTransform WireframeTransform;
+		GMatrix AccumulatedMatrix;
 	};
 
 	class GUARDIAN_API GGeometryWireframe : public GWireframe

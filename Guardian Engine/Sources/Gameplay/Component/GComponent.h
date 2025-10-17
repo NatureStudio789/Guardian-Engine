@@ -90,7 +90,7 @@ namespace GE
 		}
 		GColliderComponent(const GColliderComponent&) = default;
 
-		void AddColliderShape(std::shared_ptr<GShape> shape)
+		void AddColliderShape(std::shared_ptr<GShape> shape, bool initializeWireframe = true)
 		{
 			this->Collider->AddShape(shape);
 
@@ -126,13 +126,21 @@ namespace GE
 				}
 			}
 			this->ColliderGeometryList.push_back(geometry);
-			this->ColliderWireframeList.push_back(GGeometryWireframe::CreateNewGeometryWireframe(geometry));
+			if (initializeWireframe)
+			{
+				this->ColliderWireframeList.push_back(GGeometryWireframe::CreateNewGeometryWireframe(geometry));
+			}
+			else
+			{
+				this->ToInitializeGeometryList.push_back(geometry);
+			}
 		}
 
 		std::shared_ptr<GCollider> Collider;
 
 	private:
 		std::vector<std::shared_ptr<GGeometry>> ColliderGeometryList;
+		std::vector<std::shared_ptr<GGeometry>> ToInitializeGeometryList;
 		std::vector<std::shared_ptr<GGeometryWireframe>> ColliderWireframeList;
 		std::shared_ptr<GStaticRigidBody> StaticRigidBody;
 

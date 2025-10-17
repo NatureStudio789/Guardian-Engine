@@ -34,6 +34,7 @@ namespace GE
 
 		const GUUID& GetSceneId() const noexcept;
 		const std::string& GetSceneName() const noexcept;
+		bool GetRenderingInitialized() const noexcept;
 		std::shared_ptr<GLightRegistry> GetLightRegistry();
 		std::shared_ptr<GCamera> GetEditCamera();
 		std::shared_ptr<GCamera> GetRuntimeCamera();

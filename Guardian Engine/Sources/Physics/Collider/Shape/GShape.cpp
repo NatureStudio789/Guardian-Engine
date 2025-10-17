@@ -46,11 +46,6 @@ namespace GE
 		this->LocalTransform.Rotation = rotation;
 	}
 
-	void GShape::SetLocalScale(const GVector3& scale)
-	{
-		this->LocalTransform.Scale = scale;
-	}
-
 	const GTransform& GShape::GetLocalTransform() const noexcept
 	{
 		return this->LocalTransform;

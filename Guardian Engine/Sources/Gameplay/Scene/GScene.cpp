@@ -138,6 +138,11 @@ namespace GE
 		return this->SceneName;
 	}
 
+	bool GScene::GetRenderingInitialized() const noexcept
+	{
+		return this->IsRenderingInitialized;
+	}
+
 	std::shared_ptr<GLightRegistry> GScene::GetLightRegistry()
 	{
 		return this->LightRegistry;
@@ -360,6 +365,16 @@ namespace GE
 			auto view = this->EntityRegistry.view<GTransformComponent, GColliderComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GColliderComponent& CComponent)
 				{
+					if (!CComponent.ToInitializeGeometryList.empty())
+					{
+						for (auto& geometry : CComponent.ToInitializeGeometryList)
+						{
+							CComponent.ColliderWireframeList.push_back(GGeometryWireframe::CreateNewGeometryWireframe(geometry));
+						}
+
+						CComponent.ToInitializeGeometryList.clear();
+					}
+
 					for (UINT i = 0; i < (UINT)CComponent.Collider->GetColliderShapeList().size(); i++)
 					{
 						auto& shape = CComponent.Collider->GetColliderShapeList()[i];
@@ -393,6 +408,10 @@ namespace GE
 						
 						geometry->UpdateGeometry();
 						wireframe->SetTransform(shape->GetLocalTransform());
+						GTransform AccumulatedTransform;
+						AccumulatedTransform.Position = TComponent.Transform.Position;
+						AccumulatedTransform.Rotation = TComponent.Transform.Rotation;
+						wireframe->SetAccumulatedMatrix(AccumulatedTransform.GetTransformMatrix());
 						wireframe->Submit("debug");
 					}
 				});
