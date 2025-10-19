@@ -164,6 +164,7 @@ namespace GE
 		UINT hemisphereRings = 16;
 
 		const float halfCylinderHeight = 0.5f;
+		const float SphereRadius = 0.5f;
 
 		for (UINT ring = 0; ring <= hemisphereRings; ++ring) 
 		{
@@ -178,9 +179,9 @@ namespace GE
 				float cosPhi = std::cos(phi);
 
 				GVector3 v;
-				v.x = this->HalfSphereRadius * sinTheta * cosPhi;
-				v.y = this->HalfSphereRadius * cosTheta;
-				v.z = this->HalfSphereRadius * sinTheta * sinPhi;
+				v.x = SphereRadius * sinTheta * cosPhi;
+				v.y = SphereRadius * cosTheta;
+				v.z = SphereRadius * sinTheta * sinPhi;
 				TopHalfSphereData.Vertices.push_back(v);
 			}
 		}
@@ -219,15 +220,15 @@ namespace GE
 			float sinPhi = std::sin(phi);
 
 			GVector3 topV;
-			topV.x = this->HalfSphereRadius * cosPhi;
+			topV.x = SphereRadius * cosPhi;
 			topV.y = halfCylinderHeight;
-			topV.z = this->HalfSphereRadius * sinPhi;
+			topV.z = SphereRadius * sinPhi;
 			CylinderData.Vertices.push_back(topV);
 
 			GVector3 bottomV;
-			bottomV.x = this->HalfSphereRadius * cosPhi;
+			bottomV.x = SphereRadius * cosPhi;
 			bottomV.y = -halfCylinderHeight;
-			bottomV.z = this->HalfSphereRadius * sinPhi;
+			bottomV.z = SphereRadius * sinPhi;
 			CylinderData.Vertices.push_back(bottomV);
 		}
 
@@ -268,9 +269,9 @@ namespace GE
 				float cosPhi = std::cos(phi);
 
 				GVector3 v;
-				v.x = this->HalfSphereRadius * sinTheta * cosPhi;
-				v.y = this->HalfSphereRadius * cosTheta;
-				v.z = this->HalfSphereRadius * sinTheta * sinPhi;
+				v.x = SphereRadius * sinTheta * cosPhi;
+				v.y = SphereRadius * cosTheta;
+				v.z = SphereRadius * sinTheta * sinPhi;
 				BottomHalfSphereData.Vertices.push_back(v);
 			}
 		}
