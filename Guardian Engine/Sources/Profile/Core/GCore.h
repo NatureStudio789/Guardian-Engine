@@ -13,6 +13,7 @@
 #include <functional>
 #include <queue>
 #include <any>
+#include <variant>
 
 #include <Windows.h>
 #include <Uxtheme.h>

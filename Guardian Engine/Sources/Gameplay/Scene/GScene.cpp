@@ -290,6 +290,12 @@ namespace GE
 			this->RuntimeCamera);
 		this->RuntimeRenderMission->Request();
 
+		this->EditRenderMission->GetRenderFramebuffer()->SetShaderViewName("SceneEdit");
+		this->RuntimeRenderMission->GetRenderFramebuffer()->SetShaderViewName("SceneRuntime");
+
+		GShaderViewRegistry::RegistryShaderView(this->EditRenderMission->GetRenderFramebuffer());
+		GShaderViewRegistry::RegistryShaderView(this->RuntimeRenderMission->GetRenderFramebuffer());
+
 		this->IsRenderingInitialized = true;
 	}
 

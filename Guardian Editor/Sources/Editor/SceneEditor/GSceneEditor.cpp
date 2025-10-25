@@ -20,8 +20,8 @@ namespace GE
 			this->SceneEditPanel = std::make_shared<EUI::GPanel>("Scene");
 			this->SceneEditPanel->AddStyleToWidget(NoPaddingStyle);
 
-			this->SceneEditImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GSceneRegistry::GetActiveScene()->GetEditFramebuffer()->
-				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
+			this->SceneEditImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)
+				GShaderViewRegistry::GetShaderView("SceneEdit")->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneEditPanel->AddWidgetToPanel(this->SceneEditImage);
 
 			this->EditManipulater = std::make_shared<EUI::GManipulater>();
@@ -107,8 +107,8 @@ namespace GE
 			this->SceneRuntimePanel = std::make_shared<EUI::GPanel>("Game");
 			this->SceneRuntimePanel->AddStyleToWidget(NoPaddingStyle);
 
-			this->SceneRuntimeImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)GSceneRegistry::GetActiveScene()->GetRuntimeFramebuffer()->
-				GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2());
+			this->SceneRuntimeImage = std::make_shared<EUI::GImage>((EUI::GImage::Id)
+				GShaderViewRegistry::GetShaderView("SceneRuntime")->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2());
 			this->SceneRuntimePanel->AddWidgetToPanel(this->SceneRuntimeImage);
 			this->SceneRuntimePanel->SetWidgetEventProcessFunction([=]()
 			{
@@ -154,7 +154,7 @@ namespace GE
 				if (this->PlayState == 0)
 				{
 					GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_RUNTIME);
-					this->PlayButton->SetButtonImageId(this->StopButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr);
+					this->PlayButton->SetButtonImageId(this->StopButtonTexture->GetViewDescriptorHandle()->GPUHandle.ptr);
 					this->PlayState = 1;
 
 					ImGui::SetWindowFocus(this->SceneRuntimePanel->GetPanelName().c_str());
@@ -162,12 +162,12 @@ namespace GE
 				else if (this->PlayState == 1)
 				{
 					GSceneRegistry::GetActiveScene()->SwitchSceneState(GScene::GE_STATE_EDIT);
-					this->PlayButton->SetButtonImageId(this->PlayButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr);
+					this->PlayButton->SetButtonImageId(this->PlayButtonTexture->GetViewDescriptorHandle()->GPUHandle.ptr);
 					this->PlayState = 0;
 
 					ImGui::SetWindowFocus(this->SceneEditPanel->GetPanelName().c_str());
 				}
-			}, this->PlayButtonTexture->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2{50.0f, 50.0f});
+			}, this->PlayButtonTexture->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2{50.0f, 50.0f});
 			this->ControlPanel->AddWidgetToPanel(this->PlayButton);
 
 			this->AddWidgetToEditor(this->ControlPanel);

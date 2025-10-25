@@ -4,13 +4,13 @@
 
 namespace GE
 {
-	class GUARDIAN_API GFramebuffer
+	class GUARDIAN_API GFramebuffer : public GShaderView
 	{
 	public:
 		GFramebuffer();
 		GFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT = false);
 		GFramebuffer(const GFramebuffer& other);
-		~GFramebuffer();
+		~GFramebuffer() override;
 
 		void InitializeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, bool enableRTT = false);
 

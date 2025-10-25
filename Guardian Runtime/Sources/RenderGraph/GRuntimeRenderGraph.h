@@ -11,8 +11,8 @@ namespace GE
 		{
 			this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource(
 				"ClearingFramebuffer", this->RenderGraphFramebuffer));
-			this->AddGlobalSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource(
-				"SceneFramebuffer", GRenderer::GetRenderGraph("SceneRuntime")->GetRenderGraphFramebuffer()));
+			this->AddGlobalSource(GDirectApplicableSource<GShaderViewApplicator>::CreateNewDirectApplicableSource(
+				"SceneShaderView", GShaderViewApplicator::CreateNewShaderViewApplicator("SceneRuntime")));
 
 			{
 				auto ClearFullscreenPass = std::make_shared<GClearFramebufferPass>("Clearing");
@@ -23,7 +23,7 @@ namespace GE
 
 			{
 				auto FullscreenPass = std::make_shared<GFullscreenPass>("Fullscreen");
-				FullscreenPass->SetSinkLinkage("SourceFramebuffer", "$.SceneFramebuffer");
+				FullscreenPass->SetSinkLinkage("SourceShaderView", "$.SceneShaderView");
 				FullscreenPass->SetSinkLinkage("TargetFramebuffer", "Clearing.ClearingFramebuffer");
 
 				this->AppendPass(FullscreenPass);

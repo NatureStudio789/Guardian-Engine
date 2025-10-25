@@ -1,6 +1,6 @@
 #ifndef _GE_GRENDERTARET_H_
 #define _GE_GRENDERTARET_H_
-#include "../../Surface/GSurface.h"
+#include "../../ShaderView/GShaderViewRegistry.h"
 
 namespace GE
 {
@@ -21,7 +21,6 @@ namespace GE
 			D3D12_CPU_DESCRIPTOR_HANDLE depthStencilView);
 
 		WRL::ComPtr<ID3D12Resource> GetRTTBuffer();
-		std::shared_ptr<GDescriptorHandle> GetTextureDescriptorHandle();
 		D3D12_CPU_DESCRIPTOR_HANDLE GetRenderTargetView(std::shared_ptr<GGraphicsContext> graphicsContext);
 
 		static std::shared_ptr<GRenderTarget> CreateNewRenderTarget(
@@ -35,7 +34,6 @@ namespace GE
 		WRL::ComPtr<ID3D12Resource> RTTBuffer;
 
 		std::shared_ptr<GDescriptorHandle> RTVDescriptorHandle;
-		std::shared_ptr<GDescriptorHandle> RTVTextureDescriptorHandle;
 	};
 }
 

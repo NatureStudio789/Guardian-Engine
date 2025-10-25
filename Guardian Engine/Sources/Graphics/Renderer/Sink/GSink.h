@@ -114,7 +114,7 @@ namespace GE
 
 		void Apply(std::shared_ptr<GSource> source) override
 		{
-			this->Applicable = source->YieldApplicable();
+			this->Applicable = std::dynamic_pointer_cast<T>(source->YieldApplicable());
 			this->IsLinked = true;
 		}
 		void CheckLinkValidate() const override

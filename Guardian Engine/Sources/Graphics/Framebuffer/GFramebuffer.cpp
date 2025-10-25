@@ -2,7 +2,7 @@
 
 namespace GE
 {
-	GFramebuffer::GFramebuffer()
+	GFramebuffer::GFramebuffer() : GShaderView()
 	{
 		this->FramebufferId = GUUID();
 		this->FramebufferWidth = this->FramebufferHeight = 0;
@@ -17,7 +17,7 @@ namespace GE
 		this->InitializeFramebuffer(graphicsContext, enableRTT);
 	}
 
-	GFramebuffer::GFramebuffer(const GFramebuffer& other)
+	GFramebuffer::GFramebuffer(const GFramebuffer& other) : GShaderView(other)
 	{
 		this->FramebufferId = other.FramebufferId;
 
@@ -50,6 +50,13 @@ namespace GE
 		this->FramebufferHeight = graphicsContext->GetGraphicsSwapChain()->GetBufferHeight();
 
 		this->FramebufferRenderTarget = GRenderTarget::CreateNewRenderTarget(graphicsContext, this->EnableRTT);
+		if (this->EnableRTT)
+		{
+			this->AllocateDescriptor(1);
+			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
+				CreateShaderResourceView(this->FramebufferRenderTarget->GetRTTBuffer().Get(), null, this->ViewDescriptorHandle->CPUHandle);
+		}
+
 		this->FramebufferDepthStencil = GDepthStencil::CreateNewDepthStencil(graphicsContext);
 
 		GViewport::Attribute ViewportAttribute;
@@ -86,6 +93,12 @@ namespace GE
 		this->FramebufferHeight = newHeight;
 
 		this->FramebufferRenderTarget->ResizeRenderTargetView(graphicsContext, newWidth, newHeight);
+		if (this->EnableRTT)
+		{
+			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
+				CreateShaderResourceView(this->FramebufferRenderTarget->GetRTTBuffer().Get(), null, this->ViewDescriptorHandle->CPUHandle);
+		}
+
 		this->FramebufferDepthStencil->ResizeDepthStencilView(graphicsContext);
 
 		GViewport::Attribute ViewportAttribute;

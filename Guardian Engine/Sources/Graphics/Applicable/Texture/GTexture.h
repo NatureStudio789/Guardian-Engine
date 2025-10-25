@@ -1,22 +1,21 @@
 #ifndef _GE_GTEXTURE_H_
 #define _GE_GTEXTURE_H_
-#include "../Sampler/GSampler.h"
+#include "../ShaderViewApplicator/GShaderViewApplicator.h"
 
 namespace GE
 {
-	class GUARDIAN_API GTexture : public GApplicable
+	class GUARDIAN_API GTexture : public GApplicable, public GShaderView
 	{
 	public:
 		GTexture();
 		GTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index = 0);
 		GTexture(const GTexture& other);
-		~GTexture();
+		~GTexture() override;
 
 		void InitializeTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index = 0);
 
 		void Apply() override;
 
-		std::shared_ptr<GDescriptorHandle> GetTextureDescriptorHandle();
 		WRL::ComPtr<ID3D12Resource> GetTextureResource();
 		WRL::ComPtr<ID3D12Resource> GetTextureUploadHeap();
 
@@ -26,11 +25,9 @@ namespace GE
 		}
 
 	private:
-		std::shared_ptr<GDescriptorHandle> TextureDescriptorHandle;
 		std::shared_ptr<GRootSignature> TextureRootSignature;
 		WRL::ComPtr<ID3D12Resource> TextureResource;
 		WRL::ComPtr<ID3D12Resource> TextureUploadHeap;
-		UINT TextureRootParameterIndex;
 	};
 }
 

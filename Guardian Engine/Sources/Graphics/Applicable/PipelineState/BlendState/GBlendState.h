@@ -1,6 +1,6 @@
 #ifndef _GE_GBLENDSTATE_H_
 #define _GE_GBLENDSTATE_H_
-#include "../GRasterizerState/GRasterizerState.h"
+#include "../RasterizerState/GRasterizerState.h"
 
 namespace GE
 {

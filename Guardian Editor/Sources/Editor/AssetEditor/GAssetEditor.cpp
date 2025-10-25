@@ -38,7 +38,7 @@ namespace GE
 					this->CurrentDirectory = std::filesystem::path(this->CurrentDirectory).parent_path().string();
 					Directory = this->CurrentDirectory;
 				}
-			}, (EUI::GImage::Id)this->BackTexture->GetTextureDescriptorHandle()->GPUHandle.ptr, GVector2(20.0f, 20.0f)));
+			}, (EUI::GImage::Id)this->BackTexture->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2(20.0f, 20.0f)));
 
 		MenuBar->AddWidgetToMenuBar(std::make_shared<EUI::GInputBox>("Path", &Directory));
 		if (std::filesystem::exists(Directory) && std::filesystem::is_directory(Directory))
@@ -75,7 +75,7 @@ namespace GE
 			const auto& Path = directoryEntry.path();
 			if (directoryEntry.is_directory())
 			{
-				ImageId = (unsigned long long)this->DirectoryTexture->GetTextureDescriptorHandle()->GPUHandle.ptr;
+				ImageId = (unsigned long long)this->DirectoryTexture->GetViewDescriptorHandle()->GPUHandle.ptr;
 
 				auto& DirectoryButton = std::make_shared<EUI::GImageButton>(GUtil::GetDirectoryName(Path.string()), [=]()
 					{
@@ -98,7 +98,7 @@ namespace GE
 			}
 			else
 			{
-				ImageId = (unsigned long long)this->FileTexture->GetTextureDescriptorHandle()->GPUHandle.ptr;
+				ImageId = (unsigned long long)this->FileTexture->GetViewDescriptorHandle()->GPUHandle.ptr;
 
 				ColumnLayout->AddColumn({
 					std::make_shared<EUI::GImageButton>(Path.filename().string(), [=]()

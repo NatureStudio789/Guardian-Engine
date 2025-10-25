@@ -2,11 +2,9 @@
 
 namespace GE
 {
-	GTexture::GTexture()
+	GTexture::GTexture() : GShaderView()
 	{
-		this->TextureDescriptorHandle = null;
 		this->TextureRootSignature = null;
-		this->TextureRootParameterIndex = 0;
 	}
 
 	GTexture::GTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index)
@@ -14,21 +12,16 @@ namespace GE
 		this->InitializeTexture(rootSignature, surface, index);
 	}
 
-	GTexture::GTexture(const GTexture& other)
+	GTexture::GTexture(const GTexture& other) : GShaderView(other)
 	{
-		this->TextureDescriptorHandle = other.TextureDescriptorHandle;
 		this->TextureRootSignature = other.TextureRootSignature;
 		this->TextureResource = other.TextureResource;
 		this->TextureUploadHeap = other.TextureUploadHeap;
-		this->TextureRootParameterIndex = other.TextureRootParameterIndex;
 	}
 
 	GTexture::~GTexture()
 	{
-		this->TextureDescriptorHandle.reset();
-		this->TextureDescriptorHandle = null;
 		this->TextureRootSignature = null;
-		this->TextureRootParameterIndex = 0;
 	}
 
 	void GTexture::InitializeTexture(std::shared_ptr<GRootSignature> rootSignature, const GSurface& surface, int index)
@@ -38,15 +31,15 @@ namespace GE
 		this->TextureRootSignature = rootSignature;
 		if (!this->TextureRootSignature)
 		{
-			this->TextureRootParameterIndex = 0;
+			this->ViewRootParameterIndex = 0;
 		}
 		else
 		{
-			this->TextureRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
+			this->ViewRootParameterIndex = this->TextureRootSignature->GetRootParameterIndex(
 				GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, index));
 		}
 
-		this->TextureDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(1);
+		this->AllocateDescriptor(1);
 
 		GUARDIAN_AUTO_THROW(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 			CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT), D3D12_HEAP_FLAG_NONE,
@@ -72,7 +65,7 @@ namespace GE
 				D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			CreateShaderResourceView(this->TextureResource.Get(), null, this->TextureDescriptorHandle->CPUHandle);
+			CreateShaderResourceView(this->TextureResource.Get(), null, this->ViewDescriptorHandle->CPUHandle);
 
 		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ExecuteInitialization();
 	}
@@ -84,13 +77,7 @@ namespace GE
 			throw GUARDIAN_ERROR_EXCEPTION("This texture doesn't support apply!");
 		}
 
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-			SetGraphicsRootDescriptorTable(this->TextureRootParameterIndex, this->TextureDescriptorHandle->GPUHandle);
-	}
-
-	std::shared_ptr<GDescriptorHandle> GTexture::GetTextureDescriptorHandle()
-	{
-		return this->TextureDescriptorHandle;
+		this->ApplyShaderView();
 	}
 
 	WRL::ComPtr<ID3D12Resource> GTexture::GetTextureResource()

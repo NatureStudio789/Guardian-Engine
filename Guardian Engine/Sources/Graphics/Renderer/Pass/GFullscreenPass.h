@@ -9,7 +9,7 @@ namespace GE
 	public:
 		GFullscreenPass(const std::string& name) : GApplyPass(name)
 		{
-			this->RegisterSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("SourceFramebuffer", this->SourceFramebuffer));
+			this->RegisterSink(GDirectApplicableSink<GShaderViewApplicator>::CreateNewDirectApplicableSink("SourceShaderView", this->SourceShaderView));
 
 			this->RegisterSink(GDirectFramebufferSink::CreateNewDirectFramebufferSink("TargetFramebuffer", this->Framebuffer));
 			this->RegisterSource(GDirectFramebufferSource::CreateNewDirectFramebufferSource("OutputFramebuffer", this->Framebuffer));
@@ -38,11 +38,7 @@ namespace GE
 		{
 			GApplyPass::Apply();
 
-			UINT SourceFramebufferParameterIndex = GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::FULLSCREEN_PSO)->
-				GetPipelineRootSignature()->GetRootParameterIndex(GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, 0));
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList()->GetCommandListObject()->
-				SetGraphicsRootDescriptorTable(SourceFramebufferParameterIndex,
-					this->SourceFramebuffer->GetFramebufferRenderTarget()->GetTextureDescriptorHandle()->GPUHandle);
+			this->SourceShaderView->Apply();
 		}
 
 		void Execute() override
@@ -68,7 +64,7 @@ namespace GE
 		}
 
 	private:
-		std::shared_ptr<GFramebuffer> SourceFramebuffer;
+		std::shared_ptr<GShaderViewApplicator> SourceShaderView;
 		std::shared_ptr<GRenderable> FrameRectangle;
 	};
 }

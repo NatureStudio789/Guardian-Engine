@@ -1,6 +1,6 @@
 #ifndef _GE_GPIPELINESTATE_H_
 #define _GE_GPIPELINESTATE_H_
-#include "GBlendState/GBlendState.h"
+#include "BlendState/GBlendState.h"
 
 namespace GE
 {

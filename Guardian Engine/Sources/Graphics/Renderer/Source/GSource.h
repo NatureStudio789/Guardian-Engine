@@ -124,11 +124,12 @@ namespace GE
 		}
 		std::shared_ptr<GApplicable>& YieldApplicable() override
 		{
-			return this->Applicable;
+			std::shared_ptr<GApplicable> applicable = this->Applicable;
+			return applicable;
 		}
 
 		static std::shared_ptr<GDirectApplicableSource> CreateNewDirectApplicableSource(
-			const std::string& name, std::shared_ptr<GApplicable>& applicable)
+			const std::string& name, std::shared_ptr<T>& applicable)
 		{
 			return std::make_shared<GDirectApplicableSource>(name, applicable);
 		}

@@ -18,7 +18,6 @@ namespace GE
 		this->EnableRTT = other.EnableRTT;
 		this->RTTBuffer = other.RTTBuffer;
 
-		this->RTVTextureDescriptorHandle = other.RTVTextureDescriptorHandle;
 		this->RTVDescriptorHandle = other.RTVDescriptorHandle;
 	}
 
@@ -36,7 +35,7 @@ namespace GE
 		if (this->EnableRTT)
 		{
 			this->RTVDescriptorHandle = graphicsContext->GetRTVDescriptorHeap()->Allocate(1);
-			this->RTVTextureDescriptorHandle = graphicsContext->GetSRVDescriptorHeap()->Allocate(1);
+			/*this->RTVTextureDescriptorHandle = graphicsContext->GetSRVDescriptorHeap()->Allocate(1);*/
 
 			DXGI_SWAP_CHAIN_DESC desc;
 			graphicsContext->GetGraphicsSwapChain()->GetSwapChainObject()->GetDesc(&desc);
@@ -59,8 +58,8 @@ namespace GE
 			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->CreateRenderTargetView(
 				this->RTTBuffer.Get(), null, this->RTVDescriptorHandle->CPUHandle);
 
-			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
-				CreateShaderResourceView(this->RTTBuffer.Get(), null, this->RTVTextureDescriptorHandle->CPUHandle);
+			/*graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
+				CreateShaderResourceView(this->RTTBuffer.Get(), null, this->RTVTextureDescriptorHandle->CPUHandle);*/
 		}
 		else
 		{
@@ -107,8 +106,8 @@ namespace GE
 			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->CreateRenderTargetView(
 				this->RTTBuffer.Get(), null, this->RTVDescriptorHandle->CPUHandle);
 
-			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
-				CreateShaderResourceView(this->RTTBuffer.Get(), null, this->RTVTextureDescriptorHandle->CPUHandle);
+			/*graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
+				CreateShaderResourceView(this->RTTBuffer.Get(), null, this->RTVTextureDescriptorHandle->CPUHandle);*/
 		}
 		else
 		{
@@ -139,11 +138,6 @@ namespace GE
 	WRL::ComPtr<ID3D12Resource> GRenderTarget::GetRTTBuffer()
 	{
 		return this->RTTBuffer;
-	}
-
-	std::shared_ptr<GDescriptorHandle> GRenderTarget::GetTextureDescriptorHandle()
-	{
-		return this->RTVTextureDescriptorHandle;
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE GRenderTarget::GetRenderTargetView(std::shared_ptr<GGraphicsContext> graphicsContext)
