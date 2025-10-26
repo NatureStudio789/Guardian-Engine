@@ -52,7 +52,10 @@ namespace GE
 		this->FramebufferRenderTarget = GRenderTarget::CreateNewRenderTarget(graphicsContext, this->EnableRTT);
 		if (this->EnableRTT)
 		{
-			this->AllocateDescriptor(1);
+			if (!this->GetDescriptorAllocated())
+			{
+				this->AllocateDescriptor(1);
+			}
 			graphicsContext->GetGraphicsDevice()->GetDeviceObject()->
 				CreateShaderResourceView(this->FramebufferRenderTarget->GetRTTBuffer().Get(), null, this->ViewDescriptorHandle->CPUHandle);
 		}

@@ -1,6 +1,6 @@
 #ifndef _GE_GAPPLICABLE_H_
 #define _GE_GAPPLICABLE_H_
-#include "../GGraphicsContextRegistry.h"
+#include "../DepthMap/GDepthMap.h"
 
 namespace GE
 {

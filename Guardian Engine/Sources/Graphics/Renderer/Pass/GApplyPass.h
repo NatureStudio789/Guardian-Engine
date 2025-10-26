@@ -18,12 +18,11 @@ namespace GE
 		void AddApplicable(std::shared_ptr<GApplicable> applicable);
 
 		virtual void Apply();
-		void Finalize() override;
+		virtual void Finalize() override;
 
 	protected:
 		std::shared_ptr<GFramebuffer> Framebuffer;
 
-	private:
 		std::vector<std::shared_ptr<GApplicable>> ApplicableList;
 	};
 }

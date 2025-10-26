@@ -5,6 +5,7 @@ namespace GE
 	const std::string GPipelineStateRegistry::LIGHTING_PSO = "Lighting PSO";
 	const std::string GPipelineStateRegistry::WIREFRAME_PSO = "Wireframe PSO";
 	const std::string GPipelineStateRegistry::FULLSCREEN_PSO = "Fullscreen PSO";
+	const std::string GPipelineStateRegistry::DEPTH_PSO = "Depth PSO";
 
 	std::map<std::string, std::shared_ptr<GPipelineState>> GPipelineStateRegistry::PipelineStateList;
 
@@ -64,6 +65,10 @@ namespace GE
 			NormalParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			NormalParameter.ShaderRegisterIndex = 4;
 			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(NormalParameter);
+			GRootSignature::RootParameter DepthMapParameter;
+			DepthMapParameter.Type = GRootSignature::GE_PARAMETER_SRV;
+			DepthMapParameter.ShaderRegisterIndex = 5;
+			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(DepthMapParameter);
 			
 			GRootSignature::StaticSamplerDescription Sampler;
 			GUARDIAN_CLEAR_MEMORY(Sampler);
@@ -80,8 +85,8 @@ namespace GE
 
 		{
 			auto WireframePipelineState = std::make_shared<GPipelineState>(WIREFRAME_PSO);
-			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Wireframe.gvs"));
-			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Wireframe.gps"));
+			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Solid.gvs"));
+			WireframePipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Solid.gps"));
 
 			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
 			{
@@ -138,6 +143,33 @@ namespace GE
 
 			FullscreenPipelineState->InitializePipelineState();
 			PipelineStateList[FULLSCREEN_PSO] = FullscreenPipelineState;
+		}
+
+		{
+			auto DepthPipelineState = std::make_shared<GPipelineState>(DEPTH_PSO);
+			DepthPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_VERTEX_SHADER, "../Guardian Engine/Shaders/Solid.gvs"));
+			DepthPipelineState->SetShader(GShader::CreateNewShader(GShader::GE_PIXEL_SHADER, "../Guardian Engine/Shaders/Solid.gps"));
+
+			std::vector<D3D12_INPUT_ELEMENT_DESC> IED =
+			{
+				{"POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+			};
+
+			DepthPipelineState->SetInputLayout(GInputLayout::CreateNewInputLayout(IED.data(), (UINT)IED.size()));
+
+			DepthPipelineState->SetTopology(GTopology::CreateNewTopology(GTopology::GE_TOPOLOGY_TYPE_TRIANGLELIST));
+
+			GRootSignature::RootParameter TransformCBParameter;
+			TransformCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			TransformCBParameter.ShaderRegisterIndex = 0;
+			DepthPipelineState->GetPipelineRootSignature()->AddRootParameter(TransformCBParameter);
+			GRootSignature::RootParameter CameraCBParameter;
+			CameraCBParameter.Type = GRootSignature::GE_PARAMETER_CBV;
+			CameraCBParameter.ShaderRegisterIndex = 1;
+			DepthPipelineState->GetPipelineRootSignature()->AddRootParameter(CameraCBParameter);
+
+			DepthPipelineState->InitializePipelineState();
+			PipelineStateList[DEPTH_PSO] = DepthPipelineState;
 		}
 	}
 

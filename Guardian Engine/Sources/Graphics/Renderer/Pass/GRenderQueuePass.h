@@ -14,7 +14,7 @@ namespace GE
 		virtual void Execute() override;
 		virtual void Reset() override;
 
-	private:
+	protected:
 		std::vector<std::shared_ptr<GTask>> TaskList;
 
 		friend class GBillboardPass;

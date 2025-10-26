@@ -26,6 +26,12 @@ namespace GE
 		}
 
 		{
+			auto DepthPass = std::make_shared<GDepthPass>("Depth");
+
+			this->AppendPass(DepthPass);
+		}
+
+		{
 			auto WireframePass = std::make_shared<GWireframePass>("Wireframe");
 			WireframePass->SetSinkLinkage("Framebuffer", "Lighting.Framebuffer");
 			WireframePass->SetSinkLinkage("Camera", "Lighting.Camera");

@@ -1,6 +1,6 @@
 #ifndef _GE_GLIGHTINGPASS_H_
 #define _GE_GLIGHTINGPASS_H_
-#include "GFullscreenPass.h"
+#include "GDepthPass.h"
 
 namespace GE
 {
@@ -30,6 +30,8 @@ namespace GE
 			this->LightCBuffer = GLightCBuffer::CreateNewLightCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
 			this->AddApplicable(this->LightCBuffer);
+
+			this->AddApplicable(GShaderViewApplicator::CreateNewShaderViewApplicator("Light_1"));
 		}
 
 		void Execute() override

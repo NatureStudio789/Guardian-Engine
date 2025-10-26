@@ -126,6 +126,17 @@ namespace GE
 		}
 
 		{
+			auto& debug = std::make_shared<EUI::GPanel>("Debug");
+			debug->AddStyleToWidget(NoPaddingStyle);
+
+			auto& depth = std::make_shared<EUI::GImage>((EUI::GImage::Id)
+				GShaderViewRegistry::GetShaderView("Light_1")->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2(1024.0f, 1024.0f));
+			debug->AddWidgetToPanel(depth);
+
+			this->AddWidgetToEditor(debug);
+		}
+
+		{
 			this->SceneHierarchyPanel = std::make_shared<EUI::GPanel>("Hierarchy");
 			this->SceneHierarchyPanel->SetWidgetEventProcessFunction([=]()
 			{

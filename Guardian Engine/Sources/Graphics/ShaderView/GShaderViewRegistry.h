@@ -12,6 +12,9 @@ namespace GE
 		static std::shared_ptr<GShaderView> GetShaderView(const GUUID& id);
 		static std::shared_ptr<GShaderView> GetShaderView(const std::string& name);
 
+		static bool HasShaderView(const GUUID& id);
+		static bool HasShaderView(const std::string& name);
+
 	private:
 		static std::map<std::string, std::shared_ptr<GShaderView>> ShaderViewList;
 	};

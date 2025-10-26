@@ -10,6 +10,7 @@ namespace GE
 		
 		this->ViewRootParameterIndex = 0;
 		this->ViewDescriptorHandle = null;
+		this->IsDescriptorAllocated = false;
 	}
 
 	GShaderView::GShaderView(std::string viewName, UINT rootParameterIndex, UINT descriptorCount)
@@ -28,6 +29,7 @@ namespace GE
 
 		this->ViewRootParameterIndex = other.ViewRootParameterIndex;
 		this->ViewDescriptorHandle = other.ViewDescriptorHandle;
+		this->IsDescriptorAllocated = other.IsDescriptorAllocated;
 	}
 
 	GShaderView::~GShaderView()
@@ -37,11 +39,13 @@ namespace GE
 		
 		this->ViewRootParameterIndex = 0;
 		this->ViewDescriptorHandle.reset();
+		this->IsDescriptorAllocated = false;
 	}
 
 	void GShaderView::AllocateDescriptor(UINT descriptorCount)
 	{
 		this->ViewDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(descriptorCount);
+		this->IsDescriptorAllocated = true;
 	}
 
 	void GShaderView::SetShaderViewName(std::string name)
@@ -78,5 +82,10 @@ namespace GE
 	std::shared_ptr<GDescriptorHandle> GShaderView::GetViewDescriptorHandle()
 	{
 		return this->ViewDescriptorHandle;
+	}
+
+	const bool& GShaderView::GetDescriptorAllocated() const noexcept
+	{
+		return this->IsDescriptorAllocated;
 	}
 }

@@ -15,6 +15,7 @@ namespace GE
 		static const std::string LIGHTING_PSO;
 		static const std::string WIREFRAME_PSO;
 		static const std::string FULLSCREEN_PSO;
+		static const std::string DEPTH_PSO;
 
 	private:
 		static std::map<std::string, std::shared_ptr<GPipelineState>> PipelineStateList;

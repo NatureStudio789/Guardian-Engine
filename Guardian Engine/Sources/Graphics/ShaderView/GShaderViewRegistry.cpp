@@ -36,4 +36,22 @@ namespace GE
 
 		return ShaderViewList[name];
 	}
+
+	bool GShaderViewRegistry::HasShaderView(const GUUID& id)
+	{
+		for (auto& [name, shaderView] : ShaderViewList)
+		{
+			if (shaderView->GetShaderViewId() == id)
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	bool GShaderViewRegistry::HasShaderView(const std::string& name)
+	{
+		return ShaderViewList.count(name);
+	}
 }

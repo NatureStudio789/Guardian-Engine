@@ -24,6 +24,7 @@ namespace GE
 		const std::string& GetShaderViewName() const noexcept;
 		const UINT& GetViewRootParameterIndex() const noexcept;
 		std::shared_ptr<GDescriptorHandle> GetViewDescriptorHandle();
+		const bool& GetDescriptorAllocated() const noexcept;
 
 	protected:
 		GUUID ShaderViewId;
@@ -31,6 +32,7 @@ namespace GE
 		
 		UINT ViewRootParameterIndex;
 		std::shared_ptr<GDescriptorHandle> ViewDescriptorHandle;
+		bool IsDescriptorAllocated;
 	};
 }
 

@@ -46,6 +46,15 @@ namespace GE
 			LightingTechnique->AddStep(LightingStep);
 		}
 
+		{
+			auto& DepthStep = GStep::CreateNewStep("Depth");
+
+			DepthStep->AddApplicable(GTransformCBuffer::CreateNewTransformCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()));
+
+			LightingTechnique->AddStep(DepthStep);
+		}
+
 		this->AddTechnique(LightingTechnique);
 	}
 

@@ -39,6 +39,42 @@ namespace GE
 		float NearZ;
 		float FarZ;
 	};
+
+	class GUARDIAN_API GOrthographicsProjection
+	{
+	public:
+		GOrthographicsProjection()
+		{
+			this->ViewWidth = 50.0f;
+			this->ViewHeight = 50.0f;
+			this->NearZ = 0.1f;
+			this->FarZ = 20.0f;
+		}
+		GOrthographicsProjection(float viewWidth, float viewHeight, float nearZ, float farZ)
+		{
+			this->ViewWidth = viewWidth;
+			this->ViewHeight = viewHeight;
+			this->NearZ = nearZ;
+			this->FarZ = farZ;
+		}
+		GOrthographicsProjection(const GOrthographicsProjection& other)
+		{
+			this->ViewWidth = other.ViewWidth;
+			this->ViewHeight = other.ViewHeight;
+			this->NearZ = other.NearZ;
+			this->FarZ = other.FarZ;
+		}
+
+		const GMatrix GetProjectionMatrix() const noexcept
+		{
+			return GMatrix::OrthographicsMatrix(this->ViewWidth, this->ViewHeight, this->NearZ, this->FarZ);
+		}
+
+		float ViewWidth;
+		float ViewHeight;
+		float NearZ;
+		float FarZ;
+	};
 }
 
 #endif

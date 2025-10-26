@@ -5,6 +5,7 @@
 namespace GE
 {
 	class GUARDIAN_API GPerspectiveProjection;
+	class GUARDIAN_API GOrthographicsProjection;
 
 	class GUARDIAN_API GMatrix
 	{
@@ -49,6 +50,8 @@ namespace GE
 		static GMatrix ScalingMatrix(float x, float y, float z);
 		static GMatrix PerspectiveMatrix(const GPerspectiveProjection& projection);
 		static GMatrix PerspectiveMatrix(float fovAngle, float aspect, float nearZ, float farZ);
+		static GMatrix OrthographicsMatrix(const GOrthographicsProjection& projection);
+		static GMatrix OrthographicsMatrix(float viewWidth, float viewHeight, float nearZ, float farZ);
 		static GMatrix LookAtMatrix(const GVector3& eyePosition, const GVector3& target, const GVector3& upDirection);
 
 	private:
