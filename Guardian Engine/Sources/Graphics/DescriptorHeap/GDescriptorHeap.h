@@ -63,6 +63,7 @@ namespace GE
 		std::shared_ptr<GDescriptorHandle> Allocate(UINT descriptorCount);
 
 		WRL::ComPtr<ID3D12DescriptorHeap> GetDescriptorHeapObject();
+		const UINT& GetDescriptorIncrementSize() const noexcept;
 
 		static std::shared_ptr<GDescriptorHeap> CreateNewDescriptorHeap(std::shared_ptr<GDevice> device, 
 			UINT descriptorCount, Category category, Flag flag = GE_DESCRIPTOR_HEAP_FLAG_NONE)

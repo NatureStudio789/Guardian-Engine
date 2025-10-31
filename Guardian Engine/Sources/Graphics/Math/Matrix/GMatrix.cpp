@@ -216,14 +216,20 @@ namespace GE
 		return XMMatrixPerspectiveFovLH(fovAngle, aspect, nearZ, farZ);
 	}
 
-	GMatrix GMatrix::OrthographicsMatrix(const GOrthographicsProjection& projection)
-	{
-		return XMMatrixOrthographicLH(projection.ViewWidth, projection.ViewHeight, projection.NearZ, projection.FarZ);
-	}
-
 	GMatrix GMatrix::OrthographicsMatrix(float viewWidth, float viewHeight, float nearZ, float farZ)
 	{
 		return XMMatrixOrthographicLH(viewWidth, viewHeight, nearZ, farZ);
+	}
+
+	GMatrix GMatrix::OrthographicsOffCenterMatrix(const GOrthographicsProjection& projection)
+	{
+		return XMMatrixOrthographicOffCenterLH(projection.ViewLeft, projection.ViewRight, 
+			projection.ViewBottom, projection.ViewTop, projection.NearZ, projection.FarZ);
+	}
+
+	GMatrix GMatrix::OrthographicsOffCenterMatrix(float viewLeft, float viewRight, float viewBottom, float viewTop, float nearZ, float farZ)
+	{
+		return XMMatrixOrthographicOffCenterLH(viewLeft, viewRight, viewBottom, viewTop, nearZ, farZ);
 	}
 
 	GMatrix GMatrix::LookAtMatrix(const GVector3& eyePosition, const GVector3& target, const GVector3& upDirection)

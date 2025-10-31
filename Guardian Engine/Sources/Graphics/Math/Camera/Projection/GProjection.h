@@ -45,33 +45,41 @@ namespace GE
 	public:
 		GOrthographicsProjection()
 		{
-			this->ViewWidth = 50.0f;
-			this->ViewHeight = 50.0f;
+			this->ViewLeft = -50.0f;
+			this->ViewRight = 50.0f;
+			this->ViewTop = 50.0f;
+			this->ViewBottom = -50.0f;
 			this->NearZ = 0.1f;
 			this->FarZ = 20.0f;
 		}
-		GOrthographicsProjection(float viewWidth, float viewHeight, float nearZ, float farZ)
+		GOrthographicsProjection(float viewLeft, float viewRight, float viewTop, float viewBottom, float nearZ, float farZ)
 		{
-			this->ViewWidth = viewWidth;
-			this->ViewHeight = viewHeight;
+			this->ViewLeft = viewLeft;
+			this->ViewRight = viewRight;
+			this->ViewTop = viewTop;
+			this->ViewBottom = viewBottom;
 			this->NearZ = nearZ;
 			this->FarZ = farZ;
 		}
 		GOrthographicsProjection(const GOrthographicsProjection& other)
 		{
-			this->ViewWidth = other.ViewWidth;
-			this->ViewHeight = other.ViewHeight;
+			this->ViewLeft = other.ViewLeft;
+			this->ViewRight = other.ViewRight;
+			this->ViewTop = other.ViewTop;
+			this->ViewBottom = other.ViewBottom;
 			this->NearZ = other.NearZ;
 			this->FarZ = other.FarZ;
 		}
 
 		const GMatrix GetProjectionMatrix() const noexcept
 		{
-			return GMatrix::OrthographicsMatrix(this->ViewWidth, this->ViewHeight, this->NearZ, this->FarZ);
+			return GMatrix::OrthographicsOffCenterMatrix(this->ViewLeft, this->ViewRight, this->ViewBottom, this->ViewTop, this->NearZ, this->FarZ);
 		}
 
-		float ViewWidth;
-		float ViewHeight;
+		float ViewLeft;
+		float ViewRight;
+		float ViewTop;
+		float ViewBottom;
 		float NearZ;
 		float FarZ;
 	};

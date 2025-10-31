@@ -50,8 +50,9 @@ namespace GE
 		static GMatrix ScalingMatrix(float x, float y, float z);
 		static GMatrix PerspectiveMatrix(const GPerspectiveProjection& projection);
 		static GMatrix PerspectiveMatrix(float fovAngle, float aspect, float nearZ, float farZ);
-		static GMatrix OrthographicsMatrix(const GOrthographicsProjection& projection);
 		static GMatrix OrthographicsMatrix(float viewWidth, float viewHeight, float nearZ, float farZ);
+		static GMatrix OrthographicsOffCenterMatrix(const GOrthographicsProjection& projection);
+		static GMatrix OrthographicsOffCenterMatrix(float viewWidth, float viewHeight, float viewBottom, float viewTop, float nearZ, float farZ);
 		static GMatrix LookAtMatrix(const GVector3& eyePosition, const GVector3& target, const GVector3& upDirection);
 
 	private:

@@ -134,10 +134,12 @@ namespace GE
         this->Rotation += rotation;
     }
 
-    void GOrthoCamera::ResizeFrustum(float newWidth, float newHeight)
+    void GOrthoCamera::ResizeFrustum(float left, float right, float top, float bottom)
     {
-        this->Projection.ViewWidth = newWidth;
-        this->Projection.ViewHeight = newHeight;
+        this->Projection.ViewLeft = left;
+        this->Projection.ViewRight = right;
+        this->Projection.ViewTop = top;
+        this->Projection.ViewBottom = bottom;
     }
 
     const GMatrix GOrthoCamera::GetViewMatrix() const noexcept

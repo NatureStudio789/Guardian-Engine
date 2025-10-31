@@ -69,4 +69,9 @@ namespace GE
 	{
 		return this->DescriptorHeapObject;
 	}
+
+	const UINT& GDescriptorHeap::GetDescriptorIncrementSize() const noexcept
+	{
+		return this->DescriptorIncrementSize;
+	}
 }
