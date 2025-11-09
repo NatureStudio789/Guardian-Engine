@@ -14,7 +14,9 @@ namespace GE
 
 		void InitializeGroup(const std::string& name, UINT size);
 		void AllocateDescriptor(UINT descriptorSize);
-		void AddGroupMember(UINT index, std::shared_ptr<GShaderView> shaderViewMember);
+
+		void AddGroupMember(GShaderView* shaderViewMember);
+		void RemoveGroupMember(GShaderView* shaderViewMember);
 
 		void SetRootParameterIndex(UINT index);
 
@@ -33,7 +35,7 @@ namespace GE
 
 		UINT GroupViewSize;
 		std::shared_ptr<GDescriptorHandle> GroupHeadViewDescriptorHandle;
-		std::map<UINT, std::string> GroupMemberRegistry;
+		std::vector<GShaderView*> GroupMemberRegistry;
 		UINT GroupViewRootParameterIndex;
 
 		bool IsDescriptorAllocated;

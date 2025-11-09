@@ -19,25 +19,29 @@ namespace GE
 			{
 				this->Type = GE_PARAMETER_CBV;
 				this->ShaderRegisterIndex = 0;
+				this->DescriptorCount = 1;
 			}
-			RootParameter(const ParameterType& type, UINT index)
+			RootParameter(const ParameterType& type, UINT index, UINT descriptorCount = 1)
 			{
 				this->Type = type;
 				this->ShaderRegisterIndex = index;
+				this->DescriptorCount = descriptorCount;
 			}
 			RootParameter(const RootParameter& other)
 			{
 				this->Type = other.Type;
 				this->ShaderRegisterIndex = other.ShaderRegisterIndex;
+				this->DescriptorCount = other.DescriptorCount;
 			}
 
 			bool operator==(const RootParameter& other) const noexcept
 			{
-				return this->Type == other.Type && this->ShaderRegisterIndex == other.ShaderRegisterIndex;
+				return this->Type == other.Type && this->ShaderRegisterIndex == other.ShaderRegisterIndex && this->DescriptorCount == this->DescriptorCount;
 			}
 
 			ParameterType Type;
 			UINT ShaderRegisterIndex;
+			UINT DescriptorCount;
 		};
 
 		struct StaticSamplerDescription

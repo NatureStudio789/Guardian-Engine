@@ -68,6 +68,7 @@ namespace GE
 			GRootSignature::RootParameter DepthMapParameter;
 			DepthMapParameter.Type = GRootSignature::GE_PARAMETER_SRV;
 			DepthMapParameter.ShaderRegisterIndex = 5;
+			DepthMapParameter.DescriptorCount = GLightRegistry::MaxLightCount;
 			LightingPipelineState->GetPipelineRootSignature()->AddRootParameter(DepthMapParameter);
 			
 			GRootSignature::StaticSamplerDescription Sampler;

@@ -18,6 +18,8 @@ namespace GE
 		void ClearFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void ResizeFramebuffer(std::shared_ptr<GGraphicsContext> graphicsContext, int newWidth, int newHeight);
 
+		void ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle) override;
+
 		void BeginRendering(std::shared_ptr<GGraphicsContext> graphicsContext);
 		void EndUpRendering(std::shared_ptr<GGraphicsContext> graphicsContext);
 

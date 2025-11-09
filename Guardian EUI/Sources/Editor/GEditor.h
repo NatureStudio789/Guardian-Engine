@@ -1,6 +1,6 @@
 #ifndef _GE_GEDITOR_H_
 #define _GE_GEDITOR_H_
-#include "../Widget/Dockspace/GDockspace.h"
+#include "../CallbackRegistry/GCallbackRegistry.h"
 
 namespace GE
 {

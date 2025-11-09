@@ -126,14 +126,10 @@ namespace GE
 		}
 
 		{
-			auto& debug = std::make_shared<EUI::GPanel>("Debug");
-			debug->AddStyleToWidget(NoPaddingStyle);
+			this->SceneDebugPanel = std::make_shared<EUI::GPanel>("Debug");
+			this->SceneDebugPanel->AddStyleToWidget(NoPaddingStyle);
 
-			auto& depth = std::make_shared<EUI::GImage>((EUI::GImage::Id)
-				GShaderViewRegistry::GetShaderView("Light_1")->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2(1024.0f, 1024.0f));
-			debug->AddWidgetToPanel(depth);
-
-			this->AddWidgetToEditor(debug);
+			this->AddWidgetToEditor(this->SceneDebugPanel);
 		}
 
 		{
@@ -192,6 +188,7 @@ namespace GE
 		this->UpdateEditPanel();
 		this->UpdateHierarchyPanel();
 		this->UpdatePropertiesPanel();
+		this->UpdateDebugPanel();
 	}
 
 	void GSceneEditor::UpdateEditPanel()
@@ -414,8 +411,8 @@ namespace GE
 
 			auto& component = entity->GetComponent<GPointLightComponent>();
 
-			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Color", &component.PointLight->Color, 0.1f, 0.0f, 1.0f));
-			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Strength", &component.PointLight->Strength, 0.1f, 1.0f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Color", &component.Light->LightData.Color, 0.1f, 0.0f, 1.0f));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GDrag>("Strength", &component.Light->LightData.Strength, 0.1f, 1.0f));
 
 			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
 		}
@@ -423,7 +420,7 @@ namespace GE
 		{
 			ComponentPopup->AddWidgetToPopup(std::make_shared<EUI::GMenuItem>("Point Light", [entity]()
 				{
-					entity->AddComponent<GPointLightComponent>();
+					entity->AddLightComponent<GPointLightComponent>();
 				}));
 		}
 
@@ -539,7 +536,10 @@ namespace GE
 			auto& component = entity->GetComponent<GModelComponent>();
 
 			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GText>("Static Mesh"));
-			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GButton>(component.ModelAssetName, []() {}, GVector2(50.0f, 50.0f)));
+			ComponentNode->AddWidgetToTreeNode(std::make_shared<EUI::GButton>(component.ModelAssetName, []()
+				{
+					EUI::GCallbackRegistry::TriggerCallback("SEARCH_FOR_MODEL_ASSETS");
+				}, GVector2(50.0f, 50.0f)));
 
 			this->PropertiesPanel->AddWidgetToPanel(std::make_shared<EUI::GSeparator>());
 		}
@@ -558,5 +558,20 @@ namespace GE
 			}, GVector2(150.0f, 40.0f)));
 
 		this->PropertiesPanel->AddWidgetToPanel(ComponentPopup);
+	}
+
+	void GSceneEditor::UpdateDebugPanel()
+	{
+		this->SceneDebugPanel->ClearPanelWidgets();
+
+		for (UINT i = 0; i < (UINT)GSceneRegistry::GetActiveScene()->LightRegistry->GetPointLightList().size(); i++)
+		{
+			CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle =
+				GShaderViewRegistry::GetShaderViewGroup("PointLightDepthMapGroup")->GetGroupHeadViewDescriptorHandle()->GPUHandle;
+			gpuHandle.Offset(i, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorIncrementSize());
+
+			auto& depth = std::make_shared<EUI::GImage>((EUI::GImage::Id)gpuHandle.ptr, GVector2(1024.0f, 1024.0f));
+			this->SceneDebugPanel->AddWidgetToPanel(depth);
+		}
 	}
 }

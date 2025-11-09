@@ -72,10 +72,10 @@ namespace GE
 			SerializeData << YAML::Key << "Point Light Component";
 			SerializeData << YAML::BeginMap;
 
-			auto& Color = entity->GetComponent<GPointLightComponent>().PointLight->Color;
+			auto& Color = entity->GetComponent<GPointLightComponent>().Light->LightData.Color;
 			SerializeData << YAML::Key << "Color" << YAML::Value << Color;
 
-			auto& Strength = entity->GetComponent<GPointLightComponent>().PointLight->Strength;
+			auto& Strength = entity->GetComponent<GPointLightComponent>().Light->LightData.Strength;
 			SerializeData << YAML::Key << "Strength" << YAML::Value << Strength;
 
 			SerializeData << YAML::EndMap;
@@ -244,10 +244,10 @@ namespace GE
 		auto PointLightComponent = deserializingData["Point Light Component"];
 		if (PointLightComponent)
 		{
-			auto& PointLight = entity->AddComponent<GPointLightComponent>();
+			auto& PointLight = entity->AddLightComponent<GPointLightComponent>();
 
-			PointLight.PointLight->Color = PointLightComponent["Color"].as<GVector3>();
-			PointLight.PointLight->Strength = PointLightComponent["Strength"].as<float>();
+			PointLight.Light->LightData.Color = PointLightComponent["Color"].as<GVector3>();
+			PointLight.Light->LightData.Strength = PointLightComponent["Strength"].as<float>();
 		}
 
 		auto ColliderComponent = deserializingData["Collider Component"];

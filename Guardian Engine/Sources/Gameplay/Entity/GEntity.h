@@ -39,7 +39,27 @@ namespace GE
 				throw GUARDIAN_ERROR_EXCEPTION("This entity already has this component!");
 			}
 
+			if (typeid(T).name() == typeid(GPointLightComponent).name())
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("The entity can't add light component by this function! Please use AddLightComponent!");
+			}
+
 			return this->EntityScene->EntityRegistry.emplace<T>(this->EntityHandle, std::forward<Args>(args)...);
+		}
+
+		template<typename T, typename... Args>
+		T& AddLightComponent(Args&&... args)
+		{
+			if (this->HasComponent<T>())
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("This entity already has this component!");
+			}
+
+			auto& component = this->EntityScene->EntityRegistry.emplace<T>(this->EntityHandle, std::forward<Args>(args)...);
+
+			component.Light->Register(this->EntityScene);
+
+			return component;
 		}
 
 		template<typename T>
@@ -49,6 +69,25 @@ namespace GE
 			{
 				throw GUARDIAN_ERROR_EXCEPTION("No matched component found in this entity!");
 			}
+
+			if (typeid(T).name() == typeid(GPointLightComponent).name())
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("The entity can't remove light component by RemoveComponent function! Please use RemoveLightComponent!");
+			}
+
+			this->EntityScene->EntityRegistry.remove<T>(this->EntityHandle);
+		}
+
+		template<typename T>
+		void RemoveLightComponent()
+		{
+			if (!this->HasComponent<T>())
+			{
+				throw GUARDIAN_ERROR_EXCEPTION("No matched component found in this entity!");
+			}
+
+			auto& component = this->GetComponent<T>();
+			component.Light->Unregister(this->EntityScene);
 
 			this->EntityScene->EntityRegistry.remove<T>(this->EntityHandle);
 		}

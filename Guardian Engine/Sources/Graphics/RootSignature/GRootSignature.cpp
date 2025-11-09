@@ -58,7 +58,7 @@ namespace GE
 
 			if (parameter.Type == GE_PARAMETER_SRV)
 			{
-				ShaderResourceViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, parameter.ShaderRegisterIndex);
+				ShaderResourceViewTable.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, parameter.DescriptorCount, parameter.ShaderRegisterIndex);
 				ShaderResourceViewTableList.push_back(ShaderResourceViewTable);
 			}
 		}

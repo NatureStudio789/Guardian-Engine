@@ -5,22 +5,71 @@
 namespace GE
 {
 	class GUARDIAN_API GScene;
+	class GUARDIAN_API GDepthMap;
+	class GUARDIAN_API GCameraCBuffer;
 
 	struct GUARDIAN_API GPointLight
 	{
 	public:
+		struct Data
+		{
+		public:
+			Data()
+			{
+				this->Position = {};
+				this->Strength = 100.0f;
+				this->Color = { 1.0f };
+				this->padding = 114514.0f;
+			}
+
+			Data(const Data& other)
+			{
+				this->Position = other.Position;
+				this->Strength = other.Strength;
+				this->Color = other.Color;
+			}
+
+			Data(const GVector3& position, const GVector3& color, float strength)
+			{
+				this->Position = position;
+				this->Color = color;
+				this->Strength = strength;
+				this->padding = 114514.0f;
+			}
+
+			GVector3 Position;
+			float Strength;
+			GVector3 Color;
+		private:
+			float padding;
+		};
+
+	public:
 		GPointLight();
-		GPointLight(const GPointLight&) = default;
+		GPointLight(const GPointLight& other);
 		GPointLight(const GVector3& position,
 			const GVector3& color, float strength);
 
-		void Submit(GScene* scene);
+		void Register(GScene* scene);
+		void Unregister(GScene* scene);
 
-		GVector3 Position;
-		float Strength;
-		GVector3 Color;
+		const GUUID& GetPointLightId() const noexcept;
+		const bool& GetLightRegistered() const noexcept;
+
+		Data LightData;
+
 	private:
-		float padding1;
+		void InitializeDepthRendering();
+		void UpdateDepthRendering();
+
+		GUUID PointLightId;
+		bool IsLightRegistered;
+		
+		std::shared_ptr<GDepthMap> LightDepthMap;
+		std::shared_ptr<GCameraCBuffer> LightCameraCBuffer;
+
+		friend class GLightRegistry;
+		friend class GDepthPass;
 	};
 }
 

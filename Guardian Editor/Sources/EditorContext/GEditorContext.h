@@ -1,6 +1,6 @@
 #ifndef _GE_GEDITORCONTEXT_H_
 #define _GE_GEDITORCONTEXT_H_
-#include <GEngine.h>
+#include "../Event/GEditorEvent.h"
 
 namespace GE
 {

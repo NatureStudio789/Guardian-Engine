@@ -14,6 +14,8 @@ namespace GE
 
 		void InitializeDepthMap(UINT width, UINT height);
 
+		void ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle) override;
+
 		void ApplyDepthMap();
 		void ClearDepthMap();
 

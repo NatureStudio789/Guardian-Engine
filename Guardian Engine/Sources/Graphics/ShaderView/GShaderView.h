@@ -14,6 +14,7 @@ namespace GE
 		virtual ~GShaderView();
 
 		void AllocateDescriptor(UINT descriptorCount = 1);
+		virtual void ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle);
 
 		void SetShaderViewName(std::string name);
 		void SetRootParameterIndex(UINT index);
@@ -33,6 +34,8 @@ namespace GE
 		UINT ViewRootParameterIndex;
 		std::shared_ptr<GDescriptorHandle> ViewDescriptorHandle;
 		bool IsDescriptorAllocated;
+
+		friend class GShaderViewGroup;
 	};
 }
 

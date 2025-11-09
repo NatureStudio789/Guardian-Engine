@@ -14,6 +14,7 @@ namespace GE
 
 	private:
 		std::shared_ptr<EUI::GPanel> AssetBrowserPanel;
+		std::shared_ptr<EUI::GPanel> ModelBrowserPanel;
 		std::string AssetDirectory;
 		std::string CurrentDirectory;
 

@@ -33,7 +33,7 @@ Texture2D RoughnessTexture : register(t1);
 Texture2D MetallicTexture : register(t2);
 Texture2D AoTexture : register(t3);
 Texture2D NormalTexture : register(t4);
-Texture2D DepthMap : register(t5);
+Texture2D DepthMap[50] : register(t5);
 
 cbuffer LightCBuffer : register(b3)
 {

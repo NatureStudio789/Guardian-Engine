@@ -9,7 +9,7 @@ namespace GE
 		this->ShaderViewName = "";
 		
 		this->ViewRootParameterIndex = 0;
-		this->ViewDescriptorHandle = null;
+		this->ViewDescriptorHandle = std::make_shared<GDescriptorHandle>();
 		this->IsDescriptorAllocated = false;
 	}
 
@@ -46,6 +46,12 @@ namespace GE
 	{
 		this->ViewDescriptorHandle = GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->Allocate(descriptorCount);
 		this->IsDescriptorAllocated = true;
+	}
+
+	void GShaderView::ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+	{
+		this->ViewDescriptorHandle->CPUHandle = cpuHandle;
+		this->ViewDescriptorHandle->GPUHandle = gpuHandle;
 	}
 
 	void GShaderView::SetShaderViewName(std::string name)

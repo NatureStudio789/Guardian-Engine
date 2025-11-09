@@ -1,4 +1,5 @@
 #include "GFramebuffer.h"
+#include "../GGraphicsContextRegistry.h"
 
 namespace GE
 {
@@ -113,6 +114,17 @@ namespace GE
 		ViewportAttribute.MinDepth = 0.0f;
 		ViewportAttribute.MaxDepth = 1.0f;
 		this->FramebufferViewport->SetViewportAttribute(ViewportAttribute);
+	}
+
+	void GFramebuffer::ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+	{
+		GShaderView::ResetDescriptor(cpuHandle, gpuHandle);
+
+		if (this->EnableRTT)
+		{
+			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
+				CreateShaderResourceView(this->FramebufferRenderTarget->GetRTTBuffer().Get(), null, this->ViewDescriptorHandle->CPUHandle);
+		}
 	}
 
 	void GFramebuffer::BeginRendering(std::shared_ptr<GGraphicsContext> graphicsContext)

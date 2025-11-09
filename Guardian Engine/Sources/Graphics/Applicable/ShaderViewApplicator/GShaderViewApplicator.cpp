@@ -41,11 +41,33 @@ namespace GE
 	{
 		if (GUUID* id = std::get_if<GUUID>(&this->ApplyingIdentification))
 		{
-			GShaderViewRegistry::GetShaderView(*id)->ApplyShaderView();
+			if (GShaderViewRegistry::HasShaderView(*id))
+			{
+				GShaderViewRegistry::GetShaderView(*id)->ApplyShaderView();
+			}
+			else if (GShaderViewRegistry::HasShaderViewGroup(*id))
+			{
+				GShaderViewRegistry::GetShaderViewGroup(*id)->ApplyShaderViewGroup();
+			}
+			else
+			{
+				throw GUARDIAN_ERROR_EXCEPTION(std::format("No shader view or shader view group with id : '{}' exists!", (unsigned long long)*id));
+			}
 		}
 		else if (std::string* name = std::get_if<std::string>(&this->ApplyingIdentification))
 		{
-			GShaderViewRegistry::GetShaderView(*name)->ApplyShaderView();
+			if (GShaderViewRegistry::HasShaderView(*name))
+			{
+				GShaderViewRegistry::GetShaderView(*name)->ApplyShaderView();
+			}
+			else if (GShaderViewRegistry::HasShaderViewGroup(*name))
+			{
+				GShaderViewRegistry::GetShaderViewGroup(*name)->ApplyShaderViewGroup();
+			}
+			else
+			{
+				throw GUARDIAN_ERROR_EXCEPTION(std::format("No shader view or shader view group named '{}' exists!", *name));
+			}
 		}
 		else
 		{

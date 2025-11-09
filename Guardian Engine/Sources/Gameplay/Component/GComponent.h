@@ -64,15 +64,15 @@ namespace GE
 	public:
 		GPointLightComponent()
 		{
-			this->PointLight = std::make_shared<GPointLight>();
+			this->Light = std::make_shared<GPointLight>();
 		}
 		GPointLightComponent(std::shared_ptr<GPointLight> pointLight)
 		{
-			this->PointLight = pointLight;
+			this->Light = pointLight;
 		}
 		GPointLightComponent(const GPointLightComponent&) = default;
 
-		std::shared_ptr<GPointLight> PointLight;
+		std::shared_ptr<GPointLight> Light;
 	};
 
 	struct GUARDIAN_API GColliderComponent

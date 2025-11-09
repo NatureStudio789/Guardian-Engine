@@ -7,8 +7,8 @@ Entities:
     Tag Component:
       Tag: Cerberus
     Transform Component:
-      Position: [0, 13.6999998, 0]
-      Rotation: [-104.239998, 57.5250015, -126.172997]
+      Position: [3.92193699, 10.0264044, -1.72636092]
+      Rotation: [89.927475, -11.2493324, -113.513588]
       Scale: [1, 1, 1]
     Collider Component:
       Shapes:
@@ -60,7 +60,7 @@ Entities:
     Tag Component:
       Tag: Light1
     Transform Component:
-      Position: [5.66590691, 0, -2.06174731]
+      Position: [5.1760726, 22.5800686, -2.06174731]
       Rotation: [0, 0, 0]
       Scale: [1, 1, 1]
     Point Light Component:
@@ -74,11 +74,11 @@ Entities:
           Physics Material:
             Static Friction: 0.5
             Dynamic Friction: 0.5
-            Restitution: 0.800000012
+            Restitution: 0.300000012
           Category: Box
           Edge Length: [2, 2, 2]
     Rigid Body Component:
-      Mass: 1
+      Mass: 1.29999995
       Is Kinematic: false
     Model Component:
       Asset Name: Box

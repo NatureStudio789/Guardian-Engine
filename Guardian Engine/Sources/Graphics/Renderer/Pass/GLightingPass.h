@@ -31,7 +31,7 @@ namespace GE
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature());
 			this->AddApplicable(this->LightCBuffer);
 
-			this->AddApplicable(GShaderViewApplicator::CreateNewShaderViewApplicator("Light_1"));
+			this->AddApplicable(GShaderViewApplicator::CreateNewShaderViewApplicator("PointLightDepthMapGroup"));
 		}
 
 		void Execute() override

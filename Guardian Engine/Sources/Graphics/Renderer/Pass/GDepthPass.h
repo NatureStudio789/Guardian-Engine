@@ -17,71 +17,34 @@ namespace GE
 				this->DepthJobList[i].DepthMap = std::make_shared<GDepthMap>();
 				this->DepthJobList[i].DepthMap->AllocateDescriptor();
 			}*/
-			Test.Camera = std::make_shared<GOrthoCamera>();
+			/*Test.Camera = std::make_shared<GOrthoCamera>();
 			Test.CameraCBuffer = GCameraCBuffer::CreateNewCameraCBuffer(
 				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::DEPTH_PSO)->GetPipelineRootSignature());
 			Test.DepthMap = std::make_shared<GDepthMap>(1024, 1024);
 			Test.DepthMap->SetRootParameterIndex(GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()->
-				GetRootParameterIndex(GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, 5)));
+				GetRootParameterIndex(GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, 5, 50)));
 			Test.DepthMap->SetShaderViewName("Light_1");
 			if (!GShaderViewRegistry::HasShaderView("Light_1"))
 			{
 				GShaderViewRegistry::RegistryShaderView(Test.DepthMap);
 			}
 
-			this->AddApplicable(Test.CameraCBuffer);
+			this->AddApplicable(Test.CameraCBuffer);*/
 		}
 
 		void Apply() override
 		{
-			Test.DepthMap->ApplyDepthMap();
-			Test.DepthMap->ClearDepthMap();
-
 			for (auto& applicable : this->ApplicableList)
 			{
 				applicable->Apply();
 			}
 		}
 
-		void Execute() override
-		{
-			GMatrix CameraMatrix = Test.Camera->GetViewMatrix() * Test.Camera->Projection.GetProjectionMatrix();
-			CameraMatrix.Transpose();
-			Test.CameraCBuffer->UpdateBufferData({ CameraMatrix, Test.Camera->Position });
+		void Execute() override;
 
-			this->UpdateLightData();
-
-			Test.DepthMap->BeginRendering();
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
-
-			this->Apply();
-
-			for (auto& task : this->TaskList)
-			{
-				task->Execute();
-			}
-
-			Test.DepthMap->EndUpRendering();
-		}
-
-		void Finalize() override
-		{
-
-		}
+		void Finalize() override {}
 
 	private:
-		void UpdateLightData();
-
-		struct DepthJob
-		{
-			std::shared_ptr<GCameraCBuffer> CameraCBuffer;
-			std::shared_ptr<GOrthoCamera> Camera;
-			
-			std::shared_ptr<GDepthMap> DepthMap;
-		};
-
-		std::vector<DepthJob> DepthJobList;
-		DepthJob Test;
 	};
 }
 

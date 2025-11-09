@@ -3,21 +3,45 @@
 
 namespace GE
 {
-	void GDepthPass::UpdateLightData()
+	void GDepthPass::Execute()
 	{
-		if (GSceneRegistry::GetActiveScene()->GetLightRegistry()->HasPointLights())
+		/*GMatrix CameraMatrix = Test.Camera->GetViewMatrix() * Test.Camera->Projection.GetProjectionMatrix();
+		CameraMatrix.Transpose();
+		Test.CameraCBuffer->UpdateBufferData({ CameraMatrix, Test.Camera->Position });
+
+		this->UpdateLightData();
+
+		Test.DepthMap->BeginRendering();
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
+
+		this->Apply();
+
+		for (auto& task : this->TaskList)
 		{
-			auto& firstLight = GSceneRegistry::GetActiveScene()->GetLightRegistry()->GetPointLightList().front();
-			Test.Camera->Position = firstLight.Position;
+			task->Execute();
 		}
 
-		if (GetAsyncKeyState('E'))
+		Test.DepthMap->EndUpRendering();*/
+
+		for (auto& pointLight : GSceneRegistry::GetActiveScene()->GetLightRegistry()->GetPointLightList())
 		{
-			Test.Camera->Rotate({ 0.0f, 0.1f, 0.0f });
-		}
-		if (GetAsyncKeyState('Q'))
-		{
-			Test.Camera->Rotate({ 0.0f, -0.1f, 0.0f });
+			pointLight->UpdateDepthRendering();
+
+			pointLight->LightDepthMap->BeginRendering();
+			GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
+
+			pointLight->LightDepthMap->ApplyDepthMap();
+			pointLight->LightDepthMap->ClearDepthMap();
+
+			this->Apply();
+			pointLight->LightCameraCBuffer->Apply();
+
+			for (auto& task : this->TaskList)
+			{
+				task->Execute();
+			}
+
+			pointLight->LightDepthMap->EndUpRendering();
 		}
 	}
 }

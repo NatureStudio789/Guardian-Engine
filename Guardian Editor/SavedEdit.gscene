@@ -1,0 +1,124 @@
+Scene: 8768267435523757796
+Name: Sample Scene
+Entities:
+  - Entity: 13268956092010720253
+    Name: Cerberus
+    Parent: Root
+    Tag Component:
+      Tag: Cerberus
+    Transform Component:
+      Position: [3.92193699, 10.0264044, -1.72636092]
+      Rotation: [89.927475, -11.2493324, -113.513588]
+      Scale: [1, 1, 1]
+    Collider Component:
+      Shapes:
+        - Local Transform:
+            Position: [0, 0.200000003, 0.5]
+            Rotation: [0, 0, 0]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.200000003
+          Category: Box
+          Edge Length: [2.20000005, 3.0999999, 14]
+        - Local Transform:
+            Position: [0, -1.79999995, -6.80000019]
+            Rotation: [20, 0, 0]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.800000012
+          Category: Capsule
+          Half Sphere Radius: 1.29999995
+          Height: 2.4000001
+        - Local Transform:
+            Position: [-1, -3.29999995, -3.70000005]
+            Rotation: [-0.400000006, -2.29999995, 7.80000019]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.800000012
+          Category: Box
+          Edge Length: [0.200000003, 1.89999998, 1.79999995]
+        - Local Transform:
+            Position: [-0.899999976, -4.0999999, -6.0999999]
+            Rotation: [34.7000008, -15.3999996, 0]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.800000012
+          Category: Box
+          Edge Length: [0.100000001, 0.300000012, 2.29999995]
+    Rigid Body Component:
+      Mass: 1.60000002
+      Is Kinematic: false
+    Model Component:
+      Asset Name: Cerberus
+  - Entity: 16540817398987549085
+    Name: Light1
+    Parent: Root
+    Tag Component:
+      Tag: Light1
+    Transform Component:
+      Position: [5.1760726, 22.5800686, -2.06174731]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    Point Light Component:
+      Color: [1, 1, 1]
+      Strength: 471.799988
+    Collider Component:
+      Shapes:
+        - Local Transform:
+            Position: [0, 0, 0]
+            Rotation: [0, 0, 0]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.300000012
+          Category: Box
+          Edge Length: [2, 2, 2]
+    Rigid Body Component:
+      Mass: 1.29999995
+      Is Kinematic: false
+    Model Component:
+      Asset Name: Box
+  - Entity: 12113719906026999298
+    Name: Light2
+    Parent: Root
+    Tag Component:
+      Tag: Light2
+    Transform Component:
+      Position: [1.17900002, -6, -7.18665695]
+      Rotation: [0, 0, 0]
+      Scale: [17.2999992, 1, 15.6999998]
+    Point Light Component:
+      Color: [1, 1, 1]
+      Strength: 1000
+    Collider Component:
+      Shapes:
+        - Local Transform:
+            Position: [0, 0, 0]
+            Rotation: [0, 0, 0]
+          Physics Material:
+            Static Friction: 0.5
+            Dynamic Friction: 0.5
+            Restitution: 0.100000001
+          Category: Box
+          Edge Length: [34.5999985, 2, 31.3999996]
+    Model Component:
+      Asset Name: Box
+  - Entity: 12115211088824830474
+    Name: Main Camera
+    Parent: Root
+    Tag Component:
+      Tag: Main Camera
+    Transform Component:
+      Position: [0.300000012, 8.30000019, -27.3999996]
+      Rotation: [15.8999996, 0, 0]
+      Scale: [1, 1, 1]
+    Camera Component:
+      IsFreeLook: true
+      Projection:
+        FOV: 60
+        NearZ: 0.100000001
+        FarZ: 1000

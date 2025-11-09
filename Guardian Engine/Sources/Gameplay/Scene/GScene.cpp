@@ -302,7 +302,6 @@ namespace GE
 	void GScene::UpdateEdit()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
-		this->LightRegistry->Update();
 
 		if (GetAsyncKeyState('W'))
 		{
@@ -361,9 +360,7 @@ namespace GE
 			auto view = this->EntityRegistry.view<GTransformComponent, GPointLightComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GPointLightComponent& PLComponent)
 				{
-					PLComponent.PointLight->Position = TComponent.Transform.Position;
-
-					PLComponent.PointLight->Submit(this);
+					PLComponent.Light->LightData.Position = TComponent.Transform.Position;
 				});
 		}
 
@@ -491,7 +488,47 @@ namespace GE
 	void GScene::UpdateRuntime()
 	{
 		this->UpdateEntityTransform(this->SceneRootEntity.get());
-		this->LightRegistry->Update();
+
+		if (GetAsyncKeyState('W'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetForwardVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('S'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetBackwardVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('A'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetLeftVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('D'))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetRightVector() * 0.1f);
+		}
+		if (GetAsyncKeyState(VK_LSHIFT))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetDownVector() * 0.1f);
+		}
+		if (GetAsyncKeyState(VK_SPACE))
+		{
+			this->EditCamera->Translate(this->EditCamera->GetUpVector() * 0.1f);
+		}
+		if (GetAsyncKeyState('Q'))
+		{
+			this->EditCamera->Rotate({ 0.0f, -0.1f, 0.0f });
+		}
+		if (GetAsyncKeyState('E'))
+		{
+			this->EditCamera->Rotate({ 0.0f, 0.1f, 0.0f });
+		}
+		if (GetAsyncKeyState('R'))
+		{
+			this->EditCamera->Rotate({ 0.1f, 0.0f, 0.0f });
+		}
+		if (GetAsyncKeyState('T'))
+		{
+			this->EditCamera->Rotate({ -0.1f, 0.0f, 0.0f });
+		}
 
 		{
 			auto view = this->EntityRegistry.view<GTransformComponent, GCameraComponent>();
@@ -508,10 +545,8 @@ namespace GE
 		{
 			auto view = this->EntityRegistry.view<GTransformComponent, GPointLightComponent>();
 			view.each([=](const auto& e, GTransformComponent& TComponent, GPointLightComponent& PLComponent)
-				{
-					PLComponent.PointLight->Position = TComponent.Transform.Position;
-
-					PLComponent.PointLight->Submit(this);
+				{				
+					PLComponent.Light->LightData.Position = TComponent.Transform.Position;
 				});
 		}
 

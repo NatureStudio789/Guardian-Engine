@@ -10,7 +10,7 @@ namespace GE
 		LightData.PointLightCount = (int)PointLightList.size();
 		for (UINT i = 0; i < (UINT)PointLightList.size(); i++)
 		{
-			LightData.PointLightList[i] = PointLightList[i];
+			LightData.PointLightList[i] = PointLightList[i]->LightData;
 		}
 		this->LightCBuffer->UpdateBufferData(LightData);
 	}

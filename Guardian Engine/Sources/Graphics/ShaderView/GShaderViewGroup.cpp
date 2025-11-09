@@ -65,23 +65,49 @@ namespace GE
 		this->IsDescriptorAllocated = true;
 	}
 
-	void GShaderViewGroup::AddGroupMember(UINT index, std::shared_ptr<GShaderView> shaderViewMember)
+	void GShaderViewGroup::AddGroupMember(GShaderView* shaderViewMember)
 	{
-		GUARDIAN_CHECK_POINTER(shaderViewMember);
+		this->GroupMemberRegistry.push_back(shaderViewMember);
 
-		if (this->GroupMemberRegistry.count(index))
-		{
-			throw GUARDIAN_ERROR_EXCEPTION(std::format("The group member at index of '{}' already exists in the group named '{}'",
-				index, this->ShaderViewGroupName));
-		}
+		UINT index = (UINT)(this->GroupMemberRegistry.size() - 1);
 
-		this->GroupMemberRegistry[index] = shaderViewMember->GetShaderViewName();
 		shaderViewMember->GetViewDescriptorHandle()->CPUHandle = this->GroupHeadViewDescriptorHandle->CPUHandle;
 		shaderViewMember->GetViewDescriptorHandle()->CPUHandle.Offset(index,
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorIncrementSize());
 		shaderViewMember->GetViewDescriptorHandle()->GPUHandle = this->GroupHeadViewDescriptorHandle->GPUHandle;
 		shaderViewMember->GetViewDescriptorHandle()->GPUHandle.Offset(index,
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorIncrementSize());
+
+		shaderViewMember->IsDescriptorAllocated = true;
+	}
+
+	void GShaderViewGroup::RemoveGroupMember(GShaderView* shaderViewMember)
+	{
+		int index = -1;
+		for (int i = 0; i < (int)this->GroupMemberRegistry.size(); i++)
+		{
+			if (this->GroupMemberRegistry[i]->GetShaderViewId() == shaderViewMember->GetShaderViewId())
+			{
+				index = i;
+				break;
+			}
+		}
+
+		if (index < 0)
+		{
+			throw GUARDIAN_ERROR_EXCEPTION("Can't the right shader view member to remove!");
+		}
+
+		this->GroupMemberRegistry.erase(this->GroupMemberRegistry.begin() + index);
+
+		for (UINT i = (UINT)index; i < (UINT)this->GroupMemberRegistry.size(); i++)
+		{
+			auto& CpuHandle = this->GroupHeadViewDescriptorHandle->CPUHandle;
+			CpuHandle.Offset(i, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorIncrementSize());
+			auto& GpuHandle = this->GroupHeadViewDescriptorHandle->GPUHandle;
+			GpuHandle.Offset(i, GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetSRVDescriptorHeap()->GetDescriptorIncrementSize());
+			this->GroupMemberRegistry[i]->ResetDescriptor(CpuHandle, GpuHandle);
+		}
 	}
 
 	void GShaderViewGroup::SetRootParameterIndex(UINT index)

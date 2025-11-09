@@ -4,23 +4,30 @@
 
 namespace GE
 {
+	class GUARDIAN_API GShaderViewGroup;
+
 	class GUARDIAN_API GLightRegistry
 	{
 	public:
-		GLightRegistry() = default;
-		GLightRegistry(const GLightRegistry&) = default;
+		GLightRegistry();
+		GLightRegistry(const GLightRegistry& other);
 
-		void SubmitPointLight(const GPointLight& pointLight);
+		void RegisterPointLight(GPointLight* pointLight);
+		void UnregisterPointLight(GPointLight* pointLight);
+		void UnregisterPointLight(GUUID id);
 
-		void Update();
+		bool HasPointLight(GPointLight* pointLight);
+		bool HasPointLight(GUUID id);
 
 		bool HasPointLights();
-		const std::vector<GPointLight>& GetPointLightList();
+		std::vector<GPointLight*> GetPointLightList();
 
 		static constexpr UINT MaxLightCount = 50;
 
 	private:
-		std::vector<GPointLight> PointLightList;
+		std::vector<GPointLight*> PointLightList;
+
+		std::shared_ptr<GShaderViewGroup> PointLightDepthMapGroup;
 	};
 }
 

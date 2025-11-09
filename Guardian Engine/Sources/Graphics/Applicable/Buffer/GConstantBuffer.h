@@ -294,7 +294,7 @@ namespace GE
 			this->PointLightCount = 0;
 		}
 
-		GPointLight PointLightList[GLightRegistry::MaxLightCount];
+		GPointLight::Data PointLightList[GLightRegistry::MaxLightCount];
 	public:
 		int PointLightCount;
 	};

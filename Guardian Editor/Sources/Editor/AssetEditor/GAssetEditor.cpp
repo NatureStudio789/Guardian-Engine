@@ -10,6 +10,18 @@ namespace GE
 			this->AddWidgetToEditor(this->AssetBrowserPanel);
 		}
 
+		{
+			this->ModelBrowserPanel = std::make_shared<EUI::GPanel>("Model Browser");
+			this->ModelBrowserPanel->DisableWidgetRendering();
+
+			this->AddWidgetToEditor(this->ModelBrowserPanel);
+
+			EUI::GCallbackRegistry::RegistryCallback("SEARCH_FOR_MODEL_ASSETS", [this]()
+				{
+					this->ModelBrowserPanel->EnableWidgetRendering();
+				});
+		}
+
 		this->AssetDirectory = GProject::Instance->GetFullAssetDirectory();
 		this->CurrentDirectory = this->AssetDirectory;
 
@@ -24,6 +36,7 @@ namespace GE
 	void GAssetEditor::Update()
 	{
 		this->AssetBrowserPanel->ClearPanelWidgets();
+		this->ModelBrowserPanel->ClearPanelWidgets();
 
 		auto& MenuBar = std::make_shared<EUI::GMenuBar>();
 		this->AssetBrowserPanel->AddWidgetToPanel(MenuBar);
@@ -107,6 +120,39 @@ namespace GE
 					}, ImageId, GVector2(IconSize, IconSize)),
 
 					std::make_shared<EUI::GText>(Path.filename().string(), GVector4{1.0f, 1.0f, 1.0f, 1.0f}, true) });
+			}
+		}
+
+		{
+			static float padding = 20.0f;
+			static float IconSize = 64.0f;
+			float CellSize = IconSize + padding;
+
+			static float panelWidth = ImGui::GetContentRegionAvail().x;
+			this->ModelBrowserPanel->SetWidgetEventProcessFunction([]()
+				{
+					panelWidth = ImGui::GetContentRegionAvail().x;
+				});
+			int ColumnCount = (int)(panelWidth / CellSize);
+			if (ColumnCount < 1)
+			{
+				ColumnCount = 1;
+			}
+
+			auto& ColumnLayout = std::make_shared<EUI::GColumnLayout>();
+			ColumnLayout->SetColumnCount(ColumnCount);
+			this->ModelBrowserPanel->AddWidgetToPanel(ColumnLayout);
+
+			for (auto& [name, asset] : GAssetLoaderRegistry::GetCurrentAssetLoader()->GetLoadedAssetList())
+			{
+				if (asset->GetAssetCategory() == GAsset::GE_ASSET_STATIC_MODEL)
+				{
+					ColumnLayout->AddColumn({
+						std::make_shared<EUI::GImageButton>(asset->GetAssetName(), [=]() {},
+							this->FileTexture->GetViewDescriptorHandle()->GPUHandle.ptr, GVector2(IconSize, IconSize)),
+
+						std::make_shared<EUI::GText>(asset->GetAssetName(), GVector4{1.0f, 1.0f, 1.0f, 1.0f}, true) });
+				}
 			}
 		}
 	}

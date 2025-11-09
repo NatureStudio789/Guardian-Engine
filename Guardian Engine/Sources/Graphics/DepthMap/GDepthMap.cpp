@@ -102,6 +102,24 @@ namespace GE
 		this->DepthMapViewport = GViewport::CreateNewViewport(DepthMapViewportAttribute);
 	}
 
+	void GDepthMap::ResetDescriptor(CD3DX12_CPU_DESCRIPTOR_HANDLE cpuHandle, CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle)
+	{
+		GShaderView::ResetDescriptor(cpuHandle, gpuHandle);
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC DepthMapSRVDesc;
+		GUARDIAN_CLEAR_MEMORY(DepthMapSRVDesc);
+		DepthMapSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		DepthMapSRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		DepthMapSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+		DepthMapSRVDesc.Texture2D.MostDetailedMip = 0;
+		DepthMapSRVDesc.Texture2D.MipLevels = 1;
+		DepthMapSRVDesc.Texture2D.ResourceMinLODClamp = 0.0f;
+		DepthMapSRVDesc.Texture2D.PlaneSlice = 0;
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
+			CreateShaderResourceView(this->DepthMapBuffer.Get(), &DepthMapSRVDesc, this->ViewDescriptorHandle->CPUHandle);
+	}
+
 	void GDepthMap::ApplyDepthMap()
 	{
 		this->DepthMapViewport->ApplyViewport(GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsCommandList());
