@@ -362,6 +362,28 @@ project "Guardian EUI"
         buildoptions {"/wd4275", "/MP"}
         buildoptions {"/wd4819", "/MP"}
 
+project "Guardian-ScriptCore"
+    location "Guardian-ScriptCore"
+    kind "SharedLib"
+    language "C#"
+    dotnetframework "4.7.2"
+
+    targetdir ("Build/" .. outputdir)
+    objdir ("%{prj.name}/Intermediate/" .. outputdir)
+
+    files
+    {
+        "%{prj.name}/Sources/**.cs",
+    }
+
+    filter "configurations:Debug"
+        optimize "Off"
+        symbols "Default"
+
+    filter "configurations:Release"
+        optimize "On"
+        symbols "Default"
+
 project "ImGui"
     location "Third Party/ImGui"
     kind "StaticLib"
