@@ -30,7 +30,7 @@ namespace GE
 		}
 
 		this->PointLightList.push_back(pointLight);
-		this->PointLightDepthMapGroup->AddGroupMember(pointLight->LightDepthMap.get());
+		this->PointLightDepthMapGroup->AddGroupMember(pointLight->LightDepthCubeMap.get());
 		pointLight->InitializeDepthRendering();
 
 		if (this->PointLightList.size() > GLightRegistry::MaxLightCount)
@@ -47,10 +47,10 @@ namespace GE
 			{
 				this->PointLightList.erase(it);
 
-				this->PointLightDepthMapGroup->RemoveGroupMember(pointLight->LightDepthMap.get());
-				pointLight->LightDepthMap->GetDepthMapBuffer().Reset();
-				pointLight->LightDepthMap->GetViewDescriptorHandle()->CPUHandle.ptr = 0;
-				pointLight->LightDepthMap->GetViewDescriptorHandle()->GPUHandle.ptr = 0;
+				this->PointLightDepthMapGroup->RemoveGroupMember(pointLight->LightDepthCubeMap.get());
+				pointLight->LightDepthCubeMap->GetDepthCubeMapBuffer().Reset();
+				pointLight->LightDepthCubeMap->GetViewDescriptorHandle()->CPUHandle.ptr = 0;
+				pointLight->LightDepthCubeMap->GetViewDescriptorHandle()->GPUHandle.ptr = 0;
 				return;
 			}
 		}
@@ -67,10 +67,10 @@ namespace GE
 			{
 				this->PointLightList.erase(it);
 
-				this->PointLightDepthMapGroup->RemoveGroupMember((*it)->LightDepthMap.get());
-				(*it)->LightDepthMap->GetDepthMapBuffer().Reset();
-				(*it)->LightDepthMap->GetViewDescriptorHandle()->CPUHandle.ptr = 0;
-				(*it)->LightDepthMap->GetViewDescriptorHandle()->GPUHandle.ptr = 0;
+				this->PointLightDepthMapGroup->RemoveGroupMember((*it)->LightDepthCubeMap.get());
+				(*it)->LightDepthCubeMap->GetDepthCubeMapBuffer().Reset();
+				(*it)->LightDepthCubeMap->GetViewDescriptorHandle()->CPUHandle.ptr = 0;
+				(*it)->LightDepthCubeMap->GetViewDescriptorHandle()->GPUHandle.ptr = 0;
 				return;
 			}
 		}

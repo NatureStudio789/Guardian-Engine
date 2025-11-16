@@ -5,7 +5,7 @@
 namespace GE
 {
 	class GUARDIAN_API GScene;
-	class GUARDIAN_API GDepthMap;
+	class GUARDIAN_API GDepthCubeMap;
 	class GUARDIAN_API GCameraCBuffer;
 
 	struct GUARDIAN_API GPointLight
@@ -60,12 +60,12 @@ namespace GE
 
 	private:
 		void InitializeDepthRendering();
-		void UpdateDepthRendering();
+		void UpdateDepthRendering(UINT faceIndex);
 
 		GUUID PointLightId;
 		bool IsLightRegistered;
 		
-		std::shared_ptr<GDepthMap> LightDepthMap;
+		std::shared_ptr<GDepthCubeMap> LightDepthCubeMap;
 		std::shared_ptr<GCameraCBuffer> LightCameraCBuffer;
 
 		friend class GLightRegistry;

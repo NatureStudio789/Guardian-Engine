@@ -25,23 +25,26 @@ namespace GE
 
 		for (auto& pointLight : GSceneRegistry::GetActiveScene()->GetLightRegistry()->GetPointLightList())
 		{
-			pointLight->UpdateDepthRendering();
-
-			pointLight->LightDepthMap->BeginRendering();
-			GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
-
-			pointLight->LightDepthMap->ApplyDepthMap();
-			pointLight->LightDepthMap->ClearDepthMap();
-
-			this->Apply();
-			pointLight->LightCameraCBuffer->Apply();
-
-			for (auto& task : this->TaskList)
+			for (UINT i = 0; i < 6; i++)
 			{
-				task->Execute();
-			}
+				pointLight->UpdateDepthRendering(i);
 
-			pointLight->LightDepthMap->EndUpRendering();
+				pointLight->LightDepthCubeMap->BeginRendering();
+				GGraphicsContextRegistry::GetCurrentGraphicsContext()->ApplyDescriptorHeaps();
+
+				pointLight->LightDepthCubeMap->ApplyDepthCubeMap(i);
+				pointLight->LightDepthCubeMap->ClearDepthCubeMap(i);
+
+				this->Apply();
+				pointLight->LightCameraCBuffer->Apply();
+
+				for (auto& task : this->TaskList)
+				{
+					task->Execute();
+				}
+
+				pointLight->LightDepthCubeMap->EndUpRendering();
+			}
 		}
 	}
 }

@@ -1,6 +1,6 @@
 #ifndef _GE_GAPPLICABLE_H_
 #define _GE_GAPPLICABLE_H_
-#include "../DepthMap/GDepthMap.h"
+#include "../DepthMap/GDepthCubeMap.h"
 
 namespace GE
 {

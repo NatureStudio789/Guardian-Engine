@@ -33,7 +33,7 @@ Texture2D RoughnessTexture : register(t1);
 Texture2D MetallicTexture : register(t2);
 Texture2D AoTexture : register(t3);
 Texture2D NormalTexture : register(t4);
-Texture2D DepthMap[50] : register(t5);
+TextureCube DepthMap[50] : register(t5);
 
 cbuffer LightCBuffer : register(b3)
 {
@@ -156,6 +156,21 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
     return F0 + (1.0f - F0) * pow(clamp(1.0f - cosTheta, 0.0f, 1.0f), 5.0f);
 }
 
+float3 CalculatePointShadow(PointLight light, TextureCube depthMap, float3 worldPosition)
+{
+    float3 WorldToLight = worldPosition - light.Position;
+    
+    float ClosetDepth = depthMap.Sample(MaterialSampler, WorldToLight).r;
+    ClosetDepth *= 100.0f;
+    
+    float CurrentDepth = length(WorldToLight);
+    
+    float bias = 0.05f;
+    float shadow = CurrentDepth - bias > ClosetDepth ? 1.0f : 0.0f;
+    
+    return shadow;
+}
+
 float3 DirectLighting(PointLight light, LightingMaterial material, float3 worldPosition, float3 cameraPosition, float3 normal)
 {
     float3 N = normalize(normal);
@@ -195,7 +210,8 @@ float3 Lighting(PointLight lightList[50], const int lightCount, LightingMaterial
     [unroll]
     for (int i = 0; i < min(lightCount, 50); i++)
     {
-        Lo += DirectLighting(lightList[i], material, worldPosition, cameraPosition, normal);
+        Lo += (1.0f -  CalculatePointShadow(lightList[i], DepthMap[i], worldPosition)) * 
+            DirectLighting(lightList[i], material, worldPosition, cameraPosition, normal);
     }
 
     float3 ambient = float3(0.03f, 0.03f, 0.03f) * material.Albedo * material.Ao;

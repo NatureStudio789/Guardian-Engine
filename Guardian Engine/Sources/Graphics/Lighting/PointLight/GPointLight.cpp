@@ -10,7 +10,7 @@ namespace GE
 
 		this->IsLightRegistered = false;
 
-		this->LightDepthMap = std::make_shared<GDepthMap>();
+		this->LightDepthCubeMap = std::make_shared<GDepthCubeMap>();
 		this->LightCameraCBuffer = null;
 	}
 
@@ -21,7 +21,7 @@ namespace GE
 
 		this->IsLightRegistered = other.IsLightRegistered;
 
-		this->LightDepthMap = other.LightDepthMap;
+		this->LightDepthCubeMap = other.LightDepthCubeMap;
 		this->LightCameraCBuffer = other.LightCameraCBuffer;
 	}
 
@@ -33,13 +33,13 @@ namespace GE
 		this->LightData = { position, color, strength };
 		this->IsLightRegistered = false;
 
-		this->LightDepthMap = std::make_shared<GDepthMap>();
+		this->LightDepthCubeMap = std::make_shared<GDepthCubeMap>();
 		this->LightCameraCBuffer = null;
 	}
 
 	void GPointLight::InitializeDepthRendering()
 	{
-		this->LightDepthMap->InitializeDepthMap(1024, 1024);
+		this->LightDepthCubeMap->InitializeDepthCubeMap(1024);
 
 		this->LightCameraCBuffer = GCameraCBuffer::CreateNewCameraCBuffer(
 			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::DEPTH_PSO)->GetPipelineRootSignature());
@@ -57,9 +57,14 @@ namespace GE
 		this->IsLightRegistered = false;
 	}
 
-	void GPointLight::UpdateDepthRendering()
+	void GPointLight::UpdateDepthRendering(UINT faceIndex)
 	{
-		GCamera LightCamera = { this->LightData.Position, GVector3(),GPerspectiveProjection(90.0f, 1024 / 1024, 1.0f, 25.0f) };
+		UINT RotationWriteIndex = faceIndex / 2;
+		float WriteValue = ((faceIndex % 2) == 0) ? 1.0f : -1.0f;
+		GVector3 CameraRotation = { 0.0f, 0.0f, 0.0f };
+		CameraRotation[RotationWriteIndex] = WriteValue;
+
+		GCamera LightCamera = { this->LightData.Position, CameraRotation,GPerspectiveProjection(90.0f, 1024 / 1024, 1.0f, 100.0f) };
 
 		auto& CameraMatrix = LightCamera.GetViewMatrix() * LightCamera.Projection.GetProjectionMatrix();
 		CameraMatrix.Transpose();
