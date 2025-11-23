@@ -37,6 +37,11 @@ namespace GE
 		this->LightCameraCBuffer = null;
 	}
 
+	GPointLight::~GPointLight()
+	{
+
+	}
+
 	void GPointLight::InitializeDepthRendering()
 	{
 		this->LightDepthCubeMap->InitializeDepthCubeMap(1024);
@@ -59,12 +64,17 @@ namespace GE
 
 	void GPointLight::UpdateDepthRendering(UINT faceIndex)
 	{
-		UINT RotationWriteIndex = faceIndex / 2;
-		float WriteValue = ((faceIndex % 2) == 0) ? 1.0f : -1.0f;
-		GVector3 CameraRotation = { 0.0f, 0.0f, 0.0f };
-		CameraRotation[RotationWriteIndex] = WriteValue;
+		static GVector3 CameraAllAxisesRotations[] =
+		{
+			{ 0.0f,   90.0f,  0.0f },
+			{ 0.0f,   -90.0f, 0.0f },
+			{ 90.0f,  0.0f,   0.0f },
+			{ -90.0f, 0.0f,   0.0f },
+			{ 0.0f,   0.0f,   0.0f },
+			{ 0.0f,   180.0f, 0.0f },
+		};
 
-		GCamera LightCamera = { this->LightData.Position, CameraRotation,GPerspectiveProjection(90.0f, 1024 / 1024, 1.0f, 100.0f) };
+		GCamera LightCamera = { this->LightData.Position, CameraAllAxisesRotations[faceIndex], GPerspectiveProjection(90.0f, 1024 / 1024, 1.0f, 100.0f)};
 
 		auto& CameraMatrix = LightCamera.GetViewMatrix() * LightCamera.Projection.GetProjectionMatrix();
 		CameraMatrix.Transpose();

@@ -1,6 +1,6 @@
 #ifndef _GE_GGAMEPLAYENGINE_H_
 #define _GE_GGAMEPLAYENGINE_H_
-#include "../Asset/GAssetEngine.h"
+#include "../Script/GScriptEngine.h"
 
 namespace GE
 {

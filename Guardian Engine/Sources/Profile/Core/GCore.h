@@ -54,6 +54,9 @@
 
 #include <PhysX/PxPhysicsAPI.h>
 
+#include <mono/jit/jit.h>
+#include <mono/metadata/assembly.h>
+
 using namespace Microsoft;
 using namespace DirectX;
 using namespace physx;

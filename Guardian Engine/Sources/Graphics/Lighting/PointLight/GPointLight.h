@@ -49,6 +49,7 @@ namespace GE
 		GPointLight(const GPointLight& other);
 		GPointLight(const GVector3& position,
 			const GVector3& color, float strength);
+		~GPointLight();
 
 		void Register(GScene* scene);
 		void Unregister(GScene* scene);

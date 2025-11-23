@@ -49,6 +49,7 @@ project "Guardian Engine"
 		dependenciesdir .. "Libraries/Assimp/%{cfg.buildcfg}/",
 		dependenciesdir .. "Libraries/DirectXTK/%{cfg.buildcfg}/",
         dependenciesdir .. "Libraries/PhysX/%{cfg.buildcfg}/",
+        dependenciesdir .. "Libraries/mono/%{cfg.buildcfg}/",
 	}
 
 	links
@@ -69,6 +70,16 @@ project "Guardian Engine"
 		"DirectXTK",
 
 		"assimp",
+
+		"ole32",
+        "windowscodecs",
+        "uuid",
+        "ws2_32",
+        "winmm",
+        "version",
+        "bcrypt",
+
+        "libmono-static-sgen",
 
         "LowLevel_static_64",
         "LowLevelAABB_static_64",

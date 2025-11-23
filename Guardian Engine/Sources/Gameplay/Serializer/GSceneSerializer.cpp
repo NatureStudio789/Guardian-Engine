@@ -46,6 +46,8 @@ namespace GE
 
 	void GSceneSerializer::Deserialize(std::shared_ptr<GScene> scene, YAML::Node& deserializingData)
 	{
+		// TODO: Clear the scene old data before deserializing.
+
 		scene->SceneRootEntity = GEntity::CreateNewEntity("Root", scene.get());
 		scene->EditCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, -15.0f), GVector3(), GPerspectiveProjection());
 		scene->RuntimeCamera = std::make_shared<GCamera>(GVector3(0.0f, 0.0f, 0.0f), GVector3(), GPerspectiveProjection());
@@ -71,6 +73,8 @@ namespace GE
 
 	void GSceneSerializer::Deserialize(GScene* scene, YAML::Node& deserializingData)
 	{
+		// TODO: Clear the scene old data before deserializing.
+
 		scene->SceneRootEntity = GEntity::CreateNewEntity("Root", scene);
 		if (!scene->EditCamera)
 		{

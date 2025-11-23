@@ -31,6 +31,10 @@ namespace GE
 		{
 			m = std::make_shared<GAssetEngine>();
 		}
+		else if (moduleName == "Script")
+		{
+			m = std::make_shared<GScriptEngine>();
+		}
 		else if (moduleName == "Gameplay")
 		{
 			m = std::make_shared<GGameplayEngine>();

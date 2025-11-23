@@ -158,15 +158,15 @@ float3 FresnelSchlick(float cosTheta, float3 F0)
 
 float3 CalculatePointShadow(PointLight light, TextureCube depthMap, float3 worldPosition)
 {
-    float3 WorldToLight = worldPosition - light.Position;
+    float3 L = light.Position - worldPosition;
+    float DistanceToLight = length(L);
+    L = normalize(L);
     
-    float ClosetDepth = depthMap.Sample(MaterialSampler, WorldToLight).r;
+    float ClosetDepth = depthMap.Sample(MaterialSampler, L).r;
     ClosetDepth *= 100.0f;
     
-    float CurrentDepth = length(WorldToLight);
-    
     float bias = 0.05f;
-    float shadow = CurrentDepth - bias > ClosetDepth ? 1.0f : 0.0f;
+    float shadow = DistanceToLight - bias > ClosetDepth ? 0.0f : 1.0f;
     
     return shadow;
 }
@@ -199,7 +199,7 @@ float3 DirectLighting(PointLight light, LightingMaterial material, float3 worldP
     kD *= 1.0f - material.Metallic;
 
     float NdotL = max(dot(N, L), 0.0f);
-
+    
     return (kD * material.Albedo / PI + specular) * radiance * NdotL;
 }
 
@@ -210,7 +210,7 @@ float3 Lighting(PointLight lightList[50], const int lightCount, LightingMaterial
     [unroll]
     for (int i = 0; i < min(lightCount, 50); i++)
     {
-        Lo += (1.0f -  CalculatePointShadow(lightList[i], DepthMap[i], worldPosition)) * 
+        Lo += CalculatePointShadow(lightList[i], DepthMap[i], worldPosition) * 
             DirectLighting(lightList[i], material, worldPosition, cameraPosition, normal);
     }
 

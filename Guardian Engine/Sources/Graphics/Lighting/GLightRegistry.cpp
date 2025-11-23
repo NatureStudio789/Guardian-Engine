@@ -8,11 +8,19 @@ namespace GE
 	{
 		this->PointLightList.clear();
 
-		this->PointLightDepthMapGroup = std::make_shared<GShaderViewGroup>("PointLightDepthMapGroup", GLightRegistry::MaxLightCount);
-		GShaderViewRegistry::RegistryShaderViewGroup(this->PointLightDepthMapGroup);
-		this->PointLightDepthMapGroup->SetRootParameterIndex(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()->
-			GetRootParameterIndex(GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, 5, GLightRegistry::MaxLightCount)));
+		if (!GShaderViewRegistry::HasShaderViewGroup("PointLightDepthMapGroup"))
+		{
+			this->PointLightDepthMapGroup = std::make_shared<GShaderViewGroup>("PointLightDepthMapGroup", GLightRegistry::MaxLightCount);
+			GShaderViewRegistry::RegistryShaderViewGroup(this->PointLightDepthMapGroup);
+
+			this->PointLightDepthMapGroup->SetRootParameterIndex(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::LIGHTING_PSO)->GetPipelineRootSignature()->
+				GetRootParameterIndex(GRootSignature::RootParameter(GRootSignature::GE_PARAMETER_SRV, 5, GLightRegistry::MaxLightCount)));
+		}
+		else
+		{
+			this->PointLightDepthMapGroup = GShaderViewRegistry::GetShaderViewGroup("PointLightDepthMapGroup");
+		}
 	}
 
 	GLightRegistry::GLightRegistry(const GLightRegistry& other)
