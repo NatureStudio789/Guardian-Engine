@@ -71,6 +71,23 @@ namespace GE
 				&DepthCubeMapBufferDesc, D3D12_RESOURCE_STATE_GENERIC_READ, &BufferClearValue,
 				__uuidof(ID3D12Resource), (void**)this->DepthCubeMapBuffer.GetAddressOf()));
 
+		if (!this->GetDescriptorAllocated())
+		{
+			this->AllocateDescriptor();
+		}
+
+		D3D12_SHADER_RESOURCE_VIEW_DESC DepthCubeMapSRVDesc;
+		GUARDIAN_CLEAR_MEMORY(DepthCubeMapSRVDesc);
+		DepthCubeMapSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+		DepthCubeMapSRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		DepthCubeMapSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
+		DepthCubeMapSRVDesc.TextureCube.MipLevels = 1;
+		DepthCubeMapSRVDesc.TextureCube.MostDetailedMip = 0;
+		DepthCubeMapSRVDesc.TextureCube.ResourceMinLODClamp = 0.0f;
+
+		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
+			CreateShaderResourceView(this->DepthCubeMapBuffer.Get(), &DepthCubeMapSRVDesc, this->ViewDescriptorHandle->CPUHandle);
+		
 		for (UINT i = 0; i < 6; i++)
 		{
 			std::shared_ptr<GDescriptorHandle> DescriptorHandle =
@@ -88,23 +105,6 @@ namespace GE
 			GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
 				CreateDepthStencilView(this->DepthCubeMapBuffer.Get(), &DepthMapDSVDesc, this->DSVDescriptorHandleList[i]->CPUHandle);
 		}
-
-		if (!this->GetDescriptorAllocated())
-		{
-			this->AllocateDescriptor();
-		}
-
-		D3D12_SHADER_RESOURCE_VIEW_DESC DepthCubeMapSRVDesc;
-		GUARDIAN_CLEAR_MEMORY(DepthCubeMapSRVDesc);
-		DepthCubeMapSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		DepthCubeMapSRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-		DepthCubeMapSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURECUBE;
-		DepthCubeMapSRVDesc.TextureCube.MipLevels = 1;
-		DepthCubeMapSRVDesc.TextureCube.MostDetailedMip = 0;
-		DepthCubeMapSRVDesc.TextureCube.ResourceMinLODClamp = 0.0f;
-
-		GGraphicsContextRegistry::GetCurrentGraphicsContext()->GetGraphicsDevice()->GetDeviceObject()->
-			CreateShaderResourceView(this->DepthCubeMapBuffer.Get(), &DepthCubeMapSRVDesc, this->ViewDescriptorHandle->CPUHandle);
 
 		GViewport::Attribute DepthMapViewportAttribute;
 		DepthMapViewportAttribute.PositionX = 0.0f;

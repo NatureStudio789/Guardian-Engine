@@ -11,7 +11,7 @@ namespace GE
 		this->IsLightRegistered = false;
 
 		this->LightDepthCubeMap = std::make_shared<GDepthCubeMap>();
-		this->LightCameraCBuffer = null;
+		this->LightCameraCBufferList.clear();
 	}
 
 	GPointLight::GPointLight(const GPointLight& other)
@@ -22,7 +22,7 @@ namespace GE
 		this->IsLightRegistered = other.IsLightRegistered;
 
 		this->LightDepthCubeMap = other.LightDepthCubeMap;
-		this->LightCameraCBuffer = other.LightCameraCBuffer;
+		this->LightCameraCBufferList = other.LightCameraCBufferList;
 	}
 
 	GPointLight::GPointLight(const GVector3& position,
@@ -34,7 +34,6 @@ namespace GE
 		this->IsLightRegistered = false;
 
 		this->LightDepthCubeMap = std::make_shared<GDepthCubeMap>();
-		this->LightCameraCBuffer = null;
 	}
 
 	GPointLight::~GPointLight()
@@ -46,8 +45,11 @@ namespace GE
 	{
 		this->LightDepthCubeMap->InitializeDepthCubeMap(1024);
 
-		this->LightCameraCBuffer = GCameraCBuffer::CreateNewCameraCBuffer(
-			GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::DEPTH_PSO)->GetPipelineRootSignature());
+		for (UINT i = 0; i < 6; i++)
+		{
+			this->LightCameraCBufferList.push_back(GCameraCBuffer::CreateNewCameraCBuffer(
+				GPipelineStateRegistry::GetPipelineState(GPipelineStateRegistry::DEPTH_PSO)->GetPipelineRootSignature()));
+		}
 	}
 
 	void GPointLight::Register(GScene* scene)
@@ -68,8 +70,8 @@ namespace GE
 		{
 			{ 0.0f,   90.0f,  0.0f },
 			{ 0.0f,   -90.0f, 0.0f },
-			{ 90.0f,  0.0f,   0.0f },
 			{ -90.0f, 0.0f,   0.0f },
+			{ 90.0f,  0.0f,   0.0f },
 			{ 0.0f,   0.0f,   0.0f },
 			{ 0.0f,   180.0f, 0.0f },
 		};
@@ -78,7 +80,12 @@ namespace GE
 
 		auto& CameraMatrix = LightCamera.GetViewMatrix() * LightCamera.Projection.GetProjectionMatrix();
 		CameraMatrix.Transpose();
-		this->LightCameraCBuffer->UpdateBufferData(GCameraCBData(CameraMatrix, this->LightData.Position));
+		this->LightCameraCBufferList[faceIndex]->UpdateBufferData(GCameraCBData(CameraMatrix, this->LightData.Position));
+	}
+
+	void GPointLight::ApplyDepthRendering(UINT faceIndex)
+	{
+		this->LightCameraCBufferList[faceIndex]->Apply();
 	}
 
 	const GUUID& GPointLight::GetPointLightId() const noexcept

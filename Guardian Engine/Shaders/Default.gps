@@ -7,6 +7,7 @@ struct PSInput
     float2 TextureCoord : TEXTURECOORD;
     float3 Normal : NORMAL;
     float3 CameraPosition : CAMERAPOSITION;
+    float3 OriginPosition : ORIGINPOSITION;
 };
 
 float4 main(PSInput InputData) : SV_TARGET
@@ -17,6 +18,9 @@ float4 main(PSInput InputData) : SV_TARGET
     PixelColor = float4(Lighting(PointLightList, PointLightCount, GenerateMaterial(InputData.TextureCoord), 
         InputData.WorldPosition, InputData.CameraPosition, PixelNormal), 1.0f);
     /*PixelColor = float4(normalize(PixelNormal), 1.0f);*/
+
+    /*float Depth = DepthMap[0].Sample(MaterialSampler, InputData.OriginPosition).r;
+    PixelColor = float4(Depth, Depth, Depth, 1.0f);*/
 
     return PixelColor;
 }

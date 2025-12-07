@@ -14,6 +14,7 @@ struct VSOutput
     float2 TextureCoord : TEXTURECOORD;
     float3 Normal : NORMAL;
     float3 CameraPosition : CAMERAPOSITION;
+    float3 OriginPosition : ORIGINPOSITION;
 };
 
 VSOutput main(VSInput InputData)
@@ -27,6 +28,7 @@ VSOutput main(VSInput InputData)
     OutputData.TextureCoord = InputData.TextureCoord;
     OutputData.Normal = mul(float4(InputData.Normal, 0.0f), WorldMatrix).xyz;
     OutputData.CameraPosition = CameraPosition;
+    OutputData.OriginPosition = InputData.Position;
 
     return OutputData;
 }

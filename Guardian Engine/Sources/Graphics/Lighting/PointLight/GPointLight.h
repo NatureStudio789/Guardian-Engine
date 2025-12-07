@@ -63,11 +63,13 @@ namespace GE
 		void InitializeDepthRendering();
 		void UpdateDepthRendering(UINT faceIndex);
 
+		void ApplyDepthRendering(UINT faceIndex);
+
 		GUUID PointLightId;
 		bool IsLightRegistered;
 		
 		std::shared_ptr<GDepthCubeMap> LightDepthCubeMap;
-		std::shared_ptr<GCameraCBuffer> LightCameraCBuffer;
+		std::vector<std::shared_ptr<GCameraCBuffer>> LightCameraCBufferList;
 
 		friend class GLightRegistry;
 		friend class GDepthPass;
